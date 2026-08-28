@@ -352,7 +352,28 @@
   .t th .srt { color: var(--brand-border-300); }
   .t th.act .srt { color: var(--foreground); }
   .t td { padding: 10px 12px; vertical-align: middle; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  .tblwrap .t th:first-child, .tblwrap .t td:first-child { width: 99%; white-space: normal; }
+  .tblwrap .t th:first-child, .tblwrap .t td:first-child { width: 99%; min-width: 230px; white-space: normal; }
+  /* When the window can't hold every column on one line, the widest secondary
+     column gives way — financing wraps to two lines at a readable measure —
+     and cell padding tightens. Never ellipsis: Agency (Fannie Mae) and
+     (Freddie Mac) differ only at the end of the string. Below 1180 the table
+     scrolls instead. The threshold depends on the sidebar: collapsing the
+     rail frees 176px (14rem − 3rem), so the same table fits at a narrower
+     window and the wrap band ends 176px sooner. A container query would say
+     this directly, but containment would re-parent the position:fixed
+     popovers the tables portal out of themselves. */
+  @media (min-width: 1181px) and (max-width: 1599px) {
+    .app:not(.rail-min) .tblwrap .t td[data-l="Financing"] { white-space: normal; min-width: 150px; max-width: 200px; }
+    .app:not(.rail-min) .tblwrap .t th, .app:not(.rail-min) .tblwrap .t td { padding-left: 8px; padding-right: 8px; }
+    .app:not(.rail-min) .tblwrap .t th:first-child, .app:not(.rail-min) .tblwrap .t td:first-child { padding-left: 14px; }
+    .app:not(.rail-min) .tblwrap { overflow-x: auto; }
+  }
+  @media (min-width: 1181px) and (max-width: 1423px) {
+    .app.rail-min .tblwrap .t td[data-l="Financing"] { white-space: normal; min-width: 150px; max-width: 200px; }
+    .app.rail-min .tblwrap .t th, .app.rail-min .tblwrap .t td { padding-left: 8px; padding-right: 8px; }
+    .app.rail-min .tblwrap .t th:first-child, .app.rail-min .tblwrap .t td:first-child { padding-left: 14px; }
+    .app.rail-min .tblwrap { overflow-x: auto; }
+  }
   .t tbody tr:last-child td { border-bottom: 0; }
   .t tbody tr:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
   .t tbody tr.sel { background: var(--muted); }
