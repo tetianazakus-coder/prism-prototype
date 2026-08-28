@@ -397,9 +397,9 @@
   .sel__trg { display: flex; align-items: center; gap: 8px; border: 0; background: none;
               font-size: 13px; font-weight: 500; cursor: pointer; padding: 2px 0; color: inherit; }
   .sel__car { flex: none; line-height: 0; opacity: .5; color: var(--muted-foreground); }
-  /* the table caps the control so the longest status ("Secure Term Sheet /
-     Application") stops setting the column width; the full value stays in the
-     open dropdown and in the board lane heads */
+  /* the table caps the control so a long status label cannot set the column
+     width; the eight current statuses all fit under it, so the cap is a guard
+     for whatever the vocabulary grows into */
   .t .stat .sel__val { display: block; max-width: 132px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* SelectContent — bg-popover text-popover-foreground rounded-md border shadow-md,
      Viewport p-1, min-width the trigger's, max-height the available height, scrolls.
@@ -938,9 +938,9 @@
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
       <li><b>The board follows Janover Pro&rsquo;s Current Deals board</b> <span class="note">[comp Aug 19]</span> — flat grey lanes on a horizontal scroller, a tone dot and count pill in each lane head, a dashed &ldquo;No deals&rdquo; placeholder, card anatomy of title &rsaquo; amount &rsaquo; property type &rsaquo; footer (document and saved-lender counts, date), and a kebab menu on the card with <b>Change Status</b> as a submenu — Janover&rsquo;s path for the same edit. Every count on the footer is real: documents from the deal&rsquo;s checklist, saved lenders from the shortlist, the date from <code>updated</code>. Tokens, radii and control metrics stay LenderPrism&rsquo;s. One footer element did not survive the copy: Janover&rsquo;s owner chip (avatar + &ldquo;You&rdquo;) came off, 26 Aug &mdash; <code>loan_requests</code> has a single <code>belongs_to :user</code>, no assignee or team concept, and a broker sees only their own deals, so the chip would read &ldquo;You&rdquo; on every card and carry no information. If team seats ever arrive, it returns as the highest-value element on the card. <span class="note">[&#128161; rec]</span></li>
       <li><b>Both views are held to one height.</b> <span class="note">[&#128161; rec]</span> Toggling list &harr; board changed the card's height by roughly 300px, which reads as a page reload rather than a change of representation &mdash; the control swaps how the same eleven deals are drawn, so nothing below it should move. Both are now pinned to <code>--view-h</code>, measured off the table's own body at eleven rows: the board fills it and each lane scrolls inside itself, the table scrolls under a stuck header if the set ever grows past eleven. Lane heads stay put and the cards move under them, which is what every board holding a real pipeline does. Released below 767, where a table row is a labelled block and no one constant can hold both shapes.</li>
-      <li><b>Three deals were added on 26 Aug for the board's shape, not for volume.</b> <span class="note">[&#128161; rec]</span> Eleven lanes each holding exactly one card is the one distribution a real pipeline never has &mdash; work piles up at the front and thins toward the close. Harborview, Magnolia and Foundry (the three already drawn in the Figma <i>Deals</i> table frame) sit at <b>Lead</b> and <b>Screening</b>, giving 3 &middot; 2 &middot; 1 &middot; 1 &middot; 1 &middot; 1 &middot; 1 &middot; 0 &middot; 0 &middot; 1 &middot; 0 across the eleven statuses. Nothing about them is hand-authored beyond the deal record: their match counts (2 &middot; 1 &middot; 4) fall out of the same five-criteria scoring every other deal runs through, and their saved-lender counts are zero because nothing has been shortlisted at those stages. <b>Processing</b> and <b>Closed &amp; Funded</b> stay empty, so the dashed &ldquo;No deals&rdquo; placeholder is visible where it belongs.</li>
+      <li><b>Three deals were added on 26 Aug for the board's shape, not for volume.</b> <span class="note">[&#128161; rec]</span> Eleven lanes each holding exactly one card is the one distribution a real pipeline never has &mdash; work piles up at the front and thins toward the close. Harborview, Magnolia and Foundry (the three already drawn in the Figma <i>Deals</i> table frame) sit at <b>Leads</b> and <b>Screening</b>, giving 3 &middot; 3 &middot; 1 &middot; 2 &middot; 1 &middot; 0 &middot; 1 &middot; 0 across the eight statuses. Nothing about them is hand-authored beyond the deal record: their match counts (2 &middot; 1 &middot; 4) fall out of the same five-criteria scoring every other deal runs through, and their saved-lender counts are zero because nothing has been shortlisted at those stages. <b>Funded</b> and <b>On Hold</b> stay empty, so the dashed &ldquo;No deals&rdquo; placeholder is visible where it belongs.</li>
       <li><b>Board Settings is half-sourced.</b> The button and its position come from Janover&rsquo;s board <span class="note">[comp Aug 19]</span>; the panel&rsquo;s contents do not — we never saw inside theirs, so column visibility and card fields are conventional board settings <span class="note">[~]</span>. Both act on real data: a hidden column&rsquo;s deals stay in the pipeline and in every count (the note under the board says so), and each card field maps to a <code>loan_requests</code> column, named in the row&rsquo;s hover.</li>
-      <li><b>Deal statuses are Tony&rsquo;s own eleven</b> <span class="note">[T · Figma comment, 21 Aug]</span> — Lead | Prospective Deal · Screening, Sizing &amp; Packaging · Review Loan Request Package · Lender/Investor Outreach · Present Quotes to Client · Secure Term Sheet / Application · Engage Lender/Investor · Under App | Processing · Funded &amp; Closed · Dead · On Hold, supplied verbatim in his comment on the Board view frame. They replace the Janover placeholder set demoed 19 Aug (Draft · Sent · Contract Cancelled · Declined · Duplicate&nbsp;&ndash;&nbsp;Archive). The schema fact stands: <code>db/schema.rb</code> confirms <code>loan_requests</code> has <b>no status column at all</b>, so this is a new column, not a rename. Displayed since 26 Aug under short labels of ours &mdash; Lead &middot; Screening &middot; Package Review &middot; Outreach &middot; Quotes &middot; Term Sheet &middot; Engaged &middot; Processing &middot; Closed &amp; Funded &middot; Dead &middot; On Hold &mdash; one per Tony status, his verbatim wording kept as the stored value and shown in every tooltip. <span class="note">[&#128161; rec]</span></li>
+      <li><b>Deal statuses are eight</b> <span class="note">[&#128161; rec &middot; 28 Aug]</span> &mdash; Leads &middot; Screening &middot; Outreach &middot; Quoting &middot; Processing &middot; Funded &middot; Dead &middot; On Hold, a collapse of Tony&rsquo;s own eleven <span class="note">[T &middot; Figma comment, 21 Aug]</span>: Lead | Prospective Deal &middot; Screening, Sizing &amp; Packaging &middot; Review Loan Request Package &middot; Lender/Investor Outreach &middot; Present Quotes to Client &middot; Secure Term Sheet / Application &middot; Engage Lender/Investor &middot; Under App | Processing &middot; Funded &amp; Closed &middot; Dead &middot; On Hold, supplied verbatim in his comment on the Board view frame. The fold: the three packaging steps become <b>Screening</b>, quotes and term sheet become <b>Quoting</b>, lender engagement and underwriting become <b>Processing</b>. <b>Dead</b> and <b>On Hold</b> stay separate, as Tony had them: Dead is terminal and only feeds post-mortem reporting, On Hold is expected back &mdash; fusing them would bury recoverable deals among lost ones, the same trap as the retired fused Agency chip. His eleven had replaced the Janover placeholder set demoed 19 Aug. The schema fact stands: <code>db/schema.rb</code> confirms <code>loan_requests</code> has <b>no status column at all</b>, so this is a new column, not a rename.</li>
       <li><b>Lender status and outreach are the real enums</b>, from <code>app/models/loan_request_match.rb</code> and <code>app/(dashboard)/lenders/types.ts</code>: <code>status</code> is six values, <code>disposition</code> is five and its labels here are the repo's own <code>DISPOSITION_OPTIONS</code> strings. <code>disposition: quoted</code> is the product's Term Sheet.</li>
       <li><b>Fit is computed, never typed.</b> Five weighted criteria — amount 30, property type 25, geography 20, financing 15, appetite 10 — with property and geography as knock-outs and a financing miss capping below strong. The chips beside each score sum to it, so a 100% row shows five ticks. Drag the cut; every count on the page moves with it.</li>
       <li><b>The deal summary is built only from columns that exist.</b> Every field on it is a real <code>loan_requests</code> column — <code>transaction_name</code>, <code>loan_amount_cents</code>, <code>property_type</code>, <code>transaction_summary</code>, <code>unit_quantity</code>, <code>physical_occupancy</code>, <code>sponsor_combined_net_worth</code> and the rest. Nothing here needs a migration; the read layer is the whole gap.</li>
@@ -1073,23 +1073,26 @@ const DISPOSITION = [
 
 /* components/landing/BrokerDashboardHero.tsx — hardcoded demo array,
    tones included. Illustration copy, not a state machine. */
-/* Tony's pipeline statuses, verbatim from his Figma comment on the Board
-   view frame [T, Figma #3, 21 Aug] — kept untouched as the stored values (v).
-   The short display labels are ours [rec], one per Tony status, shown in the
-   UI with the verbatim wording preserved in tooltips. Replaces the Janover
-   placeholder set (Draft · Sent · Contract Cancelled · Declined · Duplicate – Archive). */
+/* Eight pipeline stages [rec, 28 Aug] — a collapse of Tony's eleven from his
+   Figma comment on the Board view frame [T, Figma #3, 21 Aug]. The fold:
+   Lead | Prospective Deal → Leads; Screening, Sizing & Packaging + Review Loan
+   Request Package → Screening; Lender/Investor Outreach → Outreach; Present
+   Quotes to Client + Secure Term Sheet / Application → Quoting; Engage
+   Lender/Investor + Under App | Processing → Processing; Funded & Closed →
+   Funded. Dead and On Hold stay Tony's own two — Dead is terminal (post-mortem
+   reporting only), On Hold is parked and expected back ("resurrect Q4 holds"
+   is a real workflow), so fusing them would bury recoverable deals. Stored
+   value and label are now the same string — no verbatim-vs-short split to
+   preserve in tooltips. */
 const DEAL_STATUS = [
-  { v:"Lead | Prospective Deal",         label:"Lead",            tone:"muted" },
-  { v:"Screening, Sizing & Packaging",   label:"Screening",       tone:"gold"  },
-  { v:"Review Loan Request Package",     label:"Package Review",  tone:"gold"  },
-  { v:"Lender/Investor Outreach",        label:"Outreach",        tone:"blue"  },
-  { v:"Present Quotes to Client",        label:"Quotes",          tone:"blue"  },
-  { v:"Secure Term Sheet / Application", label:"Term Sheet",      tone:"blue"  },
-  { v:"Engage Lender/Investor",          label:"Engaged",         tone:"blue"  },
-  { v:"Under App | Processing",          label:"Processing",      tone:"blue"  },
-  { v:"Funded & Closed",                 label:"Closed & Funded", tone:"green" },
-  { v:"Dead",                            label:"Dead",            tone:"red"   },
-  { v:"On Hold",                         label:"On Hold",         tone:"muted" }
+  { v:"Leads",          label:"Leads",          tone:"muted" },
+  { v:"Screening",      label:"Screening",      tone:"gold"  },
+  { v:"Outreach",       label:"Outreach",       tone:"blue"  },
+  { v:"Quoting",        label:"Quoting",        tone:"blue"  },
+  { v:"Processing",     label:"Processing",     tone:"blue"  },
+  { v:"Funded",         label:"Funded",         tone:"green" },
+  { v:"Dead",           label:"Dead",           tone:"red"   },
+  { v:"On Hold",        label:"On Hold",        tone:"muted" }
 ];
 
 /* ===========================================================
@@ -1101,7 +1104,7 @@ const DEALS = [
   {
     id:"riverside", name:"Riverside Apartments Acquisition", observed:"name+location+amount",
     amt:4.5, property:"Multifamily", city:"Austin", state:"TX", zip:"78701",
-    financing:"Agency (Fannie Mae)", ltv:70, status:"Lender/Investor Outreach",
+    financing:"Agency (Fannie Mae)", ltv:70, status:"Outreach",
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     /* Loan amount and location are the shipped request's own (Austin, Texas 78701,
        $4,500,000, /loans 28 Aug). Everything below is sample, re-scaled to that
@@ -1122,7 +1125,7 @@ const DEALS = [
   {
     id:"midtown", name:"Midtown Retail Permanent Debt", observed:"all",
     amt:3.1, property:"Retail-Multi Tenant", city:"Dallas", state:"TX", zip:"75201",
-    financing:"Agency (Fannie Mae)", ltv:65, status:"Secure Term Sheet / Application",
+    financing:"Agency (Fannie Mae)", ltv:65, status:"Quoting",
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:88.0, built:2004, balance:2.35,
     summary:"Permanent debt to retire a maturing bridge facility on a nine-tenant neighbourhood centre. Anchor lease renewed through 2033; the borrower is rate-sensitive and will trade proceeds for term.",
@@ -1134,7 +1137,7 @@ const DEALS = [
     amt:6.4, property:"Industrial", city:"Atlanta", state:"GA", zip:"30303",
     /* Financing type is the shipped request's own — Agency (Fannie Mae) on an
        industrial refinance, which is what /loans shows [28 Aug]. */
-    financing:"Agency (Fannie Mae)", ltv:60, status:"Present Quotes to Client",
+    financing:"Agency (Fannie Mae)", ltv:60, status:"Quoting",
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:100, built:1998, balance:4.1,
     summary:"Cash-out refinance on a fully leased 140,000 sq ft last-mile distribution building. Single tenant, seven years remaining, annual escalations of 3%.",
@@ -1147,7 +1150,7 @@ const DEALS = [
     /* Type of Financing is optional on the request form and this request left it
        unset — so the empty value is the product's, not a gap in our data. It is the
        only deal that carries it, and it is what makes the empty state visible. */
-    financing:"", ltv:68, status:"Engage Lender/Investor",
+    financing:"", ltv:68, status:"Processing",
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     units:132, occupancy:71.2, built:2009, price:11.0,
     summary:"Bridge facility to acquire and reposition a 132-key select-service hotel two blocks from the convention centre. Eighteen-month business plan, PIP budgeted at $2.1M, exit to agency or CMBS on stabilisation.",
@@ -1159,7 +1162,7 @@ const DEALS = [
   {
     id:"lakeline", name:"Lakeline Self-Storage Refinance", observed:false,
     amt:4.6, property:"Self-Storage", city:"Orlando", state:"FL", zip:"32803",
-    financing:"Balance Sheet Debt", ltv:65, status:"Screening, Sizing & Packaging",
+    financing:"Balance Sheet Debt", ltv:65, status:"Screening",
     created:"29 Jul", updated:"11 Aug", txType:"Refinance",
     units:610, occupancy:88.4, built:2017, balance:3.7,
     summary:"Rate-and-term refinance of a 610-unit climate-controlled self-storage facility, stabilised at 88% for six consecutive quarters. Existing bank loan matures in November.",
@@ -1169,7 +1172,7 @@ const DEALS = [
   {
     id:"crescent", name:"Crescent Senior Living Acquisition", observed:false,
     amt:9.75, property:"Senior Housing", city:"Phoenix", state:"AZ", zip:"85012",
-    financing:"Agency (Fannie Mae)", ltv:72, status:"Review Loan Request Package",
+    financing:"Agency (Fannie Mae)", ltv:72, status:"Screening",
     created:"2 Aug", updated:"9 Aug", txType:"Acquisition",
     units:96, occupancy:91.0, built:2012, price:13.5,
     summary:"Acquisition of a 96-unit independent-living community with an in-place operator staying on under a new management agreement. Seeking agency execution with a 35-year amortisation.",
@@ -1179,7 +1182,7 @@ const DEALS = [
   {
     id:"pearl", name:"Pearl District Office Refinance", observed:false,
     amt:7.2, property:"Office-Multi Tenant", city:"New York", state:"NY", zip:"10013",
-    financing:"Balance Sheet Debt", ltv:58, status:"Lead | Prospective Deal",
+    financing:"Balance Sheet Debt", ltv:58, status:"Leads",
     created:"15 Jul", updated:"6 Aug", txType:"Refinance",
     occupancy:82.5, built:1998, balance:5.9,
     summary:"Cash-neutral refinance of a boutique eight-storey office building, 82% leased across eleven tenants with a 4.2-year WALT. Draft — rent roll still being assembled.",
@@ -1209,7 +1212,7 @@ const DEALS = [
   {
     id:"harborview", name:"Harborview Student Housing Acquisition", observed:false,
     amt:10.5, property:"Student Housing", city:"Austin", state:"TX", zip:"78705",
-    financing:"Agency (Freddie Mac)", ltv:70, status:"Lead | Prospective Deal",
+    financing:"Agency (Freddie Mac)", ltv:70, status:"Leads",
     created:"22 Aug", updated:"25 Aug", txType:"Acquisition",
     units:184, occupancy:96.0, built:2014, price:13.9,
     summary:"Acquisition of a 184-bed purpose-built student housing asset four blocks from campus, pre-leased at 96% for the coming academic year. Intake received; sizing not started.",
@@ -1219,7 +1222,7 @@ const DEALS = [
   {
     id:"magnolia", name:"Magnolia Court Multifamily Refinance", observed:false,
     amt:14.2, property:"Multifamily", city:"Charleston", state:"SC", zip:"29401",
-    financing:"Permanent | Fixed-Rate", ltv:64, status:"Lead | Prospective Deal",
+    financing:"Permanent | Fixed-Rate", ltv:64, status:"Leads",
     created:"24 Aug", updated:"26 Aug", txType:"Refinance",
     units:248, occupancy:94.8, built:2019, balance:11.4,
     summary:"Refinance of a 248-unit Class A community out of a maturing construction facility. Stabilised eighteen months; the sponsor wants a ten-year fixed and is testing whether proceeds support a partial return of capital.",
@@ -1229,7 +1232,7 @@ const DEALS = [
   {
     id:"foundry", name:"Foundry Flex Industrial Purchase", observed:false,
     amt:5.8, property:"Industrial", city:"Charlotte", state:"NC", zip:"28202",
-    financing:"Balance Sheet Debt", ltv:62, status:"Screening, Sizing & Packaging",
+    financing:"Balance Sheet Debt", ltv:62, status:"Screening",
     created:"18 Aug", updated:"24 Aug", txType:"Acquisition",
     units:null, occupancy:87.5, built:2006, price:9.1,
     summary:"Purchase of a 92,000 sq ft multi-tenant flex industrial park, 87% leased across six tenants with a 3.1-year WALT. Package being assembled; two rent-roll gaps outstanding.",
@@ -1821,7 +1824,7 @@ function boardView(rows) {
       const menuOpen = S.cardMenu === d.id;
       /* Change Status drills in: the panel's content is replaced by the status
          list with a back row, one surface throughout — no accordion growth. No
-         type-ahead head: 11 options stays under the scan-vs-type threshold. */
+         type-ahead head: 8 options stays under the scan-vs-type threshold. */
       const menuInner = S.cardSub
         ? `<button type="button" role="menuitem" class="cardmenu__back" data-substatus="${d.id}">
              <span class="car3">&lsaquo;</span>Change Status</button>
@@ -2443,8 +2446,8 @@ function placeCardMenu() {
 
 /* the option list caps at eight rows and scrolls past it — the cap .ms__list
    already sets on the filter popover, so every dropdown on the page stops at
-   the same depth. DEAL_STATUS is eleven, so the status list is the one that
-   actually scrolls. */
+   the same depth. DEAL_STATUS is eight and exactly fits; the longer lists
+   (financing types, states) are the ones that actually scroll. */
 const SEL_ROWS = 8;
 
 /* Radix sizes SelectContent from the trigger — min-w-[--radix-select-trigger-width]
@@ -2628,9 +2631,9 @@ document.addEventListener("click", e => {
       const id = slugFor(d.name);
       DEALS.push({ id, name: d.name.trim(), observed: false, createdNow: true, amt: parseFloat(d.amt),
         property: d.property, city: d.city.trim(), state: d.state, zip: d.zip.trim(), financing: d.financing,
-        status: "Lead | Prospective Deal", created: now, updated: now, txType: d.txType,
+        status: "Leads", created: now, updated: now, txType: d.txType,
         summary: d.summary.trim() || "No overview yet — add one from Edit deal.", docs: { ...d.docs } });
-      S.status[id] = "Lead | Prospective Deal";
+      S.status[id] = "Leads";
       /* land on Matches, not the summary — deal to lender list in one step is
          the whole payoff [Sean 33:42]; the shipped flow detours through a
          staging page first. */
