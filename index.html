@@ -494,13 +494,15 @@
   .ms__grp { padding: 6px 8px 2px; font-size: 12px; font-weight: 500; letter-spacing: .01em;
              color: var(--muted-foreground); text-transform: none; }
   .ms__grp + .ms__item { margin-top: 0; }
-  /* drill anatomy, borrowed from the card menu: gray label back row, muted
-     chevron on group rows, primary tick when a group holds selections */
-  .ms__pop .ms__item.ms__back { color: var(--muted-foreground); font-size: 12px; font-weight: 500; gap: 6px; }
-  /* the &lsaquo; glyph centres on the x-height, so it rides low next to
-     lowercase text — nudge it up to the label's optical centre */
-  .ms__pop .car3 { font-size: 14px; line-height: 1; transform: translateY(-1.5px); }
-  .ms__car2 { color: var(--muted-foreground); font-size: 16px; line-height: 0; }
+  /* accordion anatomy — Janover Pro's property-type picker (28 Aug capture):
+     group rows stay in place and expand beneath themselves, a muted count of
+     child types sits before the chevron, and the chevron rotates when open.
+     Selected leaves still tick the group so a collapsed group with picks
+     isn't mute. */
+  .ms__n { font-size: 11.5px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  .ms__sub { padding-left: 30px; }
+  .ms__car2 { color: var(--muted-foreground); font-size: 16px; line-height: 0; display: inline-block; }
+  .ms__item[aria-expanded="true"] .ms__car2 { transform: rotate(90deg); }
   .ms__tick { color: var(--primary); font-size: 13px; }
   .ms__item.zero { color: var(--brand-border-300); }
   .ms__item.zero .cb { border-color: var(--brand-border-300); box-shadow: none; }
@@ -930,7 +932,7 @@
       <li><b>Active nav tint is <code>--sidebar-accent</code></b> (navy-700), which is what <code>SidebarMenuButton</code> actually binds — not <code>--sidebar-border</code>. Collapse the rail with the control beside the wordmark.</li>
       <li><b>One account menu, not two profile entries.</b> The shipped app splits &ldquo;you&rdquo; across two surfaces: a <code>Broker Profile</code> nav item (<code>/broker-profile</code>, pro brokers only — the <b>public directory listing</b>: headshot, cover photo, submit for admin approval) and the top-bar dropdown (<code>components/global/top-nav.tsx</code>: <code>Profile Settings</code> → <code>/profile</code>, <code>Sign out</code>). Same word, two objects, two places. <span class="note">[💡 rec]</span> consolidated here: the account button at the foot of the rail opens one menu — <b>Public profile</b> · <b>Profile Settings</b> · <b>Sign out</b> — and the nav item is gone. The routes stay separate; only the entry point merges.</li>
       <li><b>The filters are the repo's own MultiSelect</b> — <code>ui/multi-select.tsx</code>, a Popover over a Command list, selected values rendered as <code>Badge variant="outline"</code> inside the trigger with a <code>+N</code> overflow badge and a <code>CheckIcon</code> per row. One deviation: the field's name stays on the trigger, because the repo puts it in a <code>Label</code> above the field and a filter toolbar has nowhere to put one. Counts beside each option are live and computed against the <i>other</i> filter, so a zero means that combination is genuinely empty.</li>
-      <li><b>Property type is the canonical twenty-four, not the eight on this page</b> <span class="note">[repo Aug 14]</span> <span class="note">[T &middot; Figma comment, 21 Aug]</span> &mdash; the filter is pinned to <code>PROPERTY_TYPES</code> in <code>packages/constants/index.ts</code>, so it offers every type the product stores. A row dims only when your <i>other</i> filters empty it — a type no sample deal uses stays regular, because over a canonical vocabulary absence is the normal state, not a signal. Tony&rsquo;s comment asks the filter to &ldquo;match the property types we have for universal searches and lender criteria in all submission forms&rdquo;; two things still disagree with it and neither is ours to settle. His own Zoho submission form carries <b>22</b> of these &mdash; no Build to Sell Single-Family &amp; Condos, no Note Purchase Financing &mdash; and the shipped filter rail on <i>My Deals and Lenders</i> offers <b>four</b> coarse buckets (Multifamily &middot; Commercial &middot; Industrial &middot; Retail) over rows that display the granular values. <code>⚠</code> Which list is the master is question 75. The eight group headings here are the rollup that lets one list serve both shapes &mdash; browse coarse, store granular &mdash; and they are <span class="note">[💡 rec]</span> ours: they are <i>not</i> the seven licensable asset classes, which cover only eighteen of the twenty-four.</li>
+      <li><b>Property type is the canonical twenty-four, not the eight on this page</b> <span class="note">[repo Aug 14]</span> <span class="note">[T &middot; Figma comment, 21 Aug]</span> &mdash; the filter is pinned to <code>PROPERTY_TYPES</code> in <code>packages/constants/index.ts</code>, so it offers every type the product stores. A row dims only when your <i>other</i> filters empty it — a type no sample deal uses stays regular, because over a canonical vocabulary absence is the normal state, not a signal. Tony&rsquo;s comment asks the filter to &ldquo;match the property types we have for universal searches and lender criteria in all submission forms&rdquo;; two things still disagree with it and neither is ours to settle. His own Zoho submission form carries <b>22</b> of these &mdash; no Build to Sell Single-Family &amp; Condos, no Note Purchase Financing &mdash; and the shipped filter rail on <i>My Deals and Lenders</i> offers <b>four</b> coarse buckets (Multifamily &middot; Commercial &middot; Industrial &middot; Retail) over rows that display the granular values. <code>⚠</code> Which list is the master is question 75. The eight group headings here are the rollup that lets one list serve both shapes &mdash; browse coarse, store granular &mdash; and they are <span class="note">[💡 rec]</span> ours: they are <i>not</i> the seven licensable asset classes, which cover only eighteen of the twenty-four. The picker itself follows Janover Pro&rsquo;s own property-type control <span class="note">[comp 28 Aug]</span>: an accordion &mdash; group rows hold their place and expand beneath themselves with a child count and rotating chevron, several open at once, checkboxes on the granular values. Two departures from Janover, both Tanya&rsquo;s (28 Aug): the group row carries its own checkbox &mdash; check to take the whole category, a dash marks a partial selection &mdash; and a one-value group never renders as a group, its value stands at the top level instead (Hotel/Motel, Land), because expanding a row to reveal one row is pure indirection. It replaced a drill (panel-swap behind a back row), which hid the other groups while you browsed one.</li>
       <li><b>Transaction type came off the filter bar, 26 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; it briefly sat there pinned to the three values Tony&rsquo;s Zoho forms fix (Acquisition &middot; Refinance &middot; Construction loan, per his Figma comment #2), then every line of evidence pointed the other way: the matching query never reads <code>transaction_type</code>, six of the eight deal names already carry the word, the shipped My Deals rows don&rsquo;t print it, and Janover&rsquo;s board neither shows nor filters it &mdash; transaction words live in its free-text deal titles. The vocabulary fix his comment asked for survives where the field still shows: the deal detail&rsquo;s Transaction fact says <b>Acquisition</b>, not Purchase. Type of Financing &mdash; the facet his comment&rsquo;s three surfaces actually share &mdash; holds the filter slot instead. <code>⚠</code> Whether transaction type is a concept of its own at all is question 76.</li>
       <li><b>Type of Financing joins the filter bar, the table and the cards</b> <span class="note">[&#128161; rec &middot; comp 26 Aug]</span> &mdash; three independent sources elevate the same facet: the matching query scores on <code>type_of_financing</code> and never reads <code>transaction_type</code>; the shipped My Deals rows print it beside city and state; and Janover Pro&rsquo;s deals board filters by it under the name <i>Execution Types</i> (its bar: Search &middot; Property Types &middot; Execution Types &middot; Footprints), leaving transaction words &mdash; &ldquo;Land Acquisition&rdquo;, &ldquo;Leveraged Buyout&rdquo;, &ldquo;Sale Leaseback&rdquo; &mdash; to free-text deal titles. The filter carries the canonical 17 with the same type-ahead as Property type (17 also crosses the scan-vs-type threshold); the table adds a Type of Financing column and a sortable <b>Updated</b> column &mdash; recency is the one signal the table lacked, and both the live rows and Janover show it; cards get the financing value under the property line. Sample deals carry one financing value each &mdash; except Gulf Coast, which carries none, because the shipped request left the optional field blank; the table prints <i>Not specified</i> and the board card drops the fact rather than showing an empty row. The real column is an array.</li>
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
@@ -1359,7 +1361,7 @@ function savedIdsFor(id) { return new Set(savedFor(id).map(s => s.lender).concat
 const S = {
   route: "deals", dealId: null, tab: "matches",
   view: "list",
-  q: "", sort: "updated", propFilter: new Set(), finFilter: new Set(), locFilter: new Set(), open: null, msDrill: null,
+  q: "", sort: "updated", propFilter: new Set(), finFilter: new Set(), locFilter: new Set(), open: null, msExpand: new Set(),
   status: {},            /* dealId -> status, so a change persists */
   cut: FLOOR, mq: "", picked: new Set(), hidden: {}, savedNow: {},
   cardMenu: null, cardSub: false, selOpen: null,
@@ -1533,7 +1535,9 @@ function applySel(key, v) {
 }
 
 /* checkbox square, same anatomy the board-settings panel draws (ui/checkbox.tsx) */
-const CBOX = on => `<span class="cb${on ? " on" : ""}" aria-hidden="true">${on ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 7"/></svg>` : ""}</span>`;
+const CBOX = on => `<span class="cb${on ? " on" : ""}" aria-hidden="true">${on === "mixed"
+  ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"/></svg>`
+  : on ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 7"/></svg>` : ""}</span>`;
 
 function renderFilters() {
   const html = FILTERS.map(f => {
@@ -1565,32 +1569,34 @@ function renderFilters() {
         <div class="ms__list">
         ${(() => {
           const oq = f.searchable ? (S.oq || "").trim().toLowerCase() : "";
-          const leaf = v => {
+          const leaf = (v, sub) => {
             const n = countFor(f, v), on = set.has(v);
             const dim = !n && baseCountFor(f, v) > 0;
-            return `<button class="ms__item ${on ? "on" : ""} ${dim ? "zero" : ""}" type="button" role="option" aria-selected="${on}" data-msopt="${f.key}" data-msval="${esc(v)}">
+            return `<button class="ms__item ${sub ? "ms__sub" : ""} ${on ? "on" : ""} ${dim ? "zero" : ""}" type="button" role="option" aria-selected="${on}" data-msopt="${f.key}" data-msval="${esc(v)}">
               ${CBOX(on)}
               <span class="nm">${esc(v)}</span>
             </button>`;
           };
-          /* grouped facet drills like the card menu's status list: top level is
-             the groups, one click swaps the panel for that group's options
-             behind a back row — a search query overrides the drill with a flat
+          /* grouped facet is an accordion, Janover Pro's picker exactly
+             [comp 28 Aug]: group rows hold their place and expand beneath
+             themselves — several can be open at once — with a child count and
+             a rotating chevron; a search query still overrides with a flat
              hit list, because a match's group is unknowable before you find it */
           if (f.groups && !oq) {
-            const grps = f.groups();
-            const cur = S.msDrill && grps.find(x => x.g === S.msDrill);
-            if (cur) return `
-              <button class="ms__item ms__back" type="button" data-msback="${f.key}">
-                <span class="car3">&lsaquo;</span>${esc(cur.g)}</button>
-              ${cur.v.map(leaf).join("")}`;
-            return grps.map(grp => {
+            return f.groups().map(grp => {
+              /* a one-value group is pure indirection — its value stands in
+                 for it at the top level (Tanya, 28 Aug) */
+              if (grp.v.length === 1) return leaf(grp.v[0]);
               const nSel = grp.v.filter(v => set.has(v)).length;
-              return `<button class="ms__item" type="button" data-msgrp="${esc(grp.g)}">
+              const all = nSel === grp.v.length;
+              const exp = S.msExpand.has(grp.g);
+              return `<button class="ms__item" type="button" data-msgrp="${esc(grp.g)}" aria-expanded="${exp}">
+                <span data-msgrpcb="${esc(grp.g)}" role="checkbox" aria-checked="${all ? "true" : nSel ? "mixed" : "false"}" aria-label="Select all ${esc(grp.g)}">${CBOX(all || (nSel ? "mixed" : false))}</span>
                 <span class="nm">${esc(grp.g)}</span>
-                ${nSel ? `<span class="ms__tick" aria-hidden="true">&#10003;</span>` : ""}
+                <span class="ms__n">${grp.v.length}</span>
                 <span class="ms__car2" aria-hidden="true">&rsaquo;</span>
-              </button>`;
+              </button>
+              ${exp ? grp.v.map(v => leaf(v, true)).join("") : ""}`;
             }).join("");
           }
           return (f.groups ? f.groups() : [{ g:null, v:f.opts() }]).map(grp => {
@@ -1598,7 +1604,7 @@ function renderFilters() {
             if (!vis.length) return "";
             return `
             ${grp.g ? `<div class="ms__grp" role="presentation">${esc(grp.g)}</div>` : ""}
-            ${vis.map(leaf).join("")}`;
+            ${vis.map(v => leaf(v)).join("")}`;
           }).join("");
         })()}
         </div>
@@ -1677,7 +1683,7 @@ function renderSettings(rows) {
       return `<button type="button" role="menuitemcheckbox" aria-checked="${on}" data-cfield="${f.k}" title="${esc(f.src)}">
         ${CB(on)}${esc(f.label)}</button>`;
     }).join("");
-    /* the board panel drills like the property filter: two section rows up
+    /* the board panel drills like the card menu's status list: two section rows up
        top, one click swaps the panel for that section's checkboxes behind a
        back row. Two sections is light for the pattern, but Card fields was
        invisible below the fold in the stacked layout, and the gesture is
@@ -2572,7 +2578,7 @@ MOBILE.addEventListener("change", e => { if (!e.matches) setNav(false); });
 /* ---------- clicks ---------- */
 document.addEventListener("click", e => {
   const t = e.target;
-  if (S.open && !t.closest(".ms")) { S.open = null; S.oq = ""; S.msDrill = null; render(); }
+  if (S.open && !t.closest(".ms")) { S.open = null; S.oq = ""; S.msExpand = new Set(); render(); }
   if (S.cardMenu && !t.closest(".cardmenu") && !t.closest("[data-kebab]")) { S.cardMenu = null; S.cardSub = false; render(); }
   if (S.selOpen && !t.closest(".sel__pop") && !t.closest("[data-sel]")) { S.selOpen = null; render(); }
   const selopt = t.closest("[data-selopt]");
@@ -2776,15 +2782,36 @@ document.addEventListener("click", e => {
   }
 
   const ms = t.closest("[data-ms]");
-  if (ms) { const k = ms.dataset.ms; S.open = S.open === k ? null : k; S.oq = ""; S.msDrill = null;
+  if (ms) { const k = ms.dataset.ms; S.open = S.open === k ? null : k; S.oq = ""; S.msExpand = new Set();
     render();
     const inp = document.getElementById("oq"); if (inp) inp.focus();
     return; }
 
+  const gcb = t.closest("[data-msgrpcb]");
+  if (gcb) {
+    const f = FILTERS.find(x => x.groups && x.groups().some(gr => gr.g === gcb.dataset.msgrpcb));
+    const grp = f.groups().find(gr => gr.g === gcb.dataset.msgrpcb);
+    const set = f.set(), all = grp.v.every(v => set.has(v));
+    grp.v.forEach(v => all ? set.delete(v) : set.add(v));
+    render(); return;
+  }
   const grpBtn = t.closest("[data-msgrp]");
-  if (grpBtn) { S.msDrill = grpBtn.dataset.msgrp; render(); return; }
-  const msback = t.closest("[data-msback]");
-  if (msback) { S.msDrill = null; render(); return; }
+  if (grpBtn) { const g = grpBtn.dataset.msgrp;
+    const opening = !S.msExpand.has(g);
+    opening ? S.msExpand.add(g) : S.msExpand.delete(g); render();
+    /* an expanded group near the list's bottom edge would drop its options
+       below the fold — scroll the minimum that brings them into view, capped
+       so the group row itself never leaves the top: the cursor stays on the
+       row it just clicked (Tanya, 28 Aug) */
+    if (opening) { const el = document.querySelector(`[data-msgrp="${CSS.escape(g)}"]`);
+      const list = el && el.closest(".ms__list");
+      let last = el; while (last.nextElementSibling && last.nextElementSibling.classList.contains("ms__sub")) last = last.nextElementSibling;
+      if (list && last !== el) {
+        const need = last.getBoundingClientRect().bottom - list.getBoundingClientRect().bottom;
+        const cap = el.getBoundingClientRect().top - list.getBoundingClientRect().top;
+        if (need > 0) list.scrollTop += Math.min(need, Math.max(cap, 0));
+      } }
+    return; }
 
   const opt = t.closest("[data-msopt]");
   if (opt) {
@@ -2923,7 +2950,7 @@ document.addEventListener("keydown", e => {
   }
   if (e.key === "Escape" && S.open) {
     const k = S.open;
-    S.open = null; S.msDrill = null; render();
+    S.open = null; S.msExpand = new Set(); render();
     const back = document.querySelector(`[data-ms="${k}"]`);
     if (back) back.focus();
     return;
