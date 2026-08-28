@@ -2225,7 +2225,6 @@ function renderDeal(d) {
     <div class="head">
       <div>
         <h1>${esc(d.name)}</h1>
-        <p><b class="num">${money(d.amt)}</b> · ${esc(d.property)} · ${esc(locFull(d))}${d.financing ? " · " + esc(d.financing) : ""}${d.ltv ? ` · ${d.ltv}% LTV` : ""}</p>
       </div>
       <div class="head__acts">
         <span class="stat"><span class="d d-${meta.tone}"></span>
