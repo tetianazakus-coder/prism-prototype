@@ -594,7 +594,8 @@
   /* ---- deal summary ---- */
   .sumgrid { display: grid; grid-template-columns: 1fr 320px; gap: 0; }
   .sumgrid > .l { padding: 16px 18px; min-width: 0; }
-  .sumgrid > .r { border-left: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 30%, #fff); }
+  .sumgrid > .r { border-left: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 30%, #fff);
+    border-bottom-right-radius: calc(var(--radius-xl) - 1px); overflow: hidden; }
   .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 18px; margin-bottom: 16px; }
   .fact .k { font-size: 12px; color: var(--muted-foreground); margin-bottom: 2px; }
   .fact .v { font-size: 14px; font-weight: 600; }
@@ -620,7 +621,7 @@
      section header is a toggle. Chevron reuses the drill glyph: right = closed,
      rotated down = open. (A collapsed-state one-line preview was tried and cut
      28 Aug — Tanya.) */
-  .sec { border-top: 1px solid var(--brand-border-200); margin: 0 0 12px; }
+  .sec { margin: 0 0 12px; }
   .sec__hd { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; padding: 9px 0 8px;
     background: none; border: 0; cursor: pointer; text-align: left; }
   .sec__cap { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); white-space: nowrap; }
@@ -632,12 +633,8 @@
   .sec.closed .sec__car, .card.closed .sec__car { transform: none; }
   /* Terms and Business plan are both four-row label/value lists half a column
      wide — side by side they cost one section's height instead of two */
-  .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 26px;
-    border-top: 1px solid var(--brand-border-200); }
-  .duo > .sec:first-child { border-top: 0; }
-  .duo > .sec:last-child { border-top: 0; }
-  @media (max-width: 900px) { .duo { grid-template-columns: 1fr; }
-    .duo > .sec:last-child { border-top: 1px solid var(--brand-border-200); } }
+  .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 26px; padding-top: 4px; }
+  @media (max-width: 900px) { .duo { grid-template-columns: 1fr; } }
   /* chips route to the Documents tab — an empty slot is an entry point, not a
      label (Tanya, 26 Aug) */
   .dz { border: 1.5px dashed var(--brand-border-300); border-radius: var(--radius-md); padding: 22px 16px; text-align: center; color: var(--muted-foreground); margin-bottom: 12px; }
@@ -647,9 +644,7 @@
   .dzfile { display: flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 6px 10px; background: var(--card); }
   .dzfile button { margin-left: auto; border: 0; background: none; cursor: pointer; color: var(--muted-foreground); font-size: 15px; line-height: 1; padding: 2px 4px; }
   .dzfile button:hover { color: var(--foreground); }
-  .ovblk { border-top: 1px solid var(--brand-border-200); padding-top: 14px; margin-bottom: 14px; }
-  .omprev { display: flex; gap: 16px; align-items: flex-start; }
-  .omcover { position: relative; flex-shrink: 0; padding: 0; border: 0; background: none; cursor: zoom-in; }
+  .ovblk { padding-top: 16px; margin-bottom: 18px; }
   .lbov { position: fixed; inset: 0; z-index: 90; background: rgba(15, 23, 42, .82); display: flex; align-items: center; justify-content: center; gap: 18px; padding: 32px; }
   .lbfig { margin: 0; max-width: min(1040px, 86vw); text-align: center; }
   .lbfig img { max-width: 100%; max-height: 78vh; border-radius: var(--radius-md); display: block; margin: 0 auto; }
@@ -657,12 +652,11 @@
   .lbx { position: absolute; top: 16px; right: 20px; border: 0; background: none; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; padding: 4px 8px; }
   .lbnav { border: 0; background: rgba(255, 255, 255, .12); color: #fff; width: 42px; height: 42px; border-radius: 9999px; font-size: 24px; line-height: 1; cursor: pointer; flex: none; }
   .lbnav:hover { background: rgba(255, 255, 255, .24); }
-  .omcover img { display: block; width: 168px; height: 112px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); }
+  .railph { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+  .railph img { display: block; width: 100%; height: 178px; object-fit: cover; }
   .omcount { position: absolute; right: 6px; bottom: 6px; background: rgba(15, 23, 42, .72); color: #fff; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 9999px; pointer-events: none; }
   .photos { margin-bottom: 12px; }
   .photos .hero { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-radius: var(--radius-md); border: 1px solid var(--border); }
-  .upduo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
-  @media (max-width: 900px) { .upduo { grid-template-columns: 1fr; } }
   .phgrid { display: flex; gap: 10px; flex-wrap: wrap; }
   .phth { position: relative; width: 116px; height: 82px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); cursor: grab; }
   .phth.drag { opacity: .45; }
@@ -674,6 +668,7 @@
   .dz.overfiles { border-color: var(--brand-navy-600); }
   .phgrid.overfiles { outline: 1.5px dashed var(--brand-navy-600); outline-offset: 5px; border-radius: 4px; }
   .phadd:hover { border-color: var(--brand-navy-600); color: var(--foreground); }
+  .maplbl { padding: 8px 14px; font-size: 11.5px; color: var(--muted-foreground); border-bottom: 1px solid var(--border); }
   .mapbox { height: 178px; background:
       linear-gradient(90deg, rgba(190,200,220,.55) 1px, transparent 1px) 0 0/34px 34px,
       linear-gradient(rgba(190,200,220,.55) 1px, transparent 1px) 0 0/34px 34px,
@@ -682,7 +677,6 @@
   .mapbox .blk { position: absolute; background: color-mix(in srgb, var(--brand-border-300) 65%, #fff); border-radius: 2px; }
   .mapbox .pin { position: absolute; left: 50%; top: 46%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9999px; background: var(--destructive); box-shadow: 0 0 0 4px color-mix(in srgb, var(--destructive) 22%, transparent); }
   .mapbox .site { position: absolute; left: 47%; top: 55%; width: 46px; height: 34px; background: var(--primary); border-radius: 3px; }
-  .maplbl { padding: 8px 14px; font-size: 11.5px; color: var(--muted-foreground); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .sponsor { padding: 12px 14px; }
   .sponsor .k { font-size: 12px; color: var(--muted-foreground); margin-bottom: 3px; }
   .sponsor b { font-size: 14px; }
@@ -908,7 +902,7 @@
      not OM polish — lender resources are what a broker pays for [Sean 36:09].
      No contact fields (platform has them, [agreed]), no MSA [T], financing
      optional [T], zip required [T]. */
-  .frm { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+  .frm { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; max-width: 1100px; }
   @media (max-width: 900px) { .frm { grid-template-columns: 1fr; } }
   .frm__rail { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 16px; }
   .fld { margin-bottom: 16px; }
@@ -920,9 +914,10 @@
   .fld__sel { display: flex; align-items: center; height: 36px; border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card); box-shadow: var(--shadow-xs); }
   .fld__sel .sel__trg { flex: 1; height: 100%; padding: 4px 12px; justify-content: space-between; cursor: pointer; }
   .sel__val.ph { color: var(--muted-foreground); font-weight: 400; }
-  .fldrow { display: grid; grid-template-columns: 2fr 1.6fr 1fr; gap: 12px; }
+  .fldrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 12px; }
   @media (max-width: 640px) { .fldrow { grid-template-columns: 1fr; } }
-  .amtwrap { display: flex; align-items: center; gap: 6px; height: 36px; max-width: 220px; border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card); box-shadow: var(--shadow-xs); padding: 0 12px; }
+  .amtwrap { display: flex; align-items: center; gap: 6px; height: 36px; max-width: 260px; border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card); box-shadow: var(--shadow-xs); padding: 0 12px; }
+  .fldrow .amtwrap { max-width: none; }
   .amtwrap span { color: var(--muted-foreground); font-size: 14px; }
   .amtwrap input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 14px; }
   .fld.err .inp, .fld.err .fld__sel, .fld.err .amtwrap { border-color: var(--destructive); }
@@ -978,8 +973,9 @@
       <li><b>Upload dropzone joins the Documents card, 28 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; both intakes have one (the live form&rsquo;s &ldquo;Supporting Documents&rdquo; takes PDF/Word/Excel/images, 10&nbsp;MB, 10 files max; Janover&rsquo;s Documents card takes 50&nbsp;MB multiples), so the prototype now shows the pattern: choose-files button, drag and drop, a removable file list. Simulated honestly &mdash; only names are recorded, the files are never read. The checklist chips came off the form the same day &mdash; next to a real picker, mark-without-file read as a duplicate upload control (Tanya, on review). The checklist question &mdash; what lenders expect vs what the broker has &mdash; moves to the deal page, where the packaging phase belongs; the form&rsquo;s soft nudge now simply counts uploads.</li>
       <li><b>Street address and opt-in data points, 28 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the location card gains an optional street address (Zoho asks Property Address* [T], Janover requires it, the live form never asks); the map stays off the form &mdash; even Janover draws it on the OM editor, not at creation. Below location, a Property details card shows Units, Square footage, Year built and Occupancy as four plain fields &mdash; Tanya tried and rejected two opt-in variants (chips, then Janover&rsquo;s add-zone) before settling on always-visible. Units and Year built are hard-required, matching Tony&rsquo;s Zoho form where <i>Number of Units | NRSF</i> and <i>Year Built</i> carry the asterisk [T]; the units requirement accepts square footage instead, preserving the Zoho pair for CRE deals. The deal page already rendered units, occupancy and year built from seed data &mdash; created deals now feed the same facts. A rail tip carries Janover&rsquo;s nudge verbatim in spirit: data points strengthen the deal.</li>
       <li><b>Highlights and Photos land on the deal page, 28 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; Phase 3 opens where Janover keeps both: the packaging surface, not the create form. Highlights sit above the overview prose &mdash; Janover&rsquo;s own copy calls them &ldquo;the first thing lenders read&rdquo; &mdash; as an editable 3&ndash;5 bullet list with an inert <i>Generate with AI</i> affordance; Riverside ships with three sample bullets. Photos take the right rail above the map schematic: hero image and thumbnail strip. Both sections read clean and edit behind a per-section toggle &mdash; a first version put inputs, remove buttons and the AI affordance straight into the view, and Tanya called it &ldquo;too much info and actions&rdquo;; LinkedIn&rsquo;s profile (pencil per section), Julienne&rsquo;s recipe editor and Wix&rsquo;s per-block dialogs all draw the same line, and Janover&rsquo;s own cards carry per-section Edit buttons. Now <i>&#9998; Edit</i> reveals the highlight input, per-bullet remove and the AI button (or per-photo remove, the + tile and Janover&rsquo;s 3+-photos nudge), <i>Done</i> puts the section back to read; edit state resets on navigation. Chosen images render as real client-side thumbnails via object URLs &mdash; displayed, never uploaded &mdash; which is one step more honest than the document dropzone, because a photo&rsquo;s whole value is visible. Reworked 28 Aug late evening [&#128161; rec] to the listing-manager convention Turo, Etsy, Zillow and Airbnb all share: a tile grid with drag-to-reorder, the first tile badged <i>Cover</i> (it feeds the deal page&rsquo;s OM preview card), the add tile inside the grid, and image files droppable straight onto it. The schematic&rsquo;s caption loses its &ldquo;neither is collected today&rdquo; claim: photos now are.</li>
-      <li><b>Option F: the OM preview card, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya&rsquo;s screenshots of Janover&rsquo;s live deal detail settled the layout question: their deal page is a lender-communications workspace, and the package appears only as a compact preview &mdash; one photo thumbnail beside the overview text. Six layouts were mocked (<code>assets/photos-layout-options.html</code>); Tanya picked F, Janover&rsquo;s own answer. The deal summary now shows the overview as that card &mdash; cover image left (168&times;112, first photo; an <i>N photos</i> badge overlays when there are more &mdash; the Airbnb/Zillow card convention; clicking opens a lightbox &mdash; arrows, counter, Esc/backdrop close) when a photo exists, plain prose when not, zero layout jump &mdash; the right rail&rsquo;s photo hero/strip is gone, and the map shows just the street address the form collects beneath it &mdash; a <i>Location</i> caption and a &ldquo;schematic&rdquo; disclaimer were tried and cut (Tanya, same evening): the map is self-labeling, and the address line says everything. Photo management stays in the edit form. Highlights came off the page the same evening (Tanya): Janover&rsquo;s deal page carries no highlights either &mdash; bullets live inside the OM editor, and after F the preview card already tells the story; who writes highlights stays an open client question, so the section waits for a real package surface.</li>
+      <li><b>Option F: the OM preview card, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya&rsquo;s screenshots of Janover&rsquo;s live deal detail settled the layout question: their deal page is a lender-communications workspace, and the package appears only as a compact preview &mdash; one photo thumbnail beside the overview text. Six layouts were mocked (<code>assets/photos-layout-options.html</code>); Tanya picked F, Janover&rsquo;s own answer. The deal summary now shows the overview as that card &mdash; cover image left (168&times;112, first photo; an <i>N photos</i> badge overlays when there are more &mdash; the Airbnb/Zillow card convention; clicking opens a lightbox &mdash; arrows, counter, Esc/backdrop close) when a photo exists, plain prose when not, zero layout jump &mdash; the right rail&rsquo;s photo hero/strip is gone, and the map shows just the street address the form collects beneath it &mdash; a <i>Location</i> caption and a &ldquo;schematic&rdquo; disclaimer were tried and cut (Tanya, same evening): the map is self-labeling, and the address line says everything. Photo management stays in the edit form. Amended 29 Aug: Tanya moved the cover out of the overview card and into the rail above the map — option B's placement with F's lightbox and count badge kept; overview is plain prose again. Then the map became a fallback: Janover's deal page shows no map at all (Tanya's screenshot), so the rail shows the cover photo when one exists, and the map schematic with the street address only when none does &mdash; a placeholder that earns its slot, not a fixture. The address field itself is Zoho \u00a72 Property Address* [T], not the live form, which collects only State/MSA/Postal. Highlights came off the page the same evening (Tanya): Janover&rsquo;s deal page carries no highlights either &mdash; bullets live inside the OM editor, and after F the preview card already tells the story; who writes highlights stays an open client question, so the section waits for a real package surface.</li>
       <li><b>Form-to-summary correspondence audit, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya asked whether every create/edit section reaches the Deal summary; six breaks found and closed. Square footage, target closing date, shovel-ready and refinance property value were collected but never displayed &mdash; now in the size and Transaction facts. Leverage was the reverse, displayed from seeds but never collected &mdash; now computed from loan &divide; purchase price (or property value on a refinance) when no seed value exists. Worst: uploaded documents were invisible &mdash; the chips and the Documents tab read only the four-item intake checklist, so a deal created with three real uploads claimed &ldquo;Nothing was attached&rdquo;; uploads now lead the Documents tab and every document count includes them. The chips row itself then came off the summary (Tanya, minutes later) &mdash; it duplicated the tab, and a row of &ldquo;&middot; none&rdquo; chips is noise; documents live in the tab alone. One logic bug rode along: the units fact was gated on occupancy, so 42 units with occupancy blank rendered nothing.</li>
+      <li><b>Money fields take full dollars, 29 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the five amount inputs (loan, purchase price, property value, balance, project cost) drop the invented type-in-millions <i>M</i> convention for <code>$ 4,500,000</code> with live thousands separators &mdash; what Janover&rsquo;s OM editor, the live form and Zoho all do, and what <code>loan_amount_cents</code> stores. Tanya&rsquo;s catch: no reference product uses the shorthand, and an M-field invites a <code>4500000</code> typo worth $4.5 trillion. State still keeps millions internally; only the input layer converts.</li>
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
       <li><b>The board follows Janover Pro&rsquo;s Current Deals board</b> <span class="note">[comp Aug 19]</span> — flat grey lanes on a horizontal scroller, a tone dot and count pill in each lane head, a dashed &ldquo;No deals&rdquo; placeholder, card anatomy of title &rsaquo; amount &rsaquo; property type &rsaquo; footer (document and saved-lender counts, date), and a kebab menu on the card with <b>Change Status</b> as a submenu — Janover&rsquo;s path for the same edit. Every count on the footer is real: documents from the deal&rsquo;s checklist, saved lenders from the shortlist, the date from <code>updated</code>. Tokens, radii and control metrics stay LenderPrism&rsquo;s. One footer element did not survive the copy: Janover&rsquo;s owner chip (avatar + &ldquo;You&rdquo;) came off, 26 Aug &mdash; <code>loan_requests</code> has a single <code>belongs_to :user</code>, no assignee or team concept, and a broker sees only their own deals, so the chip would read &ldquo;You&rdquo; on every card and carry no information. If team seats ever arrive, it returns as the highest-value element on the card. <span class="note">[&#128161; rec]</span></li>
       <li><b>Both views are held to one height.</b> <span class="note">[&#128161; rec]</span> Toggling list &harr; board changed the card's height by roughly 300px, which reads as a page reload rather than a change of representation &mdash; the control swaps how the same eleven deals are drawn, so nothing below it should move. Both are now pinned to <code>--view-h</code>, measured off the table's own body at eleven rows: the board fills it and each lane scrolls inside itself, the table scrolls under a stuck header if the set ever grows past eleven. Lane heads stay put and the cards move under them, which is what every board holding a real pipeline does. Released below 767, where a table row is a labelled block and no one constant can hold both shapes.</li>
@@ -2082,7 +2078,7 @@ function renderDealForm() {
         <div class="fldrow">
           <div class="fld">
             <label for="f_price">Purchase price</label>
-            <div class="amtwrap"><span>$</span><input id="f_price" data-df="price" inputmode="decimal" autocomplete="off" value="${esc(d.price)}" placeholder="8.0" aria-label="Purchase price in millions"><span>M</span></div>
+            <div class="amtwrap"><span>$</span><input id="f_price" data-df="price" inputmode="numeric" autocomplete="off" value="${usdIn(d.price)}" placeholder="8,000,000" aria-label="Purchase price in dollars"></div>
           </div>
           <div class="fld">
             <label>Under contract?</label>
@@ -2096,17 +2092,17 @@ function renderDealForm() {
         <div class="fldrow">
           <div class="fld">
             <label for="f_pval">Property value</label>
-            <div class="amtwrap"><span>$</span><input id="f_pval" data-df="propValue" inputmode="decimal" autocomplete="off" value="${esc(d.propValue)}" placeholder="10.0" aria-label="Property value in millions"><span>M</span></div>
+            <div class="amtwrap"><span>$</span><input id="f_pval" data-df="propValue" inputmode="numeric" autocomplete="off" value="${usdIn(d.propValue)}" placeholder="10,000,000" aria-label="Property value in dollars"></div>
           </div>
           <div class="fld">
             <label for="f_bal">Outstanding loan balance</label>
-            <div class="amtwrap"><span>$</span><input id="f_bal" data-df="balance" inputmode="decimal" autocomplete="off" value="${esc(d.balance)}" placeholder="6.5" aria-label="Outstanding loan balance in millions"><span>M</span></div>
+            <div class="amtwrap"><span>$</span><input id="f_bal" data-df="balance" inputmode="numeric" autocomplete="off" value="${usdIn(d.balance)}" placeholder="6,500,000" aria-label="Outstanding loan balance in dollars"></div>
           </div>
         </div>` : `
         <div class="fldrow">
           <div class="fld">
             <label for="f_cost">Total project cost</label>
-            <div class="amtwrap"><span>$</span><input id="f_cost" data-df="projCost" inputmode="decimal" autocomplete="off" value="${esc(d.projCost)}" placeholder="15.0" aria-label="Total project cost in millions"><span>M</span></div>
+            <div class="amtwrap"><span>$</span><input id="f_cost" data-df="projCost" inputmode="numeric" autocomplete="off" value="${usdIn(d.projCost)}" placeholder="15,000,000" aria-label="Total project cost in dollars"></div>
           </div>
           <div class="fld">
             <label>Shovel-ready?</label>
@@ -2137,8 +2133,8 @@ function renderDealForm() {
         </div>
         <div class="fld ${miss.amt ? "err" : ""}">
           <label for="f_amt">Loan amount <span class="req">*</span></label>
-          <div class="amtwrap"><span>$</span><input id="f_amt" data-df="amt" inputmode="decimal" autocomplete="off" value="${esc(d.amt)}" placeholder="12.0" aria-label="Loan amount in millions"><span>M</span></div>
-          ${miss.amt ? `<div class="errmsg">Enter the requested amount in millions.</div>` : ""}
+          <div class="amtwrap"><span>$</span><input id="f_amt" data-df="amt" inputmode="numeric" autocomplete="off" value="${usdIn(d.amt)}" placeholder="12,000,000" aria-label="Loan amount in dollars"></div>
+          ${miss.amt ? `<div class="errmsg">Loan amount is required.</div>` : ""}
         </div>
         <div class="fld ${miss.property ? "err" : ""}">
           <label>Property type <span class="req">*</span></label>
@@ -2282,7 +2278,7 @@ function renderDealForm() {
     <div class="frmfoot">
       <a class="btn btn--outline" href="#/${editing ? "deal/" + editing.id : "deals"}">Cancel</a>
       ${editing ? "" : `<button class="btn btn--outline" type="button" id="dealsavemore">Create &amp; add another</button>`}
-      <button class="btn" type="button" id="dealsave">${editing ? "Save changes" : gaps.length && S.formWarned ? "Save anyway" : "Create deal"}</button>
+      <button class="btn" type="button" id="dealsave">${gaps.length && S.formWarned ? "Save anyway" : editing ? "Save changes" : "Create deal"}</button>
     </div>`;
 
   return `
@@ -2295,7 +2291,7 @@ function renderDealForm() {
       <div>
         <h1>${editing ? "Edit deal" : "New deal"}</h1>
         <p>${editing
-          ? "Amend the deal facts — matching recomputes from what you save."
+          ? `Updated ${esc(editing.updated)}`
           : "Only the facts lenders match on. Your contact details come from your profile, so the form never asks for them again."}</p>
       </div>
     </div>
@@ -2305,10 +2301,8 @@ function renderDealForm() {
         ${loc}
         ${dpCard}
         ${ov}
-        <div class="upduo">
         ${docs}
         ${phCard}
-        </div>
         ${foot}
       </div>
       ${rail}
@@ -2331,9 +2325,7 @@ function renderDeal(d) {
     <div class="card${cardClosed ? " closed" : ""}" style="margin-bottom:16px">
       <button type="button" class="card__hd card__hd--tgl" data-sect="card" aria-expanded="${!cardClosed}">
         <span class="ttl">Deal summary</span>
-        <span class="r">${cardClosed
-          ? `${money(d.amt)} · ${all.filter(r => r.pc >= FLOOR).length} matched · ${docsHave} of ${docsAll} documents`
-          : `Created ${esc(d.created)} · updated ${esc(d.updated)}`}</span>
+        <span class="r">Updated ${esc(d.updated)}</span>
         <span class="sec__car" aria-hidden="true">&rsaquo;</span>
       </button>
       ${cardClosed ? "" : `<div class="sumgrid">
@@ -2356,15 +2348,7 @@ function renderDeal(d) {
             })()}
             ${d.built ? `<div class="fact"><div class="k">Year built</div><div class="v num">${d.built}</div></div>` : ""}
           </div>
-          <div class="ovblk">
-          ${d.photos && d.photos.length ? `<div class="omprev">
-            <button type="button" class="omcover" data-lbopen aria-label="View photos">
-              <img src="${d.photos[0].url}" alt="${esc(d.photos[0].name)}">
-              ${d.photos.length > 1 ? `<span class="omcount">${d.photos.length} photos</span>` : ""}
-            </button>
-            <p class="prose" style="margin:0">${esc(d.summary)}</p>
-          </div>` : `<p class="prose">${esc(d.summary)}</p>`}
-          </div>
+          <div class="ovblk"><p class="prose" style="margin:0">${esc(d.summary)}</p></div>
           ${d.terms || d.plan ? `<div class="duo">
             ${d.terms ? fixSect("Terms requested",
               `<dl class="fkv">
@@ -2384,32 +2368,25 @@ function renderDeal(d) {
           ${d.su ? sumSect("su", "Sources &amp; uses", suBlock(d)) : ""}
         </div>
         <div class="r">
-          <div class="mapbox">
+          ${d.photos && d.photos.length ? `<button type="button" class="railph" data-lbopen aria-label="View photos">
+            <img src="${d.photos[0].url}" alt="${esc(d.photos[0].name)}">
+            ${d.photos.length > 1 ? `<span class="omcount">${d.photos.length} photos</span>` : ""}
+          </button>` : `<div class="mapbox">
             <div class="blk" style="left:12%;top:16%;width:56px;height:40px"></div>
             <div class="blk" style="left:64%;top:12%;width:44px;height:52px"></div>
             <div class="blk" style="left:16%;top:66%;width:70px;height:36px"></div>
             <div class="blk" style="left:70%;top:64%;width:52px;height:44px"></div>
             <div class="site"></div><div class="pin"></div>
           </div>
-          <div class="maplbl">${esc(d.addr ? d.addr + " · " + locFull(d) : locFull(d))}</div>
+          <div class="maplbl">${esc(d.addr ? d.addr + " \u00b7 " + locFull(d) : locFull(d))}</div>`}
           ${d.sponsor ? `<div class="sponsor">
             <div class="k">Sponsor</div>
             <b>${esc(d.sponsor.name)}</b>
             <div class="l2">${esc(d.sponsor.lead)} · ${esc(d.sponsor.track)}</div>
             <dl>
-              <dt>Key principals</dt><dd>${d.sponsor.principals}</dd>
               <dt>Combined liquidity</dt><dd>${money(d.sponsor.liquidity)}</dd>
               <dt>Combined net worth</dt><dd>${money(d.sponsor.worth)}</dd>
               <dt>Years experience</dt><dd>${d.sponsor.years}</dd>
-            </dl>
-          </div>` : ""}
-          ${d.mgmt ? `<div class="sponsor" style="border-top:1px solid var(--border)">
-            <div class="k">Property management</div>
-            <b>${esc(d.mgmt.co)}</b>
-            <div class="l2">${esc(d.mgmt.kind)}</div>
-            <dl>
-              <dt>Properties in market</dt><dd>${d.mgmt.props}</dd>
-              <dt>Units in market</dt><dd>${d.mgmt.units.toLocaleString("en-US")}</dd>
             </dl>
           </div>` : ""}
         </div>
@@ -3146,13 +3123,29 @@ document.addEventListener("input", e => {
   if (df) {
     /* no re-render on keystroke — focus would be lost. The two dependent
        surfaces (name counter, match preview) are patched in place instead. */
-    S.draft[df.dataset.df] = t.value;
+    if (MONEY_DF.has(df.dataset.df)) {
+      const digits = t.value.replace(/[^0-9]/g, "");
+      S.draft[df.dataset.df] = digits ? String(Number(digits) / 1e6) : "";
+      const fromEnd = t.value.length - t.selectionStart;
+      t.value = digits ? Number(digits).toLocaleString("en-US") : "";
+      const pos = Math.max(0, t.value.length - fromEnd);
+      t.setSelectionRange(pos, pos);
+    } else {
+      S.draft[df.dataset.df] = t.value;
+    }
     if (df.dataset.df === "name") { const c = document.getElementById("nmleft"); if (c) c.textContent = (80 - t.value.length) + " characters left"; }
     const p = document.getElementById("mpv"); if (p) p.innerHTML = mpvHtml();
     const g = document.getElementById("nmsug"); if (g) g.innerHTML = nmSugHtml();
     return;
   }
 });
+/* money fields display full dollars with separators; draft keeps millions so
+   every consumer (gates, preview, save) is untouched */
+const MONEY_DF = new Set(["amt", "price", "propValue", "balance", "projCost"]);
+function usdIn(millions) {
+  const v = parseFloat(millions);
+  return v > 0 ? Math.round(v * 1e6).toLocaleString("en-US") : "";
+}
 function focusBack(id) {
   const el = document.getElementById(id);
   if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
