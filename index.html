@@ -352,7 +352,7 @@
   .t th .srt { color: var(--brand-border-300); }
   .t th.act .srt { color: var(--foreground); }
   .t td { padding: 10px 12px; vertical-align: middle; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  .t th:first-child, .t td:first-child { width: 99%; white-space: normal; }
+  .tblwrap .t th:first-child, .tblwrap .t td:first-child { width: 99%; white-space: normal; }
   .t tbody tr:last-child td { border-bottom: 0; }
   .t tbody tr:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
   .t tbody tr.sel { background: var(--muted); }
@@ -406,6 +406,10 @@
   .d-muted { background: var(--muted-foreground); }
   .d-red   { background: var(--destructive); }
   .sub { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 3px; }
+  /* An optional field the request left blank. Named, not dashed — a dash reads as
+     a rendering fault, and the broker needs to know the field exists and is empty
+     so they can go and fill it. Same words as the deal summary's Financing fact. */
+  .unset { color: var(--muted-foreground); font-style: italic; }
 
   /* ---- MultiSelect. ui/multi-select.tsx: trigger is min-h-9 w-fit px-3 py-1.5
           rounded-md border-input shadow-xs, and the selected values render as
@@ -907,7 +911,7 @@
       <li><b>The filters are the repo's own MultiSelect</b> — <code>ui/multi-select.tsx</code>, a Popover over a Command list, selected values rendered as <code>Badge variant="outline"</code> inside the trigger with a <code>+N</code> overflow badge and a <code>CheckIcon</code> per row. One deviation: the field's name stays on the trigger, because the repo puts it in a <code>Label</code> above the field and a filter toolbar has nowhere to put one. Counts beside each option are live and computed against the <i>other</i> filter, so a zero means that combination is genuinely empty.</li>
       <li><b>Property type is the canonical twenty-four, not the eight on this page</b> <span class="note">[repo Aug 14]</span> <span class="note">[T &middot; Figma comment, 21 Aug]</span> &mdash; the filter is pinned to <code>PROPERTY_TYPES</code> in <code>packages/constants/index.ts</code>, so it offers every type the product stores. A row dims only when your <i>other</i> filters empty it — a type no sample deal uses stays regular, because over a canonical vocabulary absence is the normal state, not a signal. Tony&rsquo;s comment asks the filter to &ldquo;match the property types we have for universal searches and lender criteria in all submission forms&rdquo;; two things still disagree with it and neither is ours to settle. His own Zoho submission form carries <b>22</b> of these &mdash; no Build to Sell Single-Family &amp; Condos, no Note Purchase Financing &mdash; and the shipped filter rail on <i>My Deals and Lenders</i> offers <b>four</b> coarse buckets (Multifamily &middot; Commercial &middot; Industrial &middot; Retail) over rows that display the granular values. <code>⚠</code> Which list is the master is question 75. The eight group headings here are the rollup that lets one list serve both shapes &mdash; browse coarse, store granular &mdash; and they are <span class="note">[💡 rec]</span> ours: they are <i>not</i> the seven licensable asset classes, which cover only eighteen of the twenty-four.</li>
       <li><b>Transaction type came off the filter bar, 26 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; it briefly sat there pinned to the three values Tony&rsquo;s Zoho forms fix (Acquisition &middot; Refinance &middot; Construction loan, per his Figma comment #2), then every line of evidence pointed the other way: the matching query never reads <code>transaction_type</code>, six of the eight deal names already carry the word, the shipped My Deals rows don&rsquo;t print it, and Janover&rsquo;s board neither shows nor filters it &mdash; transaction words live in its free-text deal titles. The vocabulary fix his comment asked for survives where the field still shows: the deal detail&rsquo;s Transaction fact says <b>Acquisition</b>, not Purchase. Type of Financing &mdash; the facet his comment&rsquo;s three surfaces actually share &mdash; holds the filter slot instead. <code>⚠</code> Whether transaction type is a concept of its own at all is question 76.</li>
-      <li><b>Type of Financing joins the filter bar, the table and the cards</b> <span class="note">[&#128161; rec &middot; comp 26 Aug]</span> &mdash; three independent sources elevate the same facet: the matching query scores on <code>type_of_financing</code> and never reads <code>transaction_type</code>; the shipped My Deals rows print it beside city and state; and Janover Pro&rsquo;s deals board filters by it under the name <i>Execution Types</i> (its bar: Search &middot; Property Types &middot; Execution Types &middot; Footprints), leaving transaction words &mdash; &ldquo;Land Acquisition&rdquo;, &ldquo;Leveraged Buyout&rdquo;, &ldquo;Sale Leaseback&rdquo; &mdash; to free-text deal titles. The filter carries the canonical 17 with the same type-ahead as Property type (17 also crosses the scan-vs-type threshold); the table adds a Type of Financing column and a sortable <b>Updated</b> column &mdash; recency is the one signal the table lacked, and both the live rows and Janover show it; cards get the financing value under the property line. Sample deals carry one financing value each; the real column is an array.</li>
+      <li><b>Type of Financing joins the filter bar, the table and the cards</b> <span class="note">[&#128161; rec &middot; comp 26 Aug]</span> &mdash; three independent sources elevate the same facet: the matching query scores on <code>type_of_financing</code> and never reads <code>transaction_type</code>; the shipped My Deals rows print it beside city and state; and Janover Pro&rsquo;s deals board filters by it under the name <i>Execution Types</i> (its bar: Search &middot; Property Types &middot; Execution Types &middot; Footprints), leaving transaction words &mdash; &ldquo;Land Acquisition&rdquo;, &ldquo;Leveraged Buyout&rdquo;, &ldquo;Sale Leaseback&rdquo; &mdash; to free-text deal titles. The filter carries the canonical 17 with the same type-ahead as Property type (17 also crosses the scan-vs-type threshold); the table adds a Type of Financing column and a sortable <b>Updated</b> column &mdash; recency is the one signal the table lacked, and both the live rows and Janover show it; cards get the financing value under the property line. Sample deals carry one financing value each &mdash; except Gulf Coast, which carries none, because the shipped request left the optional field blank; the table prints <i>Not specified</i> and the board card drops the fact rather than showing an empty row. The real column is an array.</li>
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
       <li><b>The board follows Janover Pro&rsquo;s Current Deals board</b> <span class="note">[comp Aug 19]</span> — flat grey lanes on a horizontal scroller, a tone dot and count pill in each lane head, a dashed &ldquo;No deals&rdquo; placeholder, card anatomy of title &rsaquo; amount &rsaquo; property type &rsaquo; footer (document and saved-lender counts, date), and a kebab menu on the card with <b>Change Status</b> as a submenu — Janover&rsquo;s path for the same edit. Every count on the footer is real: documents from the deal&rsquo;s checklist, saved lenders from the shortlist, the date from <code>updated</code>. Tokens, radii and control metrics stay LenderPrism&rsquo;s. One footer element did not survive the copy: Janover&rsquo;s owner chip (avatar + &ldquo;You&rdquo;) came off, 26 Aug &mdash; <code>loan_requests</code> has a single <code>belongs_to :user</code>, no assignee or team concept, and a broker sees only their own deals, so the chip would read &ldquo;You&rdquo; on every card and carry no information. If team seats ever arrive, it returns as the highest-value element on the card. <span class="note">[&#128161; rec]</span></li>
       <li><b>Both views are held to one height.</b> <span class="note">[&#128161; rec]</span> Toggling list &harr; board changed the card's height by roughly 300px, which reads as a page reload rather than a change of representation &mdash; the control swaps how the same eleven deals are drawn, so nothing below it should move. Both are now pinned to <code>--view-h</code>, measured off the table's own body at eleven rows: the board fills it and each lane scrolls inside itself, the table scrolls under a stuck header if the set ever grows past eleven. Lane heads stay put and the cards move under them, which is what every board holding a real pipeline does. Released below 767, where a table row is a labelled block and no one constant can hold both shapes.</li>
@@ -918,7 +922,7 @@
       <li><b>Fit is computed, never typed.</b> Five weighted criteria — amount 30, property type 25, geography 20, financing 15, appetite 10 — with property and geography as knock-outs and a financing miss capping below strong. The chips beside each score sum to it, so a 100% row shows five ticks. Drag the cut; every count on the page moves with it.</li>
       <li><b>The deal summary is built only from columns that exist.</b> Every field on it is a real <code>loan_requests</code> column — <code>transaction_name</code>, <code>loan_amount_cents</code>, <code>property_type</code>, <code>transaction_summary</code>, <code>unit_quantity</code>, <code>physical_occupancy</code>, <code>sponsor_combined_net_worth</code> and the rest. Nothing here needs a migration; the read layer is the whole gap.</li>
       <li><b>Three controls on a deal row, three destinations</b> — the name opens the deal, the match count opens the scored list, <code>Find Lenders</code> opens the same list with the cut released to 0 so the near-misses are visible, and scrolls straight to the <b>Lenders on this deal</b> section.</li>
-      <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. Amounts, sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other nineteen lenders are sample data, invented so the scoring and filters have something to bite on.</li>
+      <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. A walk of the running product on <b>28 Aug</b> moved three more values across that line: Riverside is <b>Austin, Texas 78701</b> at <b>$4,500,000</b> (not Houston at $12.0M), Northside&rsquo;s financing type is <b>Agency (Fannie Mae)</b> on an industrial refinance, and Gulf Coast&rsquo;s financing type is <b>unset</b> &mdash; the field is optional on the request form and that request left it blank, which is what the <i>Not specified</i> cell in the table now shows. Riverside&rsquo;s unit count, purchase price, NOI and Sources&nbsp;&amp;&nbsp;uses were re-scaled to the observed $4.5M loan so the summary cannot contradict its own header <span class="note">[~]</span>; the numbers are still sample, only their magnitude is now anchored. Sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other nineteen lenders are sample data, invented so the scoring and filters have something to bite on.</li>
     </ul>
   </details>
 </div>
@@ -1072,18 +1076,23 @@ const DEAL_STATUS = [
    =========================================================== */
 const DEALS = [
   {
-    id:"riverside", name:"Riverside Apartments Acquisition", observed:"name",
-    amt:12.0, property:"Multifamily", city:"Houston", state:"TX", zip:"77002",
+    id:"riverside", name:"Riverside Apartments Acquisition", observed:"name+location+amount",
+    amt:4.5, property:"Multifamily", city:"Austin", state:"TX", zip:"78701",
     financing:"Agency (Fannie Mae)", ltv:70, status:"Lender/Investor Outreach",
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
-    units:214, occupancy:93.5, built:2016, price:15.8,
-    su:{ sources:[["Senior Debt",12000000],["Cash contributed by Sponsors & KPs",3500000],["Cash raised via Syndication",1800000]],
-         uses:[["Purchase Price",15800000],["CapEx",850000],["Lender Origination Fees",120000],["Mortgage Broker Fee",150000],["Legal Fees",85000],["Third-Party Reports",45000],["Other Closing Costs",250000]] },
+    /* Loan amount and location are the shipped request's own (Austin, Texas 78701,
+       $4,500,000, /loans 28 Aug). Everything below is sample, re-scaled to that
+       loan so the summary cannot contradict its own header: $4.5M at the stated
+       70% LTV implies a $6.4M basis, and the unit count, NOI and Sources & uses
+       follow from it. [~] */
+    units:42, occupancy:93.5, built:2016, price:6.4,
+    su:{ sources:[["Senior Debt",4500000],["Cash contributed by Sponsors & KPs",1700000],["Cash raised via Syndication",775000]],
+         uses:[["Purchase Price",6400000],["CapEx",320000],["Lender Origination Fees",45000],["Mortgage Broker Fee",56000],["Legal Fees",60000],["Third-Party Reports",34000],["Other Closing Costs",60000]] },
     terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"4-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
-    plan:{ strategy:"Renovate & increase rents", timeline:"24 months to stabilized", noi:1050000, exit:"Long-term hold" },
+    plan:{ strategy:"Renovate & increase rents", timeline:"24 months to stabilized", noi:352000, exit:"Long-term hold" },
     mgmt:{ kind:"Third-Party", co:"Bayou Residential Management", props:12, units:2400 },
-    summary:"Acquisition financing for a 214-unit garden-style multifamily asset, with a light value-add programme across 40% of the units. Assumable agency debt is not in place; the sponsor is seeking a ten-year fixed term with four years interest-only.",
+    summary:"Acquisition financing for a 42-unit garden-style multifamily asset, with a light value-add programme across 40% of the units. Assumable agency debt is not in place; the sponsor is seeking a ten-year fixed term with four years interest-only.",
     sponsor:{ name:"Brightwater Residential", lead:"M. Adeyinka", track:"6 multifamily assets, 3 exits", principals:2, liquidity:4.1, worth:18.2, years:14 },
     docs:{ "Executive summary":false, "Rent roll":false, "Sponsor PFS":false, "T-12 operating statement":false }
   },
@@ -1100,7 +1109,9 @@ const DEALS = [
   {
     id:"northside", name:"Northside Industrial Refinance", observed:"name+location",
     amt:6.4, property:"Industrial", city:"Atlanta", state:"GA", zip:"30303",
-    financing:"Balance Sheet Debt", ltv:60, status:"Present Quotes to Client",
+    /* Financing type is the shipped request's own — Agency (Fannie Mae) on an
+       industrial refinance, which is what /loans shows [28 Aug]. */
+    financing:"Agency (Fannie Mae)", ltv:60, status:"Present Quotes to Client",
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:100, built:1998, balance:4.1,
     summary:"Cash-out refinance on a fully leased 140,000 sq ft last-mile distribution building. Single tenant, seven years remaining, annual escalations of 3%.",
@@ -1110,7 +1121,10 @@ const DEALS = [
   {
     id:"gulf", name:"Gulf Coast Hotel Bridge Loan", observed:"name+location",
     amt:8.25, property:"Hotel/Motel", city:"Tampa", state:"FL", zip:"33602",
-    financing:"Bridge / Short-Term Debt (<3 Yrs)", ltv:68, status:"Engage Lender/Investor",
+    /* Type of Financing is optional on the request form and this request left it
+       unset — so the empty value is the product's, not a gap in our data. It is the
+       only deal that carries it, and it is what makes the empty state visible. */
+    financing:"", ltv:68, status:"Engage Lender/Investor",
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     units:132, occupancy:71.2, built:2009, price:11.0,
     summary:"Bridge facility to acquire and reposition a 132-key select-service hotel two blocks from the convention centre. Eighteen-month business plan, PIP budgeted at $2.1M, exit to agency or CMBS on stabilisation.",
@@ -1742,7 +1756,7 @@ function listView(rows) {
       <td class="nm-cell"><a href="#/deal/${d.id}"><b>${esc(d.name)}</b><span>${esc(d.property)}</span></a></td>
       ${S.cols.amt ? `<td class="num" data-l="Amount" style="font-weight:600">${money(d.amt)}</td>` : ""}
       ${S.cols.loc ? `<td data-l="State">${esc(STATE_NAME[d.state] || d.state)}</td>` : ""}
-      ${S.cols.fin ? `<td data-l="Financing">${esc(d.financing)}</td>` : ""}
+      ${S.cols.fin ? `<td data-l="Financing">${d.financing ? esc(d.financing) : `<span class="unset" title="Type of Financing is optional and was left blank on this request">Not specified</span>`}</td>` : ""}
       ${S.cols.matches ? `<td data-l="Matches"><a class="cnt-link" href="#/deal/${d.id}/matches">${n}</a>${sv ? `<span class="sub">${sv} saved</span>` : ""}</td>` : ""}
       ${S.cols.status ? `<td data-l="Status">
         <span class="stat"><span class="d d-${meta.tone}"></span>
@@ -1811,7 +1825,7 @@ function boardView(rows) {
           <span class="k" role="img" title="State" aria-label="State">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
           </span><span class="v">${esc(STATE_NAME[d.state] || d.state)}</span>` : ""}
-          ${S.cardFields.fin ? `<span class="k" role="img" title="Financing" aria-label="Financing">
+          ${S.cardFields.fin && d.financing ? `<span class="k" role="img" title="Financing" aria-label="Financing">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/></svg>
           </span><span class="v">${esc(d.financing)}</span>` : ""}
         </div>` : ""}
@@ -2295,7 +2309,7 @@ function matchesTab(d, all, counts) {
           <span class="c ${r.c.amount ? "y" : "n"}">${r.c.amount ? "✓" : "✗"} ${money(d.amt)} in ${money(l.lo)}–${money(l.hi)}</span>
           <span class="c ${r.c.property ? "y" : "n"}">${r.c.property ? "✓" : "✗"} ${esc(d.property)}</span>
           <span class="c ${r.c.geography ? "y" : "n"}">${r.c.geography ? "✓" : "✗"} lends in ${esc(d.state)}</span>
-          <span class="c ${r.c.financing ? "y" : "n"}">${r.c.financing ? "✓" : "✗"} ${esc(d.financing.split(" (")[0])}</span>
+          <span class="c ${r.c.financing ? "y" : "n"}">${r.c.financing ? "✓" : "✗"} ${d.financing ? esc(d.financing.split(" (")[0]) : "no financing type set"}</span>
           <span class="c ${r.c.appetite ? "y" : "n"}">${r.c.appetite ? "✓" : "✗"} recent appetite</span>
         </div>
       </td>
