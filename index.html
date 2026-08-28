@@ -104,13 +104,13 @@
 
   /* ============ prototype chrome — deliberately not the product ============ */
   .proto { background: #131a26; color: #d5dbe4; padding: 10px 18px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.6; }
-  .proto__row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; max-width: 1440px; margin: 0 auto; }
+  .proto__row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   .proto b { color: #fff; letter-spacing: 0.06em; text-transform: uppercase; font-size: 10.5px; }
   .proto .dot { width: 6px; height: 6px; border-radius: 50%; background: #6ea8dc; flex: none; }
   .proto span.note { color: #98a3b3; }
   .proto button { background: transparent; border: 1px solid #3c4657; color: #d5dbe4; border-radius: var(--radius-sm); padding: 3px 9px; font-family: var(--font-mono); font-size: 11px; cursor: pointer; }
   .proto button:hover { background: #232c3a; }
-  .proto details { max-width: 1440px; margin: 8px auto 0; }
+  .proto details { max-width: 1100px; margin: 8px 0 0; }
   .proto summary { cursor: pointer; color: #98a3b3; }
   .proto details ul { margin: 7px 0 0; padding-left: 18px; color: #98a3b3; }
   .proto details li { margin-bottom: 3px; }
@@ -120,7 +120,7 @@
      body at eleven rows. Ours, like the rest of the responsive layer. [~] */
   :root { --view-h: 640px; }
 
-  .frame { padding: 18px; max-width: 1440px; margin: 0 auto; }
+  .frame { padding: 18px; }
   .scroll { overflow-x: auto; }
 
   /* ============ shell ============ */
@@ -351,7 +351,8 @@
   .t th.sortable:hover { color: var(--foreground); }
   .t th .srt { color: var(--brand-border-300); }
   .t th.act .srt { color: var(--foreground); }
-  .t td { padding: 10px 12px; vertical-align: middle; border-bottom: 1px solid var(--border); }
+  .t td { padding: 10px 12px; vertical-align: middle; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .t th:first-child, .t td:first-child { width: 99%; white-space: normal; }
   .t tbody tr:last-child td { border-bottom: 0; }
   .t tbody tr:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
   .t tbody tr.sel { background: var(--muted); }
@@ -793,7 +794,7 @@
     .tscroll { overflow-x: visible; }
     table.t { min-width: 0; display: block; }
     .t thead { display: none; }
-    .t tbody, .t tr, .t td { display: block; width: auto; }
+    .t tbody, .t tr, .t td { display: block; width: auto; white-space: normal; }
     .t tr { padding: 12px 12px 10px; border-bottom: 1px solid var(--border); }
     .t tbody tr:last-child { border-bottom: 0; }
     .t td { border-bottom: 0; padding: 3px 0;
