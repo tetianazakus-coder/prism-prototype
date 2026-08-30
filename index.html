@@ -290,17 +290,16 @@
   .chk input:checked + .bx { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
   .chk input:focus-visible + .bx { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent); }
 
-  /* ---- Tabs. ui/tabs.tsx is a pill group; the deal page uses an underline set
-          because the tabs switch datasets rather than filter one ---- */
-  .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-  .tabs button { background: none; border: 0; padding: 0 2px 10px; font-size: 14px; font-weight: 500; color: var(--muted-foreground); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; cursor: pointer; }
-  .tabs button.on { color: var(--foreground); font-weight: 600; border-bottom-color: var(--primary); }
-  .tabs .ct { color: var(--muted-foreground); font-weight: 400; }
-
-  /* segmented control — the List / Board switch */
+  /* segmented control — the List / Board switch, the Deal summary tabs and the
+     lenders tabs. The lenders card carried an underline tab set until 30 Aug;
+     the reasoning was that ui/tabs.tsx is a pill group but these tabs switch
+     datasets rather than filter one. Tanya folded it into the pill anyway: two
+     tab sets on the same page in two anatomies read as two mechanisms, and the
+     deal page shows both within one scroll. */
   .seg { display: inline-flex; background: var(--muted); border-radius: var(--radius-md); padding: 3px; gap: 3px; }
   .seg button { height: 28px; padding: 0 12px; border: 0; background: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; color: var(--muted-foreground); cursor: pointer; }
   .seg button.on { background: var(--card); color: var(--foreground); box-shadow: var(--shadow-xs); }
+  .seg .ct { color: var(--muted-foreground); font-weight: 400; margin-left: 5px; }
   .seg--icon button { width: 30px; padding: 0; display: grid; place-items: center; }
   .setwrap { position: relative; }
   #setbtn { display: inline-flex; align-items: center; gap: 6px; }
@@ -592,11 +591,10 @@
     border: 1px dashed var(--brand-border-300); border-radius: var(--radius-md); }
 
   /* ---- deal summary ---- */
-  .sumgrid { display: grid; grid-template-columns: 1fr 320px; gap: 0; }
+  .sumgrid { display: grid; grid-template-columns: 320px 1fr; gap: 0; }
   .sumgrid > .l { padding: 16px 18px; min-width: 0; }
-  .sumgrid > .r { border-left: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 30%, #fff);
-    border-bottom-right-radius: calc(var(--radius-xl) - 1px); overflow: hidden; }
-  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 18px; margin-bottom: 16px; }
+  .sumgrid > .r { display: flex; flex-direction: column; padding: 16px; }
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 18px; margin-bottom: 14px; }
   .fact .k { font-size: 12px; color: var(--muted-foreground); margin-bottom: 2px; }
   .fact .v { font-size: 14px; font-weight: 600; }
   .fact .v.reg { font-weight: 500; }
@@ -627,6 +625,19 @@
   .sec__cap { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); white-space: nowrap; }
   button.sec__hd:hover .sec__cap { color: var(--foreground); }
   .sec__hd--fix { cursor: default; }
+  .sec__edit { margin-left: auto; border: 0; background: none; color: var(--muted-foreground);
+    font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; cursor: pointer; padding: 2px 4px; }
+  .sec__edit:hover { color: var(--foreground); }
+  .sedit label { display: block; font-size: 11.5px; color: var(--muted-foreground); margin: 10px 0 4px; }
+  .sedit input, .sedit select { width: 100%; height: 32px; padding: 0 9px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--card); font: inherit; font-size: 13px; color: var(--foreground); }
+  .chkgrid { display: grid; gap: 5px; }
+  .chkrow { display: flex; align-items: center; gap: 7px; font-size: 12.5px; cursor: pointer; }
+  .surow { display: flex; gap: 6px; margin-bottom: 6px; }
+  .surow input { height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font: inherit; font-size: 12.5px; min-width: 0; background: var(--card); color: var(--foreground); }
+  .surow input[data-suk] { flex: 1; }
+  .surow input[data-suv] { width: 110px; text-align: right; }
   .sec__car { margin-left: -4px; margin-top: -3px; flex: none; color: var(--muted-foreground); font-size: 16px; line-height: 1;
     transform: rotate(90deg); transition: transform .12s ease; }
   .sec.closed { margin-bottom: 0; }
@@ -644,7 +655,7 @@
   .dzfile { display: flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 6px 10px; background: var(--card); }
   .dzfile button { margin-left: auto; border: 0; background: none; cursor: pointer; color: var(--muted-foreground); font-size: 15px; line-height: 1; padding: 2px 4px; }
   .dzfile button:hover { color: var(--foreground); }
-  .ovblk { padding-top: 16px; margin-bottom: 18px; }
+  .ovblk { padding-top: 0; margin-bottom: 18px; }
   .lbov { position: fixed; inset: 0; z-index: 90; background: rgba(15, 23, 42, .82); display: flex; align-items: center; justify-content: center; gap: 18px; padding: 32px; }
   .lbfig { margin: 0; max-width: min(1040px, 86vw); text-align: center; }
   .lbfig img { max-width: 100%; max-height: 78vh; border-radius: var(--radius-md); display: block; margin: 0 auto; }
@@ -652,8 +663,8 @@
   .lbx { position: absolute; top: 16px; right: 20px; border: 0; background: none; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; padding: 4px 8px; }
   .lbnav { border: 0; background: rgba(255, 255, 255, .12); color: #fff; width: 42px; height: 42px; border-radius: 9999px; font-size: 24px; line-height: 1; cursor: pointer; flex: none; }
   .lbnav:hover { background: rgba(255, 255, 255, .24); }
-  .railph { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
-  .railph img { display: block; width: 100%; height: 178px; object-fit: cover; }
+  .railph { position: relative; display: block; width: 100%; aspect-ratio: 16 / 10; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: var(--radius-md); overflow: hidden; }
+  .railph img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .omcount { position: absolute; right: 6px; bottom: 6px; background: rgba(15, 23, 42, .72); color: #fff; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 9999px; pointer-events: none; }
   .photos { margin-bottom: 12px; }
   .photos .hero { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-radius: var(--radius-md); border: 1px solid var(--border); }
@@ -668,8 +679,8 @@
   .dz.overfiles { border-color: var(--brand-navy-600); }
   .phgrid.overfiles { outline: 1.5px dashed var(--brand-navy-600); outline-offset: 5px; border-radius: 4px; }
   .phadd:hover { border-color: var(--brand-navy-600); color: var(--foreground); }
-  .maplbl { padding: 8px 14px; font-size: 11.5px; color: var(--muted-foreground); border-bottom: 1px solid var(--border); }
-  .mapbox { height: 178px; background:
+  .maplbl { padding: 8px 2px 0; font-size: 11.5px; color: var(--muted-foreground); }
+  .mapbox { aspect-ratio: 16 / 10; border-radius: var(--radius-md); border: 1px solid var(--border); overflow: hidden; background:
       linear-gradient(90deg, rgba(190,200,220,.55) 1px, transparent 1px) 0 0/34px 34px,
       linear-gradient(rgba(190,200,220,.55) 1px, transparent 1px) 0 0/34px 34px,
       color-mix(in srgb, var(--muted) 55%, #fff);
@@ -677,16 +688,13 @@
   .mapbox .blk { position: absolute; background: color-mix(in srgb, var(--brand-border-300) 65%, #fff); border-radius: 2px; }
   .mapbox .pin { position: absolute; left: 50%; top: 46%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9999px; background: var(--destructive); box-shadow: 0 0 0 4px color-mix(in srgb, var(--destructive) 22%, transparent); }
   .mapbox .site { position: absolute; left: 47%; top: 55%; width: 46px; height: 34px; background: var(--primary); border-radius: 3px; }
-  .sponsor { padding: 12px 14px; }
-  .sponsor .k { font-size: 12px; color: var(--muted-foreground); margin-bottom: 3px; }
-  .sponsor b { font-size: 14px; }
-  .sponsor .l2 { font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
-  .sponsor dl { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; margin: 10px 0 0; font-size: 12.5px; }
-  .sponsor dt { color: var(--muted-foreground); }
-  .sponsor dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 500; text-align: right; }
 
   /* ---- match distribution ---- */
   .dist { display: flex; align-items: center; gap: 0; padding: 12px 18px; border-bottom: 1px solid var(--border); }
+  /* the seg wrapper owns the gap under the lenders tabs, so whichever tab body
+     follows sits the same distance down — .dist would otherwise stack its own
+     12px on top and the Matches tab would breathe twice as wide as Saved. */
+  .card__ct + .dist { padding-top: 0; }
   .dist .lede { flex: 1; min-width: 0; }
   .dist .lede b { font-size: 14px; }
   .dist .lede span { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
@@ -778,7 +786,28 @@
   /* a horizontal scroller for the tables that are not inside .tblwrap
      (matches, saved) — same job, no border or radius of its own */
   .tscroll { overflow-x: auto; }
-  .docgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .docrow { display: flex; align-items: center; gap: 10px; padding: 9px 11px; min-height: 44px;
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    margin-bottom: 7px; background: var(--card); font-size: 13.5px; }
+  .docrow__tick { width: 14px; text-align: center; flex: none; color: var(--color-success); }
+  .docrow--extra .docrow__nm { font-weight: 400; }
+  .docrow__nm { font-weight: 500; flex: none; }
+  .docrow__note { flex: 1; min-width: 0; font-size: 12px; color: var(--muted-foreground);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .docrow__rm { border: 0; background: none; color: var(--muted-foreground);
+    font-size: 15px; line-height: 1; cursor: pointer; padding: 0 2px; }
+  .docrow__rm:hover { color: var(--foreground); }
+  .docempty { display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 26px 0 30px; }
+  .docempty__ic { display: grid; place-items: center; width: 42px; height: 42px;
+    border-radius: var(--radius-md); background: var(--muted); color: var(--muted-foreground);
+    margin-bottom: 12px; }
+  .docempty b { font-size: 14px; }
+  .docempty p { margin: 5px 0 14px; max-width: 430px; font-size: 13px; color: var(--muted-foreground); }
+  .docnote { margin: 12px 0 4px; }
+  .docxtra { margin-top: 0; }
+  .docas { font-size: 12px; padding: 3px 6px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--card); color: var(--foreground); cursor: pointer; }
 
   /* ---- ≤1180: the slab gives way. Tables scroll rather than squeeze,
           which is the failure in the 26 Aug screenshots — every deal name
@@ -791,7 +820,7 @@
        squeeze in the 26 Aug screenshots. Scroll rather than squeeze. */
     table.t { min-width: 1060px; }
     .facts { grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); }
-    .sumgrid { grid-template-columns: 1fr 280px; }
+    .sumgrid { grid-template-columns: 280px 1fr; }
   }
 
   /* ---- ≤900: the two-column summary and the split header stop fitting ---- */
@@ -800,17 +829,13 @@
     .head { flex-direction: column; align-items: stretch; gap: 14px; }
     .head__acts { flex-wrap: wrap; }
     .sumgrid { grid-template-columns: 1fr; }
-    .sumgrid > .r { border-left: 0; border-top: 1px solid var(--border); }
     .toolbar { align-items: stretch; }
     .toolbar .search { max-width: none; flex: 1 1 100%; }
     .toolbar .right { margin-left: 0; }
     .dist { flex-wrap: wrap; gap: 12px 0; }
     .dist .lede { flex: 1 1 100%; }
     .dist .band { padding-left: 0; padding-right: 26px; text-align: left; }
-    .docgrid { grid-template-columns: 1fr; }
     .card__ft { flex-direction: column; align-items: flex-start; gap: 6px; }
-    .tabs { overflow-x: auto; gap: 18px; }
-    .tabs button { flex: none; }
   }
 
   /* ---- ≤767: the repo's own mobile edge. The rail leaves the grid and
@@ -976,6 +1001,8 @@
       <li><b>Option F: the OM preview card, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya&rsquo;s screenshots of Janover&rsquo;s live deal detail settled the layout question: their deal page is a lender-communications workspace, and the package appears only as a compact preview &mdash; one photo thumbnail beside the overview text. Six layouts were mocked (<code>assets/photos-layout-options.html</code>); Tanya picked F, Janover&rsquo;s own answer. The deal summary now shows the overview as that card &mdash; cover image left (168&times;112, first photo; an <i>N photos</i> badge overlays when there are more &mdash; the Airbnb/Zillow card convention; clicking opens a lightbox &mdash; arrows, counter, Esc/backdrop close) when a photo exists, plain prose when not, zero layout jump &mdash; the right rail&rsquo;s photo hero/strip is gone, and the map shows just the street address the form collects beneath it &mdash; a <i>Location</i> caption and a &ldquo;schematic&rdquo; disclaimer were tried and cut (Tanya, same evening): the map is self-labeling, and the address line says everything. Photo management stays in the edit form. Amended 29 Aug: Tanya moved the cover out of the overview card and into the rail above the map — option B's placement with F's lightbox and count badge kept; overview is plain prose again. Then the map became a fallback: Janover's deal page shows no map at all (Tanya's screenshot), so the rail shows the cover photo when one exists, and the map schematic with the street address only when none does &mdash; a placeholder that earns its slot, not a fixture. The address field itself is Zoho \u00a72 Property Address* [T], not the live form, which collects only State/MSA/Postal. Highlights came off the page the same evening (Tanya): Janover&rsquo;s deal page carries no highlights either &mdash; bullets live inside the OM editor, and after F the preview card already tells the story; who writes highlights stays an open client question, so the section waits for a real package surface.</li>
       <li><b>Form-to-summary correspondence audit, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya asked whether every create/edit section reaches the Deal summary; six breaks found and closed. Square footage, target closing date, shovel-ready and refinance property value were collected but never displayed &mdash; now in the size and Transaction facts. Leverage was the reverse, displayed from seeds but never collected &mdash; now computed from loan &divide; purchase price (or property value on a refinance) when no seed value exists. Worst: uploaded documents were invisible &mdash; the chips and the Documents tab read only the four-item intake checklist, so a deal created with three real uploads claimed &ldquo;Nothing was attached&rdquo;; uploads now lead the Documents tab and every document count includes them. The chips row itself then came off the summary (Tanya, minutes later) &mdash; it duplicated the tab, and a row of &ldquo;&middot; none&rdquo; chips is noise; documents live in the tab alone. One logic bug rode along: the units fact was gated on occupancy, so 42 units with occupancy blank rendered nothing.</li>
       <li><b>Money fields take full dollars, 29 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the five amount inputs (loan, purchase price, property value, balance, project cost) drop the invented type-in-millions <i>M</i> convention for <code>$ 4,500,000</code> with live thousands separators &mdash; what Janover&rsquo;s OM editor, the live form and Zoho all do, and what <code>loan_amount_cents</code> stores. Tanya&rsquo;s catch: no reference product uses the shorthand, and an M-field invites a <code>4500000</code> typo worth $4.5 trillion. State still keeps millions internally; only the input layer converts.</li>
+      <li><b>Documents became a checklist of slots, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the Documents tab left the <i>Lenders on this deal</i> card (its tabs mixed lender counts with file counts) for a card of its own: one list where each required document is a named slot &mdash; a lender-voice hint on why it&rsquo;s asked for, filled (filename, date, download) or open (Upload) &mdash; under an <i>N of M provided</i> header. The old two-column split (<i>Attached at intake</i> / <i>Not provided</i>) never linked an upload to the requirement it satisfied, so a raw <code>Screenshot&hellip;.png</code> sat beside an empty &ldquo;Rent roll&rdquo; row it might well have been. Uploads matching no slot now land under <b>Additional documents</b> with a <b>File as&hellip;</b> action that assigns them &mdash; the mapping is metadata only the broker at upload time knows, and every count on the page recomputes when it&rsquo;s made. Slot anatomy from fintech verification flows (Gusto&rsquo;s named dropzones, Airwallex&rsquo;s filled-slot cards, Faire&rsquo;s per-requirement descriptions); the single grouped list with per-row status is Origin&rsquo;s documents page. <i>Not provided</i> as a heading died with the split &mdash; requirements speak as the lender now. Amended within the hour: the checklist first shipped as its own card below the lenders card, and Tanya moved it into the Deal summary as a second tab (<i>Overview</i> | <i>Documents N of M</i>) &mdash; documents describe the deal, so they belong on the deal&rsquo;s card, not floating after the lender workspace; the tab pill carries the provided count. Upload buttons then came off the view (Tanya, same evening) &mdash; the tab shows state, a one-line signpost points at Edit deal, and uploading stays in the form&rsquo;s dropzone. The tabs themselves became the segmented control (Tanya, from Janover Pro&rsquo;s <i>My Deals &amp; Lenders | Bank/CU Prospects</i> pill) &mdash; the prototype&rsquo;s existing <code>.seg</code> component, same anatomy: muted track, white active segment. The count came off the segment label (Tanya) and the zero state became a true empty state &mdash; centred icon, <i>No documents yet</i>, the four expected documents folded into one lender-voice sentence, a single <i>Upload in Edit deal</i> action &mdash; the file-manager convention (Copilot, Grok, ElevenLabs, Dropbox all centre icon + one-liner + explanation + one CTA); the slot checklist appears once at least one document exists. Polish, same evening (Tanya): every row holds one 44px height whether filled or open (the Download button was stretching filled rows), and the signpost text link became the form&rsquo;s own <i>Choose files</i> button anatomy &mdash; an <b>Upload documents</b> outline button, in the checklist footer and the empty state both, linking to Edit deal. Reversed later that evening &mdash; Tanya challenged the detour (&ldquo;is it right pattern to lead into edit view to upload documents?&rdquo;) and it wasn&rsquo;t: documents accrue over the deal&rsquo;s life, and the slot pattern&rsquo;s point is slot = dropzone (Gusto, Airwallex; Janover uploads on the deal editor page too). The tab is now the live upload surface: each open slot&rsquo;s Upload button picks a file straight into that slot, a file dropped on the row files itself there, and the footer / empty-state button takes any documents into the list &mdash; no form round-trip, no save gate. The edit form&rsquo;s dropzone stays for intake-time attachment; both are simulated the same way, names recorded, files never read. Upload vocabulary unified, 30 Aug (Tanya): the form&rsquo;s <i>Choose files / Choose photos</i> became <b>Upload documents / Upload photos</b> &mdash; one outcome-named verb across every surface; <i>Choose</i> named the mechanism and only worked inside a dropzone sentence. The lenders card&rsquo;s own tabs (<i>Matches</i> | <i>Saved lenders</i>) followed the same evening (Tanya) &mdash; they were the last underline tab set left on the page, and two tab anatomies inside one scroll read as two mechanisms rather than one. The counts stay on the segments. The underline set&rsquo;s original reasoning (<code>ui/tabs.tsx</code> is a pill group, but these tabs switch datasets rather than filter one) is kept in the CSS comment where it stood. The open slots themselves came off on 31 Aug (Tanya): the tab lists only documents that exist &mdash; filled rows, then <i>Additional documents</i> &mdash; and the four dashed placeholder rows, their lender-voice hints, the per-slot Upload buttons and drop-onto-slot all went with them. What survives of the slot idea is the mapping: <b>File as&hellip;</b> on an unfiled upload still assigns it to a required document, and the empty state still names the four expected files in one sentence &mdash; expectation lives in prose, not in permanent scaffolding rows.</li>
+      <li><b>Financing became the summary&rsquo;s middle tab, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; Terms requested, Business plan and Sources &amp; uses left the Overview (Tanya: &ldquo;can we put this into separate tab?&rdquo;) for a <b>Financing</b> tab between Overview and Documents: the borrower&rsquo;s ask, the plan behind it and the capital stack are one story &mdash; how the deal gets financed &mdash; while Overview keeps the facts, prose and rail that identify the deal. The segment showed only when a deal carried one of the blocks at first; once the tab became editable it is always there &mdash; <i>+ Add</i> stubs are the way in for created deals. Sources &amp; uses opens expanded now: collapse earned its keep when the block crowded the Overview; in its own tab it is the content &mdash; the collapse chevron came off entirely (Tanya), leaving the same fixed caption Terms requested and Business plan carry. On 30 Aug the tab stopped being display-only (Tanya: &ldquo;add functionality for this&rdquo;): every section &mdash; Terms requested, Business plan, Sources &amp; uses, and the rail&rsquo;s Sponsor block &mdash; carries a per-section &#9998; Edit / Done toggle (the LinkedIn-profile pattern prototyped for Highlights in August), with Zoho &sect;3/&sect;7 vocabularies verbatim as the selects [T], executions as checkboxes, an editable S&amp;U grid (add/remove lines, live-formatted amounts, totals recompute on Done, empty lines hidden from the view) and <i>+ Add</i> stubs where a deal has no section yet &mdash; created deals can finally grow a package. Until now this content had no path into a deal except the one-shot Zoho submission; who authors it in production is Q77 in [[stakeholder-questions]]. On 31 Aug the Sponsor block left the rail for this tab (Tanya asked whether it belongs here; it does): Zoho &sect;6 sits between &sect;3 and &sect;7 in the intake form, lenders underwrite the sponsor exactly like the terms and the stack, and Janover keeps sponsor inside the OM rather than in chrome. It renders as a fourth section &mdash; Terms and Sponsor share the top row, Business plan and Sources &amp; uses follow full-width &mdash; and the rail now carries only workflow: status, photos, the lender list.</li>
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
       <li><b>The board follows Janover Pro&rsquo;s Current Deals board</b> <span class="note">[comp Aug 19]</span> — flat grey lanes on a horizontal scroller, a tone dot and count pill in each lane head, a dashed &ldquo;No deals&rdquo; placeholder, card anatomy of title &rsaquo; amount &rsaquo; property type &rsaquo; footer (document and saved-lender counts, date), and a kebab menu on the card with <b>Change Status</b> as a submenu — Janover&rsquo;s path for the same edit. Every count on the footer is real: documents from the deal&rsquo;s checklist, saved lenders from the shortlist, the date from <code>updated</code>. Tokens, radii and control metrics stay LenderPrism&rsquo;s. One footer element did not survive the copy: Janover&rsquo;s owner chip (avatar + &ldquo;You&rdquo;) came off, 26 Aug &mdash; <code>loan_requests</code> has a single <code>belongs_to :user</code>, no assignee or team concept, and a broker sees only their own deals, so the chip would read &ldquo;You&rdquo; on every card and carry no information. If team seats ever arrive, it returns as the highest-value element on the card. <span class="note">[&#128161; rec]</span></li>
       <li><b>Both views are held to one height.</b> <span class="note">[&#128161; rec]</span> Toggling list &harr; board changed the card's height by roughly 300px, which reads as a page reload rather than a change of representation &mdash; the control swaps how the same eleven deals are drawn, so nothing below it should move. Both are now pinned to <code>--view-h</code>, measured off the table's own body at eleven rows: the board fills it and each lane scrolls inside itself, the table scrolls under a stuck header if the set ever grows past eleven. Lane heads stay put and the cards move under them, which is what every board holding a real pipeline does. Released below 767, where a table row is a labelled block and no one constant can hold both shapes.</li>
@@ -1144,7 +1171,7 @@ const DEAL_STATUS = [
 const DEALS = [
   {
     id:"riverside", name:"Riverside Apartments Acquisition", observed:"name+location+amount",
-    amt:4.5, property:"Multifamily", city:"Austin", state:"TX", zip:"78701",
+    amt:4.5, property:"Multifamily", city:"Austin", state:"TX", zip:"78701", addr:"1804 Riverside Dr",
     financing:"Agency (Fannie Mae)", ltv:70, status:"Outreach",
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     /* Loan amount and location are the shipped request's own (Austin, Texas 78701,
@@ -1165,7 +1192,7 @@ const DEALS = [
   },
   {
     id:"midtown", name:"Midtown Retail Permanent Debt", observed:"all",
-    amt:3.1, property:"Retail-Multi Tenant", city:"Dallas", state:"TX", zip:"75201",
+    amt:3.1, property:"Retail-Multi Tenant", city:"Dallas", state:"TX", zip:"75201", addr:"2310 McKinney Ave",
     financing:"Agency (Fannie Mae)", ltv:65, status:"Quoting",
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:88.0, built:2004, balance:2.35,
@@ -1175,7 +1202,7 @@ const DEALS = [
   },
   {
     id:"northside", name:"Northside Industrial Refinance", observed:"name+location",
-    amt:6.4, property:"Industrial", city:"Atlanta", state:"GA", zip:"30303",
+    amt:6.4, property:"Industrial", city:"Atlanta", state:"GA", zip:"30303", addr:"455 Northside Dr NW",
     /* Financing type is the shipped request's own — Agency (Fannie Mae) on an
        industrial refinance, which is what /loans shows [28 Aug]. */
     financing:"Agency (Fannie Mae)", ltv:60, status:"Quoting",
@@ -1187,7 +1214,7 @@ const DEALS = [
   },
   {
     id:"gulf", name:"Gulf Coast Hotel Bridge Loan", observed:"name+location",
-    amt:8.25, property:"Hotel/Motel", city:"Tampa", state:"FL", zip:"33602",
+    amt:8.25, property:"Hotel/Motel", city:"Tampa", state:"FL", zip:"33602", addr:"915 Bayshore Blvd",
     /* Type of Financing is optional on the request form and this request left it
        unset — so the empty value is the product's, not a gap in our data. It is the
        only deal that carries it, and it is what makes the empty state visible. */
@@ -1202,7 +1229,7 @@ const DEALS = [
      enough rows to filter — no part of them is observed */
   {
     id:"lakeline", name:"Lakeline Self-Storage Refinance", observed:false,
-    amt:4.6, property:"Self-Storage", city:"Orlando", state:"FL", zip:"32803",
+    amt:4.6, property:"Self-Storage", city:"Orlando", state:"FL", zip:"32803", addr:"4120 E Colonial Dr",
     financing:"Balance Sheet Debt", ltv:65, status:"Screening",
     created:"29 Jul", updated:"11 Aug", txType:"Refinance",
     units:610, occupancy:88.4, built:2017, balance:3.7,
@@ -1212,7 +1239,7 @@ const DEALS = [
   },
   {
     id:"crescent", name:"Crescent Senior Living Acquisition", observed:false,
-    amt:9.75, property:"Senior Housing", city:"Phoenix", state:"AZ", zip:"85012",
+    amt:9.75, property:"Senior Housing", city:"Phoenix", state:"AZ", zip:"85012", addr:"3550 N Central Ave",
     financing:"Agency (Fannie Mae)", ltv:72, status:"Screening",
     created:"2 Aug", updated:"9 Aug", txType:"Acquisition",
     units:96, occupancy:91.0, built:2012, price:13.5,
@@ -1222,7 +1249,7 @@ const DEALS = [
   },
   {
     id:"pearl", name:"Pearl District Office Refinance", observed:false,
-    amt:7.2, property:"Office-Multi Tenant", city:"New York", state:"NY", zip:"10013",
+    amt:7.2, property:"Office-Multi Tenant", city:"New York", state:"NY", zip:"10013", addr:"148 Lafayette St",
     financing:"Balance Sheet Debt", ltv:58, status:"Leads",
     created:"15 Jul", updated:"6 Aug", txType:"Refinance",
     occupancy:82.5, built:1998, balance:5.9,
@@ -1232,7 +1259,7 @@ const DEALS = [
   },
   {
     id:"oldtown", name:"Old Town Mixed-Use Bridge", observed:false,
-    amt:5.4, property:"Mixed-Use", city:"San Antonio", state:"TX", zip:"78205",
+    amt:5.4, property:"Mixed-Use", city:"San Antonio", state:"TX", zip:"78205", addr:"310 E Commerce St",
     financing:"Bridge / Short-Term Debt (<3 Yrs)", ltv:68, status:"Dead",
     created:"12 Jul", updated:"28 Jul", txType:"Acquisition",
     units:24, occupancy:64.0, built:1962, price:7.4,
@@ -1252,7 +1279,7 @@ const DEALS = [
      table frame. */
   {
     id:"harborview", name:"Harborview Student Housing Acquisition", observed:false,
-    amt:10.5, property:"Student Housing", city:"Austin", state:"TX", zip:"78705",
+    amt:10.5, property:"Student Housing", city:"Austin", state:"TX", zip:"78705", addr:"2222 Rio Grande St",
     financing:"Agency (Freddie Mac)", ltv:70, status:"Leads",
     created:"22 Aug", updated:"25 Aug", txType:"Acquisition",
     units:184, occupancy:96.0, built:2014, price:13.9,
@@ -1262,7 +1289,7 @@ const DEALS = [
   },
   {
     id:"magnolia", name:"Magnolia Court Multifamily Refinance", observed:false,
-    amt:14.2, property:"Multifamily", city:"Charleston", state:"SC", zip:"29401",
+    amt:14.2, property:"Multifamily", city:"Charleston", state:"SC", zip:"29401", addr:"78 Magnolia Rd",
     financing:"Permanent | Fixed-Rate", ltv:64, status:"Leads",
     created:"24 Aug", updated:"26 Aug", txType:"Refinance",
     units:248, occupancy:94.8, built:2019, balance:11.4,
@@ -1272,7 +1299,7 @@ const DEALS = [
   },
   {
     id:"foundry", name:"Foundry Flex Industrial Purchase", observed:false,
-    amt:5.8, property:"Industrial", city:"Charlotte", state:"NC", zip:"28202",
+    amt:5.8, property:"Industrial", city:"Charlotte", state:"NC", zip:"28202", addr:"1129 S Tryon St",
     financing:"Balance Sheet Debt", ltv:62, status:"Screening",
     created:"18 Aug", updated:"24 Aug", txType:"Acquisition",
     units:null, occupancy:87.5, built:2006, price:9.1,
@@ -1410,11 +1437,11 @@ const S = {
   cut: FLOOR, mq: "", picked: new Set(), hidden: {}, savedNow: {},
   cardMenu: null, cardSub: false, selOpen: null,
   settingsOpen: false, setDrill: null, hideLanes: new Set(),
-  sumClosed: new Set(["su"]),
+  sumClosed: new Set(),
   cardFields: { amt: true, meta: true, fin: true, counts: true, when: true },
   cols: { amt: true, loc: true, fin: true, matches: true, status: true, upd: true },
   expanded: new Set(), collapsed: false, undo: null, scrollLenders: false, lb: null, phDrag: null,
-  draft: null, draftFor: null, formTried: false, formWarned: false, justCreated: null
+  draft: null, draftFor: null, formTried: false, formWarned: false, justCreated: null, sumTab: "ov", secEdit: null
 };
 DEALS.forEach(d => S.status[d.id] = d.status);
 /* pristine copy — Reset restores edited deal fields, not just statuses.
@@ -1861,7 +1888,7 @@ function boardView(rows) {
     const inCol = rows.filter(d => statusIn(d) === s.v);
     const cards = inCol.map(d => {
       const nMatch = matchCount(d), nSaved = savedIdsFor(d.id).size;
-      const nDocs = Object.values(d.docs).filter(Boolean).length + (d.files || []).length;
+      const dc = docCounts(d);
       const menuOpen = S.cardMenu === d.id;
       /* Change Status drills in: the panel's content is replaced by the status
          list with a back row, one surface throughout — no accordion growth. No
@@ -1901,8 +1928,8 @@ function boardView(rows) {
           </span><span class="v">${esc(d.financing)}</span>` : ""}
         </div>` : ""}
         <div class="dcard__ft">
-          ${S.cardFields.counts ? `<span class="cnt" title="${nDocs} of ${Object.keys(d.docs).length + (d.files || []).length} documents">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>${nDocs}</span>
+          ${S.cardFields.counts ? `<span class="cnt" title="${dc.have} of ${dc.total} documents">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>${dc.have}</span>
           <span class="cnt" title="${nSaved} saved lenders"><a href="#/deal/${d.id}/saved">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>${nSaved}</a></span>` : ""}
           ${S.cardFields.when ? `<span class="when">${esc(d.updated)}</span>` : ""}
@@ -1932,9 +1959,9 @@ function boardView(rows) {
 const usd = n => "$" + n.toLocaleString("en-US");
 function suBlock(d) {
   const tot = a => a.reduce((acc, r) => acc + r[1], 0);
-  const side = (title, rows) => `<div class="su__col"><div class="su__hd">${esc(title)}</div>
+  const side = (title, allRows) => { const rows = allRows.filter(([k, v]) => k || v); return `<div class="su__col"><div class="su__hd">${esc(title)}</div>
       ${rows.map(([k, n]) => `<div class="su__row"><span>${esc(k)}</span><span class="num">${usd(n)}</span></div>`).join("")}
-      <div class="su__row su__tot"><span>Total ${esc(title.toLowerCase())}</span><span class="num">${usd(tot(rows))}</span></div></div>`;
+      <div class="su__row su__tot"><span>Total ${esc(title.toLowerCase())}</span><span class="num">${usd(tot(rows))}</span></div></div>`; };
   return `<div class="su__grid">${side("Sources", d.su.sources)}${side("Uses", d.su.uses)}</div>`;
 }
 
@@ -1973,6 +2000,18 @@ function fixSect(title, inner) {
    not a rename.
    =========================================================== */
 const DOC_KEYS = ["Executive summary", "Rent roll", "Sponsor PFS", "T-12 operating statement"];
+
+/* Uploads not yet filed against a checklist slot. d.docAssign maps
+   slot key \u2192 filename once the broker files one. */
+function docExtras(d) {
+  const assigned = new Set(Object.values(d.docAssign || {}));
+  return (d.files || []).filter(f => !assigned.has(f));
+}
+function docCounts(d) {
+  const extra = docExtras(d).length;
+  return { have: Object.values(d.docs).filter(Boolean).length + extra,
+    total: Object.keys(d.docs).length + extra };
+}
 
 function initDraft() {
   const d = S.dealId ? dealById(S.dealId) : null;
@@ -2227,7 +2266,7 @@ function renderDealForm() {
       <div class="card__ct">
         <div class="dz" id="dz">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.4 8.3"/><path d="M12 12v9"/><path d="m8 16 4-4 4 4"/></svg>
-          <button class="btn btn--outline btn--sm" type="button" id="dzpick">Choose files</button>
+          <button class="btn btn--outline btn--sm" type="button" id="dzpick">Upload documents</button>
           <div class="hint" style="margin-top:8px">or drag and drop (PDF, Word or Excel).</div>
           <input type="file" id="f_files" multiple hidden>
         </div>
@@ -2250,7 +2289,7 @@ function renderDealForm() {
         <div class="hint" style="margin-top:8px">Drag to reorder \u2014 the first photo is the deal's cover.${d.photos.length < 3 ? " Deals with 3+ photos get more engagement." : ""}</div>` :
         `<div class="dz" id="phdz">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a2 2 0 0 0-2.8 0L6 19"/></svg>
-          <button class="btn btn--outline btn--sm" type="button" id="phpick">Choose photos</button>
+          <button class="btn btn--outline btn--sm" type="button" id="phpick">Upload photos</button>
           <div class="hint" style="margin-top:8px">or drag and drop (JPG or PNG). Deals with 3+ photos get more engagement.</div>
         </div>`}
         <input type="file" id="f_photos" accept="image/*" multiple hidden>
@@ -2317,10 +2356,9 @@ function renderDeal(d) {
   const hidden = (S.hidden[d.id] || new Set()).size;
   const outside = all.length - strong - partial;
   const sv = savedIdsFor(d.id).size;
-  const docsHave = Object.values(d.docs).filter(Boolean).length + (d.files || []).length;
-  const docsAll = Object.keys(d.docs).length + (d.files || []).length;
 
   const cardClosed = S.sumClosed.has("card");
+  const dc = docCounts(d);
   const summary = `
     <div class="card${cardClosed ? " closed" : ""}" style="margin-bottom:16px">
       <button type="button" class="card__hd card__hd--tgl" data-sect="card" aria-expanded="${!cardClosed}">
@@ -2328,7 +2366,26 @@ function renderDeal(d) {
         <span class="r">Updated ${esc(d.updated)}</span>
         <span class="sec__car" aria-hidden="true">&rsaquo;</span>
       </button>
-      ${cardClosed ? "" : `<div class="sumgrid">
+      ${cardClosed ? "" : `<div class="card__ct" style="padding-bottom:0">
+        <div class="seg" role="group" aria-label="Deal summary view">
+          <button type="button" class="${S.sumTab === "ov" ? "on" : ""}" data-sumtab="ov" aria-pressed="${S.sumTab === "ov"}">Overview</button>
+          <button type="button" class="${S.sumTab === "fin" ? "on" : ""}" data-sumtab="fin" aria-pressed="${S.sumTab === "fin"}">Financing</button>
+          <button type="button" class="${S.sumTab === "docs" ? "on" : ""}" data-sumtab="docs" aria-pressed="${S.sumTab === "docs"}">Documents</button>
+        </div>
+      </div>${S.sumTab === "docs" ? docsBody(d) : S.sumTab === "fin" ? finBody(d) : `<div class="sumgrid">
+        <div class="r">
+          ${d.photos && d.photos.length ? `<button type="button" class="railph" data-lbopen aria-label="View photos">
+            <img src="${d.photos[0].url}" alt="${esc(d.photos[0].name)}">
+            ${d.photos.length > 1 ? `<span class="omcount">${d.photos.length} photos</span>` : ""}
+          </button>` : `<div class="mapbox">
+            <div class="blk" style="left:12%;top:16%;width:56px;height:40px"></div>
+            <div class="blk" style="left:64%;top:12%;width:44px;height:52px"></div>
+            <div class="blk" style="left:16%;top:66%;width:70px;height:36px"></div>
+            <div class="blk" style="left:70%;top:64%;width:52px;height:44px"></div>
+            <div class="site"></div><div class="pin"></div>
+          </div>
+          <div class="maplbl">${esc(d.addr ? d.addr + " \u00b7 " + locFull(d) : locFull(d))}</div>`}
+        </div>
         <div class="l">
           <div class="facts">
             <div class="fact"><div class="k">Loan amount</div><div class="v num">${money(d.amt)}</div></div>
@@ -2349,49 +2406,9 @@ function renderDeal(d) {
             ${d.built ? `<div class="fact"><div class="k">Year built</div><div class="v num">${d.built}</div></div>` : ""}
           </div>
           <div class="ovblk"><p class="prose" style="margin:0">${esc(d.summary)}</p></div>
-          ${d.terms || d.plan ? `<div class="duo">
-            ${d.terms ? fixSect("Terms requested",
-              `<dl class="fkv">
-                <dt>Executions to explore</dt><dd>${d.terms.executions.map(e => esc(e)).join(" &middot; ")}</dd>
-                <dt>Loan program</dt><dd>${esc(d.terms.program)} fixed &middot; ${esc(d.terms.io)} interest-only</dd>
-                <dt>Prepayment</dt><dd>${esc(d.terms.prepay)}</dd>
-                <dt>Hold period</dt><dd>${esc(d.terms.hold)}</dd>
-              </dl>`) : ""}
-            ${d.plan ? fixSect("Business plan",
-              `<dl class="fkv">
-                <dt>Strategy</dt><dd>${esc(d.plan.strategy)}</dd>
-                <dt>Timeline</dt><dd>${esc(d.plan.timeline)}</dd>
-                <dt>Projected stabilized NOI</dt><dd class="num">${usd(d.plan.noi)}</dd>
-                <dt>Exit strategy</dt><dd>${esc(d.plan.exit)}</dd>
-              </dl>`) : ""}
-          </div>` : ""}
-          ${d.su ? sumSect("su", "Sources &amp; uses", suBlock(d)) : ""}
-        </div>
-        <div class="r">
-          ${d.photos && d.photos.length ? `<button type="button" class="railph" data-lbopen aria-label="View photos">
-            <img src="${d.photos[0].url}" alt="${esc(d.photos[0].name)}">
-            ${d.photos.length > 1 ? `<span class="omcount">${d.photos.length} photos</span>` : ""}
-          </button>` : `<div class="mapbox">
-            <div class="blk" style="left:12%;top:16%;width:56px;height:40px"></div>
-            <div class="blk" style="left:64%;top:12%;width:44px;height:52px"></div>
-            <div class="blk" style="left:16%;top:66%;width:70px;height:36px"></div>
-            <div class="blk" style="left:70%;top:64%;width:52px;height:44px"></div>
-            <div class="site"></div><div class="pin"></div>
-          </div>
-          <div class="maplbl">${esc(d.addr ? d.addr + " \u00b7 " + locFull(d) : locFull(d))}</div>`}
-          ${d.sponsor ? `<div class="sponsor">
-            <div class="k">Sponsor</div>
-            <b>${esc(d.sponsor.name)}</b>
-            <div class="l2">${esc(d.sponsor.lead)} · ${esc(d.sponsor.track)}</div>
-            <dl>
-              <dt>Combined liquidity</dt><dd>${money(d.sponsor.liquidity)}</dd>
-              <dt>Combined net worth</dt><dd>${money(d.sponsor.worth)}</dd>
-              <dt>Years experience</dt><dd>${d.sponsor.years}</dd>
-            </dl>
-          </div>` : ""}
         </div>
       </div>
-      `}
+      `}`}
     </div>`;
 
   const tabs = `
@@ -2400,15 +2417,13 @@ function renderDeal(d) {
         <h2>Lenders on this deal</h2>
         <span class="r">${all.length} evaluated · ${all.filter(r => r.pc >= FLOOR).length} matched · ${sv} saved</span>
       </div>
-      <div class="card__ct" style="padding-bottom:0">
-        <div class="tabs">
-          <button type="button" class="${S.tab === "matches" ? "on" : ""}" data-tab="matches">Matches <span class="ct">${all.filter(r => r.pc >= FLOOR).length}</span></button>
-          <button type="button" class="${S.tab === "saved" ? "on" : ""}" data-tab="saved">Saved lenders <span class="ct">${sv}</span></button>
-          <button type="button" class="${S.tab === "docs" ? "on" : ""}" data-tab="docs">Documents <span class="ct">${docsHave}</span></button>
+      <div class="card__ct">
+        <div class="seg" role="group" aria-label="Lenders view">
+          <button type="button" class="${S.tab === "matches" ? "on" : ""}" data-tab="matches" aria-pressed="${S.tab === "matches"}">Matches <span class="ct">${all.filter(r => r.pc >= FLOOR).length}</span></button>
+          <button type="button" class="${S.tab === "saved" ? "on" : ""}" data-tab="saved" aria-pressed="${S.tab === "saved"}">Saved lenders <span class="ct">${sv}</span></button>
         </div>
       </div>
-      ${S.tab === "matches" ? matchesTab(d, all, { strong, partial, outside, hidden })
-        : S.tab === "saved" ? savedTab(d) : docsTab(d)}
+      ${S.tab === "matches" ? matchesTab(d, all, { strong, partial, outside, hidden }) : savedTab(d)}
     </div>`;
 
   return `
@@ -2561,32 +2576,156 @@ function savedTab(d) {
     </div>`;
 }
 
-function docsTab(d) {
-  const files = (d.files || []).map(f => ({ label: f, note: "uploaded " + d.created }));
-  const have = files.concat(Object.entries(d.docs).filter(([, v]) => v)
-    .map(([k]) => ({ label: k, note: "PDF \u00b7 uploaded " + d.created })));
-  const missing = Object.entries(d.docs).filter(([, v]) => !v);
+/* Zoho \u00a73 Desired Terms and \u00a77 Business Plan vocabularies [T] \u2014
+   verbatim from the multifamily form. */
+const TERM_EXECUTIONS = ["Fannie Mae / Freddie Mac Fixed Rate Loan", "FHA/HUD", "Bridge Loan", "CMBS Loan", "Preferred Equity", "Mezz", "GP/LP Equity", "Construction Loan"];
+const TERM_PROGRAMS = ["5-Yr", "7-Yr", "10-Yr", "12-Yr", "30-Yr", "Floater"];
+const TERM_IOS = ["No IO", "1-Year", "2-Year", "3-Year", "4-Year", "5-Year", "Full-Term IO"];
+const TERM_PREPAYS = ["Okay with yield maintenance", "Okay with defeasance", "Prefer stepdown (5-4-3-2-1%)", "Must have no prepay (fewer competitive options)", "Indifferent"];
+const TERM_HOLDS = ["3 years", "5 years", "7 years", "10 years"];
+const PLAN_STRATEGIES = ["Buy and hold yield play", "Stabilize", "Renovate & increase rents", "Reposition", "Ground-up development"];
+const PLAN_EXITS = ["Sell", "Refinance", "Long-term hold"];
+
+function secHd(title, key) {
+  return `<div class="sec__hd sec__hd--fix"><span class="sec__cap">${title}</span>
+    <button type="button" class="sec__edit" data-secedit="${key}">${S.secEdit === key ? "Done" : "\u270e Edit"}</button></div>`;
+}
+function fixSectE(title, key, inner) {
+  return `<section class="sec">${secHd(title, key)}${inner}</section>`;
+}
+function secAdd(title, key, label) {
+  return `<section class="sec"><div class="sec__hd sec__hd--fix"><span class="sec__cap">${title}</span></div>
+    <button class="btn btn--outline btn--sm" type="button" data-secadd="${key}">${label}</button></section>`;
+}
+function selOpts(list, cur) {
+  const extra = cur && !list.includes(cur) ? `<option selected>${esc(cur)}</option>` : "";
+  return `<option value="">\u2014</option>` + extra +
+    list.map(x => `<option value="${esc(x)}"${x === cur ? " selected" : ""}>${esc(x)}</option>`).join("");
+}
+
+function termsSect(d) {
+  if (!d.terms) return secAdd("Terms requested", "terms", "+ Add terms");
+  if (S.secEdit === "terms") return fixSectE("Terms requested", "terms", `<div class="sedit">
+      <label>Executions to explore</label>
+      <div class="chkgrid">${TERM_EXECUTIONS.map(x => `<label class="chkrow"><input type="checkbox" data-sechk="terms.executions" value="${esc(x)}"${d.terms.executions.includes(x) ? " checked" : ""}>${esc(x)}</label>`).join("")}</div>
+      <label for="se_prog">Loan program</label><select id="se_prog" data-se="terms.program">${selOpts(TERM_PROGRAMS, d.terms.program)}</select>
+      <label for="se_io">Interest-only period</label><select id="se_io" data-se="terms.io">${selOpts(TERM_IOS, d.terms.io)}</select>
+      <label for="se_pp">Prepayment</label><select id="se_pp" data-se="terms.prepay">${selOpts(TERM_PREPAYS, d.terms.prepay)}</select>
+      <label for="se_hold">Hold period</label><select id="se_hold" data-se="terms.hold">${selOpts(TERM_HOLDS, d.terms.hold)}</select>
+    </div>`);
+  return fixSectE("Terms requested", "terms", `<dl class="fkv">
+      <dt>Executions to explore</dt><dd>${d.terms.executions.length ? d.terms.executions.map(e => esc(e)).join(" &middot; ") : "\u2014"}</dd>
+      <dt>Loan program</dt><dd>${d.terms.program ? esc(d.terms.program) + " fixed" : "\u2014"}${d.terms.io ? " &middot; " + esc(d.terms.io) + " interest-only" : ""}</dd>
+      <dt>Prepayment</dt><dd>${esc(d.terms.prepay) || "\u2014"}</dd>
+      <dt>Hold period</dt><dd>${esc(d.terms.hold) || "\u2014"}</dd>
+    </dl>`);
+}
+
+function planSect(d) {
+  if (!d.plan) return secAdd("Business plan", "plan", "+ Add business plan");
+  if (S.secEdit === "plan") return fixSectE("Business plan", "plan", `<div class="sedit">
+      <label for="se_strat">Strategy</label><select id="se_strat" data-se="plan.strategy">${selOpts(PLAN_STRATEGIES, d.plan.strategy)}</select>
+      <label for="se_tl">Timeline to execute</label><input id="se_tl" type="text" value="${esc(d.plan.timeline)}" data-se="plan.timeline" placeholder="24 months to stabilized">
+      <label for="se_noi">Projected stabilized NOI</label><input id="se_noi" inputmode="numeric" value="${d.plan.noi ? Number(d.plan.noi).toLocaleString("en-US") : ""}" data-sed="plan.noi" placeholder="350,000">
+      <label for="se_exit">Exit strategy</label><select id="se_exit" data-se="plan.exit">${selOpts(PLAN_EXITS, d.plan.exit)}</select>
+    </div>`);
+  return fixSectE("Business plan", "plan", `<dl class="fkv">
+      <dt>Strategy</dt><dd>${esc(d.plan.strategy) || "\u2014"}</dd>
+      <dt>Timeline</dt><dd>${esc(d.plan.timeline) || "\u2014"}</dd>
+      <dt>Projected stabilized NOI</dt><dd class="num">${d.plan.noi ? usd(d.plan.noi) : "\u2014"}</dd>
+      <dt>Exit strategy</dt><dd>${esc(d.plan.exit) || "\u2014"}</dd>
+    </dl>`);
+}
+
+function suSect(d) {
+  if (!d.su) return secAdd("Sources &amp; uses", "su", "+ Add sources &amp; uses");
+  if (S.secEdit === "su") {
+    const side = (title, key) => `<div class="su__col"><div class="su__hd">${title}</div>
+      ${d.su[key].map((r, i) => `<div class="surow">
+        <input type="text" value="${esc(r[0])}" data-suk="${key}:${i}" aria-label="${title} line ${i + 1} label" placeholder="Line item">
+        <input inputmode="numeric" value="${r[1] ? Number(r[1]).toLocaleString("en-US") : ""}" data-suv="${key}:${i}" aria-label="${title} line ${i + 1} amount" placeholder="0">
+        <button type="button" class="docrow__rm" data-surm="${key}:${i}" aria-label="Remove line">\u00d7</button>
+      </div>`).join("")}
+      <button class="btn btn--ghost btn--xs" type="button" data-suadd="${key}">+ Add line</button>
+    </div>`;
+    return fixSectE("Sources &amp; uses", "su", `<div class="su__grid">${side("Sources", "sources")}${side("Uses", "uses")}</div>`);
+  }
+  return fixSectE("Sources &amp; uses", "su", suBlock(d));
+}
+
+function finBody(d) {
   return `<div class="card__ct">
-    <div class="docgrid">
-      <div>
-        <div style="font-size:13px;font-weight:600;margin-bottom:8px">Attached at intake (${have.length})</div>
-        ${have.length ? have.map(x => `<div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:7px;background:var(--card)">
-            <span style="color:var(--color-success)">✓</span><span style="flex:1">${esc(x.label)}</span>
-            <span style="font-size:12px;color:var(--muted-foreground)">${esc(x.note)}</span>
-            <button class="btn btn--ghost btn--xs" type="button" data-inert="Download is wired to the existing upload endpoint.">Download</button>
-          </div>`).join("")
-          : `<p style="font-size:13px;color:var(--muted-foreground)">Nothing was attached when this deal was created.</p>`}
+      <div class="duo">
+        ${termsSect(d)}
+        ${sponsorSect(d)}
       </div>
-      <div>
-        <div style="font-size:13px;font-weight:600;margin-bottom:8px">Not provided (${missing.length})</div>
-        ${missing.map(([k]) => `<div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px dashed var(--brand-border-300);border-radius:var(--radius-md);margin-bottom:7px;color:var(--muted-foreground)">
-            <span style="flex:1">${esc(k)}</span>
-            <button class="btn btn--outline btn--xs" type="button" data-inert="Upload uses the intake endpoint that already accepts 10 files at 10MB each.">Upload</button>
-          </div>`).join("")}
+      <div class="duo">
+        ${planSect(d)}
       </div>
-    </div>
-    
+      ${suSect(d)}
   </div>`;
+}
+
+function sponsorSect(d) {
+  if (!d.sponsor) return secAdd("Sponsor", "sponsor", "+ Add sponsor");
+  const sp = d.sponsor;
+  if (S.secEdit === "sponsor") return fixSectE("Sponsor", "sponsor", `<div class="sedit">
+      <label for="sp_nm">Sponsor entity</label><input id="sp_nm" type="text" value="${esc(sp.name)}" data-se="sponsor.name">
+      <label for="sp_ld">Lead principal</label><input id="sp_ld" type="text" value="${esc(sp.lead)}" data-se="sponsor.lead">
+      <label for="sp_tr">Track record</label><input id="sp_tr" type="text" value="${esc(sp.track)}" data-se="sponsor.track" placeholder="6 multifamily assets, 3 exits">
+      <label for="sp_lq">Combined liquidity ($M)</label><input id="sp_lq" type="number" step="0.1" min="0" value="${sp.liquidity ?? ""}" data-sef="sponsor.liquidity">
+      <label for="sp_nw">Combined net worth ($M)</label><input id="sp_nw" type="number" step="0.1" min="0" value="${sp.worth ?? ""}" data-sef="sponsor.worth">
+      <label for="sp_yr">Years experience</label><input id="sp_yr" type="number" min="0" value="${sp.years ?? ""}" data-sef="sponsor.years">
+    </div>`);
+  return fixSectE("Sponsor", "sponsor", `<dl class="fkv">
+      <dt>Sponsor entity</dt><dd>${esc(sp.name) || "\u2014"}</dd>
+      <dt>Lead principal</dt><dd>${esc(sp.lead) || "\u2014"}</dd>
+      <dt>Track record</dt><dd>${esc(sp.track) || "\u2014"}</dd>
+      <dt>Combined liquidity</dt><dd class="num">${sp.liquidity ? money(sp.liquidity) : "\u2014"}</dd>
+      <dt>Combined net worth</dt><dd class="num">${sp.worth ? money(sp.worth) : "\u2014"}</dd>
+      <dt>Years experience</dt><dd class="num">${sp.years ?? "\u2014"}</dd>
+    </dl>`);
+}
+
+function docsBody(d) {
+  const extra = docExtras(d);
+  if (!docCounts(d).have) return `<div class="card__ct">
+    <div class="docempty">
+      <div class="docempty__ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+      <b>No documents yet</b>
+      <p>Lenders will ask for an executive summary, a rent roll, a sponsor PFS and a T-12 operating statement.</p>
+      <button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button>
+    </div>
+    <input type="file" id="docfile" hidden multiple>
+  </div>`;
+  const missingKeys = Object.entries(d.docs).filter(([, v]) => !v).map(([k]) => k);
+  const slots = Object.entries(d.docs).filter(([, v]) => v).map(([k]) => {
+    const file = (d.docAssign || {})[k];
+    return `<div class="docrow">
+          <span class="docrow__tick">\u2713</span>
+          <span class="docrow__nm">${esc(k)}</span>
+          <span class="docrow__note">${esc(file || k + ".pdf")} \u00b7 uploaded ${esc(d.created)}</span>
+          <button class="btn btn--ghost btn--xs" type="button" data-inert="Download is wired to the existing upload endpoint.">Download</button>
+          <button type="button" class="docrow__rm" data-docrm="${esc(k)}" aria-label="Remove ${esc(k)}">\u00d7</button>
+        </div>`;
+  }).join("");
+  return `<div class="card__ct">
+      ${slots}
+      ${extra.length ? `<div class="docxtra">
+        ${extra.map(f => `<div class="docrow docrow--extra">
+          <span class="docrow__nm">${esc(f)}</span>
+          <span class="docrow__note">uploaded ${esc(d.created)}</span>
+          ${missingKeys.length ? `<select class="docas" data-docas="${esc(f)}" aria-label="File ${esc(f)} as a required document">
+            <option value="">File as\u2026</option>
+            ${missingKeys.map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join("")}
+          </select>` : ""}
+          <button class="btn btn--ghost btn--xs" type="button" data-inert="Download is wired to the existing upload endpoint.">Download</button>
+          <button type="button" class="docrow__rm" data-docfrm="${esc(f)}" aria-label="Remove ${esc(f)}">\u00d7</button>
+        </div>`).join("")}
+      </div>` : ""}
+      <div class="docnote"><button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button></div>
+      <input type="file" id="docfile" hidden multiple>
+    </div>`;
 }
 
 /* ===========================================================
@@ -2735,8 +2874,9 @@ function route() {
   const me = h === "/deals/new" ? [null, null] : h.match(/^\/deal\/([a-z0-9-]+)\/edit$/);
   const m = me ? null : h.match(/^\/deal\/([a-z0-9-]+)(?:\/(matches|saved|docs))?/);
   if (me) { S.route = "form"; S.dealId = me[1]; }
-  else if (m) { S.route = "deal"; S.dealId = m[1]; if (m[2]) S.tab = m[2]; }
+  else if (m) { S.route = "deal"; S.dealId = m[1]; if (m[2]) S.tab = m[2] === "docs" ? "matches" : m[2]; }
   else { S.route = "deals"; S.dealId = null; }
+  S.secEdit = null;
   if (S.route === "form") initDraft(); else { S.draft = null; S.draftFor = null; S.justCreated = null; }
   S.lb = null;
   render();
@@ -2806,6 +2946,46 @@ document.addEventListener("click", e => {
   }
   const pht = t.closest("[data-phidx]");
   if (pht) { S.lb = Number(pht.dataset.phidx); render(); return; }
+  const sed = t.closest("[data-secedit]");
+  if (sed) { S.secEdit = S.secEdit === sed.dataset.secedit ? null : sed.dataset.secedit; render(); return; }
+  const sad = t.closest("[data-secadd]");
+  if (sad) {
+    const d = dealById(S.dealId);
+    if (d) {
+      const k = sad.dataset.secadd;
+      if (k === "terms" && !d.terms) d.terms = { executions: [], program: "", io: "", prepay: "", hold: "" };
+      if (k === "plan" && !d.plan) d.plan = { strategy: "", timeline: "", noi: null, exit: "" };
+      if (k === "su" && !d.su) d.su = { sources: [["Senior Debt", 0]], uses: [["Purchase Price", 0]] };
+      if (k === "sponsor" && !d.sponsor) d.sponsor = { name: "", lead: "", track: "", liquidity: null, worth: null, years: null };
+      S.secEdit = k; render();
+    }
+    return;
+  }
+  const srm = t.closest("[data-surm]");
+  if (srm) {
+    const d = dealById(S.dealId);
+    if (d) { const [side, i] = srm.dataset.surm.split(":"); d.su[side].splice(Number(i), 1); render(); }
+    return;
+  }
+  const sua = t.closest("[data-suadd]");
+  if (sua) {
+    const d = dealById(S.dealId);
+    if (d) { d.su[sua.dataset.suadd].push(["", 0]); render(); }
+    return;
+  }
+  if (t.closest("[data-docupall]")) { const fi = document.getElementById("docfile"); if (fi) fi.click(); return; }
+  const drm = t.closest("[data-docrm]");
+  if (drm) {
+    const d = dealById(S.dealId);
+    if (d) { const k = drm.dataset.docrm; if (d.docAssign && d.docAssign[k]) delete d.docAssign[k]; d.docs[k] = false; render(); }
+    return;
+  }
+  const dfr = t.closest("[data-docfrm]");
+  if (dfr) {
+    const d = dealById(S.dealId);
+    if (d) { d.files = (d.files || []).filter(f => f !== dfr.dataset.docfrm); render(); }
+    return;
+  }
   const frm = t.closest("[data-frm]");
   if (frm) { S.draft.files.splice(Number(frm.dataset.frm), 1); render(); return; }
   const seg = t.closest("[data-seg]");
@@ -2862,7 +3042,7 @@ document.addEventListener("click", e => {
       /* land on Matches, not the summary — deal to lender list in one step is
          the whole payoff [Sean 33:42]; the shipped flow detours through a
          staging page first. */
-      S.tab = "matches";
+      S.tab = "matches"; S.sumTab = "ov";
       location.hash = "/deal/" + id + "/matches";
     }
     return;
@@ -3058,8 +3238,10 @@ document.addEventListener("click", e => {
   if (srt) { S.sort = srt.dataset.sort; render(); return; }
 
   const find = t.closest("[data-find]");
-  if (find) { S.cardMenu = null; S.cardSub = false; S.tab = "matches"; S.cut = 0; S.scrollLenders = true; location.hash = "/deal/" + find.dataset.find + "/matches"; return; }
+  if (find) { S.cardMenu = null; S.cardSub = false; S.tab = "matches"; S.sumTab = "ov"; S.cut = 0; S.scrollLenders = true; location.hash = "/deal/" + find.dataset.find + "/matches"; return; }
 
+  const stab = t.closest("[data-sumtab]");
+  if (stab) { S.sumTab = stab.dataset.sumtab; render(); return; }
   const tab = t.closest("[data-tab]");
   if (tab) { S.tab = tab.dataset.tab; render(); return; }
 
@@ -3097,11 +3279,11 @@ function hideLender(dealId, id, quiet) {
   render();
 }
 function hardReset() {
-  S.q = ""; S.sort = "updated"; S.view = "list"; S.tab = "matches";
+  S.q = ""; S.sort = "updated"; S.view = "list"; S.tab = "matches"; S.sumTab = "ov";
   FILTERS.forEach(f => f.set().clear()); S.picked.clear(); S.expanded.clear(); S.open = null; S.oq = "";
   S.cut = FLOOR; S.mq = ""; S.hidden = {}; S.savedNow = {}; S.undo = null;
   S.cardMenu = null; S.cardSub = false; S.selOpen = null; S.lb = null;
-  S.settingsOpen = false; S.setDrill = null; S.hideLanes.clear(); S.sumClosed = new Set(["su"]);
+  S.settingsOpen = false; S.setDrill = null; S.hideLanes.clear(); S.sumClosed = new Set(); S.secEdit = null;
   S.cardFields = { amt: true, meta: true, fin: true, counts: true, when: true };
   S.cols = { amt: true, loc: true, fin: true, matches: true, status: true, upd: true };
   Object.keys(S.status).forEach(k => delete S.status[k]);
@@ -3115,6 +3297,47 @@ function hardReset() {
 /* ---------- inputs ---------- */
 document.addEventListener("input", e => {
   const t = e.target;
+  if (t.dataset && t.dataset.se !== undefined) {
+    const d = dealById(S.dealId);
+    if (d) { const [o, k] = t.dataset.se.split("."); d[o][k] = t.value; }
+    return;
+  }
+  if (t.dataset && t.dataset.sef !== undefined) {
+    const d = dealById(S.dealId);
+    if (d) { const [o, k] = t.dataset.sef.split("."); const v = parseFloat(t.value); d[o][k] = isNaN(v) ? null : v; }
+    return;
+  }
+  if (t.dataset && t.dataset.sed !== undefined) {
+    const d = dealById(S.dealId);
+    if (d) {
+      const [o, k] = t.dataset.sed.split(".");
+      const digits = t.value.replace(/[^0-9]/g, "");
+      d[o][k] = digits ? Number(digits) : null;
+      const fromEnd = t.value.length - t.selectionStart;
+      t.value = digits ? Number(digits).toLocaleString("en-US") : "";
+      const pos = Math.max(0, t.value.length - fromEnd);
+      t.setSelectionRange(pos, pos);
+    }
+    return;
+  }
+  if (t.dataset && t.dataset.suk !== undefined) {
+    const d = dealById(S.dealId);
+    if (d) { const [side, i] = t.dataset.suk.split(":"); d.su[side][Number(i)][0] = t.value; }
+    return;
+  }
+  if (t.dataset && t.dataset.suv !== undefined) {
+    const d = dealById(S.dealId);
+    if (d) {
+      const [side, i] = t.dataset.suv.split(":");
+      const digits = t.value.replace(/[^0-9]/g, "");
+      d.su[side][Number(i)][1] = digits ? Number(digits) : 0;
+      const fromEnd = t.value.length - t.selectionStart;
+      t.value = digits ? Number(digits).toLocaleString("en-US") : "";
+      const pos = Math.max(0, t.value.length - fromEnd);
+      t.setSelectionRange(pos, pos);
+    }
+    return;
+  }
   if (t.id === "q")  { S.q  = t.value; render(); focusBack("q"); return; }
   if (t.id === "mq") { S.mq = t.value; render(); focusBack("mq"); return; }
   if (t.id === "oq") { S.oq = t.value; render(); focusBack("oq"); return; }
@@ -3153,6 +3376,16 @@ function focusBack(id) {
 
 document.addEventListener("change", e => {
   const t = e.target;
+  if (t.id === "docfile") {
+    const d = dealById(S.dealId);
+    if (d && t.files.length) {
+      d.files = d.files || [];
+      const names = [...t.files].map(f => f.name);
+      for (const n of names) if (!d.files.includes(n)) d.files.push(n);
+      render();
+    }
+    return;
+  }
   if (t.id === "f_files") {
     for (const f of t.files) if (!S.draft.files.includes(f.name)) S.draft.files.push(f.name);
     render(); return;
@@ -3169,6 +3402,25 @@ document.addEventListener("change", e => {
     const rows = scored(d).filter(r => !hid.has(r.l.id) && r.pc >= S.cut);
     t.checked ? rows.forEach(r => S.picked.add(r.l.id)) : S.picked.clear();
     render(); return;
+  }
+  const chk = t.closest("[data-sechk]");
+  if (chk) {
+    const d = dealById(S.dealId);
+    if (d) {
+      const [o, k] = chk.dataset.sechk.split(".");
+      const arr = d[o][k], i = arr.indexOf(chk.value);
+      if (chk.checked && i < 0) arr.push(chk.value);
+      if (!chk.checked && i >= 0) arr.splice(i, 1);
+    }
+    return;
+  }
+  const das = t.closest("[data-docas]");
+  if (das) {
+    if (das.value) {
+      const d = dealById(S.dealId);
+      if (d) { d.docAssign = d.docAssign || {}; d.docAssign[das.value] = das.dataset.docas; d.docs[das.value] = true; render(); }
+    }
+    return;
   }
   const pick = t.closest("[data-pick]");
   if (pick) { const id = Number(pick.dataset.pick); t.checked ? S.picked.add(id) : S.picked.delete(id); render(); return; }
@@ -3191,6 +3443,7 @@ document.addEventListener("drop", e => {
   render();
 });
 
+/* deal-page document slots: dropping a file onto an open slot files it there */
 /* photo tiles: drag between tiles reorders the draft; drag files in adds them */
 document.addEventListener("dragstart", e => {
   const ph = e.target.closest && e.target.closest("[data-phidx]");
