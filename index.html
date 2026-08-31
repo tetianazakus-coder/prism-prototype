@@ -614,7 +614,7 @@
   .prose { font-size: 13.5px; color: var(--foreground); max-width: 74ch; margin: 0 0 14px; }
   .su { margin: 0 0 14px; }
   .su__cap { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 8px; }
-  .su__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; }
+  .su__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; }
   .su__hd { font-size: 12.5px; font-weight: 600; padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
   .su__row { display: flex; justify-content: space-between; gap: 12px; font-size: 12.5px; padding: 4px 0; border-bottom: 1px dashed var(--brand-border-200); }
   .su__row span:first-child { color: var(--muted-foreground); }
@@ -625,7 +625,13 @@
      intake form's remaining sections (3 Desired Terms, 7 Business Plan,
      8 Management) — Tony asked the page to include many of the form's
      sections [T, Figma #8, 21 Aug]. Labels are the form's; values sample. */
-  .fkv { display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; margin: 0; font-size: 12.5px; }
+  /* A fixed label column, not auto: with auto, each section sized its own
+     column to its own longest label, so Terms requested started its values 15px
+     left of Business plan directly beneath it and the tab had no value edge to
+     read down. 150px clears the longest label in the set (Projected stabilized
+     NOI, 139px). [💡 rec] */
+  .fkv { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 5px 28px; margin: 0; font-size: 12.5px; }
+  @media (max-width: 640px) { .fkv { grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; } }
   .fkv dt { color: var(--muted-foreground); }
   .fkv dd { margin: 0; font-weight: 500; }
   /* collapsible summary sections — the Pipedrive/Quicken record anatomy: every
@@ -636,16 +642,61 @@
   .sec__hd { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; padding: 9px 0 8px;
     background: none; border: 0; cursor: pointer; text-align: left; }
   .sec__cap { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); white-space: nowrap; }
-  button.sec__hd:hover .sec__cap { color: var(--foreground); }
   .sec__hd--fix { cursor: default; }
-  .sec__edit { margin-left: auto; border: 0; background: none; color: var(--muted-foreground);
+  /* Edit sits beside its caption, not at the far edge of the row (Tanya,
+     31 Aug). margin-left:auto worked while every editable section was half a
+     column wide; on the full-width ones — Sources & uses, Strengths &
+     weaknesses — it threw the control a thousand pixels from the heading it
+     belongs to, and the section it edits stopped being obvious. Packed left,
+     the pair reads as one label, and the caps/letterspaced caption against the
+     mixed-case control keeps them apart without distance doing the work. */
+  .sec__edit { margin-left: -4px; border: 0; background: none; color: var(--muted-foreground);
     font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; cursor: pointer; padding: 2px 4px; }
   .sec__edit:hover { color: var(--foreground); }
-  .sedit label { display: block; font-size: 11.5px; color: var(--muted-foreground); margin: 10px 0 4px; }
-  .sedit input, .sedit select { width: 100%; height: 32px; padding: 0 9px; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); background: var(--card); font: inherit; font-size: 13px; color: var(--foreground); }
+  /* Revealed on hover of the whole section, not just its header (Tanya,
+     31 Aug) — six always-on Edit controls read as six things to do on a card
+     whose job is to be read. Opacity rather than display, so the caption does
+     not shift when the control arrives and the button keeps its place in the
+     tab order. Three exceptions to the hiding, each load-bearing:
+     :focus-visible, or the control is unreachable by keyboard; --on, because
+     mid-edit it says Done and hiding the way out when the pointer wanders is
+     a trap; and the whole rule is behind hover:hover, since a touch device
+     has no hover state to reveal it with and would simply lose the control. */
+  @media (hover: hover) and (pointer: fine) {
+    .sec__edit { opacity: 0; transition: opacity .12s ease; }
+    .sec:hover > .sec__hd .sec__edit,
+    .sec__edit:focus-visible,
+    .sec__edit--on { opacity: 1; }
+  }
+  /* :not(.chkrow) because a checkbox row is a <label> too, and this rule was
+     winning on specificity — display:block broke the flex row (box and text
+     with nothing between them) and margin:10px 0 4px stacked on top of the
+     grid's own gap. The field-label rule does not own checkbox rows. */
+  /* The section editor draws the deal form's own field component — .fld for
+     the label/control pair, .inp for text and textarea, .fld__sel for the
+     dropdown — rather than the four bespoke rules that used to live here
+     (32px boxes, 11.5px captions). Two surfaces edit the same deal, and they
+     were disagreeing about what a form field looks like. A select field takes
+     a bare <label> with no `for`, which is what the form does too: the
+     accessible name comes from the trigger's aria-label. [💡 rec] */
+  /* Strengths and Weaknesses are the .dotx's sections 11 and 12, and its own
+     instruction pairs them — a strength list with no answering weakness reads
+     as a pitch. Side by side is that pairing made visible; they collapse to a
+     stack only when the column cannot hold two. [T, Figma #8] */
+  .sw { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 40px; }
+  .sw__k { font-size: 11.5px; color: var(--muted-foreground); margin-bottom: 3px; }
+  .sw__v { margin: 0; font-size: 13px; line-height: 1.55; max-width: 60ch; }
+  @media (max-width: 900px) { .sw { grid-template-columns: 1fr; gap: 14px; } }
   .chkgrid { display: grid; gap: 5px; }
-  .chkrow { display: flex; align-items: center; gap: 7px; font-size: 12.5px; cursor: pointer; }
+  /* The executions list uses the same .chk / .bx component as every table
+     select-all — ui/checkbox.tsx, 16px, rounded-4, primary when checked. It
+     had been a bare <input type="checkbox">, which the .sedit field rule was
+     sizing at width:100% / height:32px along with the text inputs and selects,
+     so each box rendered as a stretched square with its label knocked onto the
+     next line. That rule now excludes checkboxes and the component supplies
+     the box. [💡 rec] */
+  .chkrow { display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer; }
+  .chkrow .chk { flex: none; }
   .surow { display: flex; gap: 6px; margin-bottom: 6px; }
   .surow input { height: 30px; padding: 0 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);
     font: inherit; font-size: 12.5px; min-width: 0; background: var(--card); color: var(--foreground); }
@@ -653,11 +704,22 @@
   .surow input[data-suv] { width: 110px; text-align: right; }
   .sec__car { margin-left: -4px; margin-top: -3px; flex: none; color: var(--muted-foreground); font-size: 16px; line-height: 1;
     transform: rotate(90deg); transition: transform .12s ease; }
-  .sec.closed { margin-bottom: 0; }
-  .sec.closed .sec__car, .card.closed .sec__car { transform: none; }
-  /* Terms and Business plan are both four-row label/value lists half a column
-     wide — side by side they cost one section's height instead of two */
-  .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 26px; padding-top: 4px; }
+  .card.closed .sec__car { transform: none; }
+  /* Two independent columns, not a grid of paired cells. As paired cells each
+     row was sized by its taller half, so a section had to stand as tall as
+     whatever sat beside it — on a deal with no package yet, a 32px "+ Add
+     terms" stub was stretched to 211px to match Sponsor's eight lines, and the
+     tab read as broken rather than empty (Tanya, 31 Aug). Each column now
+     packs its own sections top-down and the pairing becomes thematic: left is
+     what the deal asks for and the plan behind it, right is who is behind it
+     and who runs the asset. */
+  /* 40px, and the same 40 in all three two-column grids on this tab (Tanya,
+     31 Aug). They stack down one card — section pairs, then Sources & uses,
+     then Strengths & weaknesses — so three near-identical gutters (26/22/26)
+     read as a boundary that will not hold still rather than as three
+     deliberate widths. */
+  .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; padding-top: 4px; align-items: start; }
+  .duocol { min-width: 0; }
   @media (max-width: 900px) { .duo { grid-template-columns: 1fr; } }
   /* chips route to the Documents tab — an empty slot is an entry point, not a
      label (Tanya, 26 Aug) */
@@ -725,6 +787,10 @@
      and the table. */
   .cut { display: flex; align-items: center; gap: 12px; padding: 0 18px 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
   .cut .lbl { font-size: 13px; color: var(--muted-foreground); }
+  /* A search box and a toggle are different kinds of control, not two items in
+     a row, so the 12px gap read as a group. 20px total on this pair only —
+     8px here on top of the row gap. */
+  .cut .search + .chk { margin-left: 8px; }
   .cut input[type=range] { width: 168px; accent-color: var(--primary); }
   .cut .v { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 38px; }
 
@@ -849,6 +915,17 @@
   .docrow__rm { border: 0; background: none; color: var(--muted-foreground);
     font-size: 15px; line-height: 1; cursor: pointer; padding: 0 2px; }
   .docrow__rm:hover { color: var(--foreground); }
+  /* Two parties can upload, so the row has to carry which one did: a sponsor PFS
+     the borrower supplied and one the broker typed up are not the same evidence
+     to a lender. [T · page inventory row 37, 28 Aug] */
+  .docrow__by { flex: none; font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
+  .docrow__by b { font-weight: 500; color: var(--foreground); }
+  /* Asked for, and neither provided nor missing — the third state the boolean
+     per slot cannot hold. Dashed and muted so it reads as an outstanding row
+     rather than a filled one. */
+  .docrow--pend { border-style: dashed; background: var(--muted); }
+  .docrow--pend .docrow__nm { font-weight: 400; color: var(--muted-foreground); }
+  .docrow--pend .docrow__tick { color: var(--muted-foreground); }
   .docempty { display: flex; flex-direction: column; align-items: center; text-align: center;
     padding: 26px 0 30px; }
   .docempty__ic { display: grid; place-items: center; width: 42px; height: 42px;
@@ -856,10 +933,16 @@
     margin-bottom: 12px; }
   .docempty b { font-size: 14px; }
   .docempty p { margin: 5px 0 14px; max-width: 430px; font-size: 13px; color: var(--muted-foreground); }
-  .docnote { margin: 12px 0 4px; }
+  .docnote { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+  /* A contact request in flight. The countdown sits on the row because the
+     product has no notification surface to carry it — row 25 [T]. */
+  .rqcell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .rqcell .sub { font-size: 12px; color: var(--muted-foreground); }
   .docxtra { margin-top: 0; }
-  .docas { font-size: 12px; padding: 3px 6px; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); background: var(--card); color: var(--foreground); cursor: pointer; }
+  /* the File as… control is .fld__sel--xs now, defined with the component it
+     varies. Only its behaviour in this row belongs here: the row is a flex line
+     whose note takes the slack, so the control neither stretches nor shrinks. */
+  .docxtra .fld__sel { flex: none; }
 
   /* ---- ≤1180: the slab gives way. Tables scroll rather than squeeze,
           which is the failure in the 26 Aug screenshots — every deal name
@@ -960,6 +1043,9 @@
     .card__hd { flex-direction: column; align-items: flex-start; gap: 4px; }
     .cut { gap: 8px 12px; }
     .cut .search { max-width: none !important; flex: 1 1 100%; }
+    /* search goes full width and the toggle wraps below it — a left margin
+       there is an indent, not a gap */
+    .cut .search + .chk { margin-left: 0; }
     .cut input[type=range] { width: 100%; }
     .selbar { flex-wrap: wrap; gap: 8px; }
     .selbar .r { margin-left: 0; width: 100%; }
@@ -990,6 +1076,10 @@
   .fld textarea.inp { height: auto; min-height: 96px; padding: 8px 12px; resize: vertical; font: inherit; font-size: 14px; }
   .fld__sel { display: flex; align-items: center; height: 36px; border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card); box-shadow: var(--shadow-xs); }
   .fld__sel .sel__trg { flex: 1; height: 100%; padding: 4px 12px; justify-content: space-between; cursor: pointer; }
+  /* the same box at btn--xs scale (24px, 12px), for the one place the control
+     sits inline in a list row rather than under a label in a form */
+  .fld__sel--xs { height: 24px; }
+  .fld__sel--xs .sel__trg { padding: 3px 8px; gap: 6px; font-size: 12px; }
   .sel__val.ph { color: var(--muted-foreground); font-weight: 400; }
   .fldrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 12px; }
   @media (max-width: 640px) { .fldrow { grid-template-columns: 1fr; } }
@@ -1035,9 +1125,10 @@
     <summary>What is clickable, where every value comes from, and what we invented</summary>
     <ul>
       <li><b>Tokens are the repo's, copied not matched.</b> <code>apps/lender-prism/frontend/src/app/globals.css</code> — <code>--primary</code> navy-900 <code>rgb(1,39,88)</code>, <code>--sidebar</code> navy-950 <code>rgb(8,20,45)</code>, <code>--radius</code> <code>0.5rem</code>, the eight-step shadow ramp, <code>--tracking-normal -0.011em</code>.</li>
-      <li><b>Component sizes are the repo's too.</b> Button <code>h-9 / h-8 / h-6, rounded-md</code>; Badge <code>rounded-full px-2 py-0.5 text-xs</code>; Card <code>rounded-xl border shadow-sm</code>; Table <code>th h-10 px-2 font-medium</code>; Input <code>h-9</code>; Checkbox <code>size-4 rounded-[4px]</code>; sidebar <code>3rem</code> collapsed, menu buttons <code>h-8 rounded-md p-2</code>. <b>One departure:</b> the rail is drawn at <code>14rem</code>, not the shipped <code>16rem</code> — the five nav labels are short and the widest thing in it is the org line, so the extra 32px was empty. Changing <code>SIDEBAR_WIDTH</code> in <code>ui/sidebar.tsx</code> is a one-line edit. <span class="note">[💡 rec]</span></li>
+      <li><b>Component sizes are the repo's too.</b> Button <code>h-9 / h-8 / h-6, rounded-md</code>; Badge <code>rounded-full px-2 py-0.5 text-xs</code>; Card <code>rounded-xl border shadow-sm</code>; Table <code>th h-10 px-2 font-medium</code>; Input <code>h-9</code>; Checkbox <code>size-4 rounded-[4px]</code>; sidebar <code>3rem</code> collapsed, menu buttons <code>h-8 rounded-md p-2</code>. <b>One departure:</b> the rail is drawn at <code>14rem</code>, not the shipped <code>16rem</code> — the widest thing in it is the org line, which truncates at either width, so the extra 32px was empty. Re-checked on 31 Aug when <i>Leads</i> became <b>Opportunities</b> (see the naming note below): at thirteen characters it is now the longest label by some way, and it still sets without wrapping or truncating, so the departure stands. Changing <code>SIDEBAR_WIDTH</code> in <code>ui/sidebar.tsx</code> is a one-line edit. <span class="note">[💡 rec]</span></li>
       <li><b>The responsive layer is ours; only the breakpoint is the repo's.</b> There was nothing to copy — <code>app/(dashboard)/my-deals/page.tsx</code> carries two responsive utilities in 385 lines (<code>sm:px-6</code>, <code>lg:px-8</code>) over a plain desktop table, so below about 1100px the columns squeeze until deal names wrap one word per line. What the repo does settle is where mobile starts: <code>hooks/use-mobile.ts</code> <code>MOBILE_BREAKPOINT = 768</code>, and <code>ui/sidebar.tsx</code> swaps the rail for a Sheet at <code>SIDEBAR_WIDTH_MOBILE = 18rem</code> below it. Both are honoured — 767 is the phone edge and the rail becomes an 18rem overlay with a scrim. Above it, two steps of our own: at <b>1180</b> the fixed 1180 slab is released and tables scroll inside their card rather than squeeze; at <b>900</b> the page header, toolbar and two-column deal summary stack. Below <b>767</b> each table row becomes a labelled block — the column headings survive as the labels — and a board lane fills the screen. <span class="note">[💡 rec]</span> <span class="note">[repo Aug 26]</span></li>
       <li><b>The sidebar is not a proposal — it already ships.</b> <code>components/app-nav-sidebar.tsx</code> renders a collapsible rail for brokers today. What we changed is which items are in it: <code>Lender Funnel</code> is retired <span class="note">[agreed 14 Aug]</span> and <b>Deals</b> takes its place. <code>⚠</code> The shipped rail already has an item called <b>My Deals</b> and it is a different object — the assigned-leads pipeline off <code>/api/assigned_leads</code>. That collision needs settling with the deal-object naming.</li>
+      <li><b>Leads became Opportunities, 31 Aug</b> <span class="note">[T]</span> &mdash; Tony, sheet comment on the <i>Naming &amp; lexicon</i> row, 28 Aug 01:02, answering &ldquo;Lead and Opportunity are one object &mdash; pick one word&rdquo;: <b>&ldquo;Let&rsquo;s go with &lsquo;Opportunity&rsquo;.&rdquo;</b> The rail item is renamed and nothing else is. <span class="note">[~]</span> Scope is the <b>narrow</b> reading of that answer: only the <i>Lead</i> object is renamed, so <code>Deal</code>, <code>Loan Request</code>, <code>Transaction</code> and <code>Loan</code> all stand, and the shipped <b>My Deals</b> item is untouched &mdash; the sheet row lists <i>Deal</i> and <i>Lead</i> as separate nouns, which is what makes the narrow reading available. The wide reading (Opportunity replaces the deal object on every screen) is a different and much larger change and has not been taken. The route stays <code>/leads</code>: a shipped path is not a user-facing noun, and changing it is a redirect rather than a naming decision. <b>The collision this resolves</b> <span class="note">[&#9888; was]</span> &mdash; <i>Leads</i> carried three meanings at once: this rail section (house-sourced borrower leads routed to the broker, the Pro tier&rsquo;s headline <span class="note">[T &middot; 26 Aug call]</span>), the first lane of the deal board, and the retired object name. Two are now gone. <b>What is left is the board&rsquo;s first lane</b>, which Tony named <i>Leads</i> in the same comment set: no longer a clash, but a word that would name a stage and nothing else in the product. <span class="note">[&#128161; rec]</span> Rename it <b>New</b> &mdash; stage 2 is <i>Screening</i>, so <i>New</i> states what the stage is without borrowing the next lane&rsquo;s word, and it retires <i>Lead</i> cleanly instead of leaving one behind. <b>Done, same day</b> (Tanya): <code>DEAL_STATUS</code> now opens with <b>New</b>, seeds and all, so the word <i>Lead</i> appears nowhere in the product. <span class="note">[&#128161; rec]</span> and not a transcription &mdash; the other seven stages are Tony&rsquo;s and stand as he set them, and this one is ours to propose, so it is his to reject. Deliberately <b>not</b> <i>Opportunities</i>: that is now the object&rsquo;s name, and a deal sitting at stage <i>Opportunities</i> would put an object noun in a lane slot &mdash; the same category error as the collision this is fixing, pointed the other way. <span class="note">[~]</span> One consequence worth raising with him: in Salesforce and HubSpot a <i>Lead</i> becomes an <i>Opportunity</i> as it qualifies, so naming the <i>inbound</i> object Opportunity while the working object stays <i>Deal</i> makes the pipeline read Opportunity &rarr; Deal, the reverse of the convention every broker arrives with. It is the client&rsquo;s vocabulary to set; it is not a blocker; it should not be discovered after it is on every screen.</li>
       <li><b>Active nav tint is <code>--sidebar-accent</code></b> (navy-700), which is what <code>SidebarMenuButton</code> actually binds — not <code>--sidebar-border</code>. Collapse the rail with the control beside the wordmark.</li>
       <li><b>One account menu, not two profile entries.</b> The shipped app splits &ldquo;you&rdquo; across two surfaces: a <code>Broker Profile</code> nav item (<code>/broker-profile</code>, pro brokers only — the <b>public directory listing</b>: headshot, cover photo, submit for admin approval) and the top-bar dropdown (<code>components/global/top-nav.tsx</code>: <code>Profile Settings</code> → <code>/profile</code>, <code>Sign out</code>). Same word, two objects, two places. <span class="note">[💡 rec]</span> consolidated here: the account button at the foot of the rail opens one menu — <b>Public profile</b> · <b>Profile Settings</b> · <b>Sign out</b> — and the nav item is gone. The routes stay separate; only the entry point merges.</li>
       <li><b>The filters are the repo's own MultiSelect</b> — <code>ui/multi-select.tsx</code>, a Popover over a Command list, selected values rendered as <code>Badge variant="outline"</code> inside the trigger with a <code>+N</code> overflow badge and a <code>CheckIcon</code> per row. One deviation: the field's name stays on the trigger, because the repo puts it in a <code>Label</code> above the field and a filter toolbar has nowhere to put one. Counts beside each option are live and computed against the <i>other</i> filter, so a zero means that combination is genuinely empty.</li>
@@ -1053,21 +1144,21 @@
       <li><b>Option F: the OM preview card, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya&rsquo;s screenshots of Janover&rsquo;s live deal detail settled the layout question: their deal page is a lender-communications workspace, and the package appears only as a compact preview &mdash; one photo thumbnail beside the overview text. Six layouts were mocked (<code>assets/photos-layout-options.html</code>); Tanya picked F, Janover&rsquo;s own answer. The deal summary now shows the overview as that card &mdash; cover image left (168&times;112, first photo; an <i>N photos</i> badge overlays when there are more &mdash; the Airbnb/Zillow card convention; clicking opens a lightbox &mdash; arrows, counter, Esc/backdrop close) when a photo exists, plain prose when not, zero layout jump &mdash; the right rail&rsquo;s photo hero/strip is gone, and the map shows just the street address the form collects beneath it &mdash; a <i>Location</i> caption and a &ldquo;schematic&rdquo; disclaimer were tried and cut (Tanya, same evening): the map is self-labeling, and the address line says everything. Photo management stays in the edit form. Amended 29 Aug: Tanya moved the cover out of the overview card and into the rail above the map — option B's placement with F's lightbox and count badge kept; overview is plain prose again. Then the map became a fallback: Janover's deal page shows no map at all (Tanya's screenshot), so the rail shows the cover photo when one exists, and the map schematic with the street address only when none does &mdash; a placeholder that earns its slot, not a fixture. The address field itself is Zoho \u00a72 Property Address* [T], not the live form, which collects only State/MSA/Postal. Highlights came off the page the same evening (Tanya): Janover&rsquo;s deal page carries no highlights either &mdash; bullets live inside the OM editor, and after F the preview card already tells the story; who writes highlights stays an open client question, so the section waits for a real package surface.</li>
       <li><b>Form-to-summary correspondence audit, 28 Aug evening</b> <span class="note">[&#128161; rec]</span> &mdash; Tanya asked whether every create/edit section reaches the Deal summary; six breaks found and closed. Square footage, target closing date, shovel-ready and refinance property value were collected but never displayed &mdash; now in the size and Transaction facts. Leverage was the reverse, displayed from seeds but never collected &mdash; now computed from loan &divide; purchase price (or property value on a refinance) when no seed value exists. Worst: uploaded documents were invisible &mdash; the chips and the Documents tab read only the four-item intake checklist, so a deal created with three real uploads claimed &ldquo;Nothing was attached&rdquo;; uploads now lead the Documents tab and every document count includes them. The chips row itself then came off the summary (Tanya, minutes later) &mdash; it duplicated the tab, and a row of &ldquo;&middot; none&rdquo; chips is noise; documents live in the tab alone. One logic bug rode along: the units fact was gated on occupancy, so 42 units with occupancy blank rendered nothing.</li>
       <li><b>Money fields take full dollars, 29 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the five amount inputs (loan, purchase price, property value, balance, project cost) drop the invented type-in-millions <i>M</i> convention for <code>$ 4,500,000</code> with live thousands separators &mdash; what Janover&rsquo;s OM editor, the live form and Zoho all do, and what <code>loan_amount_cents</code> stores. Tanya&rsquo;s catch: no reference product uses the shorthand, and an M-field invites a <code>4500000</code> typo worth $4.5 trillion. State still keeps millions internally; only the input layer converts.</li>
-      <li><b>Documents became a checklist of slots, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the Documents tab left the <i>Lenders on this deal</i> card (its tabs mixed lender counts with file counts) for a card of its own: one list where each required document is a named slot &mdash; a lender-voice hint on why it&rsquo;s asked for, filled (filename, date, download) or open (Upload) &mdash; under an <i>N of M provided</i> header. The old two-column split (<i>Attached at intake</i> / <i>Not provided</i>) never linked an upload to the requirement it satisfied, so a raw <code>Screenshot&hellip;.png</code> sat beside an empty &ldquo;Rent roll&rdquo; row it might well have been. Uploads matching no slot now land under <b>Additional documents</b> with a <b>File as&hellip;</b> action that assigns them &mdash; the mapping is metadata only the broker at upload time knows, and every count on the page recomputes when it&rsquo;s made. Slot anatomy from fintech verification flows (Gusto&rsquo;s named dropzones, Airwallex&rsquo;s filled-slot cards, Faire&rsquo;s per-requirement descriptions); the single grouped list with per-row status is Origin&rsquo;s documents page. <i>Not provided</i> as a heading died with the split &mdash; requirements speak as the lender now. Amended within the hour: the checklist first shipped as its own card below the lenders card, and Tanya moved it into the Deal summary as a second tab (<i>Overview</i> | <i>Documents N of M</i>) &mdash; documents describe the deal, so they belong on the deal&rsquo;s card, not floating after the lender workspace; the tab pill carries the provided count. Upload buttons then came off the view (Tanya, same evening) &mdash; the tab shows state, a one-line signpost points at Edit deal, and uploading stays in the form&rsquo;s dropzone. The tabs themselves became the segmented control (Tanya, from Janover Pro&rsquo;s <i>My Deals &amp; Lenders | Bank/CU Prospects</i> pill) &mdash; the prototype&rsquo;s existing <code>.seg</code> component, same anatomy: muted track, white active segment. The count came off the segment label (Tanya) and the zero state became a true empty state &mdash; centred icon, <i>No documents yet</i>, the four expected documents folded into one lender-voice sentence, a single <i>Upload in Edit deal</i> action &mdash; the file-manager convention (Copilot, Grok, ElevenLabs, Dropbox all centre icon + one-liner + explanation + one CTA); the slot checklist appears once at least one document exists. Polish, same evening (Tanya): every row holds one 44px height whether filled or open (the Download button was stretching filled rows), and the signpost text link became the form&rsquo;s own <i>Choose files</i> button anatomy &mdash; an <b>Upload documents</b> outline button, in the checklist footer and the empty state both, linking to Edit deal. Reversed later that evening &mdash; Tanya challenged the detour (&ldquo;is it right pattern to lead into edit view to upload documents?&rdquo;) and it wasn&rsquo;t: documents accrue over the deal&rsquo;s life, and the slot pattern&rsquo;s point is slot = dropzone (Gusto, Airwallex; Janover uploads on the deal editor page too). The tab is now the live upload surface: each open slot&rsquo;s Upload button picks a file straight into that slot, a file dropped on the row files itself there, and the footer / empty-state button takes any documents into the list &mdash; no form round-trip, no save gate. The edit form&rsquo;s dropzone stays for intake-time attachment; both are simulated the same way, names recorded, files never read. Upload vocabulary unified, 30 Aug (Tanya): the form&rsquo;s <i>Choose files / Choose photos</i> became <b>Upload documents / Upload photos</b> &mdash; one outcome-named verb across every surface; <i>Choose</i> named the mechanism and only worked inside a dropzone sentence. The lenders card&rsquo;s own tabs (<i>Matches</i> | <i>Saved lenders</i>) followed the same evening (Tanya) &mdash; they were the last underline tab set left on the page, and two tab anatomies inside one scroll read as two mechanisms rather than one. The counts stay on the segments. The underline set&rsquo;s original reasoning (<code>ui/tabs.tsx</code> is a pill group, but these tabs switch datasets rather than filter one) is kept in the CSS comment where it stood. The open slots themselves came off on 31 Aug (Tanya): the tab lists only documents that exist &mdash; filled rows, then <i>Additional documents</i> &mdash; and the four dashed placeholder rows, their lender-voice hints, the per-slot Upload buttons and drop-onto-slot all went with them. What survives of the slot idea is the mapping: <b>File as&hellip;</b> on an unfiled upload still assigns it to a required document, and the empty state still names the four expected files in one sentence &mdash; expectation lives in prose, not in permanent scaffolding rows.</li>
-      <li><b>Financing became the summary&rsquo;s middle tab, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; Terms requested, Business plan and Sources &amp; uses left the Overview (Tanya: &ldquo;can we put this into separate tab?&rdquo;) for a <b>Financing</b> tab between Overview and Documents: the borrower&rsquo;s ask, the plan behind it and the capital stack are one story &mdash; how the deal gets financed &mdash; while Overview keeps the facts, prose and rail that identify the deal. The segment showed only when a deal carried one of the blocks at first; once the tab became editable it is always there &mdash; <i>+ Add</i> stubs are the way in for created deals. Sources &amp; uses opens expanded now: collapse earned its keep when the block crowded the Overview; in its own tab it is the content &mdash; the collapse chevron came off entirely (Tanya), leaving the same fixed caption Terms requested and Business plan carry. On 30 Aug the tab stopped being display-only (Tanya: &ldquo;add functionality for this&rdquo;): every section &mdash; Terms requested, Business plan, Sources &amp; uses, and the rail&rsquo;s Sponsor block &mdash; carries a per-section &#9998; Edit / Done toggle (the LinkedIn-profile pattern prototyped for Highlights in August), with Zoho &sect;3/&sect;7 vocabularies verbatim as the selects [T], executions as checkboxes, an editable S&amp;U grid (add/remove lines, live-formatted amounts, totals recompute on Done, empty lines hidden from the view) and <i>+ Add</i> stubs where a deal has no section yet &mdash; created deals can finally grow a package. Until now this content had no path into a deal except the one-shot Zoho submission; who authors it in production is Q77 in [[stakeholder-questions]]. On 31 Aug the Sponsor block left the rail for this tab (Tanya asked whether it belongs here; it does): Zoho &sect;6 sits between &sect;3 and &sect;7 in the intake form, lenders underwrite the sponsor exactly like the terms and the stack, and Janover keeps sponsor inside the OM rather than in chrome. It renders as a fourth section &mdash; Terms and Sponsor share the top row, Business plan and Sources &amp; uses follow full-width &mdash; and the rail now carries only workflow: status, photos, the lender list.</li>
+      <li><b>Documents became a checklist of slots, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the Documents tab left the <i>Lenders on this deal</i> card (its tabs mixed lender counts with file counts) for a card of its own: one list where each required document is a named slot &mdash; a lender-voice hint on why it&rsquo;s asked for, filled (filename, date, download) or open (Upload) &mdash; under an <i>N of M provided</i> header. The old two-column split (<i>Attached at intake</i> / <i>Not provided</i>) never linked an upload to the requirement it satisfied, so a raw <code>Screenshot&hellip;.png</code> sat beside an empty &ldquo;Rent roll&rdquo; row it might well have been. Uploads matching no slot now land under <b>Additional documents</b> with a <b>File as&hellip;</b> action that assigns them &mdash; the mapping is metadata only the broker at upload time knows, and every count on the page recomputes when it&rsquo;s made. Slot anatomy from fintech verification flows (Gusto&rsquo;s named dropzones, Airwallex&rsquo;s filled-slot cards, Faire&rsquo;s per-requirement descriptions); the single grouped list with per-row status is Origin&rsquo;s documents page. <i>Not provided</i> as a heading died with the split &mdash; requirements speak as the lender now. Amended within the hour: the checklist first shipped as its own card below the lenders card, and Tanya moved it into the Deal summary as a second tab (<i>Overview</i> | <i>Documents N of M</i>) &mdash; documents describe the deal, so they belong on the deal&rsquo;s card, not floating after the lender workspace; the tab pill carries the provided count. Upload buttons then came off the view (Tanya, same evening) &mdash; the tab shows state, a one-line signpost points at Edit deal, and uploading stays in the form&rsquo;s dropzone. The tabs themselves became the segmented control (Tanya, from Janover Pro&rsquo;s <i>My Deals &amp; Lenders | Bank/CU Prospects</i> pill) &mdash; the prototype&rsquo;s existing <code>.seg</code> component, same anatomy: muted track, white active segment. The count came off the segment label (Tanya) and the zero state became a true empty state &mdash; centred icon, <i>No documents yet</i>, the four expected documents folded into one lender-voice sentence, a single <i>Upload in Edit deal</i> action &mdash; the file-manager convention (Copilot, Grok, ElevenLabs, Dropbox all centre icon + one-liner + explanation + one CTA); the slot checklist appears once at least one document exists. Polish, same evening (Tanya): every row holds one 44px height whether filled or open (the Download button was stretching filled rows), and the signpost text link became the form&rsquo;s own <i>Choose files</i> button anatomy &mdash; an <b>Upload documents</b> outline button, in the checklist footer and the empty state both, linking to Edit deal. Reversed later that evening &mdash; Tanya challenged the detour (&ldquo;is it right pattern to lead into edit view to upload documents?&rdquo;) and it wasn&rsquo;t: documents accrue over the deal&rsquo;s life, and the slot pattern&rsquo;s point is slot = dropzone (Gusto, Airwallex; Janover uploads on the deal editor page too). The tab is now the live upload surface: each open slot&rsquo;s Upload button picks a file straight into that slot, a file dropped on the row files itself there, and the footer / empty-state button takes any documents into the list &mdash; no form round-trip, no save gate. The edit form&rsquo;s dropzone stays for intake-time attachment; both are simulated the same way, names recorded, files never read. Upload vocabulary unified, 30 Aug (Tanya): the form&rsquo;s <i>Choose files / Choose photos</i> became <b>Upload documents / Upload photos</b> &mdash; one outcome-named verb across every surface; <i>Choose</i> named the mechanism and only worked inside a dropzone sentence. The lenders card&rsquo;s own tabs (<i>Matches</i> | <i>Saved lenders</i>) followed the same evening (Tanya) &mdash; they were the last underline tab set left on the page, and two tab anatomies inside one scroll read as two mechanisms rather than one. The counts stay on the segments. The underline set&rsquo;s original reasoning (<code>ui/tabs.tsx</code> is a pill group, but these tabs switch datasets rather than filter one) is kept in the CSS comment where it stood. The open slots themselves came off on 31 Aug (Tanya): the tab lists only documents that exist &mdash; filled rows, then <i>Additional documents</i> &mdash; and the four dashed placeholder rows, their lender-voice hints, the per-slot Upload buttons and drop-onto-slot all went with them. What survives of the slot idea is the mapping: <b>File as&hellip;</b> on an unfiled upload still assigns it to a required document, and the empty state still names the four expected files in one sentence &mdash; expectation lives in prose, not in permanent scaffolding rows. <b>Two parties can upload, 31 Aug</b> <span class="note">[T]</span> &mdash; Tony, page inventory row 37, 28 Aug: uploading is &ldquo;both the borrower and the broker&rdquo;; a broker or an Admin can ask the borrower, and a broker with an off-platform borrower uploads what he receives himself. The research points the same way and had done since 19 Aug &mdash; neither broker interviewed uploads anything (insight 5): Dustin works out of Dropbox and DocuHound, Sean sends the borrower a Drive link and the borrower fills it. The product&rsquo;s direction is the opposite of both. <b>This is not a second button.</b> The moment two parties can upload, <i>who provided this</i> becomes a fact the row has to carry &mdash; a sponsor PFS the borrower supplied and one the broker assembled are not the same evidence to a lender &mdash; so every filled row gained an uploader (<i>You</i> / <i>M. Adeyinka &middot; borrower</i>), which it could not have carried before because there was only one possible answer. And a document that has been <i>asked for</i> is neither provided nor missing: <code>d.docs</code> is a boolean per slot, so the requested state is a third value it cannot hold. It is drawn as a dashed row &mdash; <i>Requested from {lead} &middot; {when} &middot; not yet uploaded</i>, with <b>Remind</b> and a cancel &mdash; and <b>Ask the borrower</b> sits beside <i>Upload documents</i> in the footer and the empty state both. Riverside is seeded three-of-four with a mixed uploader split so the column has something to say <span class="note">[~]</span>; the requested row is deliberately left unseeded, because the control is what a reader should land on and one click produces the state. <span class="note">[~]</span> What is drawn is the request; what is not built underneath it is the delivery, and there are two separate holes. There is <b>no borrower to address</b> &mdash; the deal carries a <i>sponsor</i> (entity name, lead principal, liquidity, net worth, track record) with no email, no phone and no login &mdash; and there is <b>no outbound mail of any kind</b>, which makes this the second unbuilt mailer in this prototype, the first being the lender invitation the add-a-contact form silently sends. Rather than let the screen imply a message left the building, the click&rsquo;s toast says so. Per-file provenance and the requested state are read-layer work the deal already has shapes for and can ship now; the borrower record and the mailer are one build, and cheaper raised with Chris as one conversation than discovered a row apart. <b>The last native <code>&lt;select&gt;</code> in the prototype went on 31 Aug</b> (Tanya) &mdash; <i>File as&hellip;</i> was still an OS popup, the one control that had escaped the 31 Aug sweep through the Financing editor, and the only one left anywhere in the file. It is <code>selCtl</code> now, in the form&rsquo;s own <code>.fld__sel</code> box at <code>btn--xs</code> scale &mdash; 24px inside a 44px row, beside the 24px Download button, rather than the 36px the same box takes under a label in a form. <span class="note">[&#128161; rec]</span> It is the one dropdown here that <b>holds no value</b>: choosing files the upload, which moves the row out of <i>Additional documents</i> and takes the control with it, so there is never a selection to display and no em-dash row to clear one &mdash; the placeholder is the entire label, and it reads as the action it is. Its three-line change branch came out with the tag, since <code>applySel</code>&rsquo;s <code>da:</code> case now does the same assignment through the shared click path, which is also where its keyboard behaviour comes from for free.</li>
+      <li><b>Financing became the summary&rsquo;s middle tab, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; Terms requested, Business plan and Sources &amp; uses left the Overview (Tanya: &ldquo;can we put this into separate tab?&rdquo;) for a <b>Financing</b> tab between Overview and Documents: the borrower&rsquo;s ask, the plan behind it and the capital stack are one story &mdash; how the deal gets financed &mdash; while Overview keeps the facts, prose and rail that identify the deal. The segment showed only when a deal carried one of the blocks at first; once the tab became editable it is always there &mdash; <i>+ Add</i> stubs are the way in for created deals. Sources &amp; uses opens expanded now: collapse earned its keep when the block crowded the Overview; in its own tab it is the content &mdash; the collapse chevron came off entirely (Tanya), leaving the same fixed caption Terms requested and Business plan carry. The shell behind it was deleted on 31 Aug, when Tanya asked whether sections should open collapsed and the answer came back no <span class="note">[&#128161; rec]</span>: the tab bar is already the disclosure &mdash; Overview, Financing and Documents exist so this card is not one long scroll &mdash; and hiding a tab&rsquo;s content behind a second layer, on a tab the broker deliberately opened, hides the reason they opened it. These are three-to-eight-row blocks, so a collapse buys about a hundred pixels and costs a click to learn anything at all; and since most of Tony&rsquo;s &sect;6 and &sect;7 is optional, a collapsed caption would look the same whether the section is full or empty &mdash; and the emptiness is the thing question 77 is about. Two unreferenced functions came out with the answer so the machinery cannot be reached for again by accident. On 30 Aug the tab stopped being display-only (Tanya: &ldquo;add functionality for this&rdquo;): every section &mdash; Terms requested, Business plan, Sources &amp; uses, and the rail&rsquo;s Sponsor block &mdash; carries a per-section &#9998; Edit / Done toggle (the LinkedIn-profile pattern prototyped for Highlights in August), moved to sit beside its caption on 31 Aug (Tanya) &mdash; LinkedIn parks the pencil at the section&rsquo;s far edge, which survives a one-column profile and does not survive a full-width Sources &amp; uses, where the control ends up most of the card away from the heading it belongs to. <b>Then hidden until the section is hovered</b> (Tanya, same hour) &mdash; six always-on Edit controls read as six things to do on a card whose job is to be read, and the tab now carries six sections rather than three. The reveal is opacity, not display, so the caption does not shift when the control arrives; the trigger is the whole section rather than its header row, so the affordance appears while the pointer is still travelling toward the content. Three things stay visible regardless, and each is load-bearing rather than defensive: keyboard focus, or the control cannot be reached without a mouse; the mid-edit state, because the button reads <i>Done</i> then and hiding the way out when the pointer wanders is a trap rather than a tidy-up; and every touch device, since a coarse pointer has no hover to reveal it with and would simply lose the ability to edit &mdash; the whole rule sits behind <code>hover: hover</code> for that reason, with Zoho &sect;3/&sect;7 vocabularies verbatim as the selects [T], executions as checkboxes, an editable S&amp;U grid (add/remove lines, live-formatted amounts, totals recompute on Done, empty lines hidden from the view) and <i>+ Add</i> stubs where a deal has no section yet. <b>Rebuilt on the design system on 31 Aug</b> (Tanya, four passes) &mdash; the editor had been drawing its own controls, and every one of them was a private copy of something the file already owned. The checkboxes were bare <code>&lt;input type=&quot;checkbox&quot;&gt;</code> being sized by the editor&rsquo;s own field rule at <code>width:100%; height:32px</code>, so each rendered as a stretched square with its label knocked to the next line; they are now the <code>.chk</code> component every table select-all uses. The dropdowns were native <code>&lt;select&gt;</code>, which opens the operating system&rsquo;s own list &mdash; grey, system font, none of these tokens &mdash; which is the exact thing <code>selCtl</code> was written to replace on the status cells; they are now that control, routed through <code>applySel</code> on a new <code>se:</code> key beside the deal draft&rsquo;s <code>nd:</code>. And the text fields were a 32px bespoke box under an 11.5px caption; they are now <code>.fld</code> / <code>.inp</code>, the same component the create form&rsquo;s <i>Deal name</i> uses, at 36px under a 13px label. Two surfaces edit the same deal and they were disagreeing about what a form field looks like. <b>The read view gained a fixed label column</b> at the same time: with <code>auto</code>, each section sized its own column to its own longest label, so Terms requested started its values fifteen pixels left of Business plan directly beneath it &mdash; there was no value edge to read down a column. Created deals can finally grow a package. Until now this content had no path into a deal except the one-shot Zoho submission; who authors it in production is Q77 in [[stakeholder-questions]]. On 31 Aug the Sponsor block left the rail for this tab (Tanya asked whether it belongs here; it does): Zoho &sect;6 sits between &sect;3 and &sect;7 in the intake form, lenders underwrite the sponsor exactly like the terms and the stack, and Janover keeps sponsor inside the OM rather than in chrome. It renders as a fourth section &mdash; and the rail now carries only workflow: status, photos, the lender list. <b>The tab became two columns rather than a grid of pairs, 31 Aug</b> (Tanya, &ldquo;something went wrong&rdquo;) &mdash; paired cells meant every row was sized by its taller half, so on a deal with no package yet a 32-pixel <i>+ Add terms</i> stub was stretched to 211 to match Sponsor&rsquo;s eight lines and the tab read as broken rather than as empty. Each column now packs its own sections, which also makes the pairing mean something: <b>left is what the deal asks for</b> &mdash; Terms requested, then the Business plan behind it &mdash; and <b>right is who stands behind it</b>, the Sponsor and then the Property management running the asset. Sources &amp; uses and Strengths &amp; weaknesses stay full-width beneath, since both are themselves two-sided. <b>Three more of Tony&rsquo;s sections landed 31 Aug</b> <span class="note">[T]</span> after Tanya re-read his two Figma comments against the tab. <b>Property management</b> (Zoho &sect;8) is a <i>restoration</i>, not a new build: it shipped 26 Aug for comment #8 and was lost in the rework above &mdash; the <code>mgmt</code> seed object survived on Riverside with no code reading it, while this strip, the stylesheet and two KB notes all went on claiming it rendered. It now sits beside Business plan, which had been holding a two-column row alone, since who runs the asset is the same question as what the plan is. <b>Strengths</b> and <b>Weaknesses / mitigating factors</b> are &sect;11 and &sect;12 of the template Tony named, and the two his forms cannot reduce to a field &mdash; everything else on the tab is a fact, and these are the argument made from the facts. They render side by side because the template pairs them by name: a weakness with no mitigant is an unfinished sentence, and a strengths column with nothing opposite it is a pitch. They close the tab rather than open it &mdash; the case is made after the terms, the sponsor, the plan and the stack are on the table. <b>Sponsor gained guarantors and credit issues</b> (&sect;6): carve-out signers and the BK / foreclosure / litigation question are what a lender screens before it reads a single line of Terms requested, and the block had been showing only the flattering half of that section. Pearl District carries a disclosed foreclosure so the field is seen doing the job it exists for. <span class="note">[&#128161; rec]</span> The em dash and <i>None disclosed</i> are deliberately different answers here: unanswered is not the same as clean, and on an underwriting field that distinction is the whole value. <b>Not added</b>, and the omission is a decision <span class="note">[&#128161; rec]</span>: &sect;5 Property Details in bulk &mdash; ground lease, LURA, environmental, deferred maintenance, tenant concentrations, the utilities matrix. They are disclosures for the package, and twelve Yes/No/Unknown rows would bury the six facts that make this card scannable. <span class="note">[~]</span> Also still unanswered: there is no hotel variant, though Tony&rsquo;s second form is a hotel intake &mdash; rooms rather than units, Brand / Flag, ADR, RevPAR, PIP, demand drivers, and an executions list with no agency in it.</li>
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
       <li><b>Loan amount joins the filter bar, 31 Aug</b> <span class="note">[T]</span> &mdash; the one filter Tony asked for by name on the 26 Aug call, ranked third in his own ordering (State &middot; Property type &middot; Loan amount &middot; Execution Type, the last droppable): &ldquo;a lender asks what else the broker is working on&rdquo;, and size is one of the first things they screen by. The bar now renders in that ranking. It filters by <i>bucket</i> (Under $1M through $25M+), not a min/max pair <span class="note">[&#128161; rec]</span> &mdash; a deal&rsquo;s amount is one number, so the screening question is &ldquo;which size class&rdquo;, and the audit already showed what free-typed Min/Max bounds do to a list: the likeliest entry hides the right rows. Buckets reuse the MultiSelect anatomy every other facet has, counts and all; the boundaries are sample <span class="note">[~]</span> &mdash; nobody has said where broker size classes actually break.</li>
       <li><b>The board follows Janover Pro&rsquo;s Current Deals board</b> <span class="note">[comp Aug 19]</span> — flat grey lanes on a horizontal scroller, a tone dot and count pill in each lane head, a dashed &ldquo;No deals&rdquo; placeholder, card anatomy of title &rsaquo; amount &rsaquo; property type &rsaquo; footer (document and saved-lender counts, date), and a kebab menu on the card with <b>Change Status</b> as a submenu — Janover&rsquo;s path for the same edit. Every count on the footer is real: documents from the deal&rsquo;s checklist, saved lenders from the shortlist, the date from <code>updated</code>. Tokens, radii and control metrics stay LenderPrism&rsquo;s. One footer element did not survive the copy: Janover&rsquo;s owner chip (avatar + &ldquo;You&rdquo;) came off, 26 Aug &mdash; <code>loan_requests</code> has a single <code>belongs_to :user</code>, no assignee or team concept, and a broker sees only their own deals, so the chip would read &ldquo;You&rdquo; on every card and carry no information. If team seats ever arrive, it returns as the highest-value element on the card. <span class="note">[&#128161; rec]</span></li>
       <li><b>Both views are held to one height.</b> <span class="note">[&#128161; rec]</span> Toggling list &harr; board changed the card's height by roughly 300px, which reads as a page reload rather than a change of representation &mdash; the control swaps how the same eleven deals are drawn, so nothing below it should move. Both are now pinned to <code>--view-h</code>, measured off the table's own body at eleven rows: the board fills it and each lane scrolls inside itself, the table scrolls under a stuck header if the set ever grows past eleven. Lane heads stay put and the cards move under them, which is what every board holding a real pipeline does. Released below 767, where a table row is a labelled block and no one constant can hold both shapes.</li>
-      <li><b>Three deals were added on 26 Aug for the board's shape, not for volume.</b> <span class="note">[&#128161; rec]</span> Eleven lanes each holding exactly one card is the one distribution a real pipeline never has &mdash; work piles up at the front and thins toward the close. Harborview, Magnolia and Foundry (the three already drawn in the Figma <i>Deals</i> table frame) sit at <b>Leads</b> and <b>Screening</b>, giving 3 &middot; 3 &middot; 1 &middot; 2 &middot; 1 &middot; 0 &middot; 1 &middot; 0 across the eight statuses. Nothing about them is hand-authored beyond the deal record: their match counts (2 &middot; 1 &middot; 4) fall out of the same five-criteria scoring every other deal runs through, and their saved-lender counts are zero because nothing has been shortlisted at those stages. <b>Funded</b> and <b>On Hold</b> stay empty, so the dashed &ldquo;No deals&rdquo; placeholder is visible where it belongs.</li>
+      <li><b>Three deals were added on 26 Aug for the board's shape, not for volume.</b> <span class="note">[&#128161; rec]</span> Eleven lanes each holding exactly one card is the one distribution a real pipeline never has &mdash; work piles up at the front and thins toward the close. Harborview, Magnolia and Foundry (the three already drawn in the Figma <i>Deals</i> table frame) sit at <b>New</b> and <b>Screening</b>, giving 3 &middot; 3 &middot; 1 &middot; 2 &middot; 1 &middot; 0 &middot; 1 &middot; 0 across the eight statuses. Nothing about them is hand-authored beyond the deal record: their match counts (2 &middot; 1 &middot; 4) fall out of the same five-criteria scoring every other deal runs through, and their saved-lender counts are zero because nothing has been shortlisted at those stages. <b>Funded</b> and <b>On Hold</b> stay empty, so the dashed &ldquo;No deals&rdquo; placeholder is visible where it belongs.</li>
       <li><b>Board Settings is half-sourced.</b> The button and its position come from Janover&rsquo;s board <span class="note">[comp Aug 19]</span>; the panel&rsquo;s contents do not — we never saw inside theirs, so column visibility and card fields are conventional board settings <span class="note">[~]</span>. Both act on real data: a hidden column&rsquo;s deals stay in the pipeline and in every count (the note under the board says so), and each card field maps to a <code>loan_requests</code> column, named in the row&rsquo;s hover.</li>
-      <li><b>Deal statuses are eight</b> <span class="note">[&#128161; rec &middot; 28 Aug]</span> &mdash; Leads &middot; Screening &middot; Outreach &middot; Quoting &middot; Processing &middot; Funded &middot; Dead &middot; On Hold, a collapse of Tony&rsquo;s own eleven <span class="note">[T &middot; Figma comment, 21 Aug]</span>: Lead | Prospective Deal &middot; Screening, Sizing &amp; Packaging &middot; Review Loan Request Package &middot; Lender/Investor Outreach &middot; Present Quotes to Client &middot; Secure Term Sheet / Application &middot; Engage Lender/Investor &middot; Under App | Processing &middot; Funded &amp; Closed &middot; Dead &middot; On Hold, supplied verbatim in his comment on the Board view frame. The fold: the three packaging steps become <b>Screening</b>, quotes and term sheet become <b>Quoting</b>, lender engagement and underwriting become <b>Processing</b>. <b>Dead</b> and <b>On Hold</b> stay separate, as Tony had them: Dead is terminal and only feeds post-mortem reporting, On Hold is expected back &mdash; fusing them would bury recoverable deals among lost ones, the same trap as the retired fused Agency chip. His eleven had replaced the Janover placeholder set demoed 19 Aug. The schema fact stands: <code>db/schema.rb</code> confirms <code>loan_requests</code> has <b>no status column at all</b>, so this is a new column, not a rename.</li>
+      <li><b>Deal statuses are eight</b> <span class="note">[&#128161; rec &middot; 28 Aug]</span> &mdash; New &middot; Screening &middot; Outreach &middot; Quoting &middot; Processing &middot; Funded &middot; Dead &middot; On Hold, a collapse of Tony&rsquo;s own eleven <span class="note">[T &middot; Figma comment, 21 Aug]</span>: Lead | Prospective Deal &middot; Screening, Sizing &amp; Packaging &middot; Review Loan Request Package &middot; Lender/Investor Outreach &middot; Present Quotes to Client &middot; Secure Term Sheet / Application &middot; Engage Lender/Investor &middot; Under App | Processing &middot; Funded &amp; Closed &middot; Dead &middot; On Hold, supplied verbatim in his comment on the Board view frame. The fold: the three packaging steps become <b>Screening</b>, quotes and term sheet become <b>Quoting</b>, lender engagement and underwriting become <b>Processing</b>. <b>Dead</b> and <b>On Hold</b> stay separate, as Tony had them: Dead is terminal and only feeds post-mortem reporting, On Hold is expected back &mdash; fusing them would bury recoverable deals among lost ones, the same trap as the retired fused Agency chip. His eleven had replaced the Janover placeholder set demoed 19 Aug. The schema fact stands: <code>db/schema.rb</code> confirms <code>loan_requests</code> has <b>no status column at all</b>, so this is a new column, not a rename.</li>
       <li><b>Lender status and outreach are the real enums</b>, from <code>app/models/loan_request_match.rb</code> and <code>app/(dashboard)/lenders/types.ts</code>: <code>status</code> is six values, <code>disposition</code> is five and its labels here are the repo's own <code>DISPOSITION_OPTIONS</code> strings. <code>disposition: quoted</code> is the product's Term Sheet. Collapsed to one control, 31 Aug <span class="note">[&#128161; rec &middot; Janover]</span>: the broker edits only <b>Outreach</b> &mdash; disposition is the broker&rsquo;s own log, so it gets the dropdown &mdash; while status is the lender&rsquo;s answer and renders as a read-only badge (<i>Lender interested</i> / <i>declined</i> / <i>not a fit</i>) only once the lender has actually acted; the passive states (pending, open request, under review) were meant to show as a digest clock in a <b>Last activity</b> column; both are gone &mdash; see question 78 &mdash; so those three states have no surface at all today. The shipped table prints one column too &mdash; labeled <i>Status</i> but holding the <code>DISPOSITION_OPTIONS</code> values, the label lying about its contents &mdash; so one column is also what production does; ours names the axis honestly. Three of the five disposition values duplicate status values, which is why two editable dropdowns invited drift: a lender declines in-platform and the broker&rsquo;s column still says under review. Rows sort hottest first (Quoted &rarr; Not Yet Contacted). The lender-answer badge came off within the hour (Tanya) &mdash; beside the dropdown it duplicated the outreach value &mdash; so the lender&rsquo;s in-platform response now has no surface again until activity logging gives it one. The dropdown gained the colour vocabulary instead: one dot per disposition, on the trigger and in the open list &mdash; the shipped page colours these same labels, but prints <i>Not Yet Contacted</i> in the same red as <i>Not a Fit</i>; here amber separates &ldquo;not started&rdquo; from the dead ends, and red marks only <i>Not a Fit</i>. The action column then folded to the matches-table anatomy (Tanya): one primary button per row &mdash; <b>Email</b> on a banker, <b>Find a contact</b> on an institution (renamed from <i>Ask Prism to find a contact</i>; the credit-spend explanation lives in the click-note, not the label) &mdash; and the rest behind the same row kebab, <i>Log a call</i> above a red <i>Remove from deal</i>, which gained its object since a menu item floats free of its row&rsquo;s gravity. The two tables then converged on one column set (Tanya): Saved lenders carries the matches columns &mdash; Loan range, Property type, Financing type, same two-chips-then-<i>+N more</i> anatomy &mdash; plus Outreach, so a broker comparing a saved shortlist against fresh matches reads the same grid; the short-lived Last activity column folded back into the lender cell as the digest line it started as, and that line came off too on 31 Aug once the KB was searched for what produces it &mdash; nothing does, and <i>Digest sent 6 Aug</i> contradicts the per-lender cadence setting Tony recorded <span class="note">[T]</span>. The lender cell is back to name and identity, and the deal&rsquo;s outreach state is carried by the Outreach column alone. Last activity is also the slot where derived state lands once contact logging exists (audit priority 2) &mdash; Janover&rsquo;s Deal Inbox computes its status pill from the conversation thread itself, and both LenderPrism vocabularies end at Quoted while Janover&rsquo;s funnel runs on to Terms Accepted, Underwriting and Closed Won: the back half of the funnel is missing from the data model entirely.</li>
       <li><b>Fit is computed, never typed.</b> Five weighted criteria — amount 30, property type 25, geography 20, financing 15, appetite 10 — with property and geography as knock-outs and a financing miss capping below strong. The chips beside each score sum to it, so a 100% row shows five ticks. Drag the cut; every count on the page moves with it.</li>
       <li><b>The deal summary is built only from columns that exist.</b> Every field on it is a real <code>loan_requests</code> column — <code>transaction_name</code>, <code>loan_amount_cents</code>, <code>property_type</code>, <code>transaction_summary</code>, <code>unit_quantity</code>, <code>physical_occupancy</code>, <code>sponsor_combined_net_worth</code> and the rest. Nothing here needs a migration; the read layer is the whole gap.</li>
       <li><b>Three controls on a deal row, three destinations</b> — the name opens the deal, the match count opens the scored list, <code>Find Lenders</code> opens the same list with the cut released to 0 so the near-misses are visible, and scrolls straight to the <b>Lenders on this deal</b> section.</li>
-      <li><b>Bankers roll up to accounts on the matches list, 31 Aug</b> <span class="note">[T]</span> <span class="note">[&#128161; rec]</span> &mdash; Tony, 14 Aug: &ldquo;we might have 5 bankers that work for a Company, like Wells Fargo or Chase. When a loan search is performed, those five lenders will display in the search results. People should roll up to Accounts within the search results as well.&rdquo; They did not: a person was the row, so five colleagues arrived as five unrelated lines and saving one left the other four sitting there. The matches list now groups by account behind a <b>Group by account</b> switch in the results bar, <b>on by default</b> &mdash; the flat list is the reported bug, so the corrected view is the one a broker lands on, and the switch is what it costs to go back. Sunbelt Agency Group carries five bankers so Tony&rsquo;s own example is on screen; Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges. The account row is a <i>heading</i>, not a lender: it counts the roster and spans its ranges (<i>$1M &ndash; $50M across 5 bankers</i>) and leaves property and financing blank, because a credit box belongs to a person &mdash; rolling capabilities up would advertise an appetite no banker at the institution actually has. Selecting the account selects its people; Save stays per banker, since a term sheet comes from a human being. Redrawn 31 Aug after a Mobbin sweep <span class="note">[&#128161; rec &middot; Mobbin]</span>: the heading stopped renting the data columns &mdash; its range sat in the Loan range cell and em dashes under Property and Financing read as missing data &mdash; and became the slim full-width band grouped tables converge on (Airtable and Asana band the group header; Xero right-aligns the rollup total on it, where the range summary now sits). One line &mdash; caret, account name, roster facts, a green <i>&#10003; N saved</i> when the group holds saved bankers, range on the right &mdash; and the whole band toggles, not just the caret. <b>Source became a badge and a filter</b> rather than the tab it is today &mdash; and it prints only the exception: registered is the default, a default should be silent, so one row carries a badge and thirteen read nothing. A matching <i>Source</i> filter shipped beside it for an afternoon and came off again (Tanya, 31 Aug): on a deal&rsquo;s matches it separates thirteen rows from one, which is a job the badge already does by being visible &mdash; and a segmented control whose segments are that lopsided teaches the same lesson as the two shipped filters retired above it. The filter belongs on <code>/lenders</code>, where the source split is a <i>tab</i> over hundreds of records; demoting that tab to a filter is the argument, and a deal&rsquo;s match list is not where it is made. <b>One word, amended same day</b> (Tanya) &mdash; a first pass badged the institution <i>Prospector</i> and the banker it produced <i>Sourced by Prism</i>, on the reasoning that Tony uses <i>Prospector</i> for an institution with no contact person. Two labels in one chip style read as two categories at the same level, which is the one thing this is not: bank from the directory &rarr; banker an admin found inside it &rarr; registered lender is a <i>lifecycle</i>. Both now read <b>Prospector</b>, in blue rather than the neutral of the criteria pills &mdash; provenance is a different kind of fact from a property type, and a grey chip beside grey chips reads as one more capability. The stage is carried by the row, which already shows it: the institution says <i>No contacts yet</i> in three cells, the banker has a name, a title, criteria and a Save button. What the second badge was saying is now words on the meta line &mdash; <i>found by Prism, not registered</i> &mdash; which costs no second token and keeps the tie to the paid action. Ironwood Community Bank is the case that forces it &mdash; one registered banker and one Prospector-sourced contact at the same bank, which the shipped <i>My Deals &amp; Lenders</i> / <i>Bank/CU Prospects</i> split can only draw by listing the bank twice with half its people in either. <span class="note">[T]</span> Tony, 20 Aug, sharpened the badge: a contact registered through Prospector &ldquo;should move to Lender Funnel / Network&rdquo;, so the label names how someone arrived and is expected to change, not a permanent class of lender. Every match count now prints both units &mdash; <i>14 bankers &middot; 7 accounts</i> &mdash; on the results bar, the deals table and the board card, because one number silently meaning people on one screen and institutions on the next is the ambiguity the rollup introduces. <span class="note">[~]</span> Still open, and it is the expensive half: nothing links a registered lender to an institution today &mdash; company name is required free text on both the broker and the lender profile with no organization picker, which is how duplicates arrive. Tony&rsquo;s answer, 20 Aug <span class="note">[T]</span>, is a lookup at registration &mdash; search existing accounts, create if none, seed from the Prospector file, admin edits the typos (<code>BofA</code>, <code>bank of america</code>) &mdash; which is a registration change this prototype does not draw. Here the accounts are simply given. <b>Institutions with nobody on file, 31 Aug</b> <span class="note">[sandbox Aug 31]</span> &mdash; the case the rollup has to answer and a list of people cannot: a broker picks Comerica or Texas Capital out of the Banks &amp; Credit Unions directory and saves an institution with no contact at all. The shipped product already carries these &mdash; four of the twenty-four saved on the Chan Portfolio deal, reading <i>No contacts yet</i>, badged <i>Prospector</i>, at status <i>Not Yet Contacted</i>. They sit on <b>Saved lenders</b> and can never appear under Matches, because matching reads a credit box and a credit box belongs to a banker. The row says so in every cell it cannot fill: loan range <i>No contacts yet</i>, status <i>No contact yet</i> as text rather than the control the banker rows get, outreach an em dash &mdash; a status control here would offer to mark <i>Contacted</i> an institution with nobody to contact. What the row does carry is the identity the account already has (institution kind, FDIC cert, branches near the deal) and the one action that changes the situation, <i>Ask Prism to find a contact</i> &mdash; the paid sourcing offer sitting beside the free rows rather than behind a tab, worded to promise the search and not the result <span class="note">[~]</span>. <i>Prospector</i> is the right badge here and only here: it is Tony&rsquo;s word for an institution we have no contact person for, so it is exact on a bank with none and wrong on a named banker. The explanatory strip above these rows (<i>N institutions saved with nobody on file yet&hellip;</i>) was removed (Tanya, 31 Aug) &mdash; the rows already say it cell by cell, and a banner restating what the table shows is annotation, not UI. What replaced it is a <b>door, 31 Aug</b> <span class="note">[T]</span> &mdash; Tony&rsquo;s Prospector ask, third session running: surface the count before the search (&ldquo;75 banks within a 100-mile radius of this property. Perform a search now&rdquo;), zip or city + state required so the radius correlates. The saved-tab footer now reads <i>N banks and credit unions within 100 miles of {zip}</i> with a <b>Search directory</b> action &mdash; on this tab and not Matches, because the directory is the one source a match list can never produce and what a broker saves there lands here as a Prospector row. <span class="note">[~]</span> The count is sample, seeded from the deal&rsquo;s zip; live it is an FDIC-directory query the product already runs. Reworked same hour (Tanya, &ldquo;should it be below the table?&rdquo;): position stands &mdash; the door appends rows to this list, and list-end is where add-actions live &mdash; but the loose sentence became a separated footer strip, border-top and muted fill, the live find-lenders panel&rsquo;s own footer anatomy; floating in card padding it read as a caption, not a door. <b>Outreach state in the matches row was built and removed the same day, 31 Aug</b> <span class="note">[&#128161; rec &middot; Janover]</span> &mdash; Janover Pro&rsquo;s search results carry <i>Offering Sent</i> / <i>Offering Viewed</i> / <i>Rejected</i> on the row itself, so a broker prospects with contact history in view <span class="note">[comp 26 Aug]</span>, and ours printed only network staleness (<i>last active 2 months ago</i>, a fact about the lender and not about this deal). The borrowing was drawn as a digest clock under the name on both tabs &mdash; <i>Digest sent 6 Aug &middot; viewed 2 days ago</i> &mdash; and came off within the hour (Tanya) once the KB was searched for what produces it. <b>Nothing does.</b> The audit&rsquo;s own version of this line reads <i>&ldquo;Digest sent 6 Aug &middot; no reply&rdquo;</i> and claims it needs &ldquo;only surfacing of an event the system already generates&rdquo;; the KB does not support even that. <i>Viewed</i> needs email open tracking, of which there is no trace anywhere &mdash; no mailer, no scheduler, no pixel, and <span class="note">[~]</span> no email of any kind from this product has ever been seen by us. <i>Sent 6 Aug</i> is worse than unbacked, it contradicts a recorded fact: alert cadence is set per lender on their own profile &mdash; instant / daily / weekly / monthly / <b>off</b> <span class="note">[T]</span> &mdash; so there is no shared weekly send date, and a lender set to off has no date at all. The conflict between that setting and the <i>&ldquo;weekly digests&rdquo;</i> promise printed on <code>/lenders</code> is question 17, still open. Drawing a clock over an unanswered question is how a prototype starts teaching the client something untrue, so the line is gone from both tabs and the ask is now <b>question 78</b>. What the attempt did surface is worth keeping: a lender sitting at <i>Not Yet Contacted</i> while the platform claims to have mailed them is a contradiction the shipped product already carries &mdash; either the digest is not contact or the default disposition is wrong. And the colour argument it forced stands on its own for whatever eventually fills this slot: <b>a row gets one colour system, and Outreach owns it wherever it exists</b> &mdash; the disposition dropdown already spends green on <i>Quoted</i> and gold on <i>Not Yet Contacted</i>, so a second coloured signal beside it would put both hues on one row meaning unrelated things. <b>Outreach does not belong on Matches either</b>, since a disposition presupposes a save and would read on three rows of fourteen, the same emptiness that retired the shipped Type and amount filters. <b>The match list stating its own inputs was tried the same day and removed</b> (Tanya) <span class="note">[&#128161; rec &middot; Janover]</span> &mdash; one sentence above the table naming the deal facts the fourteen were scored against and the five axes they were scored on, promoted out of the empty state, which still carries that prose for the case where nothing cleared the bar. Janover prints its own version &mdash; <i>&ldquo;You are searching for: SBA lenders offering $4M+ financing in Maricopa County&hellip;&rdquo;</i> <span class="note">[comp 26 Aug]</span> &mdash; but theirs is an echo of the filters the user just typed, which is why its per-row <i>Matching filters</i> column repeats the same county on all fourteen lines, gains nothing, and prints <i>SBA 504</i> twice on several of them. The match criteria stay unstated on this tab <span class="note">[~]</span>: there are no filter chips here to read them off, only a search box and a grouping switch.</li>
-      <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. A walk of the running product on <b>28 Aug</b> moved three more values across that line: Riverside is <b>Austin, Texas 78701</b> at <b>$4,500,000</b> (not Houston at $12.0M), Northside&rsquo;s financing type is <b>Agency (Fannie Mae)</b> on an industrial refinance, and Gulf Coast&rsquo;s financing type is <b>unset</b> &mdash; the field is optional on the request form and that request left it blank, which is what the <i>Not specified</i> cell in the table now shows. Riverside&rsquo;s unit count, purchase price, NOI and Sources&nbsp;&amp;&nbsp;uses were re-scaled to the observed $4.5M loan so the summary cannot contradict its own header <span class="note">[~]</span>; the numbers are still sample, only their magnitude is now anchored. Sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other twenty-six bankers &mdash; including every colleague sharing an account, and the one Prospector-sourced contact at Ironwood &mdash; are sample data, invented so the scoring, the filters and the account rollup have something to bite on. The blue <i>observed</i> badge the lender tables carried came off on 31 Aug (Tanya) &mdash; provenance stays in the data flags and this strip, off the demo surface.</li>
+      <li><b>Bankers roll up to accounts on the matches list, 31 Aug</b> <span class="note">[T]</span> <span class="note">[&#128161; rec]</span> &mdash; Tony, 14 Aug: &ldquo;we might have 5 bankers that work for a Company, like Wells Fargo or Chase. When a loan search is performed, those five lenders will display in the search results. People should roll up to Accounts within the search results as well.&rdquo; They did not: a person was the row, so five colleagues arrived as five unrelated lines and saving one left the other four sitting there. The matches list now groups by account behind a <b>Group by account</b> switch in the results bar, <b>on by default</b> &mdash; the flat list is the reported bug, so the corrected view is the one a broker lands on, and the switch is what it costs to go back. Sunbelt Agency Group carries five bankers so Tony&rsquo;s own example is on screen; Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges. The account row is a <i>heading</i>, not a lender: it counts the roster and spans its ranges (<i>$1M &ndash; $50M across 5 bankers</i>) and leaves property and financing blank, because a credit box belongs to a person &mdash; rolling capabilities up would advertise an appetite no banker at the institution actually has. Selecting the account selects its people; Save stays per banker, since a term sheet comes from a human being. Redrawn 31 Aug after a Mobbin sweep <span class="note">[&#128161; rec &middot; Mobbin]</span>: the heading stopped renting the data columns &mdash; its range sat in the Loan range cell and em dashes under Property and Financing read as missing data &mdash; and became the slim full-width band grouped tables converge on (Airtable and Asana band the group header; Xero right-aligns the rollup total on it, where the range summary now sits). One line &mdash; caret, account name, roster facts, a green <i>&#10003; N saved</i> when the group holds saved bankers, range on the right &mdash; and the whole band toggles, not just the caret. <b>Source became a badge and a filter</b> rather than the tab it is today &mdash; and it prints only the exception: registered is the default, a default should be silent, so one row carries a badge and thirteen read nothing. A matching <i>Source</i> filter shipped beside it for an afternoon and came off again (Tanya, 31 Aug): on a deal&rsquo;s matches it separates thirteen rows from one, which is a job the badge already does by being visible &mdash; and a segmented control whose segments are that lopsided teaches the same lesson as the two shipped filters retired above it. The filter belongs on <code>/lenders</code>, where the source split is a <i>tab</i> over hundreds of records; demoting that tab to a filter is the argument, and a deal&rsquo;s match list is not where it is made. <b>One word, amended same day</b> (Tanya) &mdash; a first pass badged the institution <i>Prospector</i> and the banker it produced <i>Sourced by Prism</i>, on the reasoning that Tony uses <i>Prospector</i> for an institution with no contact person. Two labels in one chip style read as two categories at the same level, which is the one thing this is not: bank from the directory &rarr; banker an admin found inside it &rarr; registered lender is a <i>lifecycle</i>. Both now read <b>Prospector</b>, in blue rather than the neutral of the criteria pills &mdash; provenance is a different kind of fact from a property type, and a grey chip beside grey chips reads as one more capability. The stage is carried by the row, which already shows it: the institution reads <i>No contacts yet</i> where a credit box would be, the banker has a name, a title, criteria and a Save button. What the second badge was saying is now words on the meta line &mdash; <i>found by Prism, not registered</i> &mdash; which costs no second token and keeps the tie to the paid action. Ironwood Community Bank is the case that forces it &mdash; one registered banker and one Prospector-sourced contact at the same bank, which the shipped <i>My Deals &amp; Lenders</i> / <i>Bank/CU Prospects</i> split can only draw by listing the bank twice with half its people in either. <span class="note">[T]</span> Tony, 20 Aug, sharpened the badge: a contact registered through Prospector &ldquo;should move to Lender Funnel / Network&rdquo;, so the label names how someone arrived and is expected to change, not a permanent class of lender. Every match count now prints both units &mdash; <i>14 bankers &middot; 7 accounts</i> &mdash; on the results bar, the deals table and the board card, because one number silently meaning people on one screen and institutions on the next is the ambiguity the rollup introduces. <span class="note">[~]</span> Still open, and it is the expensive half: nothing links a registered lender to an institution today &mdash; company name is required free text on both the broker and the lender profile with no organization picker, which is how duplicates arrive. Tony&rsquo;s answer, 20 Aug <span class="note">[T]</span>, is a lookup at registration &mdash; search existing accounts, create if none, seed from the Prospector file, admin edits the typos (<code>BofA</code>, <code>bank of america</code>) &mdash; which is a registration change this prototype does not draw. Here the accounts are simply given. <b>Institutions with nobody on file, 31 Aug</b> <span class="note">[sandbox Aug 31]</span> &mdash; the case the rollup has to answer and a list of people cannot: a broker picks Comerica or Texas Capital out of the Banks &amp; Credit Unions directory and saves an institution with no contact at all. The shipped product already carries these &mdash; four of the twenty-four saved on the Chan Portfolio deal, reading <i>No contacts yet</i>, badged <i>Prospector</i>, at status <i>Not Yet Contacted</i>. They sit on <b>Saved lenders</b> and can never appear under Matches, because matching reads a credit box and a credit box belongs to a banker. The row says so in every cell it cannot fill: loan range <i>No contacts yet</i>, outreach <i>No contact yet</i> as text rather than the dropdown the banker rows get, property and financing em dashes &mdash; an outreach control here would offer to mark <i>Contacted</i> an institution with nobody to contact. A fourth statement of the same fact sat under the name (<i>&hellip; nobody to alert until this account has a contact</i>) and came off on 31 Aug (Tanya): the cells had already said it three times, and it was the one version that asserted a mechanism rather than a gap in the data &mdash; the same unbacked alerting the digest clock was removed for, and now question 78. The meta line keeps only <i>Added 2 days ago</i>, which nothing else in the row carries and which is the row&rsquo;s one moving part: a Prospector cannot progress on its own, so its age is the difference between waiting and abandoned. What the row does carry is the identity the account already has (institution kind, FDIC cert, branches near the deal) and the one action that changes the situation, <i>Ask Prism to find a contact</i> &mdash; the paid sourcing offer sitting beside the free rows rather than behind a tab, worded to promise the search and not the result <span class="note">[~]</span>. <i>Prospector</i> is the right badge here and only here: it is Tony&rsquo;s word for an institution we have no contact person for, so it is exact on a bank with none and wrong on a named banker. The explanatory strip above these rows (<i>N institutions saved with nobody on file yet&hellip;</i>) was removed (Tanya, 31 Aug) &mdash; the rows already say it cell by cell, and a banner restating what the table shows is annotation, not UI. What replaced it is a <b>door, 31 Aug</b> <span class="note">[T]</span> &mdash; Tony&rsquo;s Prospector ask, third session running: surface the count before the search (&ldquo;75 banks within a 100-mile radius of this property. Perform a search now&rdquo;), zip or city + state required so the radius correlates. The saved-tab footer now reads <i>N banks and credit unions within 100 miles of {zip}</i> with a <b>Search directory</b> action &mdash; on this tab and not Matches, because the directory is the one source a match list can never produce and what a broker saves there lands here as a Prospector row. <span class="note">[~]</span> The count is sample, seeded from the deal&rsquo;s zip; live it is an FDIC-directory query the product already runs. Reworked same hour (Tanya, &ldquo;should it be below the table?&rdquo;): position stands &mdash; the door appends rows to this list, and list-end is where add-actions live &mdash; but the loose sentence became a separated footer strip, border-top and muted fill, the live find-lenders panel&rsquo;s own footer anatomy; floating in card padding it read as a caption, not a door. <b>Outreach state in the matches row was built and removed the same day, 31 Aug</b> <span class="note">[&#128161; rec &middot; Janover]</span> &mdash; Janover Pro&rsquo;s search results carry <i>Offering Sent</i> / <i>Offering Viewed</i> / <i>Rejected</i> on the row itself, so a broker prospects with contact history in view <span class="note">[comp 26 Aug]</span>, and ours printed only network staleness (<i>last active 2 months ago</i>, a fact about the lender and not about this deal). The borrowing was drawn as a digest clock under the name on both tabs &mdash; <i>Digest sent 6 Aug &middot; viewed 2 days ago</i> &mdash; and came off within the hour (Tanya) once the KB was searched for what produces it. <b>Nothing does.</b> The audit&rsquo;s own version of this line reads <i>&ldquo;Digest sent 6 Aug &middot; no reply&rdquo;</i> and claims it needs &ldquo;only surfacing of an event the system already generates&rdquo;; the KB does not support even that. <i>Viewed</i> needs email open tracking, of which there is no trace anywhere &mdash; no mailer, no scheduler, no pixel, and <span class="note">[~]</span> no email of any kind from this product has ever been seen by us. <i>Sent 6 Aug</i> is worse than unbacked, it contradicts a recorded fact: alert cadence is set per lender on their own profile &mdash; instant / daily / weekly / monthly / <b>off</b> <span class="note">[T]</span> &mdash; so there is no shared weekly send date, and a lender set to off has no date at all. The conflict between that setting and the <i>&ldquo;weekly digests&rdquo;</i> promise printed on <code>/lenders</code> is question 17, still open. Drawing a clock over an unanswered question is how a prototype starts teaching the client something untrue, so the line is gone from both tabs and the ask is now <b>question 78</b>. What the attempt did surface is worth keeping: a lender sitting at <i>Not Yet Contacted</i> while the platform claims to have mailed them is a contradiction the shipped product already carries &mdash; either the digest is not contact or the default disposition is wrong. And the colour argument it forced stands on its own for whatever eventually fills this slot: <b>a row gets one colour system, and Outreach owns it wherever it exists</b> &mdash; the disposition dropdown already spends green on <i>Quoted</i> and gold on <i>Not Yet Contacted</i>, so a second coloured signal beside it would put both hues on one row meaning unrelated things. <b>Outreach does not belong on Matches either</b>, since a disposition presupposes a save and would read on three rows of fourteen, the same emptiness that retired the shipped Type and amount filters. <b>The match list stating its own inputs was tried the same day and removed</b> (Tanya) <span class="note">[&#128161; rec &middot; Janover]</span> &mdash; one sentence above the table naming the deal facts the fourteen were scored against and the five axes they were scored on, promoted out of the empty state, which still carries that prose for the case where nothing cleared the bar. Janover prints its own version &mdash; <i>&ldquo;You are searching for: SBA lenders offering $4M+ financing in Maricopa County&hellip;&rdquo;</i> <span class="note">[comp 26 Aug]</span> &mdash; but theirs is an echo of the filters the user just typed, which is why its per-row <i>Matching filters</i> column repeats the same county on all fourteen lines, gains nothing, and prints <i>SBA 504</i> twice on several of them. The match criteria stay unstated on this tab <span class="note">[~]</span>: there are no filter chips here to read them off, only a search box and a grouping switch. <b>The pending state after the paid click, 31 Aug</b> <span class="note">[T]</span> &mdash; Tony answered this on 27 August, in the page inventory (row 16), in four parts: pending reads &ldquo;working&rdquo; or &ldquo;in progress&rdquo;, the broker is notified when the contact arrives, seven days is the deadline, and &ldquo;if nothing found after 7 days, credit is returned.&rdquo; None of the four was drawn, and this row&rsquo;s own click-note still claimed four days later that how long it takes is unknown. All four are now in the Outreach cell, which was the only cell on a Prospector row with anywhere to go &mdash; the other three describe a credit box that genuinely does not exist, and they stay honest. Three states: <i>No contact yet</i>, then <b>&#9203; Working on it</b> with <i>1 credit held &middot; 7 days left</i>, then <b>&#8634; Credit returned</b> with <i>Nobody found &middot; {date}</i>. The kebab follows the state &mdash; <i>Find a contact</i>, <i>Cancel request</i> while one is in flight, <i>Search again</i> once a credit has come back &mdash; so no state leaves a dead menu. <b>The credit balance became real</b>: it was hardcoded <code>0</code> in the rail and the top bar, which made both the spend and the refund invisible, and a refund nobody can see is not a refund. It now starts at 3 <span class="note">[~]</span>, drops on the request and comes back on a cancel; a click with no credits is refused in the toast rather than pretending to hold one. Texas Capital is seeded returned so the refund is on screen without waiting a week <span class="note">[~]</span>. <b>The countdown lives on the row</b> <span class="note">[&#128161; rec]</span> because Tony&rsquo;s item 2 depends on a notification system that does not exist &mdash; row 25 <span class="note">[T]</span> &mdash; so the row is the only place a broker can learn any of this, and a deadline they are not shown is one they cannot be held to. The refund is the half worth building first: a paid action with no visible deadline and no stated failure case is the exact shape of the <i>Request support</i> defect the study already found in session recordings, where the backend worked and the broker never learned anything had happened. <span class="note">[~]</span> Seven days, the due date and the returned date are drawn as fixed sample strings; live they come off the job&rsquo;s own timestamps.</li>
+      <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. A walk of the running product on <b>28 Aug</b> moved three more values across that line: Riverside is <b>Austin, Texas 78701</b> at <b>$4,500,000</b> (not Houston at $12.0M), Northside&rsquo;s financing type is <b>Agency (Fannie Mae)</b> on an industrial refinance, and Gulf Coast&rsquo;s financing type is <b>unset</b> &mdash; the field is optional on the request form and that request left it blank, which is what the <i>Not specified</i> cell in the table now shows. Riverside&rsquo;s unit count, purchase price, NOI and Sources&nbsp;&amp;&nbsp;uses were re-scaled to the observed $4.5M loan so the summary cannot contradict its own header <span class="note">[~]</span>; the numbers are still sample, only their magnitude is now anchored. Sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other twenty-six bankers &mdash; including every colleague sharing an account, and the one Prospector-sourced contact at Ironwood &mdash; are sample data, invented so the scoring, the filters and the account rollup have something to bite on. <b>Every deal carries a full financing package from 31 Aug</b> (Tanya: &ldquo;it should be filled for all deals&rdquo;) &mdash; terms, business plan, sponsor disclosures, property management, sources &amp; uses and the strengths/weaknesses pair, on all eleven rather than on Riverside alone, since a demo where ten of eleven deals open on a column of <i>+ Add</i> stubs shows the empty state and not the product. <span class="note">[~]</span> All of it is sample, and each package is argued from that deal&rsquo;s own header so the tab cannot contradict the facts above it: Sources equal Uses to the dollar on all eleven, Senior Debt equals the loan amount, an acquisition leads its Uses with Purchase Price and a refinance with Pay Off Outstanding Balance, executions match the deal&rsquo;s own Execution type, and every projected NOI lands between a 7.8% and a 14.3% debt yield on the requested loan &mdash; the hotel bridge being the wide one, as it should be. The <i>+ Add</i> stubs are still the path a newly created deal takes, which is what they were built for. <b>The seeds were then made to cover the vocabulary, 31 Aug</b> (Tanya: &ldquo;why not all sources represented?&rdquo;) &mdash; the balance rules above say nothing about <i>variety</i>, so the generator reached for the same three lines eleven times: every sample deal had an identical capital stack, and four of Tony&rsquo;s seven Sources values &mdash; Preferred Equity, Mezz Debt, C&#8209;Pace, Institutional GP/LP Equity &mdash; were never drawn at all. Uses was already complete at eight of eight. The sample lender network said otherwise: four lenders fund <b>Mezz Debt</b> and two fund <b>Equity (Preferred)</b>, Ridgeway Mezzanine doing nothing else, so six lender records offered capital no deal on the board had a slot for. Three deals took a subordinate slice, each where the property type argues for it <span class="note">[~]</span>: <b>Gulf Coast</b> a $600,000 C&#8209;PACE assessment against the PIP and $1.5M of preferred equity (Florida has an active programme, and a hotel PIP is mostly the envelope, HVAC and lighting that PACE exists to fund), <b>Crescent</b> a $1.6M mezzanine piece behind the highest senior LTV here, and <b>Harborview</b> an institutional LP in place of its retail syndication &mdash; two answers to the same question, and a student-housing acquisition is where the institutional one gets asked. None of it touches Senior Debt or the Uses side, because subordinate capital replaces equity rather than the loan: totals, debt yields and the loan amounts all stand. Two things follow from it that are design rather than data. <b>Subordinate capital is a weakness as much as a source</b>, so Strengths &amp; weaknesses now carries the intercreditor on Crescent, the PACE assessment ranking ahead of the mortgage on Gulf Coast, and a 10% GP co-invest on Harborview &mdash; the section finally arguing rather than restating. And <b>the grid has no order of its own</b> <span class="note">[~]</span>: it is free text, and Tony&rsquo;s form lists Senior Debt <i>last</i>, so the seeds impose the stack convention instead &mdash; senior, assessment, subordinate debt, preferred, institutional common, sponsor common, retail common. If the vocabulary is ever controlled, its order has to be decided with it, or a controlled list rendered in form order prints the stack upside down. The three vocabularies that name these instruments three different ways are recorded as a conflict in [[master-lists]]. The blue <i>observed</i> badge the lender tables carried came off on 31 Aug (Tanya) &mdash; provenance stays in the data flags and this strip, off the demo surface.</li>
       <li><b>One clock vocabulary for timestamps, 31 Aug</b> <span class="note">[&#128161; rec &middot; sandbox 31 Aug]</span> &mdash; a sandbox sweep found four date formats on one dashboard: &ldquo;August 4th at 4:43 PM&rdquo; on loan requests, &ldquo;04/08/2026&rdquo; on matches (DD/MM &mdash; a US reader parses April), and the same lender date rendered &ldquo;3 weeks ago&rdquo; by the lenders table but &ldquo;27 days ago&rdquo; by the dashboard widgets. Every relative value is an unlabeled &ldquo;Updated N ago&rdquo; that stamps the lender <i>record&rsquo;s</i> touch time, never the relationship &mdash; and the View results page, the surface closest to a communication inbox, shows no dates at all (&ldquo;Previously Saved&rdquo; and &ldquo;already contacted&rdquo; both undated). The rule the prototype demonstrates: absolute short dates for records (the deals table&rsquo;s <b>Updated</b> column), relative time only for activity fresher than two weeks, and every relative value labeled with its verb &mdash; <i>last active 3 months ago</i> on a matches row and <i>Added 2 days ago</i> on a Prospector row, never a bare &ldquo;2 days ago&rdquo;, which is the product&rsquo;s own unlabeled-clock mistake. Past two weeks the question &ldquo;is this fresh?&rdquo; has one answer, so the date takes over. <span class="note">[~]</span> The digest clock that carried these examples until 31 Aug &mdash; <i>Digest sent 6 Aug &middot; viewed 2 days ago</i> &mdash; was removed the same day for want of a backend that produces either half; the rule outlived its exemplar. Last-contact recency stays impossible until contact logging exists (priority 2): a timestamp cannot precede the event it stamps.</li>
       <li><b>The matches table dropped its scoring chrome, 31 Aug</b> <span class="note">[&#128161; rec &middot; Figma mockup]</span> &mdash; the evaluated-count strip (strong / partial / outside / hidden), the fit slider with its below-the-cut line, the <b>Fit</b> column and the per-row criteria chips all came off; what remains is what the live lenders table actually has: company/contact, loan range, <b>Property type</b> (new column, same two-chips-then-<i>+N more</i> anatomy as financing), financing type. The scoring strip and slider were invented UI with no product counterpart &mdash; fit is still computed underneath, ordering the rows and gating the 60% bar, it just is not printed. <b>Hide</b> left the row for a kebab menu (the deals table&rsquo;s own <code>.rowkebab</code> / <code>.cardmenu</code> anatomy), joined by <b>Report inaccurate criteria</b> &mdash; previously a card-footer link, now a danger item next to the row it disputes, which is where the shipped page&rsquo;s Report Issue sits too. The cut-release path died with the slider: <i>Find Lenders</i> now lands on the 60%+ list rather than releasing the cut to 0 for near-misses. <b>A footer strip, tried and removed 31 Aug</b> (Tanya) &mdash; the saved tab&rsquo;s directory-door anatomy was repeated under Matches for an afternoon: a boundary sentence left (<i>Hiding a lender is per-deal and reversible &mdash; they are not notified, and they stay countable in the strip above</i>) and <b>Report inaccurate criteria</b> as a text link right. It came off the same day; the dispute action stays in the row kebab, where it sits next to the criteria it contests, and Matches ends at the table again. What survives it is the count the sentence needed: the results bar prints <i>&middot; N hidden</i> when the deal hides anyone &mdash; the count that vanished with the evaluated-count strip, resurfaced in the one place the bar already counts things.</li>
       <li><b>Bulk actions reached Saved lenders, 31 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the matches selbar anatomy, with the verbs translated for a list that is already saved: <b>Set outreach</b> (a dropdown in the bar &mdash; outreach happens in batches, and the shipped Chan Portfolio deal holds 24 saved lenders) and <b>Remove from deal</b>, one undo restoring the lot. Email-bulk stayed off &mdash; a mail merge this product cannot send &mdash; and Hide belongs to Matches. Institutions are pickable &mdash; Remove applies to them &mdash; but Set outreach skips them with a note in the bar: outreach describes something done to a person, and a Prospector row has no person on file. Setting outreach promotes a just-saved row into the saved store, which also fixed a silent no-op the per-row dropdown had on rows saved this session.</li>
@@ -1100,9 +1191,16 @@
         <a href="#/lenders" data-nav="lenders" title="Lenders">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg>
           <span class="nm">Lenders</span></a>
-        <a href="#/leads" data-nav="leads" title="Leads">
+        <!-- Opportunities, not Leads [T · sheet comment, 28 Aug 01:02] — "Let's go
+             with 'Opportunity'", answering "Lead and Opportunity are one object —
+             pick one word". [~] Scope taken as the narrow reading: only the Lead
+             object is renamed, so Deal, Loan Request, Transaction and Loan stand
+             and the shipped My Deals is untouched. The route stays /leads — the
+             shipped path is not a user-facing noun, and changing it is a redirect,
+             not a naming decision. -->
+        <a href="#/leads" data-nav="leads" title="Opportunities">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><circle cx="12" cy="9" r="3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-          <span class="nm">Leads</span></a>
+          <span class="nm">Opportunities</span></a>
       </div>
     </div>
 
@@ -1118,7 +1216,7 @@
     <div class="rail__end">
       <button class="rail__credits" type="button">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-        <span class="nm">0 credits</span><span class="buy">Buy</span>
+        <span class="nm" id="railCredits">0 credits</span><span class="buy">Buy</span>
       </button>
       <div class="rail__accwrap">
         <!-- One account menu for everything person-shaped. The shipped app splits this
@@ -1160,7 +1258,7 @@
       <div class="mbar__mark">Lender<i>Prism</i></div>
       <button class="mbar__credits" type="button" data-inert="Credits — the same balance the rail shows; buying opens the credit sheet.">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-        0
+        <span id="mbarCredits">0</span>
       </button>
     </div>
     <div class="page" id="view"></div>
@@ -1212,7 +1310,14 @@ const DISPOSITION = [
    value and label are now the same string — no verbatim-vs-short split to
    preserve in tooltips. */
 const DEAL_STATUS = [
-  { v:"Leads",          label:"Leads",          tone:"muted" },
+  /* New, not Leads [💡 rec · 31 Aug]. Tony named this lane Leads in the same
+     comment set that renamed the Lead object to Opportunity, which left the word
+     naming a stage and nothing else in the product. Not "Opportunities" either:
+     that is the object's name, and a Deal sitting at stage "Opportunities" would
+     put an object noun in a lane slot — the same category error, pointed the
+     other way. Stage 2 is Screening, so New states what the stage is without
+     borrowing the next lane's word. */
+  { v:"New",            label:"New",            tone:"muted" },
   { v:"Screening",      label:"Screening",      tone:"gold"  },
   { v:"Outreach",       label:"Outreach",       tone:"blue"  },
   { v:"Quoting",        label:"Quoting",        tone:"blue"  },
@@ -1245,9 +1350,24 @@ const DEALS = [
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
     plan:{ strategy:"Renovate & increase rents", timeline:"24 months to stabilized", noi:352000, exit:"Long-term hold" },
     mgmt:{ kind:"Third-Party", co:"Bayou Residential Management", props:12, units:2400 },
+    /* Argued only from numbers this page already shows, so a reader can check
+       every claim against the facts above it: 2016 vintage, 93.5% occupied,
+       $320,000 CapEx on a $6.4M basis, $352,000 NOI against $4.5M requested
+       (7.8% debt yield), $4.1M liquidity (91% of the loan). [~] */
+    sw:{ strengths:"Built 2016, so the value-add is interior finish work rather than systems or envelope \u2014 $320,000 of CapEx against a $6.4M basis. The asset is already 93.5% occupied, so the business plan does not depend on lease-up, and the sponsor has 14 years and six multifamily assets behind it. Agency-eligible at 70% LTV.",
+        weaknesses:"Projected stabilized NOI of $352,000 is a 7.8% debt yield on the $4.5M requested \u2014 thin if rent growth stalls. Mitigating: the programme touches only 40% of units, so CapEx can be paced against achieved rents instead of committed up front; four years of interest-only hold debt service flat through the plan; and the sponsor\u2019s $4.1M of liquidity covers 91% of the loan amount." },
     summary:"Acquisition financing for a 42-unit garden-style multifamily asset, with a light value-add programme across 40% of the units. Assumable agency debt is not in place; the sponsor is seeking a ten-year fixed term with four years interest-only.",
-    sponsor:{ name:"Brightwater Residential", lead:"M. Adeyinka", track:"6 multifamily assets, 3 exits", principals:2, liquidity:4.1, worth:18.2, years:14 },
-    docs:{ "Executive summary":false, "Rent roll":false, "Sponsor PFS":false, "T-12 operating statement":false }
+    sponsor:{ name:"Brightwater Residential", lead:"M. Adeyinka", track:"6 multifamily assets, 3 exits", principals:2, liquidity:4.1, worth:18.2, years:14,
+              guarantors:"M. Adeyinka and one co-principal, joint and several on carve-outs", credit:"None disclosed" },
+    docs:{ "Executive summary":true, "Rent roll":true, "Sponsor PFS":true, "T-12 operating statement":false },
+    /* Who provided each file. [T] Tony, page inventory row 37, 28 Aug: uploading is
+       "both the borrower and the broker", so provenance stops being derivable —
+       every filled row today reads "uploaded {date}" and names no actor because
+       there is only one possible answer. [~] The split here is sample. */
+    docBy:{ "Executive summary":"you", "Rent roll":"borrower", "Sponsor PFS":"borrower" }
+    /* The requested state — the third one d.docs, a boolean per slot, cannot hold —
+       is left unseeded: Ask the borrower is the control worth landing on, and one
+       click produces the pending row from it. */
   },
   {
     id:"midtown", name:"Midtown Retail Permanent Debt", observed:"all",
@@ -1256,7 +1376,16 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:88.0, built:2004, balance:2.35,
     summary:"Permanent debt to retire a maturing bridge facility on a nine-tenant neighbourhood centre. Anchor lease renewed through 2033; the borrower is rate-sensitive and will trade proceeds for term.",
-    sponsor:{ name:"Kessler Midtown Holdings", lead:"R. Kessler", track:"4 retail centres, 1 exit", principals:1, liquidity:1.6, worth:7.4, years:9 },
+    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"No IO",
+            prepay:"Okay with yield maintenance", hold:"10 years" },
+    plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 no repositioning planned", noi:268000, exit:"Long-term hold" },
+    mgmt:{ kind:"Borrower Affiliated", co:"Kessler Retail Services", props:4, units:null },
+    su:{ sources:[["Senior Debt",3100000]],
+         uses:[["Pay Off Outstanding Balance",2350000],["CapEx",575000],["Lender Origination Fees",31000],["Mortgage Broker Fee",39000],["Legal Fees",45000],["Third-Party Reports",28000],["Other Closing Costs",32000]] },
+    sw:{ strengths:"The anchor renewed through 2033, so more than half the income is contracted past the term of the loan being sought. Projected NOI of $268,000 is an 8.6% debt yield on $3.1M, and the 2004 vintage means the CapEx here is tenant improvement rather than building work.",
+        weaknesses:"Twelve per cent vacant across a nine-tenant centre, and one anchor carries the rent roll \u2014 a single departure moves the coverage. Mitigating: the anchor is the tenant with the longest remaining term, the borrower is taking no interest-only so the loan amortises from month one, and yield maintenance was accepted to buy the lowest fixed rate." },
+    sponsor:{ name:"Kessler Midtown Holdings", lead:"R. Kessler", track:"4 retail centres, 1 exit", principals:1, liquidity:1.6, worth:7.4, years:9,
+              guarantors:"R. Kessler, sole recourse \u2014 single-principal sponsor", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":true, "Sponsor PFS":false, "T-12 operating statement":false }
   },
   {
@@ -1268,7 +1397,16 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:100, built:1998, balance:4.1,
     summary:"Cash-out refinance on a fully leased 140,000 sq ft last-mile distribution building. Single tenant, seven years remaining, annual escalations of 3%.",
-    sponsor:{ name:"Northside Logistics Partners", lead:"D. Ferraro", track:"9 industrial assets, 5 exits", principals:3, liquidity:6.8, worth:24.5, years:21 },
+    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan","CMBS Loan"], program:"10-Yr", io:"3-Year",
+            prepay:"Okay with defeasance", hold:"10 years" },
+    plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 single tenant, seven years remaining", noi:563000, exit:"Long-term hold" },
+    mgmt:{ kind:"Self-Managed", co:"Northside Logistics Partners", props:9, units:null },
+    su:{ sources:[["Senior Debt",6400000]],
+         uses:[["Pay Off Outstanding Balance",4100000],["Cash Out to Sponsor",1950000],["Lender Origination Fees",64000],["Mortgage Broker Fee",80000],["Legal Fees",55000],["Third-Party Reports",42000],["Other Closing Costs",109000]] },
+    sw:{ strengths:"One hundred per cent leased with seven years remaining and 3% annual escalations, so the income steps up through the whole term. At 60% LTV this is the least levered request in the pipeline, and $563,000 of NOI is an 8.8% debt yield on $6.4M.",
+        weaknesses:"Single-tenant, which means occupancy is binary: the building is either fully leased or empty, and the 1998 shell would need capital to re-tenant. Mitigating: seven years of remaining term outruns any near-term rollover, the sponsor has 21 years and nine industrial assets behind it, and 60% leverage leaves room to carry a vacancy." },
+    sponsor:{ name:"Northside Logistics Partners", lead:"D. Ferraro", track:"9 industrial assets, 5 exits", principals:3, liquidity:6.8, worth:24.5, years:21,
+              guarantors:"D. Ferraro and two co-principals, joint and several", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":false, "Sponsor PFS":true, "T-12 operating statement":true }
   },
   {
@@ -1281,7 +1419,16 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     units:132, occupancy:71.2, built:2009, price:11.0,
     summary:"Bridge facility to acquire and reposition a 132-key select-service hotel two blocks from the convention centre. Eighteen-month business plan, PIP budgeted at $2.1M, exit to agency or CMBS on stabilisation.",
-    sponsor:{ name:"Causeway Hospitality Group", lead:"T. Okonkwo", track:"11 hotels, 6 exits", principals:2, liquidity:9.2, worth:41.0, years:18 },
+    terms:{ executions:["Bridge Loan"], program:"Floater", io:"Full-Term IO",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"3 years" },
+    plan:{ strategy:"Reposition", timeline:"18 months to stabilized", noi:1180000, exit:"Refinance" },
+    mgmt:{ kind:"Third-Party", co:"Bayshore Hotel Management", props:7, units:940 },
+    su:{ sources:[["Senior Debt",8250000],["C-Pace",600000],["Preferred Equity",1500000],["Cash contributed by Sponsors & KPs",1350000],["Cash raised via Syndication",800000]],
+         uses:[["Purchase Price",11000000],["CapEx",1000000],["Lender Origination Fees",124000],["Mortgage Broker Fee",103000],["Legal Fees",95000],["Third-Party Reports",68000],["Other Closing Costs",110000]] },
+    sw:{ strengths:"Two blocks from the convention centre, which is the demand driver the whole plan runs on, and the sponsor has eleven hotels and six exits behind it. The PIP is fully budgeted at $1.0M rather than assumed, with $600,000 of it carried by a C-PACE assessment rather than by equity, and full-term interest-only holds debt service flat across the eighteen-month plan.",
+        weaknesses:"Occupancy is 71.2% going in and the exit is a refinance, so the plan depends on both stabilising the asset and a receptive debt market in three years. The stack is also the busiest here: $600,000 of C-PACE and $1.5M of preferred equity sit between the loan and the sponsor, so a senior lender is underwriting an intercreditor and an assessment that ranks ahead of its own lien. Mitigating: $2.15M of sponsor and syndicated cash still sits beneath all of it, the hold is set to three years against an eighteen-month plan, and stabilised NOI of $1.18M would be a 14.3% debt yield on the senior loan and 13.3% including the assessment \u2014 wide enough to absorb a miss." },
+    sponsor:{ name:"Causeway Hospitality Group", lead:"T. Okonkwo", track:"11 hotels, 6 exits", principals:2, liquidity:9.2, worth:41.0, years:18,
+              guarantors:"T. Okonkwo and one co-principal, joint and several on carve-outs", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":false, "Sponsor PFS":true, "T-12 operating statement":false }
   },
   /* the four below are pure sample data, added so the board and table have
@@ -1293,7 +1440,16 @@ const DEALS = [
     created:"29 Jul", updated:"11 Aug", txType:"Refinance",
     units:610, occupancy:88.4, built:2017, balance:3.7,
     summary:"Rate-and-term refinance of a 610-unit climate-controlled self-storage facility, stabilised at 88% for six consecutive quarters. Existing bank loan matures in November.",
-    sponsor:{ name:"Sunbelt Storage Partners", lead:"K. Reyes", track:"9 storage assets, 2 exits", principals:3, liquidity:2.8, worth:12.4, years:11 },
+    terms:{ executions:["CMBS Loan"], program:"10-Yr", io:"1-Year",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
+    plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised at 88% for six consecutive quarters", noi:391000, exit:"Refinance" },
+    mgmt:{ kind:"Self-Managed", co:"Sunbelt Storage Partners", props:9, units:5400 },
+    su:{ sources:[["Senior Debt",4600000]],
+         uses:[["Pay Off Outstanding Balance",3700000],["CapEx",620000],["Lender Origination Fees",46000],["Mortgage Broker Fee",58000],["Legal Fees",48000],["Third-Party Reports",31000],["Other Closing Costs",97000]] },
+    sw:{ strengths:"Six consecutive quarters at 88% is a stabilisation record rather than a projection, and the 2017 build means the climate control is current. $391,000 of NOI is an 8.5% debt yield on $4.6M at 65% leverage.",
+        weaknesses:"The existing bank loan matures, so this is a refinance on someone else\u2019s clock rather than the sponsor\u2019s. Mitigating: the asset is already stabilised so no lease-up has to happen first, the request is rate-and-term rather than a cash-out, and self-management across nine assets and 5,400 units in this market keeps the operating cost base known." },
+    sponsor:{ name:"Sunbelt Storage Partners", lead:"K. Reyes", track:"9 storage assets, 2 exits", principals:3, liquidity:2.8, worth:12.4, years:11,
+              guarantors:"K. Reyes and two co-principals, joint and several", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":true, "Sponsor PFS":false, "T-12 operating statement":true }
   },
   {
@@ -1303,17 +1459,35 @@ const DEALS = [
     created:"2 Aug", updated:"9 Aug", txType:"Acquisition",
     units:96, occupancy:91.0, built:2012, price:13.5,
     summary:"Acquisition of a 96-unit independent-living community with an in-place operator staying on under a new management agreement. Seeking agency execution with a 35-year amortisation.",
-    sponsor:{ name:"Cactus Wren Capital", lead:"D. Whitehorse", track:"4 senior assets, 1 exit", principals:2, liquidity:5.6, worth:22.7, years:9 },
+    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan","FHA/HUD"], program:"10-Yr", io:"2-Year",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
+    plan:{ strategy:"Stabilize", timeline:"12 months to stabilized", noi:812000, exit:"Long-term hold" },
+    mgmt:{ kind:"Third-Party", co:"Desert Bloom Senior Living", props:11, units:1240 },
+    su:{ sources:[["Senior Debt",9750000],["Mezz Debt",1600000],["Cash contributed by Sponsors & KPs",1900000],["Cash raised via Syndication",800000]],
+         uses:[["Purchase Price",13500000],["CapEx",150000],["Lender Origination Fees",98000],["Mortgage Broker Fee",122000],["Legal Fees",82000],["Third-Party Reports",48000],["Other Closing Costs",50000]] },
+    sw:{ strengths:"The in-place operator stays on under a new management agreement, so the plan does not depend on an operator transition \u2014 the usual failure point in seniors. 91% occupied at a 2012 vintage, with only $150,000 of CapEx budgeted, and both agency and HUD executions are open to it.",
+        weaknesses:"Independent living is the operator-sensitive end of the property type, the sponsor has four senior assets and one exit against a $13.5M purchase, and a $1.6M mezzanine piece takes total leverage to 84% \u2014 the highest here, and an intercreditor the senior lender has to agree to. Mitigating: the operator has 1,240 units under management in this market, $2.7M of common equity still sits beneath both loans, and stabilised NOI of $812,000 is an 8.3% debt yield on the senior and 7.2% across the whole stack, with two years of interest-only to reach it." },
+    sponsor:{ name:"Cactus Wren Capital", lead:"D. Whitehorse", track:"4 senior assets, 1 exit", principals:2, liquidity:5.6, worth:22.7, years:9,
+              guarantors:"D. Whitehorse and one co-principal, joint and several on carve-outs", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":false, "Sponsor PFS":true, "T-12 operating statement":false }
   },
   {
     id:"pearl", name:"Pearl District Office Refinance", observed:false,
     amt:7.2, property:"Office-Multi Tenant", city:"New York", state:"NY", zip:"10013", addr:"148 Lafayette St",
-    financing:"Balance Sheet Debt", ltv:58, status:"Leads",
+    financing:"Balance Sheet Debt", ltv:58, status:"New",
     created:"15 Jul", updated:"6 Aug", txType:"Refinance",
     occupancy:82.5, built:1998, balance:5.9,
     summary:"Cash-neutral refinance of a boutique eight-storey office building, 82% leased across eleven tenants with a 4.2-year WALT. Draft — rent roll still being assembled.",
-    sponsor:{ name:"Mercer Street Holdings", lead:"A. Petrov", track:"7 office assets, 3 exits", principals:4, liquidity:6.1, worth:35.8, years:16 },
+    terms:{ executions:["CMBS Loan","Bridge Loan"], program:"5-Yr", io:"1-Year",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"5 years" },
+    plan:{ strategy:"Stabilize", timeline:"24 months to stabilized", noi:634000, exit:"Sell" },
+    mgmt:{ kind:"Third-Party", co:"Lafayette Property Services", props:14, units:null },
+    su:{ sources:[["Senior Debt",7200000],["Cash contributed by Sponsors & KPs",300000]],
+         uses:[["Pay Off Outstanding Balance",5900000],["CapEx",1150000],["Lender Origination Fees",72000],["Mortgage Broker Fee",90000],["Legal Fees",130000],["Third-Party Reports",58000],["Other Closing Costs",100000]] },
+    sw:{ strengths:"Eleven tenants across eight floors, so no single departure moves the rent roll, and the 4.2-year WALT outruns the five-year term being sought. The request is cash-neutral at 58% LTV \u2014 the lowest leverage in the pipeline \u2014 and $1.15M of leasing capital is funded inside the loan rather than assumed.",
+        weaknesses:"Office in 2026, 82.5% leased in a 1998 building, and the exit is a sale into a property type lenders are pricing defensively. Mitigating: leverage is 58%, the sponsor carries $6.1M of liquidity against a $7.2M loan, and the CapEx line is sized to lease the vacant 17.5% rather than to reposition the building. The rent roll is still being assembled, so every figure here is the sponsor\u2019s until it is verified." },
+    sponsor:{ name:"Mercer Street Holdings", lead:"A. Petrov", track:"7 office assets, 3 exits", principals:4, liquidity:6.1, worth:35.8, years:16,
+              guarantors:"A. Petrov only \u2014 the other three principals are non-recourse", credit:"One 2021 office foreclosure disclosed, unrelated entity" },
     docs:{ "Executive summary":false, "Rent roll":false, "Sponsor PFS":false, "T-12 operating statement":false }
   },
   {
@@ -1323,7 +1497,16 @@ const DEALS = [
     created:"12 Jul", updated:"28 Jul", txType:"Acquisition",
     units:24, occupancy:64.0, built:1962, price:7.4,
     summary:"Duplicate of an earlier submission for the same property — archived. Ground-floor retail with 24 lofts above, heavy-lift reposition of a 1962 building.",
-    sponsor:{ name:"Alamo Urban Ventures", lead:"R. Casillas", track:"5 mixed-use assets, 2 exits", principals:2, liquidity:1.9, worth:8.6, years:7 },
+    terms:{ executions:["Bridge Loan"], program:"Floater", io:"Full-Term IO",
+            prepay:"Must have no prepay (fewer competitive options)", hold:"3 years" },
+    plan:{ strategy:"Reposition", timeline:"24 months to stabilized", noi:486000, exit:"Refinance" },
+    mgmt:{ kind:"Borrower Affiliated", co:"Alamo Urban Management", props:5, units:96 },
+    su:{ sources:[["Senior Debt",5400000],["Cash contributed by Sponsors & KPs",1600000],["Cash raised via Syndication",900000]],
+         uses:[["Purchase Price",7400000],["CapEx",300000],["Lender Origination Fees",54000],["Mortgage Broker Fee",68000],["Legal Fees",40000],["Third-Party Reports",22000],["Other Closing Costs",16000]] },
+    sw:{ strengths:"Ground-floor retail under 24 lofts on a downtown block, and $2.5M of sponsor and syndicated equity sits beneath a 68% loan. Full-term interest-only with no prepay holds debt service flat and leaves the exit refinance unpenalised.",
+        weaknesses:"A 1962 building at 64% occupancy is a heavy-lift reposition, and $300,000 of CapEx is thin against a building of that age. Mitigating: the sponsor is borrower-affiliated on management so the operating plan and the ownership are the same people, and the hold is three years against a twenty-four-month plan. This request is a duplicate of an earlier submission and was archived, so none of it was underwritten." },
+    sponsor:{ name:"Alamo Urban Ventures", lead:"R. Casillas", track:"5 mixed-use assets, 2 exits", principals:2, liquidity:1.9, worth:8.6, years:7,
+              guarantors:"R. Casillas and one co-principal, joint and several", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":false, "Sponsor PFS":false, "T-12 operating statement":false }
   },
   /* Three more sample deals, 26 Aug. They exist so the board reads as a
@@ -1339,21 +1522,39 @@ const DEALS = [
   {
     id:"harborview", name:"Harborview Student Housing Acquisition", observed:false,
     amt:10.5, property:"Student Housing", city:"Austin", state:"TX", zip:"78705", addr:"2222 Rio Grande St",
-    financing:"Agency (Freddie Mac)", ltv:70, status:"Leads",
+    financing:"Agency (Freddie Mac)", ltv:70, status:"New",
     created:"22 Aug", updated:"25 Aug", txType:"Acquisition",
     units:184, occupancy:96.0, built:2014, price:13.9,
     summary:"Acquisition of a 184-bed purpose-built student housing asset four blocks from campus, pre-leased at 96% for the coming academic year. Intake received; sizing not started.",
-    sponsor:{ name:"Longhorn Campus Partners", lead:"J. Okafor", track:"3 student assets, 1 exit", principals:2, liquidity:3.4, worth:14.6, years:8 },
+    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"3-Year",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
+    plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 pre-leased at 96% for the coming year", noi:892000, exit:"Long-term hold" },
+    mgmt:{ kind:"Third-Party", co:"Campus Living Group", props:6, units:1860 },
+    su:{ sources:[["Senior Debt",10500000],["Institutional GP/LP Equity",3500000],["Cash contributed by Sponsors & KPs",400000]],
+         uses:[["Purchase Price",13900000],["CapEx",180000],["Lender Origination Fees",105000],["Mortgage Broker Fee",131000],["Legal Fees",45000],["Third-Party Reports",39000]] },
+    sw:{ strengths:"Pre-leased at 96% for the coming academic year, so the income is contracted before closing rather than projected, and four blocks from campus is the distance the property type is priced on. Purpose-built in 2014, so $180,000 of CapEx is the whole capital plan.",
+        weaknesses:"Student housing re-leases its entire rent roll every twelve months, the sponsor has three assets and one exit against a $13.9M purchase, and its own cash in the deal is $400,000 against $3.5M from an institutional LP \u2014 a 10% co-invest is the thin end of what a lender wants to see. Mitigating: the manager runs 1,860 beds in this market, $3.9M of equity still sits beneath a 70% agency loan and the LP is one decision-maker rather than a retail syndication, and three years of interest-only covers two full leasing cycles before amortisation starts." },
+    sponsor:{ name:"Longhorn Campus Partners", lead:"J. Okafor", track:"3 student assets, 1 exit", principals:2, liquidity:3.4, worth:14.6, years:8,
+              guarantors:"J. Okafor and one co-principal, joint and several on carve-outs", credit:"None disclosed" },
     docs:{ "Executive summary":false, "Rent roll":false, "Sponsor PFS":false, "T-12 operating statement":false }
   },
   {
     id:"magnolia", name:"Magnolia Court Multifamily Refinance", observed:false,
     amt:14.2, property:"Multifamily", city:"Charleston", state:"SC", zip:"29401", addr:"78 Magnolia Rd",
-    financing:"Permanent | Fixed-Rate", ltv:64, status:"Leads",
+    financing:"Permanent | Fixed-Rate", ltv:64, status:"New",
     created:"24 Aug", updated:"26 Aug", txType:"Refinance",
     units:248, occupancy:94.8, built:2019, balance:11.4,
     summary:"Refinance of a 248-unit Class A community out of a maturing construction facility. Stabilised eighteen months; the sponsor wants a ten-year fixed and is testing whether proceeds support a partial return of capital.",
-    sponsor:{ name:"Palmetto Court Holdings", lead:"S. Delacroix", track:"6 multifamily assets, 2 exits", principals:3, liquidity:7.9, worth:29.3, years:13 },
+    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"5-Year",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
+    plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised eighteen months", noi:1164000, exit:"Long-term hold" },
+    mgmt:{ kind:"Third-Party", co:"Lowcountry Residential", props:9, units:2140 },
+    su:{ sources:[["Senior Debt",14200000]],
+         uses:[["Pay Off Outstanding Balance",11400000],["Cash Out to Sponsor",2155000],["CapEx",118000],["Lender Origination Fees",142000],["Mortgage Broker Fee",178000],["Legal Fees",95000],["Third-Party Reports",62000],["Other Closing Costs",50000]] },
+    sw:{ strengths:"A 2019 Class A asset stabilised for eighteen months at 94.8%, taking out a construction facility \u2014 the risk the lender is asked to price has already been retired by the sponsor. At 64% LTV, $1.164M of NOI is an 8.2% debt yield, and five years of interest-only on a ten-year fixed is the widest coverage window in the pipeline.",
+        weaknesses:"The construction loan matures, so the timetable belongs to the maturing lender and not to the borrower, and $2.155M of the proceeds returns development equity rather than staying in the asset. Mitigating: the sponsor holds $7.9M of liquidity against a $14.2M request, the asset needs no capital beyond $118,000, and the take-out is a straightforward agency execution on a stabilised Class A property." },
+    sponsor:{ name:"Palmetto Court Holdings", lead:"S. Delacroix", track:"6 multifamily assets, 2 exits", principals:3, liquidity:7.9, worth:29.3, years:13,
+              guarantors:"S. Delacroix and two co-principals, joint and several on carve-outs", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":false, "Sponsor PFS":false, "T-12 operating statement":false }
   },
   {
@@ -1363,7 +1564,16 @@ const DEALS = [
     created:"18 Aug", updated:"24 Aug", txType:"Acquisition",
     units:null, occupancy:87.5, built:2006, price:9.1,
     summary:"Purchase of a 92,000 sq ft multi-tenant flex industrial park, 87% leased across six tenants with a 3.1-year WALT. Package being assembled; two rent-roll gaps outstanding.",
-    sponsor:{ name:"Catawba Industrial Group", lead:"B. Nkemelu", track:"5 industrial assets, 2 exits", principals:2, liquidity:4.7, worth:19.1, years:12 },
+    terms:{ executions:["CMBS Loan","Bridge Loan"], program:"7-Yr", io:"2-Year",
+            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
+    plan:{ strategy:"Stabilize", timeline:"18 months to stabilized", noi:522000, exit:"Sell" },
+    mgmt:{ kind:"Borrower Affiliated", co:"Catawba Asset Services", props:5, units:null },
+    su:{ sources:[["Senior Debt",5800000],["Cash contributed by Sponsors & KPs",2700000],["Cash raised via Syndication",1000000]],
+         uses:[["Purchase Price",9100000],["CapEx",180000],["Lender Origination Fees",58000],["Mortgage Broker Fee",73000],["Legal Fees",44000],["Third-Party Reports",31000],["Other Closing Costs",14000]] },
+    sw:{ strengths:"Six tenants across 92,000 sq ft, so the vacancy is spread rather than concentrated, and flex industrial in Charlotte is the tightest sub-market the pipeline touches. $3.7M of equity sits beneath a 62% loan and $522,000 of NOI is a 9.0% debt yield \u2014 the widest of any stabilised request here.",
+        weaknesses:"A 3.1-year WALT is shorter than the seven-year term being sought, so the rent roll turns over inside the loan, and two rent-roll gaps are still open in the package. Mitigating: 62% leverage and a 9% debt yield leave room for re-leasing downtime, the sponsor manages the asset itself, and two years of interest-only covers the eighteen-month stabilisation." },
+    sponsor:{ name:"Catawba Industrial Group", lead:"B. Nkemelu", track:"5 industrial assets, 2 exits", principals:2, liquidity:4.7, worth:19.1, years:12,
+              guarantors:"B. Nkemelu and one co-principal, joint and several", credit:"None disclosed" },
     docs:{ "Executive summary":true, "Rent roll":false, "Sponsor PFS":true, "T-12 operating statement":false }
   }
 ];
@@ -1591,6 +1801,18 @@ const S = {
   /* Execution Support per deal: undefined | "requested" | "in_progress".
      Midtown is seeded in progress so the working state is on screen. [~] */
   ops: { midtown: "in_progress" }, dirRadius: 100,
+  /* A paid contact request against a Prospector institution.
+     "dealId:acct" -> { state:"working"|"returned", due, left, on }. [T] Tony,
+     page inventory row 16, 27 Aug: pending reads "working" or "in progress",
+     the broker is notified when the contact arrives, and "if nothing found
+     after 7 days, credit is returned." Texas Capital is seeded returned so the
+     refund — the half of the answer that involves the broker's money — is on
+     screen without waiting a week. [~] The dates are sample. */
+  findc: { "riverside:texascap": { state: "returned", on: "29 Aug" } },
+  /* The balance the rail and the top bar both print. It was a hardcoded 0, which
+     made the spend and the refund invisible; a credit that never moves cannot
+     show that it came back. [~] The starting figure is sample. */
+  credits: 3,
   cardMenu: null, cardSub: false, selOpen: null,
   settingsOpen: false, setDrill: null, hideLanes: new Set(),
   sumClosed: new Set(),
@@ -1769,6 +1991,28 @@ function applySel(key, v) {
   if (kind === "d") { S.status[id] = v; return; }
   if (kind === "nd") { S.draft[id] = v; return; }
   if (kind === "dr") { S.dirRadius = Number(v); return; }
+  /* section editor on the deal's Financing tab. id is "<object>.<field>",
+     the same path the text inputs carry on data-se. */
+  if (kind === "se") {
+    const d = dealById(S.dealId);
+    if (d) { const [o, k] = id.split("."); if (d[o]) d[o][k] = v; }
+    return;
+  }
+  /* filing a loose upload against a required document. Alone among the selects
+     here this one has no value to hold: the choice moves the row out of the
+     extras list and takes the control with it, so cur is always empty and the
+     placeholder is the whole label. id is the filename, v the slot chosen. */
+  if (kind === "da") {
+    const d = dealById(S.dealId);
+    if (d) {
+      d.docAssign = d.docAssign || {}; d.docAssign[v] = id; d.docs[v] = true;
+      /* filing an upload against a slot answers whatever was asked for there,
+         and the broker is the one who filed it */
+      d.docBy = d.docBy || {}; d.docBy[v] = "you";
+      if (d.docReq) delete d.docReq[v];
+    }
+    return;
+  }
   if (kind === "bo") {
     /* bulk outreach. Institutions are skipped — outreach describes something
        done to a person, and a Prospector row has no person on file. A fresh
@@ -2181,27 +2425,15 @@ function suBlock(d) {
   return `<div class="su__grid">${side("Sources", d.su.sources)}${side("Uses", d.su.uses)}</div>`;
 }
 
-/* collapsible section shell. A closed section shows `pv` — its one-line
-   summary — on the header, so nothing scannable is lost to the collapse. */
-function sumSect(key, title, inner) {
-  const closed = S.sumClosed.has(key);
-  return `<section class="sec${closed ? " closed" : ""}">
-    <button type="button" class="sec__hd" data-sect="${key}" aria-expanded="${!closed}">
-      <span class="sec__cap">${title}</span>
-      <span class="sec__car" aria-hidden="true">&rsaquo;</span>
-    </button>
-    ${closed ? "" : inner}
-  </section>`;
-}
-
-/* always-open section — same shell, no toggle. Terms and Business plan are
-   scan-first content [T, artifact 26 Aug]; only Sources & uses collapses. */
-function fixSect(title, inner) {
-  return `<section class="sec">
-    <div class="sec__hd sec__hd--fix"><span class="sec__cap">${title}</span></div>
-    ${inner}
-  </section>`;
-}
+/* Per-section collapse used to live here — sumSect for the toggling shell and
+   fixSect for the always-open one. Both went unreferenced when Sources & uses
+   lost its chevron on 30 Aug, and were deleted on 31 Aug after Tanya asked
+   whether sections should open collapsed: the answer had to be argued rather
+   than reached for. secHd is the one section header now. S.sumClosed survives
+   because the Deal summary card itself still toggles, on the "card" key.
+   sumSect's comment had outlived its code too — it described a closed section
+   printing a one-line `pv` summary on its header, and no such parameter was
+   ever written. */
 
 /* ===========================================================
    Deal form — create and edit share one surface, as Janover's does
@@ -2933,33 +3165,51 @@ function savedTab(d) {
      action offered is the one that would change that. [💡 rec] The badge is
      Prospector, the product's own word — the same badge a banker found inside
      that directory carries, because the two are one pipeline and not two
-     categories. The stage is legible from the row rather than the chip: here
-     three cells say there is nobody to act on. */
-  const prosRows = pros.map(a => `
+     categories. The stage is legible from the row rather than the chip: the cells
+     that cannot be filled say why, and nothing restates it a fourth time. */
+  const prosRows = pros.map(a => {
+  /* Three states, and only the first was drawn. [T] Tony specified the other two
+     on 27 Aug (page inventory row 16) and the row still said the duration was
+     unknown four days later. The countdown and the refund both live in this cell
+     because there is no notification surface to carry them — row 25 [T] — and a
+     broker who is not told a deadline cannot be held to one. */
+  const rq = S.findc[d.id + ":" + a.acct];
+  const outreach = !rq
+    ? `<span class="unset" title="Outreach describes something done to a person, and there is no person on file yet.">No contact yet</span>`
+    : rq.state === "working"
+      ? `<span class="rqcell"><span class="badge badge--outline tone-gold" title="An admin is calling the branch to add a named banker. You are notified when one is on file.">⏳ Working on it</span>
+         <span class="sub">1 credit held · <b>${esc(rq.left)} days left</b></span></span>`
+      : `<span class="rqcell"><span class="badge badge--outline tone-blue" title="Seven days passed with no named banker on file, so the credit went back to your balance.">↺ Credit returned</span>
+         <span class="sub">Nobody found · ${esc(rq.on)}</span></span>`;
+  return `
     <tr class="${S.spicked.has(a.acct) ? "sel" : ""}">
       <td class="pick-cell"><span class="chk"><input type="checkbox" data-spicka="${a.acct}" aria-label="Select ${esc(a.p.co)}" ${S.spicked.has(a.acct) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="white-space:normal">
         <span class="nml"><b>${esc(a.p.co)}</b><span class="src" title="An institution from the Banks &amp; Credit Unions directory, with no contact person on file yet.">Prospector</span></span>
         <span>${esc(a.p.inst)} · ${a.p.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
-        <span style="font-size:12px">Added ${esc(a.added)} · nobody to alert until this account has a contact</span>
+        <span style="font-size:12px">Added ${esc(a.added)}</span>
       </td>
       <td class="num" data-l="Loan range"><span class="unset" title="Loan range, financing services and property types all live on a banker. This institution has none on file, so there is nothing to compare against the deal.">No contacts yet</span></td>
       <td class="chips-cell" data-l="Property type"><span class="unset">—</span></td>
       <td class="chips-cell" data-l="Financing type"><span class="unset">—</span></td>
-      <td data-l="Outreach"><span class="unset" title="Outreach describes something done to a person, and there is no person on file yet.">No contact yet</span></td>
+      <td data-l="Outreach">${outreach}</td>
       <td class="actions-cell"><div class="rowacts" style="justify-content:flex-end">
         <button type="button" class="rowkebab" data-kebab="sa:${a.acct}" aria-haspopup="menu" aria-expanded="${S.cardMenu === "sa:" + a.acct}" aria-label="Actions for ${esc(a.p.co)}">${KEBAB}</button>
         ${S.cardMenu === "sa:" + a.acct ? `<div class="cardmenu" role="menu" aria-label="Institution actions" draggable="false">
-          <button type="button" role="menuitem" data-inert="Find a contact spends one credit: an admin calls the branch and adds a named banker to this institution. The copy promises the search, not a contact — fulfilment is a person doing research, and [~] how long it takes is unknown.">
+          ${rq && rq.state === "working"
+            ? `<button type="button" role="menuitem" data-findcx="${a.acct}" aria-label="Cancel the contact request for ${esc(a.p.co)}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            Cancel request</button>`
+            : `<button type="button" role="menuitem" data-findc="${a.acct}" aria-label="${rq ? "Search again" : "Find a contact"} at ${esc(a.p.co)}" title="Spends one credit: an admin calls the branch and adds a named banker. Seven days, then the credit comes back if nobody is found. [T]">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            Find a contact</button>
+            ${rq ? "Search again" : "Find a contact"}</button>`}
           <div class="cardmenu__sep"></div>
           <button type="button" role="menuitem" class="danger" data-unsaveacct="${a.acct}" aria-label="Remove ${esc(a.p.co)} from this deal">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             Remove from deal</button>
         </div>` : ""}
       </div></td>
-    </tr>`).join("");
+    </tr>`; }).join("");
 
   /* The directory door. [T] Tony, 26 Aug, third session raising Prospector:
      surface the count before the search — "75 banks within a 100-mile
@@ -2985,10 +3235,11 @@ const TERM_PREPAYS = ["Okay with yield maintenance", "Okay with defeasance", "Pr
 const TERM_HOLDS = ["3 years", "5 years", "7 years", "10 years"];
 const PLAN_STRATEGIES = ["Buy and hold yield play", "Stabilize", "Renovate & increase rents", "Reposition", "Ground-up development"];
 const PLAN_EXITS = ["Sell", "Refinance", "Long-term hold"];
+const MGMT_KINDS = ["Self-Managed", "Borrower Affiliated", "Third-Party"];
 
 function secHd(title, key) {
   return `<div class="sec__hd sec__hd--fix"><span class="sec__cap">${title}</span>
-    <button type="button" class="sec__edit" data-secedit="${key}">${S.secEdit === key ? "Done" : "\u270e Edit"}</button></div>`;
+    <button type="button" class="sec__edit${S.secEdit === key ? " sec__edit--on" : ""}" data-secedit="${key}">${S.secEdit === key ? "Done" : "\u270e Edit"}</button></div>`;
 }
 function fixSectE(title, key, inner) {
   return `<section class="sec">${secHd(title, key)}${inner}</section>`;
@@ -2997,21 +3248,32 @@ function secAdd(title, key, label) {
   return `<section class="sec"><div class="sec__hd sec__hd--fix"><span class="sec__cap">${title}</span></div>
     <button class="btn btn--outline btn--sm" type="button" data-secadd="${key}">${label}</button></section>`;
 }
-function selOpts(list, cur) {
-  const extra = cur && !list.includes(cur) ? `<option selected>${esc(cur)}</option>` : "";
-  return `<option value="">\u2014</option>` + extra +
-    list.map(x => `<option value="${esc(x)}"${x === cur ? " selected" : ""}>${esc(x)}</option>`).join("");
+/* A dropdown inside the section editor. It draws the same ui/select.tsx
+   control as the deal form and every status cell, in the form's own field box
+   — replacing a native <select>, which rendered the operating system's list
+   (grey, system-font, ignoring every token in this file) the moment it opened.
+   A leading em-dash row is how a value gets cleared, which is what the native
+   empty <option> was doing. [💡 rec] */
+function seSel(path, list, cur, label) {
+  /* the clear row only exists once there is something to clear, so an unset
+     field falls through to selCtl's placeholder and reads as a prompt rather
+     than as a deliberate em dash — the deal form's own behaviour */
+  const opts = (cur ? [{ v: "", label: "\u2014" }] : []).concat(
+    (cur && !list.includes(cur) ? [cur] : []).concat(list).map(x => ({ v: x, label: x })));
+  return `<div class="fld__sel">${selCtl("se:" + path, opts, cur, label)}</div>`;
 }
 
 function termsSect(d) {
   if (!d.terms) return secAdd("Terms requested", "terms", "+ Add terms");
   if (S.secEdit === "terms") return fixSectE("Terms requested", "terms", `<div class="sedit">
-      <label>Executions to explore</label>
-      <div class="chkgrid">${TERM_EXECUTIONS.map(x => `<label class="chkrow"><input type="checkbox" data-sechk="terms.executions" value="${esc(x)}"${d.terms.executions.includes(x) ? " checked" : ""}>${esc(x)}</label>`).join("")}</div>
-      <label for="se_prog">Loan program</label><select id="se_prog" data-se="terms.program">${selOpts(TERM_PROGRAMS, d.terms.program)}</select>
-      <label for="se_io">Interest-only period</label><select id="se_io" data-se="terms.io">${selOpts(TERM_IOS, d.terms.io)}</select>
-      <label for="se_pp">Prepayment</label><select id="se_pp" data-se="terms.prepay">${selOpts(TERM_PREPAYS, d.terms.prepay)}</select>
-      <label for="se_hold">Hold period</label><select id="se_hold" data-se="terms.hold">${selOpts(TERM_HOLDS, d.terms.hold)}</select>
+      <div class="fld">
+        <label>Executions to explore</label>
+        <div class="chkgrid">${TERM_EXECUTIONS.map(x => `<label class="chkrow"><span class="chk"><input type="checkbox" data-sechk="terms.executions" value="${esc(x)}"${d.terms.executions.includes(x) ? " checked" : ""}><span class="bx">\u2713</span></span>${esc(x)}</label>`).join("")}</div>
+      </div>
+      <div class="fld"><label>Loan program</label>${seSel("terms.program", TERM_PROGRAMS, d.terms.program, "Loan program")}</div>
+      <div class="fld"><label>Interest-only period</label>${seSel("terms.io", TERM_IOS, d.terms.io, "Interest-only period")}</div>
+      <div class="fld"><label>Prepayment</label>${seSel("terms.prepay", TERM_PREPAYS, d.terms.prepay, "Prepayment")}</div>
+      <div class="fld"><label>Hold period</label>${seSel("terms.hold", TERM_HOLDS, d.terms.hold, "Hold period")}</div>
     </div>`);
   return fixSectE("Terms requested", "terms", `<dl class="fkv">
       <dt>Executions to explore</dt><dd>${d.terms.executions.length ? d.terms.executions.map(e => esc(e)).join(" &middot; ") : "\u2014"}</dd>
@@ -3024,10 +3286,12 @@ function termsSect(d) {
 function planSect(d) {
   if (!d.plan) return secAdd("Business plan", "plan", "+ Add business plan");
   if (S.secEdit === "plan") return fixSectE("Business plan", "plan", `<div class="sedit">
-      <label for="se_strat">Strategy</label><select id="se_strat" data-se="plan.strategy">${selOpts(PLAN_STRATEGIES, d.plan.strategy)}</select>
-      <label for="se_tl">Timeline to execute</label><input id="se_tl" type="text" value="${esc(d.plan.timeline)}" data-se="plan.timeline" placeholder="24 months to stabilized">
-      <label for="se_noi">Projected stabilized NOI</label><input id="se_noi" inputmode="numeric" value="${d.plan.noi ? Number(d.plan.noi).toLocaleString("en-US") : ""}" data-sed="plan.noi" placeholder="350,000">
-      <label for="se_exit">Exit strategy</label><select id="se_exit" data-se="plan.exit">${selOpts(PLAN_EXITS, d.plan.exit)}</select>
+      <div class="fld"><label>Strategy</label>${seSel("plan.strategy", PLAN_STRATEGIES, d.plan.strategy, "Strategy")}</div>
+      <div class="fld"><label for="se_tl">Timeline to execute</label>
+        <input class="inp" id="se_tl" type="text" value="${esc(d.plan.timeline)}" data-se="plan.timeline" placeholder="24 months to stabilized"></div>
+      <div class="fld"><label for="se_noi">Projected stabilized NOI</label>
+        <input class="inp" id="se_noi" inputmode="numeric" value="${d.plan.noi ? Number(d.plan.noi).toLocaleString("en-US") : ""}" data-sed="plan.noi" placeholder="350,000"></div>
+      <div class="fld"><label>Exit strategy</label>${seSel("plan.exit", PLAN_EXITS, d.plan.exit, "Exit strategy")}</div>
     </div>`);
   return fixSectE("Business plan", "plan", `<dl class="fkv">
       <dt>Strategy</dt><dd>${esc(d.plan.strategy) || "\u2014"}</dd>
@@ -3056,13 +3320,11 @@ function suSect(d) {
 function finBody(d) {
   return `<div class="card__ct">
       <div class="duo">
-        ${termsSect(d)}
-        ${sponsorSect(d)}
-      </div>
-      <div class="duo">
-        ${planSect(d)}
+        <div class="duocol">${termsSect(d)}${planSect(d)}</div>
+        <div class="duocol">${sponsorSect(d)}${mgmtSect(d)}</div>
       </div>
       ${suSect(d)}
+      ${swSect(d)}
   </div>`;
 }
 
@@ -3070,12 +3332,14 @@ function sponsorSect(d) {
   if (!d.sponsor) return secAdd("Sponsor", "sponsor", "+ Add sponsor");
   const sp = d.sponsor;
   if (S.secEdit === "sponsor") return fixSectE("Sponsor", "sponsor", `<div class="sedit">
-      <label for="sp_nm">Sponsor entity</label><input id="sp_nm" type="text" value="${esc(sp.name)}" data-se="sponsor.name">
-      <label for="sp_ld">Lead principal</label><input id="sp_ld" type="text" value="${esc(sp.lead)}" data-se="sponsor.lead">
-      <label for="sp_tr">Track record</label><input id="sp_tr" type="text" value="${esc(sp.track)}" data-se="sponsor.track" placeholder="6 multifamily assets, 3 exits">
-      <label for="sp_lq">Combined liquidity ($M)</label><input id="sp_lq" type="number" step="0.1" min="0" value="${sp.liquidity ?? ""}" data-sef="sponsor.liquidity">
-      <label for="sp_nw">Combined net worth ($M)</label><input id="sp_nw" type="number" step="0.1" min="0" value="${sp.worth ?? ""}" data-sef="sponsor.worth">
-      <label for="sp_yr">Years experience</label><input id="sp_yr" type="number" min="0" value="${sp.years ?? ""}" data-sef="sponsor.years">
+      <div class="fld"><label for="sp_nm">Sponsor entity</label><input class="inp" id="sp_nm" type="text" value="${esc(sp.name)}" data-se="sponsor.name"></div>
+      <div class="fld"><label for="sp_ld">Lead principal</label><input class="inp" id="sp_ld" type="text" value="${esc(sp.lead)}" data-se="sponsor.lead"></div>
+      <div class="fld"><label for="sp_tr">Track record</label><input class="inp" id="sp_tr" type="text" value="${esc(sp.track)}" data-se="sponsor.track" placeholder="6 multifamily assets, 3 exits"></div>
+      <div class="fld"><label for="sp_lq">Combined liquidity ($M)</label><input class="inp" id="sp_lq" type="number" step="0.1" min="0" value="${sp.liquidity ?? ""}" data-sef="sponsor.liquidity"></div>
+      <div class="fld"><label for="sp_nw">Combined net worth ($M)</label><input class="inp" id="sp_nw" type="number" step="0.1" min="0" value="${sp.worth ?? ""}" data-sef="sponsor.worth"></div>
+      <div class="fld"><label for="sp_yr">Years experience</label><input class="inp" id="sp_yr" type="number" min="0" value="${sp.years ?? ""}" data-sef="sponsor.years"></div>
+      <div class="fld"><label for="sp_gt">Guarantors / carve-out signers</label><input class="inp" id="sp_gt" type="text" value="${esc(sp.guarantors || "")}" data-se="sponsor.guarantors" placeholder="Who signs the carve-outs"></div>
+      <div class="fld"><label for="sp_cr">Credit issues (BKs, foreclosures, litigation)</label><input class="inp" id="sp_cr" type="text" value="${esc(sp.credit || "")}" data-se="sponsor.credit" placeholder="None disclosed"></div>
     </div>`);
   return fixSectE("Sponsor", "sponsor", `<dl class="fkv">
       <dt>Sponsor entity</dt><dd>${esc(sp.name) || "\u2014"}</dd>
@@ -3084,46 +3348,135 @@ function sponsorSect(d) {
       <dt>Combined liquidity</dt><dd class="num">${sp.liquidity ? money(sp.liquidity) : "\u2014"}</dd>
       <dt>Combined net worth</dt><dd class="num">${sp.worth ? money(sp.worth) : "\u2014"}</dd>
       <dt>Years experience</dt><dd class="num">${sp.years ?? "\u2014"}</dd>
+      <dt>Guarantors</dt><dd>${sp.guarantors ? esc(sp.guarantors) : "\u2014"}</dd>
+      <dt>Credit issues</dt><dd>${sp.credit ? esc(sp.credit) : "\u2014"}</dd>
     </dl>`);
 }
 
+/* Section 8 of both intake forms. It was built on 26 Aug for Tony's Figma #8,
+   then lost in the 30-31 Aug rework that moved Sponsor off the rail — the seed
+   object survived on Riverside with nothing reading it. Restored 31 Aug, under
+   Sponsor in the right-hand column: both answer who is behind the deal, one
+   the money and one the operator. The form's
+   two count fields (PROPERTIES / UNITS managed in the subject market) are one
+   line here, because "12 properties" and "2,400 units" answer the same lender
+   question and a lender reads them together. [T, Figma #8] */
+function mgmtSect(d) {
+  if (!d.mgmt) return secAdd("Property management", "mgmt", "+ Add management");
+  const m = d.mgmt;
+  if (S.secEdit === "mgmt") return fixSectE("Property management", "mgmt", `<div class="sedit">
+      <div class="fld"><label>Property management</label>${seSel("mgmt.kind", MGMT_KINDS, m.kind, "Property management")}</div>
+      <div class="fld"><label for="mg_co">Management company</label><input class="inp" id="mg_co" type="text" value="${esc(m.co || "")}" data-se="mgmt.co"></div>
+      <div class="fld"><label for="mg_pr">Properties managed in this market</label><input class="inp" id="mg_pr" type="number" min="0" value="${m.props ?? ""}" data-sef="mgmt.props"></div>
+      <div class="fld"><label for="mg_un">Units managed in this market</label><input class="inp" id="mg_un" type="number" min="0" value="${m.units ?? ""}" data-sef="mgmt.units"></div>
+    </div>`);
+  const scale = [m.props ? m.props + (m.props === 1 ? " property" : " properties") : "",
+                 m.units ? Number(m.units).toLocaleString("en-US") + " units" : ""].filter(Boolean).join(" \u00b7 ");
+  return fixSectE("Property management", "mgmt", `<dl class="fkv">
+      <dt>Management</dt><dd>${m.kind ? esc(m.kind) : "\u2014"}</dd>
+      <dt>Company</dt><dd>${m.co ? esc(m.co) : "\u2014"}</dd>
+      <dt>Managed in this market</dt><dd>${scale || "\u2014"}</dd>
+    </dl>`);
+}
+
+/* Sections 11 and 12 of the .dotx, and the tail of section 7 on the Zoho form.
+   Tony asked for "many of the sections found in this document" [T, Figma #8]
+   and these are the two that only a narrative can carry: every number above
+   them is a fact, and this is the argument made from the facts. The template
+   pairs them by name — Weaknesses / Mitigating Factors — so a weakness with no
+   mitigant is an unfinished sentence, which is why they render side by side
+   and the label keeps both halves. Last on the tab on purpose: it is the case
+   you make once the terms, the sponsor, the plan and the stack are on the
+   table. [~] Riverside's text is sample, argued from its own figures. */
+function swSect(d) {
+  if (!d.sw) return secAdd("Strengths &amp; weaknesses", "sw", "+ Add strengths &amp; weaknesses");
+  if (S.secEdit === "sw") return fixSectE("Strengths &amp; weaknesses", "sw", `<div class="sedit">
+      <div class="fld"><label for="sw_s">Strengths</label>
+        <textarea class="inp" id="sw_s" data-se="sw.strengths" placeholder="What makes this credit work">${esc(d.sw.strengths || "")}</textarea></div>
+      <div class="fld"><label for="sw_w">Weaknesses / mitigating factors</label>
+        <textarea class="inp" id="sw_w" data-se="sw.weaknesses" placeholder="What a lender will push on, and the answer">${esc(d.sw.weaknesses || "")}</textarea></div>
+    </div>`);
+  return fixSectE("Strengths &amp; weaknesses", "sw", `<div class="sw">
+      <div><div class="sw__k">Strengths</div><p class="sw__v">${d.sw.strengths ? esc(d.sw.strengths) : "\u2014"}</p></div>
+      <div><div class="sw__k">Weaknesses &amp; mitigating factors</div><p class="sw__v">${d.sw.weaknesses ? esc(d.sw.weaknesses) : "\u2014"}</p></div>
+    </div>`);
+}
+
+/* [T] Tony, page inventory row 37, 28 Aug: uploading is "both the borrower and
+   the broker" \u2014 a broker or an Admin can ask the borrower, and a broker with an
+   off-platform borrower uploads what he receives himself. The research points the
+   same way: neither broker we interviewed uploads (insight 5, 19 Aug) \u2014 Sean
+   sends a Drive link and the borrower fills it.
+
+   That is not a second button. Two parties uploading makes *who provided this* a
+   fact the row has to carry, and a document that has been asked for is neither
+   provided nor missing \u2014 a third state d.docs, a boolean per slot, cannot hold.
+   Both are drawn here. [~] What is still missing underneath is a borrower to
+   address: the deal carries a sponsor \u2014 entity, lead principal, net worth \u2014 with
+   no email, no phone and no login, and no outbound mail exists in the product,
+   so the ask is drawn and its delivery is not. */
 function docsBody(d) {
   const extra = docExtras(d);
-  if (!docCounts(d).have) return `<div class="card__ct">
+  const lead = (d.sponsor && d.sponsor.lead) || "the borrower";
+  const req = d.docReq || {};
+  const reqKeys = Object.keys(req).filter(k => !d.docs[k]);
+  const missingKeys = Object.entries(d.docs).filter(([, v]) => !v).map(([k]) => k);
+  const askable = missingKeys.filter(k => !req[k]);
+  const askBtn = askable.length
+    ? `<button class="btn btn--outline btn--sm" type="button" data-askb title="Emails ${esc(lead)} a link to upload the ${askable.length === 1 ? "outstanding document" : askable.length + " outstanding documents"} straight onto this deal.">Ask the borrower</button>`
+    : "";
+  if (!docCounts(d).have && !reqKeys.length) return `<div class="card__ct">
     <div class="docempty">
       <div class="docempty__ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
       <b>No documents yet</b>
-      <p>Lenders will ask for an executive summary, a rent roll, a sponsor PFS and a T-12 operating statement.</p>
-      <button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button>
+      <p>Lenders will ask for an executive summary, a rent roll, a sponsor PFS and a T-12 operating statement. You can upload them, or ask ${esc(lead)} to.</p>
+      <div class="docnote" style="justify-content:center">
+        <button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button>
+        ${askBtn}
+      </div>
     </div>
     <input type="file" id="docfile" hidden multiple>
   </div>`;
-  const missingKeys = Object.entries(d.docs).filter(([, v]) => !v).map(([k]) => k);
   const slots = Object.entries(d.docs).filter(([, v]) => v).map(([k]) => {
     const file = (d.docAssign || {})[k];
+    /* [~] Files that predate two-party upload are the broker's by definition \u2014
+       there was nobody else who could have provided them. */
+    const by = (d.docBy || {})[k] === "borrower"
+      ? `<b>${esc(lead)}</b> \u00b7 borrower`
+      : `<b>You</b>`;
     return `<div class="docrow">
           <span class="docrow__tick">\u2713</span>
           <span class="docrow__nm">${esc(k)}</span>
-          <span class="docrow__note">${esc(file || k + ".pdf")} \u00b7 uploaded ${esc(d.created)}</span>
+          <span class="docrow__note">${esc(file || k + ".pdf")} \u00b7 ${esc(d.created)}</span>
+          <span class="docrow__by" title="Who provided this file. A sponsor PFS the borrower supplied and one the broker assembled are not the same evidence to a lender.">${by}</span>
           <button class="btn btn--ghost btn--xs" type="button" data-inert="Download is wired to the existing upload endpoint.">Download</button>
           <button type="button" class="docrow__rm" data-docrm="${esc(k)}" aria-label="Remove ${esc(k)}">\u00d7</button>
         </div>`;
   }).join("");
+  const pend = reqKeys.map(k => `<div class="docrow docrow--pend">
+          <span class="docrow__tick">\u23f3</span>
+          <span class="docrow__nm">${esc(k)}</span>
+          <span class="docrow__note">Requested from ${esc(lead)} \u00b7 ${esc(req[k])} \u00b7 not yet uploaded</span>
+          <button class="btn btn--ghost btn--xs" type="button" data-remind="${esc(k)}">Remind</button>
+          <button type="button" class="docrow__rm" data-reqrm="${esc(k)}" aria-label="Cancel the request for ${esc(k)}">\u00d7</button>
+        </div>`).join("");
   return `<div class="card__ct">
-      ${slots}
+      ${slots}${pend}
       ${extra.length ? `<div class="docxtra">
         ${extra.map(f => `<div class="docrow docrow--extra">
           <span class="docrow__nm">${esc(f)}</span>
           <span class="docrow__note">uploaded ${esc(d.created)}</span>
-          ${missingKeys.length ? `<select class="docas" data-docas="${esc(f)}" aria-label="File ${esc(f)} as a required document">
-            <option value="">File as\u2026</option>
-            ${missingKeys.map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join("")}
-          </select>` : ""}
+          ${missingKeys.length ? `<div class="fld__sel fld__sel--xs">${selCtl("da:" + f,
+            missingKeys.map(k => ({ v: k, label: k })), "",
+            "File " + f + " as a required document", "File as\u2026")}</div>` : ""}
           <button class="btn btn--ghost btn--xs" type="button" data-inert="Download is wired to the existing upload endpoint.">Download</button>
           <button type="button" class="docrow__rm" data-docfrm="${esc(f)}" aria-label="Remove ${esc(f)}">\u00d7</button>
         </div>`).join("")}
       </div>` : ""}
-      <div class="docnote"><button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button></div>
+      <div class="docnote">
+        <button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button>
+        ${askBtn}
+      </div>
       <input type="file" id="docfile" hidden multiple>
     </div>`;
 }
@@ -3267,9 +3620,15 @@ function render() {
   if (S.undo) {
     const t = document.createElement("div");
     t.className = "toast tundo";
-    t.innerHTML = `<span>${esc(S.undo.msg)}</span><button type="button" id="undo">Undo</button>`;
+    /* a toast with nothing to undo is still worth showing — refusing an action
+       has to say so somewhere, and the button would be a dead control. */
+    t.innerHTML = `<span>${esc(S.undo.msg)}</span>${S.undo.fn ? `<button type="button" id="undo">Undo</button>` : ""}`;
     document.body.appendChild(t);
   }
+  /* the balance lives outside #view, so render() has to reach for it */
+  const rc = document.getElementById("railCredits"), mc = document.getElementById("mbarCredits");
+  if (rc) rc.textContent = S.credits + (S.credits === 1 ? " credit" : " credits");
+  if (mc) mc.textContent = String(S.credits);
 }
 
 function route() {
@@ -3364,7 +3723,9 @@ document.addEventListener("click", e => {
       if (k === "terms" && !d.terms) d.terms = { executions: [], program: "", io: "", prepay: "", hold: "" };
       if (k === "plan" && !d.plan) d.plan = { strategy: "", timeline: "", noi: null, exit: "" };
       if (k === "su" && !d.su) d.su = { sources: [["Senior Debt", 0]], uses: [["Purchase Price", 0]] };
-      if (k === "sponsor" && !d.sponsor) d.sponsor = { name: "", lead: "", track: "", liquidity: null, worth: null, years: null };
+      if (k === "sponsor" && !d.sponsor) d.sponsor = { name: "", lead: "", track: "", liquidity: null, worth: null, years: null, guarantors: "", credit: "" };
+      if (k === "mgmt" && !d.mgmt) d.mgmt = { kind: "", co: "", props: null, units: null };
+      if (k === "sw" && !d.sw) d.sw = { strengths: "", weaknesses: "" };
       S.secEdit = k; render();
     }
     return;
@@ -3382,10 +3743,56 @@ document.addEventListener("click", e => {
     return;
   }
   if (t.closest("[data-docupall]")) { const fi = document.getElementById("docfile"); if (fi) fi.click(); return; }
+
+  /* Asking the borrower. [T] row 37, 28 Aug. The request is the state change;
+     the email that would carry it does not exist — and it is the second unbuilt
+     outbound mail in this inventory, the first being the lender invitation the
+     add-a-contact form silently sends. [~] The toast says so rather than the
+     screen pretending a message left the building. */
+  if (t.closest("[data-askb]")) {
+    const d = dealById(S.dealId);
+    if (d) {
+      const lead = (d.sponsor && d.sponsor.lead) || "the borrower";
+      const keys = Object.entries(d.docs).filter(([k, v]) => !v && !(d.docReq || {})[k]).map(([k]) => k);
+      if (keys.length) {
+        d.docReq = d.docReq || {};
+        keys.forEach(k => { d.docReq[k] = "just now"; });
+        S.undo = { msg: keys.length + (keys.length === 1 ? " document" : " documents") + " requested from " + lead +
+            ". [~] No borrower contact exists in the product today — the deal carries a sponsor record with no email, and no outbound mail has been built.",
+          fn: () => keys.forEach(k => delete d.docReq[k]) };
+      }
+      render();
+    }
+    return;
+  }
+  const rmd = t.closest("[data-remind]");
+  if (rmd) {
+    const d = dealById(S.dealId);
+    if (d) {
+      S.undo = { msg: "Reminder sent to " + ((d.sponsor && d.sponsor.lead) || "the borrower") + " about the " +
+        rmd.dataset.remind.toLowerCase() + ". [~] Same unbuilt mailer as the request itself." };
+      render();
+    }
+    return;
+  }
+  const rqr = t.closest("[data-reqrm]");
+  if (rqr) {
+    const d = dealById(S.dealId);
+    if (d && d.docReq) {
+      const k = rqr.dataset.reqrm, was = d.docReq[k];
+      delete d.docReq[k];
+      S.undo = { msg: "Request for the " + k.toLowerCase() + " cancelled.", fn: () => { d.docReq[k] = was; } };
+      render();
+    }
+    return;
+  }
+
   const drm = t.closest("[data-docrm]");
   if (drm) {
     const d = dealById(S.dealId);
-    if (d) { const k = drm.dataset.docrm; if (d.docAssign && d.docAssign[k]) delete d.docAssign[k]; d.docs[k] = false; render(); }
+    if (d) { const k = drm.dataset.docrm; if (d.docAssign && d.docAssign[k]) delete d.docAssign[k];
+      if (d.docBy) delete d.docBy[k];
+      d.docs[k] = false; render(); }
     return;
   }
   const dfr = t.closest("[data-docfrm]");
@@ -3436,12 +3843,12 @@ document.addEventListener("click", e => {
       const id = slugFor(d.name);
       DEALS.push({ id, name: d.name.trim(), observed: false, createdNow: true, amt: parseFloat(d.amt),
         property: d.property, city: d.city.trim(), state: d.state, zip: d.zip.trim(), financing: d.financing,
-        status: "Leads", created: now, updated: now, txType: d.txType, ...tx,
+        status: "New", created: now, updated: now, txType: d.txType, ...tx,
         summary: d.summary.trim() || "No overview yet — add one from Edit deal.", docs: { ...d.docs }, files: d.files.slice(),
         addr: d.addr.trim(), units: parseFloat(d.units) || null, sf: parseFloat(d.sf) || null,
         built: parseFloat(d.built) || null, occupancy: parseFloat(d.occupancy) || null,
         photos: d.photos.slice() });
-      S.status[id] = "Leads";
+      S.status[id] = "New";
       if (saveBtn.id === "dealsavemore") {
         /* stay on the form; the notice link is the only navigation offered */
         S.justCreated = { id, name: d.name.trim() };
@@ -3672,6 +4079,36 @@ document.addEventListener("click", e => {
     S.acctRm[id] = S.acctRm[id] || new Set();
     S.acctRm[id].add(a);
     S.undo = { msg: PROSPECTS.find(x => x.acct === a).co + " removed from this deal.", fn: () => S.acctRm[id].delete(a) };
+    render(); return;
+  }
+
+  /* The paid action, and the two states after it. [T] Tony, page inventory row 16,
+     27 Aug. The credit leaves the balance on the click and comes back on the
+     cancel — a refund nobody can see is not a refund. [~] Seven days and the due
+     date are drawn as fixed sample values; live they are a job timestamp. */
+  const fc = t.closest("[data-findc]");
+  if (fc) {
+    S.cardMenu = null;
+    const a = fc.dataset.findc, k = S.dealId + ":" + a, prev = S.findc[k], co = PROSPECTS.find(x => x.acct === a).co;
+    if (S.credits < 1) {
+      S.undo = { msg: "No credits left, so the search cannot be placed. Buy credits from the sidebar." };
+      render(); return;
+    }
+    S.findc[k] = { state: "working", left: 7, due: "7 Sep" };
+    S.credits -= 1;
+    S.undo = { msg: co + " — an admin is calling the branch. 1 credit held; if nobody is on file by 7 Sep it comes back.",
+      fn: () => { S.credits += 1; if (prev) S.findc[k] = prev; else delete S.findc[k]; } };
+    render(); return;
+  }
+
+  const fx = t.closest("[data-findcx]");
+  if (fx) {
+    S.cardMenu = null;
+    const a = fx.dataset.findcx, k = S.dealId + ":" + a, prev = S.findc[k], co = PROSPECTS.find(x => x.acct === a).co;
+    delete S.findc[k];
+    S.credits += 1;
+    S.undo = { msg: "Search cancelled at " + co + ". The credit is back on your balance.",
+      fn: () => { S.credits -= 1; S.findc[k] = prev; } };
     render(); return;
   }
 
@@ -3908,14 +4345,8 @@ document.addEventListener("change", e => {
     }
     return;
   }
-  const das = t.closest("[data-docas]");
-  if (das) {
-    if (das.value) {
-      const d = dealById(S.dealId);
-      if (d) { d.docAssign = d.docAssign || {}; d.docAssign[das.value] = das.dataset.docas; d.docs[das.value] = true; render(); }
-    }
-    return;
-  }
+  /* the File as… branch that stood here went with the native <select>; the
+     assignment is applySel's "da:" case, reached by the shared click handler */
   if (t.id === "grpacct") { S.grpAcct = t.checked; render(); return; }
   const apick = t.closest("[data-apick]");
   if (apick) {
