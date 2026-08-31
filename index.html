@@ -430,6 +430,9 @@
      a rendering fault, and the broker needs to know the field exists and is empty
      so they can go and fill it. Same words as the deal summary's Execution type fact. */
   .unset { color: var(--muted-foreground); font-style: italic; }
+  /* Last activity column: two stacked lines, event then clock */
+  .lact { display: block; font-size: 12.5px; white-space: nowrap; }
+  .lact.mut { font-size: 12px; color: var(--muted-foreground); }
 
   /* ---- MultiSelect. ui/multi-select.tsx: trigger is min-h-9 w-fit px-3 py-1.5
           rounded-md border-input shadow-xs, and the selected values render as
@@ -679,7 +682,6 @@
   .dz.overfiles { border-color: var(--brand-navy-600); }
   .phgrid.overfiles { outline: 1.5px dashed var(--brand-navy-600); outline-offset: 5px; border-radius: 4px; }
   .phadd:hover { border-color: var(--brand-navy-600); color: var(--foreground); }
-  .maplbl { padding: 8px 2px 0; font-size: 11.5px; color: var(--muted-foreground); }
   .mapbox { aspect-ratio: 16 / 10; border-radius: var(--radius-md); border: 1px solid var(--border); overflow: hidden; background:
       linear-gradient(90deg, rgba(190,200,220,.55) 1px, transparent 1px) 0 0/34px 34px,
       linear-gradient(rgba(190,200,220,.55) 1px, transparent 1px) 0 0/34px 34px,
@@ -688,6 +690,9 @@
   .mapbox .blk { position: absolute; background: color-mix(in srgb, var(--brand-border-300) 65%, #fff); border-radius: 2px; }
   .mapbox .pin { position: absolute; left: 50%; top: 46%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9999px; background: var(--destructive); box-shadow: 0 0 0 4px color-mix(in srgb, var(--destructive) 22%, transparent); }
   .mapbox .site { position: absolute; left: 47%; top: 55%; width: 46px; height: 34px; background: var(--primary); border-radius: 3px; }
+  .mapbox .maptip { position: absolute; left: 50%; top: 46%; transform: translate(-50%, calc(-100% - 14px)); background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 9px; font-size: 11.5px; color: var(--foreground); white-space: nowrap; box-shadow: 0 2px 8px rgba(16, 24, 40, 0.12); opacity: 0; pointer-events: none; transition: opacity 0.12s; }
+  .mapbox .maptip::after { content: ""; position: absolute; left: 50%; bottom: -4px; width: 8px; height: 8px; transform: translateX(-50%) rotate(45deg); background: var(--card); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .mapbox:hover .maptip { opacity: 1; }
 
   /* ---- match distribution ---- */
   .dist { display: flex; align-items: center; gap: 0; padding: 12px 18px; border-bottom: 1px solid var(--border); }
@@ -705,7 +710,10 @@
   .dist .band.strong .n { color: var(--color-success); }
   .dist .band.partial .n { color: var(--color-brand-gold-text); }
 
-  .cut { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); flex-wrap: wrap; background: color-mix(in srgb, var(--muted) 22%, #fff); }
+  /* no fill: the toolbar sits inside the card and the rule under it is enough
+     separation. A tinted band read as a third surface between the segment tabs
+     and the table. */
+  .cut { display: flex; align-items: center; gap: 12px; padding: 0 18px 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
   .cut .lbl { font-size: 13px; color: var(--muted-foreground); }
   .cut input[type=range] { width: 168px; accent-color: var(--primary); }
   .cut .v { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 38px; }
@@ -723,6 +731,40 @@
   .pill { display: inline-block; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1px 7px; font-size: 12px; color: var(--muted-foreground); margin: 0 3px 3px 0; background: var(--card); }
   .more { display: inline-block; background: none; border: 1px dashed var(--brand-border-300); border-radius: var(--radius-sm); padding: 1px 7px; font-size: 12px; color: var(--muted-foreground); cursor: pointer; }
   .more:hover { border-color: var(--muted-foreground); color: var(--foreground); }
+
+  /* account rollup. The account row is a heading, not a lender — drawn as a
+     slim full-width band (the grouped-table convention: Airtable and Asana
+     band the group header rather than faking a data row; Xero right-aligns
+     the rollup total on the band), roster facts inline, range rollup on the
+     right. No per-column cells, so no em dashes posing as missing data;
+     capability still lives only on the banker rows, which keep the ordinary
+     row anatomy, indented. The whole band toggles, not just the caret. */
+  .acctrow > td { background: color-mix(in srgb, var(--muted) 34%, #fff); border-top: 1px solid var(--border); }
+  /* .nm-cell blocks its b and span, so the name line becomes an explicit row */
+  .nm-cell .nml { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; font-size: inherit; color: inherit; }
+  .nm-cell .nml b { display: inline; }
+  .acctband { padding: 6px 12px 6px 4px; cursor: pointer; }
+  .acctband .bw { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+  .acctband .an { font-weight: 600; font-size: 14px; color: var(--foreground); white-space: nowrap; }
+  .acctband .am { font-size: 12px; color: var(--muted-foreground); font-weight: 400; white-space: nowrap; }
+  .acctband .asv { color: var(--color-success); }
+  .acctband .ar { margin-left: auto; padding-left: 16px; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--foreground); }
+  .acctcar { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 0; background: none; cursor: pointer; color: var(--muted-foreground); flex: 0 0 auto; }
+  .acctcar svg { transition: transform .12s ease; }
+  .acctcar.shut svg { transform: rotate(-90deg); }
+  .acctrow .as { display: block; font-size: 12px; color: var(--muted-foreground); font-weight: 400; }
+  /* 12px cell pad + 20px caret + 8px gap = the account name's rail; children share it */
+  .subrow .nm-cell { padding-left: 40px; }
+  /* the caption over the contactless institutions. Blue, not the account row's
+     neutral: it explains rather than groups, and it shares the tint of the
+     Prospector badge on the rows underneath it. */
+  .noterow > td { background: color-mix(in srgb, var(--brand-blue-400) 6%, #fff); border-top: 1px solid color-mix(in srgb, var(--brand-blue-400) 22%, #fff); }
+  .noterow .nt { display: flex; align-items: flex-start; gap: 8px; color: var(--brand-navy-600); font-size: 12.5px; line-height: 1.45; }
+  .noterow .nt svg { flex: 0 0 auto; margin-top: 1px; opacity: .85; }
+  /* One badge, one colour. Blue rather than the neutral of the criteria pills:
+     provenance is a different kind of fact from a property type, and a grey
+     chip beside grey chips reads as one more capability. */
+  .nm-cell .src, .src { display: inline-block; width: auto; flex: 0 0 auto; border: 1px solid color-mix(in srgb, var(--brand-blue-400) 32%, #fff); border-radius: var(--radius-sm); padding: 0 6px; font-size: 11px; line-height: 1.5; color: var(--brand-navy-600); background: color-mix(in srgb, var(--brand-blue-400) 9%, #fff); }
 
   .selbar { display: flex; align-items: center; gap: 12px; padding: 9px 18px; background: var(--accent); border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent-foreground); }
   .selbar b { font-variant-numeric: tabular-nums; }
@@ -1009,11 +1051,14 @@
       <li><b>Three deals were added on 26 Aug for the board's shape, not for volume.</b> <span class="note">[&#128161; rec]</span> Eleven lanes each holding exactly one card is the one distribution a real pipeline never has &mdash; work piles up at the front and thins toward the close. Harborview, Magnolia and Foundry (the three already drawn in the Figma <i>Deals</i> table frame) sit at <b>Leads</b> and <b>Screening</b>, giving 3 &middot; 3 &middot; 1 &middot; 2 &middot; 1 &middot; 0 &middot; 1 &middot; 0 across the eight statuses. Nothing about them is hand-authored beyond the deal record: their match counts (2 &middot; 1 &middot; 4) fall out of the same five-criteria scoring every other deal runs through, and their saved-lender counts are zero because nothing has been shortlisted at those stages. <b>Funded</b> and <b>On Hold</b> stay empty, so the dashed &ldquo;No deals&rdquo; placeholder is visible where it belongs.</li>
       <li><b>Board Settings is half-sourced.</b> The button and its position come from Janover&rsquo;s board <span class="note">[comp Aug 19]</span>; the panel&rsquo;s contents do not — we never saw inside theirs, so column visibility and card fields are conventional board settings <span class="note">[~]</span>. Both act on real data: a hidden column&rsquo;s deals stay in the pipeline and in every count (the note under the board says so), and each card field maps to a <code>loan_requests</code> column, named in the row&rsquo;s hover.</li>
       <li><b>Deal statuses are eight</b> <span class="note">[&#128161; rec &middot; 28 Aug]</span> &mdash; Leads &middot; Screening &middot; Outreach &middot; Quoting &middot; Processing &middot; Funded &middot; Dead &middot; On Hold, a collapse of Tony&rsquo;s own eleven <span class="note">[T &middot; Figma comment, 21 Aug]</span>: Lead | Prospective Deal &middot; Screening, Sizing &amp; Packaging &middot; Review Loan Request Package &middot; Lender/Investor Outreach &middot; Present Quotes to Client &middot; Secure Term Sheet / Application &middot; Engage Lender/Investor &middot; Under App | Processing &middot; Funded &amp; Closed &middot; Dead &middot; On Hold, supplied verbatim in his comment on the Board view frame. The fold: the three packaging steps become <b>Screening</b>, quotes and term sheet become <b>Quoting</b>, lender engagement and underwriting become <b>Processing</b>. <b>Dead</b> and <b>On Hold</b> stay separate, as Tony had them: Dead is terminal and only feeds post-mortem reporting, On Hold is expected back &mdash; fusing them would bury recoverable deals among lost ones, the same trap as the retired fused Agency chip. His eleven had replaced the Janover placeholder set demoed 19 Aug. The schema fact stands: <code>db/schema.rb</code> confirms <code>loan_requests</code> has <b>no status column at all</b>, so this is a new column, not a rename.</li>
-      <li><b>Lender status and outreach are the real enums</b>, from <code>app/models/loan_request_match.rb</code> and <code>app/(dashboard)/lenders/types.ts</code>: <code>status</code> is six values, <code>disposition</code> is five and its labels here are the repo's own <code>DISPOSITION_OPTIONS</code> strings. <code>disposition: quoted</code> is the product's Term Sheet.</li>
+      <li><b>Lender status and outreach are the real enums</b>, from <code>app/models/loan_request_match.rb</code> and <code>app/(dashboard)/lenders/types.ts</code>: <code>status</code> is six values, <code>disposition</code> is five and its labels here are the repo's own <code>DISPOSITION_OPTIONS</code> strings. <code>disposition: quoted</code> is the product's Term Sheet. Collapsed to one control, 31 Aug <span class="note">[&#128161; rec &middot; Janover]</span>: the broker edits only <b>Outreach</b> &mdash; disposition is the broker&rsquo;s own log, so it gets the dropdown &mdash; while status is the lender&rsquo;s answer and renders as a read-only badge (<i>Lender interested</i> / <i>declined</i> / <i>not a fit</i>) only once the lender has actually acted; the passive states (pending, open request, under review) already show as the digest clock, now in a <b>Last activity</b> column. The shipped table prints one column too &mdash; labeled <i>Status</i> but holding the <code>DISPOSITION_OPTIONS</code> values, the label lying about its contents &mdash; so one column is also what production does; ours names the axis honestly. Three of the five disposition values duplicate status values, which is why two editable dropdowns invited drift: a lender declines in-platform and the broker&rsquo;s column still says under review. Rows sort hottest first (Quoted &rarr; Not Yet Contacted). The lender-answer badge came off within the hour (Tanya) &mdash; beside the dropdown it duplicated the outreach value &mdash; so the lender&rsquo;s in-platform response now has no surface again until activity logging gives it one. The dropdown gained the colour vocabulary instead: one dot per disposition, on the trigger and in the open list &mdash; the shipped page colours these same labels, but prints <i>Not Yet Contacted</i> in the same red as <i>Not a Fit</i>; here amber separates &ldquo;not started&rdquo; from the dead ends, and red marks only <i>Not a Fit</i>. The action column then folded to the matches-table anatomy (Tanya): one primary button per row &mdash; <b>Email</b> on a banker, <b>Find a contact</b> on an institution (renamed from <i>Ask Prism to find a contact</i>; the credit-spend explanation lives in the click-note, not the label) &mdash; and the rest behind the same row kebab, <i>Log a call</i> above a red <i>Remove from deal</i>, which gained its object since a menu item floats free of its row&rsquo;s gravity. The two tables then converged on one column set (Tanya): Saved lenders carries the matches columns &mdash; Loan range, Property type, Financing type, same two-chips-then-<i>+N more</i> anatomy &mdash; plus Outreach, so a broker comparing a saved shortlist against fresh matches reads the same grid; the short-lived Last activity column folded back into the lender cell as the digest line it started as. Last activity is also the slot where derived state lands once contact logging exists (audit priority 2) &mdash; Janover&rsquo;s Deal Inbox computes its status pill from the conversation thread itself, and both LenderPrism vocabularies end at Quoted while Janover&rsquo;s funnel runs on to Terms Accepted, Underwriting and Closed Won: the back half of the funnel is missing from the data model entirely.</li>
       <li><b>Fit is computed, never typed.</b> Five weighted criteria — amount 30, property type 25, geography 20, financing 15, appetite 10 — with property and geography as knock-outs and a financing miss capping below strong. The chips beside each score sum to it, so a 100% row shows five ticks. Drag the cut; every count on the page moves with it.</li>
       <li><b>The deal summary is built only from columns that exist.</b> Every field on it is a real <code>loan_requests</code> column — <code>transaction_name</code>, <code>loan_amount_cents</code>, <code>property_type</code>, <code>transaction_summary</code>, <code>unit_quantity</code>, <code>physical_occupancy</code>, <code>sponsor_combined_net_worth</code> and the rest. Nothing here needs a migration; the read layer is the whole gap.</li>
       <li><b>Three controls on a deal row, three destinations</b> — the name opens the deal, the match count opens the scored list, <code>Find Lenders</code> opens the same list with the cut released to 0 so the near-misses are visible, and scrolls straight to the <b>Lenders on this deal</b> section.</li>
-      <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. A walk of the running product on <b>28 Aug</b> moved three more values across that line: Riverside is <b>Austin, Texas 78701</b> at <b>$4,500,000</b> (not Houston at $12.0M), Northside&rsquo;s financing type is <b>Agency (Fannie Mae)</b> on an industrial refinance, and Gulf Coast&rsquo;s financing type is <b>unset</b> &mdash; the field is optional on the request form and that request left it blank, which is what the <i>Not specified</i> cell in the table now shows. Riverside&rsquo;s unit count, purchase price, NOI and Sources&nbsp;&amp;&nbsp;uses were re-scaled to the observed $4.5M loan so the summary cannot contradict its own header <span class="note">[~]</span>; the numbers are still sample, only their magnitude is now anchored. Sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other nineteen lenders are sample data, invented so the scoring and filters have something to bite on.</li>
+      <li><b>Bankers roll up to accounts on the matches list, 31 Aug</b> <span class="note">[T]</span> <span class="note">[&#128161; rec]</span> &mdash; Tony, 14 Aug: &ldquo;we might have 5 bankers that work for a Company, like Wells Fargo or Chase. When a loan search is performed, those five lenders will display in the search results. People should roll up to Accounts within the search results as well.&rdquo; They did not: a person was the row, so five colleagues arrived as five unrelated lines and saving one left the other four sitting there. The matches list now groups by account behind a <b>Group by account</b> switch in the results bar, <b>on by default</b> &mdash; the flat list is the reported bug, so the corrected view is the one a broker lands on, and the switch is what it costs to go back. Sunbelt Agency Group carries five bankers so Tony&rsquo;s own example is on screen; Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges. The account row is a <i>heading</i>, not a lender: it counts the roster and spans its ranges (<i>$1M &ndash; $50M across 5 bankers</i>) and leaves property and financing blank, because a credit box belongs to a person &mdash; rolling capabilities up would advertise an appetite no banker at the institution actually has. Selecting the account selects its people; Save stays per banker, since a term sheet comes from a human being. Redrawn 31 Aug after a Mobbin sweep <span class="note">[&#128161; rec &middot; Mobbin]</span>: the heading stopped renting the data columns &mdash; its range sat in the Loan range cell and em dashes under Property and Financing read as missing data &mdash; and became the slim full-width band grouped tables converge on (Airtable and Asana band the group header; Xero right-aligns the rollup total on it, where the range summary now sits). One line &mdash; caret, account name, roster facts, a green <i>&#10003; N saved</i> when the group holds saved bankers, range on the right &mdash; and the whole band toggles, not just the caret. <b>Source became a badge and a filter</b> rather than the tab it is today &mdash; and it prints only the exception: registered is the default, a default should be silent, so one row carries a badge and thirteen read nothing. A matching <i>Source</i> filter shipped beside it for an afternoon and came off again (Tanya, 31 Aug): on a deal&rsquo;s matches it separates thirteen rows from one, which is a job the badge already does by being visible &mdash; and a segmented control whose segments are that lopsided teaches the same lesson as the two shipped filters retired above it. The filter belongs on <code>/lenders</code>, where the source split is a <i>tab</i> over hundreds of records; demoting that tab to a filter is the argument, and a deal&rsquo;s match list is not where it is made. <b>One word, amended same day</b> (Tanya) &mdash; a first pass badged the institution <i>Prospector</i> and the banker it produced <i>Sourced by Prism</i>, on the reasoning that Tony uses <i>Prospector</i> for an institution with no contact person. Two labels in one chip style read as two categories at the same level, which is the one thing this is not: bank from the directory &rarr; banker an admin found inside it &rarr; registered lender is a <i>lifecycle</i>. Both now read <b>Prospector</b>, in blue rather than the neutral of the criteria pills &mdash; provenance is a different kind of fact from a property type, and a grey chip beside grey chips reads as one more capability. The stage is carried by the row, which already shows it: the institution says <i>No contacts yet</i> in three cells, the banker has a name, a title, criteria and a Save button. What the second badge was saying is now words on the meta line &mdash; <i>found by Prism, not registered</i> &mdash; which costs no second token and keeps the tie to the paid action. Ironwood Community Bank is the case that forces it &mdash; one registered banker and one Prospector-sourced contact at the same bank, which the shipped <i>My Deals &amp; Lenders</i> / <i>Bank/CU Prospects</i> split can only draw by listing the bank twice with half its people in either. <span class="note">[T]</span> Tony, 20 Aug, sharpened the badge: a contact registered through Prospector &ldquo;should move to Lender Funnel / Network&rdquo;, so the label names how someone arrived and is expected to change, not a permanent class of lender. Every match count now prints both units &mdash; <i>14 bankers &middot; 7 accounts</i> &mdash; on the results bar, the deals table and the board card, because one number silently meaning people on one screen and institutions on the next is the ambiguity the rollup introduces. <span class="note">[~]</span> Still open, and it is the expensive half: nothing links a registered lender to an institution today &mdash; company name is required free text on both the broker and the lender profile with no organization picker, which is how duplicates arrive. Tony&rsquo;s answer, 20 Aug <span class="note">[T]</span>, is a lookup at registration &mdash; search existing accounts, create if none, seed from the Prospector file, admin edits the typos (<code>BofA</code>, <code>bank of america</code>) &mdash; which is a registration change this prototype does not draw. Here the accounts are simply given. <b>Institutions with nobody on file, 31 Aug</b> <span class="note">[sandbox Aug 31]</span> &mdash; the case the rollup has to answer and a list of people cannot: a broker picks Comerica or Texas Capital out of the Banks &amp; Credit Unions directory and saves an institution with no contact at all. The shipped product already carries these &mdash; four of the twenty-four saved on the Chan Portfolio deal, reading <i>No contacts yet</i>, badged <i>Prospector</i>, at status <i>Not Yet Contacted</i>. They sit on <b>Saved lenders</b> and can never appear under Matches, because matching reads a credit box and a credit box belongs to a banker. The row says so in every cell it cannot fill: loan range <i>No contacts yet</i>, status <i>No contact yet</i> as text rather than the control the banker rows get, outreach an em dash &mdash; a status control here would offer to mark <i>Contacted</i> an institution with nobody to contact. What the row does carry is the identity the account already has (institution kind, FDIC cert, branches near the deal) and the one action that changes the situation, <i>Ask Prism to find a contact</i> &mdash; the paid sourcing offer sitting beside the free rows rather than behind a tab, worded to promise the search and not the result <span class="note">[~]</span>. <i>Prospector</i> is the right badge here and only here: it is Tony&rsquo;s word for an institution we have no contact person for, so it is exact on a bank with none and wrong on a named banker. The explanatory strip above these rows (<i>N institutions saved with nobody on file yet&hellip;</i>) was removed (Tanya, 31 Aug) &mdash; the rows already say it cell by cell, and a banner restating what the table shows is annotation, not UI.</li>
+      <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. A walk of the running product on <b>28 Aug</b> moved three more values across that line: Riverside is <b>Austin, Texas 78701</b> at <b>$4,500,000</b> (not Houston at $12.0M), Northside&rsquo;s financing type is <b>Agency (Fannie Mae)</b> on an industrial refinance, and Gulf Coast&rsquo;s financing type is <b>unset</b> &mdash; the field is optional on the request form and that request left it blank, which is what the <i>Not specified</i> cell in the table now shows. Riverside&rsquo;s unit count, purchase price, NOI and Sources&nbsp;&amp;&nbsp;uses were re-scaled to the observed $4.5M loan so the summary cannot contradict its own header <span class="note">[~]</span>; the numbers are still sample, only their magnitude is now anchored. Sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other twenty-six bankers &mdash; including every colleague sharing an account, and the one Prospector-sourced contact at Ironwood &mdash; are sample data, invented so the scoring, the filters and the account rollup have something to bite on. The blue <i>observed</i> badge the lender tables carried came off on 31 Aug (Tanya) &mdash; provenance stays in the data flags and this strip, off the demo surface.</li>
+      <li><b>One clock vocabulary for timestamps, 31 Aug</b> <span class="note">[&#128161; rec &middot; sandbox 31 Aug]</span> &mdash; a sandbox sweep found four date formats on one dashboard: &ldquo;August 4th at 4:43 PM&rdquo; on loan requests, &ldquo;04/08/2026&rdquo; on matches (DD/MM &mdash; a US reader parses April), and the same lender date rendered &ldquo;3 weeks ago&rdquo; by the lenders table but &ldquo;27 days ago&rdquo; by the dashboard widgets. Every relative value is an unlabeled &ldquo;Updated N ago&rdquo; that stamps the lender <i>record&rsquo;s</i> touch time, never the relationship &mdash; and the View results page, the surface closest to a communication inbox, shows no dates at all (&ldquo;Previously Saved&rdquo; and &ldquo;already contacted&rdquo; both undated). The rule the prototype demonstrates: absolute short dates for records (the deals table&rsquo;s <b>Updated</b> column, &ldquo;Digest sent 6 Aug&rdquo;), relative time only for activity fresher than two weeks, and every relative value labeled with its verb &mdash; saved-lender rows read <i>viewed 2 days ago</i> (a bare &ldquo;2 days ago&rdquo; repeated the product&rsquo;s unlabeled-clock mistake), <i>not viewed yet</i> replaces the dash, and Midtown&rsquo;s 14-day-old engagement crossed the freshness horizon to <i>viewed 17 Aug</i> &mdash; past two weeks the question &ldquo;is this fresh?&rdquo; has one answer, so the date takes over. Last-contact recency stays impossible until contact logging exists (priority 2): a timestamp cannot precede the event it stamps.</li>
+      <li><b>The matches table dropped its scoring chrome, 31 Aug</b> <span class="note">[&#128161; rec &middot; Figma mockup]</span> &mdash; the evaluated-count strip (strong / partial / outside / hidden), the fit slider with its below-the-cut line, the <b>Fit</b> column and the per-row criteria chips all came off; what remains is what the live lenders table actually has: company/contact, loan range, <b>Property type</b> (new column, same two-chips-then-<i>+N more</i> anatomy as financing), financing type. The scoring strip and slider were invented UI with no product counterpart &mdash; fit is still computed underneath, ordering the rows and gating the 60% bar, it just is not printed. <b>Hide</b> left the row for a kebab menu (the deals table&rsquo;s own <code>.rowkebab</code> / <code>.cardmenu</code> anatomy), joined by <b>Report inaccurate criteria</b> &mdash; previously a card-footer link, now a danger item next to the row it disputes, which is where the shipped page&rsquo;s Report Issue sits too. The cut-release path died with the slider: <i>Find Lenders</i> now lands on the 60%+ list rather than releasing the cut to 0 for near-misses.</li>
     </ul>
   </details>
 </div>
@@ -1132,11 +1177,11 @@ const MATCH_STATUS = [
 
 /* app/(dashboard)/lenders/types.ts — DISPOSITION_OPTIONS, labels verbatim */
 const DISPOSITION = [
-  { v:"not_yet_contacted",       label:"Not Yet Contacted" },
-  { v:"has_not_responded",       label:"Has Not Responded" },
-  { v:"interested_under_review", label:"Interested - Under Review" },
-  { v:"not_a_fit_disposition",   label:"Not a Fit" },
-  { v:"quoted",                  label:"Quoted" }
+  { v:"not_yet_contacted",       label:"Not Yet Contacted",       tone:"gold"  },
+  { v:"has_not_responded",       label:"Has Not Responded",       tone:"muted" },
+  { v:"interested_under_review", label:"Interested - Under Review", tone:"blue" },
+  { v:"not_a_fit_disposition",   label:"Not a Fit",               tone:"red"   },
+  { v:"quoted",                  label:"Quoted",                  tone:"green" }
 ];
 
 /* components/landing/BrokerDashboardHero.tsx — hardcoded demo array,
@@ -1273,8 +1318,8 @@ const DEALS = [
      one deal is the only shape that never occurs in practice. All three
      sit at Lead or Screening, so nothing has been sent to a lender yet
      and their saved-lender counts are zero. Their match counts are not
-     zero — matchCount() scores every deal against the 20-lender network
-     on its own merits, so these three come out at 2, 1 and 4. The names
+     zero — matchCount() scores every deal against the 27-banker network
+     on its own merits, so these three come out at 4, 1 and 4. The names
      and headline figures are the three already drawn in the Figma Deals
      table frame. */
   {
@@ -1310,76 +1355,109 @@ const DEALS = [
 ];
 
 /* the lender network. Sandbox Debt Fund is the one lender we have
-   actually seen; the other nineteen are sample data with criteria
+   actually seen; the other twenty-six are sample data with criteria
    written so the scoring has something to discriminate on. */
 const NETWORK = [
-  { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", inst:"Debt Fund", observed:true, lo:1, hi:25, mo:0,
+  { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", role:"Principal", acct:"sandbox", src:"network", inst:"Debt Fund", observed:true, lo:1, hi:25, mo:0,
     prop:["Multifamily","Industrial","Retail-Multi Tenant","Mixed-Use"], st:["TX","FL","GA","NC"],
     fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | Fixed-Rate","Bridge / Short-Term Debt (<3 Yrs)","CMBS"] },
-  { id:2,  co:"Sunbelt Agency Group", ct:"Nadia Coleman", inst:"Agency Lender", lo:3, hi:50, mo:0,
+  { id:2,  co:"Sunbelt Agency Group", ct:"Nadia Coleman", role:"Managing Director, Agency", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:3, hi:50, mo:0,
     prop:["Multifamily","Senior Housing","Student Housing"], st:["TX","OK","AZ","NM","GA"],
     fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","FHA/HUD","Permanent | Fixed-Rate"] },
-  { id:3,  co:"Harbor Point Advisors", ct:"Alexis Nwosu", inst:"Non-Bank / Investment Fund", lo:2, hi:30, mo:2,
+  { id:3,  co:"Harbor Point Advisors", ct:"Alexis Nwosu", role:"Managing Partner", acct:"harbor", src:"network", inst:"Non-Bank / Investment Fund", lo:2, hi:30, mo:2,
     prop:["Multifamily","Mixed-Use","Retail-Multi Tenant"], st:["TX","LA","FL"],
     fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Bridge / Short-Term Debt (<3 Yrs)"] },
-  { id:4,  co:"Meridian Debt Partners", ct:"Alice Chen", inst:"Non-Bank / Investment Fund", lo:1, hi:15, mo:0,
+  { id:4,  co:"Meridian Debt Partners", ct:"Alice Chen", role:"Director, Originations", acct:"meridian", src:"network", inst:"Non-Bank / Investment Fund", lo:1, hi:15, mo:0,
     prop:["Retail-Multi Tenant","Self-Storage","Industrial"], st:["TX","OK"],
     fin:["Bridge / Short-Term Debt (<3 Yrs)","CMBS"] },
-  { id:5,  co:"Cobalt Street Capital", ct:"Sofia Marchetti", inst:"Debt Fund", lo:2, hi:50, mo:0,
+  { id:5,  co:"Cobalt Street Capital", ct:"Sofia Marchetti", role:"VP, CRE Lending", acct:"cobalt", src:"network", inst:"Debt Fund", lo:2, hi:50, mo:0,
     prop:["Retail-Multi Tenant","Mixed-Use","Office-Multi Tenant"], st:["TX","NY","NJ"],
     fin:["Mezz Debt","Equity (Preferred)","Bridge / Short-Term Debt (<3 Yrs)"] },
-  { id:6,  co:"Northline Capital", ct:"Dana Ortiz", inst:"Life Insurance Company", lo:10, hi:75, mo:0,
+  { id:6,  co:"Northline Capital", ct:"Dana Ortiz", role:"SVP, Real Estate Finance", acct:"northline", src:"network", inst:"Life Insurance Company", lo:10, hi:75, mo:0,
     prop:["Multifamily","Senior Housing","Student Housing"], st:["AZ","CA","NV","TX"],
     fin:["Permanent | Fixed-Rate","Agency (Fannie Mae)","Agency (Freddie Mac)","Balance Sheet Debt"] },
-  { id:7,  co:"Fielding Life & Annuity", ct:"Robert Nakamura", inst:"Life Insurance Company", lo:15, hi:100, mo:6,
+  { id:7,  co:"Fielding Life & Annuity", ct:"Robert Nakamura", role:"Managing Director", acct:"fielding", src:"network", inst:"Life Insurance Company", lo:15, hi:100, mo:6,
     prop:["Multifamily","Senior Housing","Assisted Living / Memory Care"], st:["AZ","TX","NM"],
     fin:["Permanent | Fixed-Rate","FHA/HUD"] },
-  { id:8,  co:"Piedmont Regional Bank", ct:"Grace Whitfield", inst:"Bank", lo:1, hi:12, mo:1,
+  { id:8,  co:"Piedmont Regional Bank", ct:"Grace Whitfield", role:"SVP, Commercial Real Estate", acct:"piedmont", src:"network", inst:"Bank", lo:1, hi:12, mo:1,
     prop:["Industrial","Office-Owner/User","Retail-Single Tenant"], st:["GA","NC","SC","TN"],
     fin:["Balance Sheet Debt","Construction Loans"] },
-  { id:9,  co:"Atlantic Coast Credit Union", ct:"Miles Barrera", inst:"Credit Union", lo:1, hi:8, mo:3,
+  { id:9,  co:"Atlantic Coast Credit Union", ct:"Miles Barrera", role:"VP, Member Business Lending", acct:"atlantic", src:"network", inst:"Credit Union", lo:1, hi:8, mo:3,
     prop:["Industrial","Multifamily","Mixed-Use"], st:["GA","FL","SC"],
     fin:["Balance Sheet Debt","Permanent | Fixed-Rate"] },
-  { id:10, co:"Gulf Bridge Credit", ct:"Ana Ferreira", inst:"Debt Fund", lo:5, hi:40, mo:0,
+  { id:10, co:"Gulf Bridge Credit", ct:"Ana Ferreira", role:"Director, Originations", acct:"gulfbridge", src:"network", inst:"Debt Fund", lo:5, hi:40, mo:0,
     prop:["Hotel/Motel","Retail-Multi Tenant","Mixed-Use"], st:["FL","AL","MS","LA","TX"],
     fin:["Bridge / Short-Term Debt (<3 Yrs)","Mezz Debt"] },
-  { id:11, co:"Bayfront Hospitality Finance", ct:"Owen Castellanos", inst:"Non-Bank / Investment Fund", lo:5, hi:60, mo:1,
+  { id:11, co:"Bayfront Hospitality Finance", ct:"Owen Castellanos", role:"Managing Director", acct:"bayfront", src:"network", inst:"Non-Bank / Investment Fund", lo:5, hi:60, mo:1,
     prop:["Hotel/Motel","RV Park","Marina"], st:["FL","GA","SC"],
     fin:["Bridge / Short-Term Debt (<3 Yrs)","Construction Loans","CMBS"] },
-  { id:12, co:"Keystone CMBS Conduit", ct:"Priya Raman", inst:"Conduit", lo:10, hi:150, mo:2,
+  { id:12, co:"Keystone CMBS Conduit", ct:"Priya Raman", role:"Executive Director", acct:"keystone", src:"network", inst:"Conduit", lo:10, hi:150, mo:2,
     prop:["Retail-Multi Tenant","Office-Multi Tenant","Industrial","Hotel/Motel"], st:["TX","FL","GA","AZ","NY","CA","IL"],
     fin:["CMBS","Permanent | Fixed-Rate"] },
-  { id:13, co:"Lakeshore Industrial Lending", ct:"Tom Vasquez", inst:"Bank", lo:3, hi:35, mo:0,
+  { id:13, co:"Lakeshore Industrial Lending", ct:"Tom Vasquez", role:"SVP, Commercial Lending", acct:"lakeshore", src:"network", inst:"Bank", lo:3, hi:35, mo:0,
     prop:["Industrial","Land","Manufactured Housing / Mobile Home Park"], st:["GA","TN","AL","NC"],
     fin:["Balance Sheet Debt","Permanent | Fixed-Rate","Construction Loans"] },
-  { id:14, co:"Ridgeway Mezzanine", ct:"Hannah Oyelaran", inst:"Debt Fund", lo:2, hi:20, mo:4,
+  { id:14, co:"Ridgeway Mezzanine", ct:"Hannah Oyelaran", role:"Principal", acct:"ridgeway", src:"network", inst:"Debt Fund", lo:2, hi:20, mo:4,
     prop:["Multifamily","Industrial","Hotel/Motel"], st:["TX","FL","GA","AZ"],
     fin:["Mezz Debt","Equity (Preferred)"] },
-  { id:15, co:"Presidio Structured Capital", ct:"Victor Hale", inst:"Non-Bank / Investment Fund", lo:8, hi:80, mo:9,
+  { id:15, co:"Presidio Structured Capital", ct:"Victor Hale", role:"Managing Director", acct:"presidio", src:"network", inst:"Non-Bank / Investment Fund", lo:8, hi:80, mo:9,
     prop:["Multifamily","Office-Multi Tenant"], st:["CA","NV","AZ","TX"],
     fin:["Bridge / Short-Term Debt (<3 Yrs)","Permanent | Fixed-Rate"] },
-  { id:16, co:"Ironwood Community Bank", ct:"Sarah Lindqvist", inst:"Bank", lo:0.5, hi:6, mo:2,
-    prop:["Retail-Single Tenant","Office-Owner/User","Industrial"], st:["TX","OK","AR"],
+  { id:16, co:"Ironwood Community Bank", ct:"Sarah Lindqvist", role:"SVP, Commercial Real Estate", acct:"ironwood", src:"network", inst:"Bank", lo:0.5, hi:6, mo:2,
+    prop:["Retail-Single Tenant","Office-Owner/User","Industrial","Multifamily"], st:["TX","OK","AR"],
     fin:["Balance Sheet Debt"] },
-  { id:17, co:"Palmetto Storage Finance", ct:"Derek Mwangi", inst:"Debt Fund", lo:1, hi:18, mo:5,
+  { id:17, co:"Palmetto Storage Finance", ct:"Derek Mwangi", role:"Director, Credit", acct:"palmetto", src:"network", inst:"Debt Fund", lo:1, hi:18, mo:5,
     prop:["Self-Storage","Industrial"], st:["FL","GA","SC","NC"],
     fin:["Balance Sheet Debt","Bridge / Short-Term Debt (<3 Yrs)"] },
-  { id:18, co:"Anchor Senior Housing Capital", ct:"Ruth Delgado", inst:"Agency Lender", lo:5, hi:45, mo:1,
+  { id:18, co:"Anchor Senior Housing Capital", ct:"Ruth Delgado", role:"VP, Agency Production", acct:"anchor", src:"network", inst:"Agency Lender", lo:5, hi:45, mo:1,
     prop:["Senior Housing","Assisted Living / Memory Care","Nursing Facility"], st:["TX","AZ","CO"],
     fin:["FHA/HUD","Agency (Fannie Mae)","Agency (Freddie Mac)"] },
-  { id:19, co:"Calder & Bly Real Estate Credit", ct:"James Calder", inst:"Debt Fund", lo:20, hi:200, mo:7,
+  { id:19, co:"Calder & Bly Real Estate Credit", ct:"James Calder", role:"Founding Partner", acct:"calder", src:"network", inst:"Debt Fund", lo:20, hi:200, mo:7,
     prop:["Office-Multi Tenant","Multifamily","Industrial"], st:["NY","NJ","CT","IL"],
     fin:["Permanent | Fixed-Rate","Mezz Debt"] },
-  { id:20, co:"Trailhead Construction Finance", ct:"Emma Bergström", inst:"Non-Bank / Investment Fund", lo:4, hi:40, mo:1,
+  { id:20, co:"Trailhead Construction Finance", ct:"Emma Bergström", role:"Director, Construction Finance", acct:"trailhead", src:"network", inst:"Non-Bank / Investment Fund", lo:4, hi:40, mo:1,
     prop:["Build to Rent","Multifamily","Land"], st:["TX","AZ","NV","UT"],
-    fin:["Construction Loans","Land / Lot Development"] }
+    fin:["Construction Loans","Land / Lot Development"] },
+
+  /* Colleagues. [T] Tony, 14 Aug: "we might have 5 bankers that work for a Company,
+     like Wells Fargo or Chase. When a loan search is performed, those five lenders
+     will display in the search results. People should roll up to Accounts within the
+     search results as well." Sunbelt carries five so his own example is on screen;
+     Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges.
+     Criteria differ per banker because they do in the product — that is why an
+     account cannot inherit one credit box. [~] All sample. */
+  { id:21, co:"Sunbelt Agency Group", ct:"Ethan Park", role:"SVP, Agency Production", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:3, hi:50, mo:0,
+    prop:["Multifamily","Senior Housing","Student Housing"], st:["TX","OK","AZ","NM","GA"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","FHA/HUD","Permanent | Fixed-Rate"] },
+  { id:22, co:"Sunbelt Agency Group", ct:"Monique Leclair", role:"Director, Agency", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:1, hi:20, mo:1,
+    prop:["Multifamily","Student Housing"], st:["TX","GA","NC"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | Fixed-Rate"] },
+  { id:23, co:"Sunbelt Agency Group", ct:"Victor Almeida", role:"VP, Originations", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:2, hi:25, mo:9,
+    prop:["Multifamily","Senior Housing"], st:["TX","AZ"],
+    fin:["Agency (Fannie Mae)","FHA/HUD"] },
+  { id:24, co:"Sunbelt Agency Group", ct:"Renée Alvarado", role:"Managing Director, Real Estate", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:3, hi:45, mo:2,
+    prop:["Multifamily","Mixed-Use"], st:["TX","NM"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | Fixed-Rate"] },
+  { id:25, co:"Harbor Point Advisors", ct:"Colin Marsh", role:"Director", acct:"harbor", src:"network", inst:"Non-Bank / Investment Fund", lo:1, hi:25, mo:3,
+    prop:["Multifamily","Retail-Multi Tenant"], st:["TX","LA"],
+    fin:["Agency (Fannie Mae)","Bridge / Short-Term Debt (<3 Yrs)"] },
+  { id:26, co:"Harbor Point Advisors", ct:"Yara Haddad", role:"VP, Originations", acct:"harbor", src:"network", inst:"Non-Bank / Investment Fund", lo:3, hi:35, mo:8,
+    prop:["Multifamily","Mixed-Use"], st:["TX","FL"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)"] },
+  /* Ironwood holds one banker of each source, which is the case the tab split
+     cannot draw: today a bank with both a registered banker and a Prospector
+     record has to appear in My Deals & Lenders and Bank/CU Prospects at once,
+     holding half its people in either. [~] */
+  { id:27, co:"Ironwood Community Bank", ct:"Wade Kimball", role:"VP, CRE Lending", acct:"ironwood", src:"prospector", inst:"Bank", lo:0.5, hi:12, mo:4,
+    prop:["Retail-Single Tenant","Industrial","Multifamily"], st:["TX","OK"],
+    fin:["Balance Sheet Debt"] }
 ];
 
 /* saved lenders — a (deal, lender) pair carries the status, not the lender.
    Midtown / Sandbox Debt Fund is the one pair observed in the sandbox:
    the shipped row reads Not a Fit with disposition Has Not Responded. */
 const SAVED = [
-  { deal:"midtown",   lender:1,  status:"not_a_fit",    disp:"has_not_responded",       observed:true, seen:"14 days ago" },
+  { deal:"midtown",   lender:1,  status:"not_a_fit",    disp:"has_not_responded",       observed:true, seen:"17 Aug" },
   { deal:"riverside", lender:1,  status:"interested",   disp:"interested_under_review", seen:"2 days ago" },
   { deal:"riverside", lender:2,  status:"under_review", disp:"has_not_responded",       seen:"6 days ago" },
   { deal:"riverside", lender:6,  status:"pending",      disp:"not_yet_contacted",       seen:"—" },
@@ -1388,6 +1466,28 @@ const SAVED = [
   { deal:"gulf",      lender:10, status:"under_review", disp:"interested_under_review", seen:"5 days ago" },
   { deal:"gulf",      lender:11, status:"open_request", disp:"has_not_responded",       seen:"9 days ago" }
 ];
+
+/* Institutions a broker saved from the Banks & Credit Unions directory, where
+   nobody is on file yet. [sandbox Aug 31] The shipped product carries these in
+   My Deals & Lenders as rows reading "No contacts yet", badged Prospector, at
+   status Not Yet Contacted — four of the twenty-four saved on the Chan
+   Portfolio deal. They have no criteria, which is why they can never appear in
+   a scored match list: matching reads a credit box, and a credit box belongs to
+   a banker. They arrive by being picked from the directory, not by being found.
+   [~] Names, branch counts and FDIC certs are sample. */
+const PROSPECTS = [
+  { acct:"comerica", co:"Comerica Bank",      inst:"Bank", cert:"983",   branches:14, near:"3 branches within 10 mi of 78701" },
+  { acct:"texascap", co:"Texas Capital Bank", inst:"Bank", cert:"34383", branches:6,  near:"2 branches within 10 mi of 78701" }
+];
+/* saved as an account, not as a pair — there is no person to hold a status */
+const SAVED_ACCT = [
+  { deal:"riverside", acct:"comerica", added:"2 days ago" },
+  { deal:"riverside", acct:"texascap", added:"2 days ago" }
+];
+function prospectsFor(id) {
+  return SAVED_ACCT.filter(a => a.deal === id && !(S.acctRm[id] && S.acctRm[id].has(a.acct)))
+    .map(a => ({ ...a, p: PROSPECTS.find(x => x.acct === a.acct) }));
+}
 
 /* ===========================================================
    Fit. Computed from five weighted criteria, never typed.
@@ -1417,7 +1517,12 @@ function scored(deal) {
   return NETWORK.map(l => ({ l, ...scoreOf(l, deal) })).sort((a, b) => b.pc - a.pc || a.l.co.localeCompare(b.l.co));
 }
 function matchCount(deal) { return scored(deal).filter(r => r.pc >= FLOOR).length; }
-function savedFor(id) { return SAVED.filter(s => s.deal === id); }
+/* [💡 rec] The same result set is two numbers once bankers roll up to accounts —
+   14 people at 7 institutions — and they are not interchangeable. Every surface
+   that prints one prints the other, so no count on the page can be read as the
+   other unit by mistake. */
+function acctCount(deal) { return new Set(scored(deal).filter(r => r.pc >= FLOOR).map(r => r.l.acct)).size; }
+function savedFor(id) { return SAVED.filter(s => s.deal === id && !(S.savedRm[id] && S.savedRm[id].has(s.lender))); }
 /* saved-in-this-session rows, minus anything the deal already carries — one
    source of truth, so the tab count, the badge and the footer cannot disagree */
 function savedNowFor(id) {
@@ -1434,7 +1539,10 @@ const S = {
   view: "list",
   q: "", sort: "updated", propFilter: new Set(), finFilter: new Set(), locFilter: new Set(), open: null, msExpand: new Set(),
   status: {},            /* dealId -> status, so a change persists */
-  cut: FLOOR, mq: "", picked: new Set(), hidden: {}, savedNow: {},
+  mq: "", picked: new Set(), hidden: {}, savedNow: {}, savedRm: {},
+  /* grouping is on by default: the flat list is the bug Tony reported, so the
+     corrected view is the one a broker lands on. [💡 rec] */
+  grpAcct: true, acctShut: new Set(), acctRm: {},
   cardMenu: null, cardSub: false, selOpen: null,
   settingsOpen: false, setDrill: null, hideLanes: new Set(),
   sumClosed: new Set(),
@@ -1848,14 +1956,14 @@ function listView(rows) {
       <th></th>
     </tr>`;
   const body = rows.map(d => {
-    const st = S.status[d.id], meta = statusMeta(st), n = matchCount(d), sv = savedFor(d.id).length;
+    const st = S.status[d.id], meta = statusMeta(st), n = matchCount(d), na = acctCount(d), sv = savedFor(d.id).length;
     const menuOpen = S.cardMenu === d.id;
     return `<tr data-row="${d.id}">
       <td class="nm-cell"><a href="#/deal/${d.id}"><b>${esc(d.name)}</b><span>${esc(d.property)}</span></a></td>
       ${S.cols.amt ? `<td class="num" data-l="Amount" style="font-weight:600">${money(d.amt)}</td>` : ""}
       ${S.cols.loc ? `<td data-l="State">${esc(STATE_NAME[d.state] || d.state)}</td>` : ""}
       ${S.cols.fin ? `<td data-l="Execution">${d.financing ? esc(d.financing) : `<span class="unset" title="Execution type is optional and was left blank on this request">Not specified</span>`}</td>` : ""}
-      ${S.cols.matches ? `<td data-l="Matches"><a class="cnt-link" href="#/deal/${d.id}/matches">${n}</a>${sv ? `<span class="sub">${sv} saved</span>` : ""}</td>` : ""}
+      ${S.cols.matches ? `<td data-l="Matches"><a class="cnt-link" href="#/deal/${d.id}/matches">${n}</a><span class="sub">${na} ${na === 1 ? "account" : "accounts"}${sv ? " · " + sv + " saved" : ""}</span></td>` : ""}
       ${S.cols.status ? `<td data-l="Status">
         <span class="stat"><span class="d d-${meta.tone}"></span>
           ${selCtl("d:" + d.id, DEAL_STATUS, st, "Status for " + d.name)}
@@ -1881,6 +1989,28 @@ function listView(rows) {
 }
 
 const KEBAB = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>`;
+const INFO = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`;
+const CARET = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+/* Only the exception is printed. Registered is the default and a default should
+   be silent — badging all fourteen rows Network says nothing and makes the rows
+   that differ harder to find.
+   [💡 rec] One word, not two. An earlier pass badged the institution Prospector
+   and the person it produced Sourced by Prism, on the reasoning that Tony uses
+   Prospector for an institution with nobody on file. Two labels in one chip
+   style read as two categories at the same level, which is the one thing this
+   is not: it is a single pipeline — bank from the directory, then a banker an
+   admin found inside it, then a registered lender once they sign up
+   ([T] Tony, 20 Aug: such a contact "should move to Lender Funnel / Network").
+   The badge now names the origin only, and the row carries the stage: the
+   institution row says No contacts yet in three cells, the banker row has a
+   name, a title, criteria and a Save button. What the badge stopped saying is
+   said in words on the meta line instead, where it costs no second token.
+   [~] The digest line is inferred from digests being tied to registration. */
+const srcBadge = l => l.src === "prospector"
+  ? `<span class="src" title="Came from the Banks &amp; Credit Unions directory. An admin at Prism called the branch and found this person; not registered, so no weekly digest until they are.">Prospector</span>`
+  : "";
+/* the stage, in words rather than a second chip */
+const srcLine = l => l.src === "prospector" ? " · found by Prism, not registered" : "";
 
 function boardView(rows) {
   const shown = vocabList().filter(s => !S.hideLanes.has(s.v));
@@ -1903,7 +2033,7 @@ function boardView(rows) {
              Change Status<span class="car2">&rsaquo;</span></button>
           <button type="button" role="menuitem" data-find="${d.id}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg>
-            Matches (${nMatch})</button>
+            Matches (${nMatch} · ${acctCount(d)} ${acctCount(d) === 1 ? "account" : "accounts"})</button>
           <button type="button" role="menuitem" data-inert="Edit opens /loans/${d.id}/edit — the shipped edit form already has every field on this card.">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
             Edit Deal</button>
@@ -2351,10 +2481,6 @@ function renderDealForm() {
 function renderDeal(d) {
   const st = S.status[d.id], meta = statusMeta(st);
   const all = scored(d);
-  const strong = all.filter(r => band(r.pc) === "strong").length;
-  const partial = all.filter(r => band(r.pc) === "partial").length;
-  const hidden = (S.hidden[d.id] || new Set()).size;
-  const outside = all.length - strong - partial;
   const sv = savedIdsFor(d.id).size;
 
   const cardClosed = S.sumClosed.has("card");
@@ -2383,8 +2509,8 @@ function renderDeal(d) {
             <div class="blk" style="left:16%;top:66%;width:70px;height:36px"></div>
             <div class="blk" style="left:70%;top:64%;width:52px;height:44px"></div>
             <div class="site"></div><div class="pin"></div>
-          </div>
-          <div class="maplbl">${esc(d.addr ? d.addr + " \u00b7 " + locFull(d) : locFull(d))}</div>`}
+            ${d.addr ? `<div class="maptip">${esc(d.addr)}</div>` : ""}
+          </div>`}
         </div>
         <div class="l">
           <div class="facts">
@@ -2415,7 +2541,6 @@ function renderDeal(d) {
     <div class="card" id="lenderscard">
       <div class="card__hd">
         <h2>Lenders on this deal</h2>
-        <span class="r">${all.length} evaluated · ${all.filter(r => r.pc >= FLOOR).length} matched · ${sv} saved</span>
       </div>
       <div class="card__ct">
         <div class="seg" role="group" aria-label="Lenders view">
@@ -2423,7 +2548,7 @@ function renderDeal(d) {
           <button type="button" class="${S.tab === "saved" ? "on" : ""}" data-tab="saved" aria-pressed="${S.tab === "saved"}">Saved lenders <span class="ct">${sv}</span></button>
         </div>
       </div>
-      ${S.tab === "matches" ? matchesTab(d, all, { strong, partial, outside, hidden }) : savedTab(d)}
+      ${S.tab === "matches" ? matchesTab(d, all) : savedTab(d)}
     </div>`;
 
   return `
@@ -2444,23 +2569,21 @@ function renderDeal(d) {
     ${tabs}`;
 }
 
-function matchesTab(d, all, counts) {
+function matchesTab(d, all) {
   const hid = S.hidden[d.id] || new Set();
   const q = S.mq.trim().toLowerCase();
-  const rows = all.filter(r => !hid.has(r.l.id) && r.pc >= S.cut && (!q || (r.l.co + " " + r.l.ct + " " + r.l.inst).toLowerCase().includes(q)));
+  /* fit is still computed — it orders the rows and gates the 60% bar — it just
+     is not printed. The mockup pares the columns to what the live lenders
+     table actually has: company/contact, loan range, property types,
+     financing services. The scoring strip, slider and per-row criteria
+     chips were invented UI with no product counterpart. */
+  const rows = all.filter(r => !hid.has(r.l.id) && r.pc >= FLOOR
+    && (!q || (r.l.co + " " + r.l.ct + " " + r.l.inst).toLowerCase().includes(q)));
   const savedIds = savedIdsFor(d.id);
-
-  const dist = `
-    <div class="dist">
-      <div class="lede">
-        <b>${all.length} lenders evaluated against this deal</b>
-        <span>Last run 12 August · <a href="#" data-inert="Re-run would re-score the network against the deal's current criteria.">re-run</a> · scored on amount, property type, geography, financing type and recent appetite</span>
-      </div>
-      <div class="band strong"><div class="n">${counts.strong}</div><div class="k">strong fit · ${STRONG}%+</div></div>
-      <div class="band partial"><div class="n">${counts.partial}</div><div class="k">partial · ${FLOOR}–${STRONG - 1}%</div></div>
-      <div class="band"><div class="n">${counts.outside}</div><div class="k">outside criteria</div></div>
-      <div class="band"><div class="n">${counts.hidden}</div><div class="k">hidden by you</div></div>
-    </div>`;
+  /* both units, always. A match count that means bankers on one screen and
+     institutions on the next is the ambiguity the rollup introduces, so the
+     bar prints the two numbers rather than picking one. [💡 rec] */
+  const nAcct = new Set(rows.map(r => r.l.acct)).size;
 
   const cut = `
     <div class="cut">
@@ -2468,11 +2591,11 @@ function matchesTab(d, all, counts) {
         <span class="mag" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg></span>
         <input class="inp" id="mq" type="search" placeholder="Search lenders" aria-label="Search lenders" value="${esc(S.mq)}">
       </div>
-      <span class="lbl">Fit at least</span>
-      <input type="range" id="fitcut" min="0" max="100" step="5" value="${S.cut}" aria-label="Minimum fit score">
-      <span class="v">${S.cut}%</span>
-      <span class="lbl">${all.length - rows.length - hid.size} below the cut${hid.size ? `, ${hid.size} hidden` : ""}</span>
-      ${(S.cut !== FLOOR || S.mq) ? `<button class="btn btn--link" type="button" id="rescut" style="font-size:13px">Reset the cut</button>` : ""}
+      <label class="chk" style="display:inline-flex;align-items:center;gap:7px;cursor:pointer">
+        <input type="checkbox" id="grpacct" ${S.grpAcct ? "checked" : ""}><span class="bx">✓</span>
+        <span class="lbl" style="color:var(--foreground)">Group by account</span>
+      </label>
+      <span class="lbl" style="margin-left:auto">${rows.length} ${rows.length === 1 ? "banker" : "bankers"} · ${nAcct} ${nAcct === 1 ? "account" : "accounts"}</span>
     </div>`;
 
   const selbar = S.picked.size ? `
@@ -2486,9 +2609,12 @@ function matchesTab(d, all, counts) {
     </div>` : "";
 
   if (!rows.length) {
-    return dist + cut + selbar + `<div class="empty"><b>No lender clears a ${S.cut}% cut on this deal</b>
-      <p>The network is still there — ${all.length} lenders were scored and the highest reached ${all[0] ? all[0].pc : 0}%. Lower the cut to see the near misses rather than an empty screen.</p>
-      <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="rescut2">Reset the cut to ${FLOOR}%</button></div></div>`;
+    return cut + selbar + (q
+      ? `<div class="empty"><b>No lenders match “${esc(S.mq)}”</b>
+        <p>Search covers the lender, contact and institution names on this deal’s matches.</p>
+        <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="clrmq">Clear search</button></div></div>`
+      : `<div class="empty"><b>No lenders match this deal yet</b>
+        <p>${all.length} bankers in the network were scored on amount, property type, geography, financing type and recent appetite — none cleared the bar. Matches appear here as lender criteria or the deal change.</p></div>`);
   }
 
   const head = `
@@ -2496,81 +2622,179 @@ function matchesTab(d, all, counts) {
       <th style="width:34px"><span class="chk"><input type="checkbox" id="pickall" aria-label="Select all" ${rows.every(r => S.picked.has(r.l.id)) ? "checked" : ""}><span class="bx">✓</span></span></th>
       <th>Lender</th>
       <th>Loan range</th>
+      <th>Property type</th>
       <th>Financing type</th>
-      <th class="act">Fit <span class="srt">↓</span></th>
       <th></th>
     </tr>`;
 
-  const body = rows.map(r => {
-    const b = band(r.pc), l = r.l, isSaved = savedIds.has(l.id), ex = S.expanded.has(l.id);
+  /* one banker row, drawn the same whether it stands alone or sits under an
+     account heading — only the leading name and the indent change. */
+  const row = (r, sub) => {
+    const l = r.l, isSaved = savedIds.has(l.id), ex = S.expanded.has(l.id);
     const finList = ex ? l.fin : l.fin.slice(0, 2);
-    const passed = Object.entries(r.c).filter(([, v]) => v).length;
-    return `<tr class="${S.picked.has(l.id) ? "sel" : ""}">
+    const propList = ex ? l.prop : l.prop.slice(0, 2);
+    const menuOpen = S.cardMenu === "ml:" + l.id;
+    return `<tr class="${sub ? "subrow " : ""}${S.picked.has(l.id) ? "sel" : ""}">
       <td class="pick-cell"><span class="chk"><input type="checkbox" data-pick="${l.id}" aria-label="Select ${esc(l.co)}" ${S.picked.has(l.id) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="max-width:340px;white-space:normal">
-        <b>${esc(l.co)}${l.observed ? ' <span class="badge badge--outline tone-blue" style="font-size:11px;vertical-align:middle">observed</span>' : ""}</b>
-        <span>${esc(l.ct)} · ${esc(l.inst)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}</span>
-        <div class="crit">
-          <span class="c ${r.c.amount ? "y" : "n"}">${r.c.amount ? "✓" : "✗"} ${money(d.amt)} in ${money(l.lo)}–${money(l.hi)}</span>
-          <span class="c ${r.c.property ? "y" : "n"}">${r.c.property ? "✓" : "✗"} ${esc(d.property)}</span>
-          <span class="c ${r.c.geography ? "y" : "n"}">${r.c.geography ? "✓" : "✗"} lends in ${esc(d.state)}</span>
-          <span class="c ${r.c.financing ? "y" : "n"}">${r.c.financing ? "✓" : "✗"} ${d.financing ? esc(d.financing.split(" (")[0]) : "no financing type set"}</span>
-          <span class="c ${r.c.appetite ? "y" : "n"}">${r.c.appetite ? "✓" : "✗"} recent appetite</span>
-        </div>
+        <span class="nml"><b>${sub ? esc(l.ct) : esc(l.co)}</b>${srcBadge(l)}</span>
+        <span>${sub ? esc(l.role) : esc(l.ct) + " · " + esc(l.inst)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}${srcLine(l)}</span>
       </td>
       <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
-      <td class="chips-cell" data-l="Execution" style="white-space:normal;max-width:230px">
+      <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:200px">
+        ${propList.map(pt => `<span class="pill">${esc(pt)}</span>`).join("")}
+        ${l.prop.length > 2 ? `<button class="more" type="button" data-exp="${l.id}">${ex ? "less" : "+" + (l.prop.length - 2) + " more"}</button>` : ""}
+      </td>
+      <td class="chips-cell" data-l="Financing type" style="white-space:normal;max-width:230px">
         ${finList.map(f => `<span class="pill">${esc(f)}</span>`).join("")}
         ${l.fin.length > 2 ? `<button class="more" type="button" data-exp="${l.id}">${ex ? "less" : "+" + (l.fin.length - 2) + " more"}</button>` : ""}
       </td>
-      <td data-l="Fit"><span class="fit ${b === "strong" ? "s" : b === "partial" ? "p" : "o"}"><span class="pc">${r.pc}%</span><span class="of">${passed} of 5 criteria</span></span></td>
       <td class="actions-cell"><div class="rowacts">
         ${isSaved
           ? `<span class="badge badge--outline tone-green">✓ Saved</span>`
           : `<button class="btn btn--sm" type="button" data-save="${l.id}">Save to deal</button>`}
-        <button class="btn btn--ghost btn--sm" type="button" data-hide="${l.id}">Hide</button>
+        <button type="button" class="rowkebab" data-kebab="ml:${l.id}" aria-haspopup="menu" aria-expanded="${menuOpen}" aria-label="Actions for ${esc(l.co)}">${KEBAB}</button>
+        ${menuOpen ? `<div class="cardmenu" role="menu" aria-label="Lender actions" draggable="false">
+          <button type="button" role="menuitem" data-hide="${l.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+            Hide</button>
+          <div class="cardmenu__sep"></div>
+          <button type="button" role="menuitem" class="danger" data-inert="Report inaccurate criteria opens the same form the shipped page has — the dispute lands next to the criteria it contests.">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            Report inaccurate criteria</button>
+        </div>` : ""}
       </div></td>
     </tr>`;
-  }).join("");
+  };
 
-  return dist + cut + selbar + `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${body}</tbody></table></div>
-    <div class="card__ft">
-      <span>Hiding a lender is per-deal and reversible — they are not notified, and they stay countable in the strip above.</span>
-      <a href="#" data-inert="Report inaccurate criteria opens the same form the shipped page has, moved next to the criteria it disputes.">Report inaccurate criteria</a>
-    </div>`;
+  /* accounts, in the order their strongest banker arrived. The heading counts
+     the roster and spans its ranges; property and financing stay blank because
+     a credit box belongs to a person — rolling one up would invent an appetite
+     no banker at the institution actually has. [💡 rec] */
+  const groups = [], byAcct = new Map();
+  for (const r of rows) {
+    if (!byAcct.has(r.l.acct)) { const g = { acct: r.l.acct, rows: [] }; byAcct.set(r.l.acct, g); groups.push(g); }
+    byAcct.get(r.l.acct).rows.push(r);
+  }
+
+  const body = S.grpAcct ? groups.map(g => {
+    const first = g.rows[0].l, n = g.rows.length, shut = S.acctShut.has(g.acct);
+    const lo = Math.min(...g.rows.map(r => r.l.lo)), hi = Math.max(...g.rows.map(r => r.l.hi));
+    const picked = g.rows.every(r => S.picked.has(r.l.id));
+    const sv = g.rows.filter(r => savedIds.has(r.l.id)).length;
+    return `<tr class="acctrow">
+      <td class="pick-cell"><span class="chk"><input type="checkbox" data-apick="${g.acct}" aria-label="Select every banker at ${esc(first.co)}" ${picked ? "checked" : ""}><span class="bx">✓</span></span></td>
+      <td colspan="5" class="acctband" data-acct="${g.acct}"><div class="bw">
+        <button class="acctcar${shut ? " shut" : ""}" type="button" aria-expanded="${!shut}" aria-label="${shut ? "Show" : "Hide"} the ${n} ${n === 1 ? "banker" : "bankers"} at ${esc(first.co)}">${CARET}</button>
+        <span class="an">${esc(first.co)}</span>
+        <span class="am">${esc(first.inst)} · ${n} ${n === 1 ? "banker" : "bankers"}${(() => {
+          const np = g.rows.filter(r => r.l.src === "prospector").length;
+          return np ? " · " + np + " from Prospector" : "";
+        })()}${sv ? ` · <span class="asv">✓ ${sv} saved</span>` : ""}</span>
+        <span class="ar">${money(lo)} – ${money(hi)} <span class="am">across ${n} ${n === 1 ? "banker" : "bankers"}</span></span>
+      </div></td>
+    </tr>` + (shut ? "" : g.rows.map(r => row(r, true)).join(""));
+  }).join("") : rows.map(r => row(r, false)).join("");
+
+  return cut + selbar + `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
 }
 
 function savedTab(d) {
   const rows = savedFor(d.id).concat(
     savedNowFor(d.id).map(id => ({ deal:d.id, lender:id, status:"pending", disp:"not_yet_contacted", fresh:true })));
-  if (!rows.length) {
+  const pros = prospectsFor(d.id);
+  if (!rows.length && !pros.length) {
     return `<div class="empty"><b>No lenders saved to this deal yet</b>
       <p>Saving a lender here is what puts the deal in front of them — saved lenders receive the weekly digest when a deal matches their criteria.</p>
-      <div class="acts"><button class="btn btn--sm" type="button" data-tab="matches">See the ${matchCount(d)} matches</button></div></div>`;
+      <div class="acts"><button class="btn btn--sm" type="button" data-tab="matches">See the ${matchCount(d)} matches at ${acctCount(d)} ${acctCount(d) === 1 ? "account" : "accounts"}</button></div></div>`;
   }
-  const head = `<tr><th>Lender</th><th>Loan range</th><th>Status</th><th>Outreach</th><th>Next action</th></tr>`;
+  const head = `<tr><th>Lender</th><th>Loan range</th><th>Property type</th><th>Financing type</th><th>Outreach</th><th></th></tr>`;
+  /* One editable column. Outreach (disposition) is the broker's own log, so it
+     keeps the dropdown; status is the lender's answer, so it renders as a
+     read-only badge once the lender has actually acted — you cannot dropdown
+     someone else's answer. The passive statuses (pending, open request, under
+     review) already show as the digest clock in Last activity. Rows sort
+     hottest first — the funnel order Janover's mailbox counts walk. [💡 rec] */
+  const RANK = { quoted: 0, interested_under_review: 1, has_not_responded: 2, not_yet_contacted: 3 };
+  rows.sort((a, b) => (RANK[a.disp] ?? 9) - (RANK[b.disp] ?? 9));
   const body = rows.map(s => {
-    const l = lenderById(s.lender), m = matchMeta(s.status);
+    const l = lenderById(s.lender);
+    const dt = (DISPOSITION.find(o => o.v === s.disp) || {}).tone;
+    const menuOpen = S.cardMenu === "sl:" + l.id;
+    const ex = S.expanded.has(l.id);
+    const finList = ex ? l.fin : l.fin.slice(0, 2);
+    const propList = ex ? l.prop : l.prop.slice(0, 2);
     return `<tr>
       <td class="nm-cell" style="white-space:normal">
-        <b>${esc(l.co)}${s.observed ? ' <span class="badge badge--outline tone-blue" style="font-size:11px;vertical-align:middle">observed</span>' : ""}</b>
-        <span>${esc(l.ct)} · ${esc(l.inst)}</span>
+        <span class="nml"><b>${esc(l.ct)}</b>${srcBadge(l)}</span>
+        <span>${esc(l.role)} · ${esc(l.co)} · ${esc(l.inst)}${srcLine(l)}</span>
         <span style="font-size:12px">${s.fresh
           ? "Saved just now · included in the next weekly digest"
-          : "Digest sent 6 Aug · " + esc(s.seen)}</span>
+          : "Digest sent 6 Aug · " + (s.seen === "—" ? "not viewed yet" : "viewed " + esc(s.seen))}</span>
       </td>
       <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
-      <td data-l="Status"><span class="stat"><span class="d d-${m.tone}"></span>
-        ${selCtl("ms:" + l.id, MATCH_STATUS, s.status, "Status for " + l.co)}</span></td>
-      <td data-l="Outreach"><span class="stat">
+      <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:200px">
+        ${propList.map(pt => `<span class="pill">${esc(pt)}</span>`).join("")}
+        ${l.prop.length > 2 ? `<button class="more" type="button" data-exp="${l.id}">${ex ? "less" : "+" + (l.prop.length - 2) + " more"}</button>` : ""}
+      </td>
+      <td class="chips-cell" data-l="Financing type" style="white-space:normal;max-width:230px">
+        ${finList.map(f => `<span class="pill">${esc(f)}</span>`).join("")}
+        ${l.fin.length > 2 ? `<button class="more" type="button" data-exp="${l.id}">${ex ? "less" : "+" + (l.fin.length - 2) + " more"}</button>` : ""}
+      </td>
+      <td data-l="Outreach"><span class="stat">${dt ? `<span class="d d-${dt}"></span>` : ""}
         ${selCtl("md:" + l.id, DISPOSITION, s.disp, "Outreach for " + l.co)}</span></td>
-      <td class="actions-cell"><div class="rowacts" style="justify-content:flex-start">
-        <button class="btn btn--outline btn--sm" type="button" data-inert="Email opens a composer prefilled with the deal summary. No contact logging exists in the product today — this is the gap the audit calls priority 2.">Email</button>
-        <button class="btn btn--ghost btn--sm" type="button" data-inert="Log a call writes an activity record. Nothing like it exists today, which is why the &ldquo;contacted&rdquo; count cannot be computed.">Log a call</button>
+      <td class="actions-cell"><div class="rowacts" style="justify-content:flex-end">
+        <button type="button" class="rowkebab" data-kebab="sl:${l.id}" aria-haspopup="menu" aria-expanded="${menuOpen}" aria-label="Actions for ${esc(l.co)}">${KEBAB}</button>
+        ${menuOpen ? `<div class="cardmenu" role="menu" aria-label="Saved lender actions" draggable="false">
+          <button type="button" role="menuitem" data-inert="Email opens a composer prefilled with the deal summary. No contact logging exists in the product today — this is the gap the audit calls priority 2.">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Email</button>
+          <button type="button" role="menuitem" data-inert="Log a call writes an activity record. Nothing like it exists today, which is why the &ldquo;contacted&rdquo; count cannot be computed.">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Log a call</button>
+          <div class="cardmenu__sep"></div>
+          <button type="button" role="menuitem" class="danger" data-unsave="${l.id}" aria-label="Remove ${esc(l.co)} from saved lenders">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Remove from deal</button>
+        </div>` : ""}
       </div></td>
     </tr>`;
   }).join("");
-  return `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${body}</tbody></table></div>
+
+  /* An institution with nobody on file. It cannot carry a status control or an
+     outreach control, because both describe something done to a person and
+     there is no person — so the cells that would hold them say so, and the only
+     action offered is the one that would change that. [💡 rec] The badge is
+     Prospector, the product's own word — the same badge a banker found inside
+     that directory carries, because the two are one pipeline and not two
+     categories. The stage is legible from the row rather than the chip: here
+     three cells say there is nobody to act on. */
+  const prosRows = pros.map(a => `
+    <tr>
+      <td class="nm-cell" style="white-space:normal">
+        <span class="nml"><b>${esc(a.p.co)}</b><span class="src" title="An institution from the Banks &amp; Credit Unions directory, with no contact person on file yet.">Prospector</span></span>
+        <span>${esc(a.p.inst)} · FDIC cert ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
+        <span style="font-size:12px">Added ${esc(a.added)} · no digest, because a digest goes to a person</span>
+      </td>
+      <td class="num" data-l="Loan range"><span class="unset" title="Loan range, financing services and property types all live on a banker. This institution has none on file, so there is nothing to compare against the deal.">No contacts yet</span></td>
+      <td class="chips-cell" data-l="Property type"><span class="unset">—</span></td>
+      <td class="chips-cell" data-l="Financing type"><span class="unset">—</span></td>
+      <td data-l="Outreach"><span class="unset" title="Outreach describes something done to a person, and there is no person on file yet.">No contact yet</span></td>
+      <td class="actions-cell"><div class="rowacts" style="justify-content:flex-end">
+        <button type="button" class="rowkebab" data-kebab="sa:${a.acct}" aria-haspopup="menu" aria-expanded="${S.cardMenu === "sa:" + a.acct}" aria-label="Actions for ${esc(a.p.co)}">${KEBAB}</button>
+        ${S.cardMenu === "sa:" + a.acct ? `<div class="cardmenu" role="menu" aria-label="Institution actions" draggable="false">
+          <button type="button" role="menuitem" data-inert="Find a contact spends one credit: an admin calls the branch and adds a named banker to this institution. The copy promises the search, not a contact — fulfilment is a person doing research, and [~] how long it takes is unknown.">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Find a contact</button>
+          <div class="cardmenu__sep"></div>
+          <button type="button" role="menuitem" class="danger" data-unsaveacct="${a.acct}" aria-label="Remove ${esc(a.p.co)} from this deal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Remove from deal</button>
+        </div>` : ""}
+      </div></td>
+    </tr>`).join("");
+
+  return `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${body}${prosRows}</tbody></table></div>
     <div class="card__ct" style="padding-top:12px">
       
     </div>`;
@@ -3238,7 +3462,7 @@ document.addEventListener("click", e => {
   if (srt) { S.sort = srt.dataset.sort; render(); return; }
 
   const find = t.closest("[data-find]");
-  if (find) { S.cardMenu = null; S.cardSub = false; S.tab = "matches"; S.sumTab = "ov"; S.cut = 0; S.scrollLenders = true; location.hash = "/deal/" + find.dataset.find + "/matches"; return; }
+  if (find) { S.cardMenu = null; S.cardSub = false; S.tab = "matches"; S.sumTab = "ov"; S.scrollLenders = true; location.hash = "/deal/" + find.dataset.find + "/matches"; return; }
 
   const stab = t.closest("[data-sumtab]");
   if (stab) { S.sumTab = stab.dataset.sumtab; render(); return; }
@@ -3252,9 +3476,25 @@ document.addEventListener("click", e => {
   if (save) { saveLender(S.dealId, Number(save.dataset.save)); return; }
 
   const hide = t.closest("[data-hide]");
-  if (hide) { hideLender(S.dealId, Number(hide.dataset.hide)); return; }
+  if (hide) { S.cardMenu = null; hideLender(S.dealId, Number(hide.dataset.hide)); return; }
 
-  if (t.id === "rescut" || t.id === "rescut2") { S.cut = FLOOR; S.mq = ""; render(); return; }
+  const un = t.closest("[data-unsave]");
+  if (un) { S.cardMenu = null; removeSaved(S.dealId, Number(un.dataset.unsave)); return; }
+
+  const una = t.closest("[data-unsaveacct]");
+  if (una) {
+    S.cardMenu = null;
+    const a = una.dataset.unsaveacct, id = S.dealId;
+    S.acctRm[id] = S.acctRm[id] || new Set();
+    S.acctRm[id].add(a);
+    S.undo = { msg: PROSPECTS.find(x => x.acct === a).co + " removed from this deal.", fn: () => S.acctRm[id].delete(a) };
+    render(); return;
+  }
+
+  const acc = t.closest("[data-acct]");
+  if (acc) { const a = acc.dataset.acct; S.acctShut.has(a) ? S.acctShut.delete(a) : S.acctShut.add(a); render(); return; }
+
+  if (t.id === "clrmq") { S.mq = ""; render(); return; }
   if (t.id === "clrSel") { S.picked.clear(); render(); return; }
   if (t.id === "saveSel") { S.picked.forEach(id => saveLender(S.dealId, id, true)); S.picked.clear(); render(); return; }
   if (t.id === "hideSel") { S.picked.forEach(id => hideLender(S.dealId, id, true)); S.picked.clear(); render(); return; }
@@ -3270,6 +3510,19 @@ function saveLender(dealId, id, quiet) {
   }
   render();
 }
+function removeSaved(dealId, id) {
+  /* removal is the deliberate exit — it also stops the weekly digest, so it
+     gets a verb and an undo, never an icon flick */
+  if (S.savedNow[dealId] && S.savedNow[dealId][id]) {
+    delete S.savedNow[dealId][id];
+    S.undo = { msg: lenderById(id).co + " removed from saved lenders. They stop receiving this deal's digest.", fn: () => { S.savedNow[dealId][id] = true; } };
+  } else {
+    S.savedRm[dealId] = S.savedRm[dealId] || new Set();
+    S.savedRm[dealId].add(id);
+    S.undo = { msg: lenderById(id).co + " removed from saved lenders. They stop receiving this deal's digest.", fn: () => S.savedRm[dealId].delete(id) };
+  }
+  render();
+}
 function hideLender(dealId, id, quiet) {
   S.hidden[dealId] = S.hidden[dealId] || new Set();
   S.hidden[dealId].add(id);
@@ -3281,7 +3534,8 @@ function hideLender(dealId, id, quiet) {
 function hardReset() {
   S.q = ""; S.sort = "updated"; S.view = "list"; S.tab = "matches"; S.sumTab = "ov";
   FILTERS.forEach(f => f.set().clear()); S.picked.clear(); S.expanded.clear(); S.open = null; S.oq = "";
-  S.cut = FLOOR; S.mq = ""; S.hidden = {}; S.savedNow = {}; S.undo = null;
+  S.mq = ""; S.hidden = {}; S.savedNow = {}; S.savedRm = {}; S.undo = null;
+  S.grpAcct = true; S.acctShut = new Set(); S.acctRm = {};
   S.cardMenu = null; S.cardSub = false; S.selOpen = null; S.lb = null;
   S.settingsOpen = false; S.setDrill = null; S.hideLanes.clear(); S.sumClosed = new Set(); S.secEdit = null;
   S.cardFields = { amt: true, meta: true, fin: true, counts: true, when: true };
@@ -3341,7 +3595,6 @@ document.addEventListener("input", e => {
   if (t.id === "q")  { S.q  = t.value; render(); focusBack("q"); return; }
   if (t.id === "mq") { S.mq = t.value; render(); focusBack("mq"); return; }
   if (t.id === "oq") { S.oq = t.value; render(); focusBack("oq"); return; }
-  if (t.id === "fitcut") { S.cut = Number(t.value); render(); const el = document.getElementById("fitcut"); if (el) el.focus(); return; }
   const df = t.closest("[data-df]");
   if (df) {
     /* no re-render on keystroke — focus would be lost. The two dependent
@@ -3399,7 +3652,7 @@ document.addEventListener("change", e => {
   }
   if (t.id === "pickall") {
     const d = dealById(S.dealId), hid = S.hidden[d.id] || new Set();
-    const rows = scored(d).filter(r => !hid.has(r.l.id) && r.pc >= S.cut);
+    const rows = scored(d).filter(r => !hid.has(r.l.id) && r.pc >= FLOOR);
     t.checked ? rows.forEach(r => S.picked.add(r.l.id)) : S.picked.clear();
     render(); return;
   }
@@ -3421,6 +3674,16 @@ document.addEventListener("change", e => {
       if (d) { d.docAssign = d.docAssign || {}; d.docAssign[das.value] = das.dataset.docas; d.docs[das.value] = true; render(); }
     }
     return;
+  }
+  if (t.id === "grpacct") { S.grpAcct = t.checked; render(); return; }
+  const apick = t.closest("[data-apick]");
+  if (apick) {
+    /* selecting an account selects its people — the account is a heading, and
+       what a broker saves to a deal is always a banker. [💡 rec] */
+    const d = dealById(S.dealId), hid = S.hidden[d.id] || new Set();
+    scored(d).filter(r => r.l.acct === apick.dataset.apick && !hid.has(r.l.id) && r.pc >= FLOOR)
+      .forEach(r => t.checked ? S.picked.add(r.l.id) : S.picked.delete(r.l.id));
+    render(); return;
   }
   const pick = t.closest("[data-pick]");
   if (pick) { const id = Number(pick.dataset.pick); t.checked ? S.picked.add(id) : S.picked.delete(id); render(); return; }
