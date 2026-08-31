@@ -433,6 +433,16 @@
   /* Last activity column: two stacked lines, event then clock */
   .lact { display: block; font-size: 12.5px; white-space: nowrap; }
   .lact.mut { font-size: 12px; color: var(--muted-foreground); }
+  /* Directory door: the one lender source a match list cannot produce.
+     A separated footer strip, the live find-lenders panel's own anatomy
+     (border-t + bg-muted/20) — a boundary zone, not a row of the table. */
+  .dirdoor { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted-foreground);
+    border-top: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 20%, transparent);
+    padding: 10px 18px; border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
+  .dirdoor b { color: var(--foreground); font-weight: 600; }
+  .dirdoor .doorlnk { margin-left: auto; flex: 0 0 auto; background: none; border: 0; padding: 0; cursor: pointer;
+    font: inherit; font-size: 13px; font-weight: 500; color: var(--primary); white-space: nowrap; }
+  .dirdoor .doorlnk:hover { text-decoration: underline; }
 
   /* ---- MultiSelect. ui/multi-select.tsx: trigger is min-h-9 w-fit px-3 py-1.5
           rounded-md border-input shadow-xs, and the selected values render as
@@ -1046,19 +1056,23 @@
       <li><b>Documents became a checklist of slots, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the Documents tab left the <i>Lenders on this deal</i> card (its tabs mixed lender counts with file counts) for a card of its own: one list where each required document is a named slot &mdash; a lender-voice hint on why it&rsquo;s asked for, filled (filename, date, download) or open (Upload) &mdash; under an <i>N of M provided</i> header. The old two-column split (<i>Attached at intake</i> / <i>Not provided</i>) never linked an upload to the requirement it satisfied, so a raw <code>Screenshot&hellip;.png</code> sat beside an empty &ldquo;Rent roll&rdquo; row it might well have been. Uploads matching no slot now land under <b>Additional documents</b> with a <b>File as&hellip;</b> action that assigns them &mdash; the mapping is metadata only the broker at upload time knows, and every count on the page recomputes when it&rsquo;s made. Slot anatomy from fintech verification flows (Gusto&rsquo;s named dropzones, Airwallex&rsquo;s filled-slot cards, Faire&rsquo;s per-requirement descriptions); the single grouped list with per-row status is Origin&rsquo;s documents page. <i>Not provided</i> as a heading died with the split &mdash; requirements speak as the lender now. Amended within the hour: the checklist first shipped as its own card below the lenders card, and Tanya moved it into the Deal summary as a second tab (<i>Overview</i> | <i>Documents N of M</i>) &mdash; documents describe the deal, so they belong on the deal&rsquo;s card, not floating after the lender workspace; the tab pill carries the provided count. Upload buttons then came off the view (Tanya, same evening) &mdash; the tab shows state, a one-line signpost points at Edit deal, and uploading stays in the form&rsquo;s dropzone. The tabs themselves became the segmented control (Tanya, from Janover Pro&rsquo;s <i>My Deals &amp; Lenders | Bank/CU Prospects</i> pill) &mdash; the prototype&rsquo;s existing <code>.seg</code> component, same anatomy: muted track, white active segment. The count came off the segment label (Tanya) and the zero state became a true empty state &mdash; centred icon, <i>No documents yet</i>, the four expected documents folded into one lender-voice sentence, a single <i>Upload in Edit deal</i> action &mdash; the file-manager convention (Copilot, Grok, ElevenLabs, Dropbox all centre icon + one-liner + explanation + one CTA); the slot checklist appears once at least one document exists. Polish, same evening (Tanya): every row holds one 44px height whether filled or open (the Download button was stretching filled rows), and the signpost text link became the form&rsquo;s own <i>Choose files</i> button anatomy &mdash; an <b>Upload documents</b> outline button, in the checklist footer and the empty state both, linking to Edit deal. Reversed later that evening &mdash; Tanya challenged the detour (&ldquo;is it right pattern to lead into edit view to upload documents?&rdquo;) and it wasn&rsquo;t: documents accrue over the deal&rsquo;s life, and the slot pattern&rsquo;s point is slot = dropzone (Gusto, Airwallex; Janover uploads on the deal editor page too). The tab is now the live upload surface: each open slot&rsquo;s Upload button picks a file straight into that slot, a file dropped on the row files itself there, and the footer / empty-state button takes any documents into the list &mdash; no form round-trip, no save gate. The edit form&rsquo;s dropzone stays for intake-time attachment; both are simulated the same way, names recorded, files never read. Upload vocabulary unified, 30 Aug (Tanya): the form&rsquo;s <i>Choose files / Choose photos</i> became <b>Upload documents / Upload photos</b> &mdash; one outcome-named verb across every surface; <i>Choose</i> named the mechanism and only worked inside a dropzone sentence. The lenders card&rsquo;s own tabs (<i>Matches</i> | <i>Saved lenders</i>) followed the same evening (Tanya) &mdash; they were the last underline tab set left on the page, and two tab anatomies inside one scroll read as two mechanisms rather than one. The counts stay on the segments. The underline set&rsquo;s original reasoning (<code>ui/tabs.tsx</code> is a pill group, but these tabs switch datasets rather than filter one) is kept in the CSS comment where it stood. The open slots themselves came off on 31 Aug (Tanya): the tab lists only documents that exist &mdash; filled rows, then <i>Additional documents</i> &mdash; and the four dashed placeholder rows, their lender-voice hints, the per-slot Upload buttons and drop-onto-slot all went with them. What survives of the slot idea is the mapping: <b>File as&hellip;</b> on an unfiled upload still assigns it to a required document, and the empty state still names the four expected files in one sentence &mdash; expectation lives in prose, not in permanent scaffolding rows.</li>
       <li><b>Financing became the summary&rsquo;s middle tab, 30 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; Terms requested, Business plan and Sources &amp; uses left the Overview (Tanya: &ldquo;can we put this into separate tab?&rdquo;) for a <b>Financing</b> tab between Overview and Documents: the borrower&rsquo;s ask, the plan behind it and the capital stack are one story &mdash; how the deal gets financed &mdash; while Overview keeps the facts, prose and rail that identify the deal. The segment showed only when a deal carried one of the blocks at first; once the tab became editable it is always there &mdash; <i>+ Add</i> stubs are the way in for created deals. Sources &amp; uses opens expanded now: collapse earned its keep when the block crowded the Overview; in its own tab it is the content &mdash; the collapse chevron came off entirely (Tanya), leaving the same fixed caption Terms requested and Business plan carry. On 30 Aug the tab stopped being display-only (Tanya: &ldquo;add functionality for this&rdquo;): every section &mdash; Terms requested, Business plan, Sources &amp; uses, and the rail&rsquo;s Sponsor block &mdash; carries a per-section &#9998; Edit / Done toggle (the LinkedIn-profile pattern prototyped for Highlights in August), with Zoho &sect;3/&sect;7 vocabularies verbatim as the selects [T], executions as checkboxes, an editable S&amp;U grid (add/remove lines, live-formatted amounts, totals recompute on Done, empty lines hidden from the view) and <i>+ Add</i> stubs where a deal has no section yet &mdash; created deals can finally grow a package. Until now this content had no path into a deal except the one-shot Zoho submission; who authors it in production is Q77 in [[stakeholder-questions]]. On 31 Aug the Sponsor block left the rail for this tab (Tanya asked whether it belongs here; it does): Zoho &sect;6 sits between &sect;3 and &sect;7 in the intake form, lenders underwrite the sponsor exactly like the terms and the stack, and Janover keeps sponsor inside the OM rather than in chrome. It renders as a fourth section &mdash; Terms and Sponsor share the top row, Business plan and Sources &amp; uses follow full-width &mdash; and the rail now carries only workflow: status, photos, the lender list.</li>
       <li><b>Location filter became State, 27 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the old facet’s values were literal &ldquo;City, ST&rdquo; strings scraped off the sample rows, one per deal. Three reasons state is the right grain: the matching query scores geography by state and never reads city; Tony’s intake form asks <b>State*</b> with MSA cut and postal code separate; and the create form leaves city optional, so a city-less deal rendered a &ldquo;, TX&rdquo; badge. The facet now carries the canonical 51 with the same type-ahead as Property type. The table’s Location column briefly kept city&nbsp;+&nbsp;state; on 28 Aug it became <b>State</b> too, printing the full state name &mdash; the shipped My Deals row does exactly this (State &ldquo;Florida&rdquo;, City blank on most rows), and city + postal code are optional, so the list never shows fields a deal may not have. The deal detail keeps the full address &mdash; the record view is where optional fields belong.</li>
+      <li><b>Loan amount joins the filter bar, 31 Aug</b> <span class="note">[T]</span> &mdash; the one filter Tony asked for by name on the 26 Aug call, ranked third in his own ordering (State &middot; Property type &middot; Loan amount &middot; Execution Type, the last droppable): &ldquo;a lender asks what else the broker is working on&rdquo;, and size is one of the first things they screen by. The bar now renders in that ranking. It filters by <i>bucket</i> (Under $1M through $25M+), not a min/max pair <span class="note">[&#128161; rec]</span> &mdash; a deal&rsquo;s amount is one number, so the screening question is &ldquo;which size class&rdquo;, and the audit already showed what free-typed Min/Max bounds do to a list: the likeliest entry hides the right rows. Buckets reuse the MultiSelect anatomy every other facet has, counts and all; the boundaries are sample <span class="note">[~]</span> &mdash; nobody has said where broker size classes actually break.</li>
       <li><b>The board follows Janover Pro&rsquo;s Current Deals board</b> <span class="note">[comp Aug 19]</span> — flat grey lanes on a horizontal scroller, a tone dot and count pill in each lane head, a dashed &ldquo;No deals&rdquo; placeholder, card anatomy of title &rsaquo; amount &rsaquo; property type &rsaquo; footer (document and saved-lender counts, date), and a kebab menu on the card with <b>Change Status</b> as a submenu — Janover&rsquo;s path for the same edit. Every count on the footer is real: documents from the deal&rsquo;s checklist, saved lenders from the shortlist, the date from <code>updated</code>. Tokens, radii and control metrics stay LenderPrism&rsquo;s. One footer element did not survive the copy: Janover&rsquo;s owner chip (avatar + &ldquo;You&rdquo;) came off, 26 Aug &mdash; <code>loan_requests</code> has a single <code>belongs_to :user</code>, no assignee or team concept, and a broker sees only their own deals, so the chip would read &ldquo;You&rdquo; on every card and carry no information. If team seats ever arrive, it returns as the highest-value element on the card. <span class="note">[&#128161; rec]</span></li>
       <li><b>Both views are held to one height.</b> <span class="note">[&#128161; rec]</span> Toggling list &harr; board changed the card's height by roughly 300px, which reads as a page reload rather than a change of representation &mdash; the control swaps how the same eleven deals are drawn, so nothing below it should move. Both are now pinned to <code>--view-h</code>, measured off the table's own body at eleven rows: the board fills it and each lane scrolls inside itself, the table scrolls under a stuck header if the set ever grows past eleven. Lane heads stay put and the cards move under them, which is what every board holding a real pipeline does. Released below 767, where a table row is a labelled block and no one constant can hold both shapes.</li>
       <li><b>Three deals were added on 26 Aug for the board's shape, not for volume.</b> <span class="note">[&#128161; rec]</span> Eleven lanes each holding exactly one card is the one distribution a real pipeline never has &mdash; work piles up at the front and thins toward the close. Harborview, Magnolia and Foundry (the three already drawn in the Figma <i>Deals</i> table frame) sit at <b>Leads</b> and <b>Screening</b>, giving 3 &middot; 3 &middot; 1 &middot; 2 &middot; 1 &middot; 0 &middot; 1 &middot; 0 across the eight statuses. Nothing about them is hand-authored beyond the deal record: their match counts (2 &middot; 1 &middot; 4) fall out of the same five-criteria scoring every other deal runs through, and their saved-lender counts are zero because nothing has been shortlisted at those stages. <b>Funded</b> and <b>On Hold</b> stay empty, so the dashed &ldquo;No deals&rdquo; placeholder is visible where it belongs.</li>
       <li><b>Board Settings is half-sourced.</b> The button and its position come from Janover&rsquo;s board <span class="note">[comp Aug 19]</span>; the panel&rsquo;s contents do not — we never saw inside theirs, so column visibility and card fields are conventional board settings <span class="note">[~]</span>. Both act on real data: a hidden column&rsquo;s deals stay in the pipeline and in every count (the note under the board says so), and each card field maps to a <code>loan_requests</code> column, named in the row&rsquo;s hover.</li>
       <li><b>Deal statuses are eight</b> <span class="note">[&#128161; rec &middot; 28 Aug]</span> &mdash; Leads &middot; Screening &middot; Outreach &middot; Quoting &middot; Processing &middot; Funded &middot; Dead &middot; On Hold, a collapse of Tony&rsquo;s own eleven <span class="note">[T &middot; Figma comment, 21 Aug]</span>: Lead | Prospective Deal &middot; Screening, Sizing &amp; Packaging &middot; Review Loan Request Package &middot; Lender/Investor Outreach &middot; Present Quotes to Client &middot; Secure Term Sheet / Application &middot; Engage Lender/Investor &middot; Under App | Processing &middot; Funded &amp; Closed &middot; Dead &middot; On Hold, supplied verbatim in his comment on the Board view frame. The fold: the three packaging steps become <b>Screening</b>, quotes and term sheet become <b>Quoting</b>, lender engagement and underwriting become <b>Processing</b>. <b>Dead</b> and <b>On Hold</b> stay separate, as Tony had them: Dead is terminal and only feeds post-mortem reporting, On Hold is expected back &mdash; fusing them would bury recoverable deals among lost ones, the same trap as the retired fused Agency chip. His eleven had replaced the Janover placeholder set demoed 19 Aug. The schema fact stands: <code>db/schema.rb</code> confirms <code>loan_requests</code> has <b>no status column at all</b>, so this is a new column, not a rename.</li>
-      <li><b>Lender status and outreach are the real enums</b>, from <code>app/models/loan_request_match.rb</code> and <code>app/(dashboard)/lenders/types.ts</code>: <code>status</code> is six values, <code>disposition</code> is five and its labels here are the repo's own <code>DISPOSITION_OPTIONS</code> strings. <code>disposition: quoted</code> is the product's Term Sheet. Collapsed to one control, 31 Aug <span class="note">[&#128161; rec &middot; Janover]</span>: the broker edits only <b>Outreach</b> &mdash; disposition is the broker&rsquo;s own log, so it gets the dropdown &mdash; while status is the lender&rsquo;s answer and renders as a read-only badge (<i>Lender interested</i> / <i>declined</i> / <i>not a fit</i>) only once the lender has actually acted; the passive states (pending, open request, under review) already show as the digest clock, now in a <b>Last activity</b> column. The shipped table prints one column too &mdash; labeled <i>Status</i> but holding the <code>DISPOSITION_OPTIONS</code> values, the label lying about its contents &mdash; so one column is also what production does; ours names the axis honestly. Three of the five disposition values duplicate status values, which is why two editable dropdowns invited drift: a lender declines in-platform and the broker&rsquo;s column still says under review. Rows sort hottest first (Quoted &rarr; Not Yet Contacted). The lender-answer badge came off within the hour (Tanya) &mdash; beside the dropdown it duplicated the outreach value &mdash; so the lender&rsquo;s in-platform response now has no surface again until activity logging gives it one. The dropdown gained the colour vocabulary instead: one dot per disposition, on the trigger and in the open list &mdash; the shipped page colours these same labels, but prints <i>Not Yet Contacted</i> in the same red as <i>Not a Fit</i>; here amber separates &ldquo;not started&rdquo; from the dead ends, and red marks only <i>Not a Fit</i>. The action column then folded to the matches-table anatomy (Tanya): one primary button per row &mdash; <b>Email</b> on a banker, <b>Find a contact</b> on an institution (renamed from <i>Ask Prism to find a contact</i>; the credit-spend explanation lives in the click-note, not the label) &mdash; and the rest behind the same row kebab, <i>Log a call</i> above a red <i>Remove from deal</i>, which gained its object since a menu item floats free of its row&rsquo;s gravity. The two tables then converged on one column set (Tanya): Saved lenders carries the matches columns &mdash; Loan range, Property type, Financing type, same two-chips-then-<i>+N more</i> anatomy &mdash; plus Outreach, so a broker comparing a saved shortlist against fresh matches reads the same grid; the short-lived Last activity column folded back into the lender cell as the digest line it started as. Last activity is also the slot where derived state lands once contact logging exists (audit priority 2) &mdash; Janover&rsquo;s Deal Inbox computes its status pill from the conversation thread itself, and both LenderPrism vocabularies end at Quoted while Janover&rsquo;s funnel runs on to Terms Accepted, Underwriting and Closed Won: the back half of the funnel is missing from the data model entirely.</li>
+      <li><b>Lender status and outreach are the real enums</b>, from <code>app/models/loan_request_match.rb</code> and <code>app/(dashboard)/lenders/types.ts</code>: <code>status</code> is six values, <code>disposition</code> is five and its labels here are the repo's own <code>DISPOSITION_OPTIONS</code> strings. <code>disposition: quoted</code> is the product's Term Sheet. Collapsed to one control, 31 Aug <span class="note">[&#128161; rec &middot; Janover]</span>: the broker edits only <b>Outreach</b> &mdash; disposition is the broker&rsquo;s own log, so it gets the dropdown &mdash; while status is the lender&rsquo;s answer and renders as a read-only badge (<i>Lender interested</i> / <i>declined</i> / <i>not a fit</i>) only once the lender has actually acted; the passive states (pending, open request, under review) were meant to show as a digest clock in a <b>Last activity</b> column; both are gone &mdash; see question 78 &mdash; so those three states have no surface at all today. The shipped table prints one column too &mdash; labeled <i>Status</i> but holding the <code>DISPOSITION_OPTIONS</code> values, the label lying about its contents &mdash; so one column is also what production does; ours names the axis honestly. Three of the five disposition values duplicate status values, which is why two editable dropdowns invited drift: a lender declines in-platform and the broker&rsquo;s column still says under review. Rows sort hottest first (Quoted &rarr; Not Yet Contacted). The lender-answer badge came off within the hour (Tanya) &mdash; beside the dropdown it duplicated the outreach value &mdash; so the lender&rsquo;s in-platform response now has no surface again until activity logging gives it one. The dropdown gained the colour vocabulary instead: one dot per disposition, on the trigger and in the open list &mdash; the shipped page colours these same labels, but prints <i>Not Yet Contacted</i> in the same red as <i>Not a Fit</i>; here amber separates &ldquo;not started&rdquo; from the dead ends, and red marks only <i>Not a Fit</i>. The action column then folded to the matches-table anatomy (Tanya): one primary button per row &mdash; <b>Email</b> on a banker, <b>Find a contact</b> on an institution (renamed from <i>Ask Prism to find a contact</i>; the credit-spend explanation lives in the click-note, not the label) &mdash; and the rest behind the same row kebab, <i>Log a call</i> above a red <i>Remove from deal</i>, which gained its object since a menu item floats free of its row&rsquo;s gravity. The two tables then converged on one column set (Tanya): Saved lenders carries the matches columns &mdash; Loan range, Property type, Financing type, same two-chips-then-<i>+N more</i> anatomy &mdash; plus Outreach, so a broker comparing a saved shortlist against fresh matches reads the same grid; the short-lived Last activity column folded back into the lender cell as the digest line it started as, and that line came off too on 31 Aug once the KB was searched for what produces it &mdash; nothing does, and <i>Digest sent 6 Aug</i> contradicts the per-lender cadence setting Tony recorded <span class="note">[T]</span>. The lender cell is back to name and identity, and the deal&rsquo;s outreach state is carried by the Outreach column alone. Last activity is also the slot where derived state lands once contact logging exists (audit priority 2) &mdash; Janover&rsquo;s Deal Inbox computes its status pill from the conversation thread itself, and both LenderPrism vocabularies end at Quoted while Janover&rsquo;s funnel runs on to Terms Accepted, Underwriting and Closed Won: the back half of the funnel is missing from the data model entirely.</li>
       <li><b>Fit is computed, never typed.</b> Five weighted criteria — amount 30, property type 25, geography 20, financing 15, appetite 10 — with property and geography as knock-outs and a financing miss capping below strong. The chips beside each score sum to it, so a 100% row shows five ticks. Drag the cut; every count on the page moves with it.</li>
       <li><b>The deal summary is built only from columns that exist.</b> Every field on it is a real <code>loan_requests</code> column — <code>transaction_name</code>, <code>loan_amount_cents</code>, <code>property_type</code>, <code>transaction_summary</code>, <code>unit_quantity</code>, <code>physical_occupancy</code>, <code>sponsor_combined_net_worth</code> and the rest. Nothing here needs a migration; the read layer is the whole gap.</li>
       <li><b>Three controls on a deal row, three destinations</b> — the name opens the deal, the match count opens the scored list, <code>Find Lenders</code> opens the same list with the cut released to 0 so the near-misses are visible, and scrolls straight to the <b>Lenders on this deal</b> section.</li>
-      <li><b>Bankers roll up to accounts on the matches list, 31 Aug</b> <span class="note">[T]</span> <span class="note">[&#128161; rec]</span> &mdash; Tony, 14 Aug: &ldquo;we might have 5 bankers that work for a Company, like Wells Fargo or Chase. When a loan search is performed, those five lenders will display in the search results. People should roll up to Accounts within the search results as well.&rdquo; They did not: a person was the row, so five colleagues arrived as five unrelated lines and saving one left the other four sitting there. The matches list now groups by account behind a <b>Group by account</b> switch in the results bar, <b>on by default</b> &mdash; the flat list is the reported bug, so the corrected view is the one a broker lands on, and the switch is what it costs to go back. Sunbelt Agency Group carries five bankers so Tony&rsquo;s own example is on screen; Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges. The account row is a <i>heading</i>, not a lender: it counts the roster and spans its ranges (<i>$1M &ndash; $50M across 5 bankers</i>) and leaves property and financing blank, because a credit box belongs to a person &mdash; rolling capabilities up would advertise an appetite no banker at the institution actually has. Selecting the account selects its people; Save stays per banker, since a term sheet comes from a human being. Redrawn 31 Aug after a Mobbin sweep <span class="note">[&#128161; rec &middot; Mobbin]</span>: the heading stopped renting the data columns &mdash; its range sat in the Loan range cell and em dashes under Property and Financing read as missing data &mdash; and became the slim full-width band grouped tables converge on (Airtable and Asana band the group header; Xero right-aligns the rollup total on it, where the range summary now sits). One line &mdash; caret, account name, roster facts, a green <i>&#10003; N saved</i> when the group holds saved bankers, range on the right &mdash; and the whole band toggles, not just the caret. <b>Source became a badge and a filter</b> rather than the tab it is today &mdash; and it prints only the exception: registered is the default, a default should be silent, so one row carries a badge and thirteen read nothing. A matching <i>Source</i> filter shipped beside it for an afternoon and came off again (Tanya, 31 Aug): on a deal&rsquo;s matches it separates thirteen rows from one, which is a job the badge already does by being visible &mdash; and a segmented control whose segments are that lopsided teaches the same lesson as the two shipped filters retired above it. The filter belongs on <code>/lenders</code>, where the source split is a <i>tab</i> over hundreds of records; demoting that tab to a filter is the argument, and a deal&rsquo;s match list is not where it is made. <b>One word, amended same day</b> (Tanya) &mdash; a first pass badged the institution <i>Prospector</i> and the banker it produced <i>Sourced by Prism</i>, on the reasoning that Tony uses <i>Prospector</i> for an institution with no contact person. Two labels in one chip style read as two categories at the same level, which is the one thing this is not: bank from the directory &rarr; banker an admin found inside it &rarr; registered lender is a <i>lifecycle</i>. Both now read <b>Prospector</b>, in blue rather than the neutral of the criteria pills &mdash; provenance is a different kind of fact from a property type, and a grey chip beside grey chips reads as one more capability. The stage is carried by the row, which already shows it: the institution says <i>No contacts yet</i> in three cells, the banker has a name, a title, criteria and a Save button. What the second badge was saying is now words on the meta line &mdash; <i>found by Prism, not registered</i> &mdash; which costs no second token and keeps the tie to the paid action. Ironwood Community Bank is the case that forces it &mdash; one registered banker and one Prospector-sourced contact at the same bank, which the shipped <i>My Deals &amp; Lenders</i> / <i>Bank/CU Prospects</i> split can only draw by listing the bank twice with half its people in either. <span class="note">[T]</span> Tony, 20 Aug, sharpened the badge: a contact registered through Prospector &ldquo;should move to Lender Funnel / Network&rdquo;, so the label names how someone arrived and is expected to change, not a permanent class of lender. Every match count now prints both units &mdash; <i>14 bankers &middot; 7 accounts</i> &mdash; on the results bar, the deals table and the board card, because one number silently meaning people on one screen and institutions on the next is the ambiguity the rollup introduces. <span class="note">[~]</span> Still open, and it is the expensive half: nothing links a registered lender to an institution today &mdash; company name is required free text on both the broker and the lender profile with no organization picker, which is how duplicates arrive. Tony&rsquo;s answer, 20 Aug <span class="note">[T]</span>, is a lookup at registration &mdash; search existing accounts, create if none, seed from the Prospector file, admin edits the typos (<code>BofA</code>, <code>bank of america</code>) &mdash; which is a registration change this prototype does not draw. Here the accounts are simply given. <b>Institutions with nobody on file, 31 Aug</b> <span class="note">[sandbox Aug 31]</span> &mdash; the case the rollup has to answer and a list of people cannot: a broker picks Comerica or Texas Capital out of the Banks &amp; Credit Unions directory and saves an institution with no contact at all. The shipped product already carries these &mdash; four of the twenty-four saved on the Chan Portfolio deal, reading <i>No contacts yet</i>, badged <i>Prospector</i>, at status <i>Not Yet Contacted</i>. They sit on <b>Saved lenders</b> and can never appear under Matches, because matching reads a credit box and a credit box belongs to a banker. The row says so in every cell it cannot fill: loan range <i>No contacts yet</i>, status <i>No contact yet</i> as text rather than the control the banker rows get, outreach an em dash &mdash; a status control here would offer to mark <i>Contacted</i> an institution with nobody to contact. What the row does carry is the identity the account already has (institution kind, FDIC cert, branches near the deal) and the one action that changes the situation, <i>Ask Prism to find a contact</i> &mdash; the paid sourcing offer sitting beside the free rows rather than behind a tab, worded to promise the search and not the result <span class="note">[~]</span>. <i>Prospector</i> is the right badge here and only here: it is Tony&rsquo;s word for an institution we have no contact person for, so it is exact on a bank with none and wrong on a named banker. The explanatory strip above these rows (<i>N institutions saved with nobody on file yet&hellip;</i>) was removed (Tanya, 31 Aug) &mdash; the rows already say it cell by cell, and a banner restating what the table shows is annotation, not UI.</li>
+      <li><b>Bankers roll up to accounts on the matches list, 31 Aug</b> <span class="note">[T]</span> <span class="note">[&#128161; rec]</span> &mdash; Tony, 14 Aug: &ldquo;we might have 5 bankers that work for a Company, like Wells Fargo or Chase. When a loan search is performed, those five lenders will display in the search results. People should roll up to Accounts within the search results as well.&rdquo; They did not: a person was the row, so five colleagues arrived as five unrelated lines and saving one left the other four sitting there. The matches list now groups by account behind a <b>Group by account</b> switch in the results bar, <b>on by default</b> &mdash; the flat list is the reported bug, so the corrected view is the one a broker lands on, and the switch is what it costs to go back. Sunbelt Agency Group carries five bankers so Tony&rsquo;s own example is on screen; Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges. The account row is a <i>heading</i>, not a lender: it counts the roster and spans its ranges (<i>$1M &ndash; $50M across 5 bankers</i>) and leaves property and financing blank, because a credit box belongs to a person &mdash; rolling capabilities up would advertise an appetite no banker at the institution actually has. Selecting the account selects its people; Save stays per banker, since a term sheet comes from a human being. Redrawn 31 Aug after a Mobbin sweep <span class="note">[&#128161; rec &middot; Mobbin]</span>: the heading stopped renting the data columns &mdash; its range sat in the Loan range cell and em dashes under Property and Financing read as missing data &mdash; and became the slim full-width band grouped tables converge on (Airtable and Asana band the group header; Xero right-aligns the rollup total on it, where the range summary now sits). One line &mdash; caret, account name, roster facts, a green <i>&#10003; N saved</i> when the group holds saved bankers, range on the right &mdash; and the whole band toggles, not just the caret. <b>Source became a badge and a filter</b> rather than the tab it is today &mdash; and it prints only the exception: registered is the default, a default should be silent, so one row carries a badge and thirteen read nothing. A matching <i>Source</i> filter shipped beside it for an afternoon and came off again (Tanya, 31 Aug): on a deal&rsquo;s matches it separates thirteen rows from one, which is a job the badge already does by being visible &mdash; and a segmented control whose segments are that lopsided teaches the same lesson as the two shipped filters retired above it. The filter belongs on <code>/lenders</code>, where the source split is a <i>tab</i> over hundreds of records; demoting that tab to a filter is the argument, and a deal&rsquo;s match list is not where it is made. <b>One word, amended same day</b> (Tanya) &mdash; a first pass badged the institution <i>Prospector</i> and the banker it produced <i>Sourced by Prism</i>, on the reasoning that Tony uses <i>Prospector</i> for an institution with no contact person. Two labels in one chip style read as two categories at the same level, which is the one thing this is not: bank from the directory &rarr; banker an admin found inside it &rarr; registered lender is a <i>lifecycle</i>. Both now read <b>Prospector</b>, in blue rather than the neutral of the criteria pills &mdash; provenance is a different kind of fact from a property type, and a grey chip beside grey chips reads as one more capability. The stage is carried by the row, which already shows it: the institution says <i>No contacts yet</i> in three cells, the banker has a name, a title, criteria and a Save button. What the second badge was saying is now words on the meta line &mdash; <i>found by Prism, not registered</i> &mdash; which costs no second token and keeps the tie to the paid action. Ironwood Community Bank is the case that forces it &mdash; one registered banker and one Prospector-sourced contact at the same bank, which the shipped <i>My Deals &amp; Lenders</i> / <i>Bank/CU Prospects</i> split can only draw by listing the bank twice with half its people in either. <span class="note">[T]</span> Tony, 20 Aug, sharpened the badge: a contact registered through Prospector &ldquo;should move to Lender Funnel / Network&rdquo;, so the label names how someone arrived and is expected to change, not a permanent class of lender. Every match count now prints both units &mdash; <i>14 bankers &middot; 7 accounts</i> &mdash; on the results bar, the deals table and the board card, because one number silently meaning people on one screen and institutions on the next is the ambiguity the rollup introduces. <span class="note">[~]</span> Still open, and it is the expensive half: nothing links a registered lender to an institution today &mdash; company name is required free text on both the broker and the lender profile with no organization picker, which is how duplicates arrive. Tony&rsquo;s answer, 20 Aug <span class="note">[T]</span>, is a lookup at registration &mdash; search existing accounts, create if none, seed from the Prospector file, admin edits the typos (<code>BofA</code>, <code>bank of america</code>) &mdash; which is a registration change this prototype does not draw. Here the accounts are simply given. <b>Institutions with nobody on file, 31 Aug</b> <span class="note">[sandbox Aug 31]</span> &mdash; the case the rollup has to answer and a list of people cannot: a broker picks Comerica or Texas Capital out of the Banks &amp; Credit Unions directory and saves an institution with no contact at all. The shipped product already carries these &mdash; four of the twenty-four saved on the Chan Portfolio deal, reading <i>No contacts yet</i>, badged <i>Prospector</i>, at status <i>Not Yet Contacted</i>. They sit on <b>Saved lenders</b> and can never appear under Matches, because matching reads a credit box and a credit box belongs to a banker. The row says so in every cell it cannot fill: loan range <i>No contacts yet</i>, status <i>No contact yet</i> as text rather than the control the banker rows get, outreach an em dash &mdash; a status control here would offer to mark <i>Contacted</i> an institution with nobody to contact. What the row does carry is the identity the account already has (institution kind, FDIC cert, branches near the deal) and the one action that changes the situation, <i>Ask Prism to find a contact</i> &mdash; the paid sourcing offer sitting beside the free rows rather than behind a tab, worded to promise the search and not the result <span class="note">[~]</span>. <i>Prospector</i> is the right badge here and only here: it is Tony&rsquo;s word for an institution we have no contact person for, so it is exact on a bank with none and wrong on a named banker. The explanatory strip above these rows (<i>N institutions saved with nobody on file yet&hellip;</i>) was removed (Tanya, 31 Aug) &mdash; the rows already say it cell by cell, and a banner restating what the table shows is annotation, not UI. What replaced it is a <b>door, 31 Aug</b> <span class="note">[T]</span> &mdash; Tony&rsquo;s Prospector ask, third session running: surface the count before the search (&ldquo;75 banks within a 100-mile radius of this property. Perform a search now&rdquo;), zip or city + state required so the radius correlates. The saved-tab footer now reads <i>N banks and credit unions within 100 miles of {zip}</i> with a <b>Search directory</b> action &mdash; on this tab and not Matches, because the directory is the one source a match list can never produce and what a broker saves there lands here as a Prospector row. <span class="note">[~]</span> The count is sample, seeded from the deal&rsquo;s zip; live it is an FDIC-directory query the product already runs. Reworked same hour (Tanya, &ldquo;should it be below the table?&rdquo;): position stands &mdash; the door appends rows to this list, and list-end is where add-actions live &mdash; but the loose sentence became a separated footer strip, border-top and muted fill, the live find-lenders panel&rsquo;s own footer anatomy; floating in card padding it read as a caption, not a door. <b>Outreach state in the matches row was built and removed the same day, 31 Aug</b> <span class="note">[&#128161; rec &middot; Janover]</span> &mdash; Janover Pro&rsquo;s search results carry <i>Offering Sent</i> / <i>Offering Viewed</i> / <i>Rejected</i> on the row itself, so a broker prospects with contact history in view <span class="note">[comp 26 Aug]</span>, and ours printed only network staleness (<i>last active 2 months ago</i>, a fact about the lender and not about this deal). The borrowing was drawn as a digest clock under the name on both tabs &mdash; <i>Digest sent 6 Aug &middot; viewed 2 days ago</i> &mdash; and came off within the hour (Tanya) once the KB was searched for what produces it. <b>Nothing does.</b> The audit&rsquo;s own version of this line reads <i>&ldquo;Digest sent 6 Aug &middot; no reply&rdquo;</i> and claims it needs &ldquo;only surfacing of an event the system already generates&rdquo;; the KB does not support even that. <i>Viewed</i> needs email open tracking, of which there is no trace anywhere &mdash; no mailer, no scheduler, no pixel, and <span class="note">[~]</span> no email of any kind from this product has ever been seen by us. <i>Sent 6 Aug</i> is worse than unbacked, it contradicts a recorded fact: alert cadence is set per lender on their own profile &mdash; instant / daily / weekly / monthly / <b>off</b> <span class="note">[T]</span> &mdash; so there is no shared weekly send date, and a lender set to off has no date at all. The conflict between that setting and the <i>&ldquo;weekly digests&rdquo;</i> promise printed on <code>/lenders</code> is question 17, still open. Drawing a clock over an unanswered question is how a prototype starts teaching the client something untrue, so the line is gone from both tabs and the ask is now <b>question 78</b>. What the attempt did surface is worth keeping: a lender sitting at <i>Not Yet Contacted</i> while the platform claims to have mailed them is a contradiction the shipped product already carries &mdash; either the digest is not contact or the default disposition is wrong. And the colour argument it forced stands on its own for whatever eventually fills this slot: <b>a row gets one colour system, and Outreach owns it wherever it exists</b> &mdash; the disposition dropdown already spends green on <i>Quoted</i> and gold on <i>Not Yet Contacted</i>, so a second coloured signal beside it would put both hues on one row meaning unrelated things. <b>Outreach does not belong on Matches either</b>, since a disposition presupposes a save and would read on three rows of fourteen, the same emptiness that retired the shipped Type and amount filters. <b>The match list stating its own inputs was tried the same day and removed</b> (Tanya) <span class="note">[&#128161; rec &middot; Janover]</span> &mdash; one sentence above the table naming the deal facts the fourteen were scored against and the five axes they were scored on, promoted out of the empty state, which still carries that prose for the case where nothing cleared the bar. Janover prints its own version &mdash; <i>&ldquo;You are searching for: SBA lenders offering $4M+ financing in Maricopa County&hellip;&rdquo;</i> <span class="note">[comp 26 Aug]</span> &mdash; but theirs is an echo of the filters the user just typed, which is why its per-row <i>Matching filters</i> column repeats the same county on all fourteen lines, gains nothing, and prints <i>SBA 504</i> twice on several of them. The match criteria stay unstated on this tab <span class="note">[~]</span>: there are no filter chips here to read them off, only a search box and a grouping switch.</li>
       <li><b>Observed vs sample.</b> Four deal names and three of their locations are read off the shipped <code>/loans</code> index; <b>Midtown Retail Permanent Debt</b> is the only deal whose amount and property type we have seen (<code>$3,100,000</code>, Retail-Multi Tenant, Dallas TX), and <b>Sandbox Debt Fund</b> the only lender. A walk of the running product on <b>28 Aug</b> moved three more values across that line: Riverside is <b>Austin, Texas 78701</b> at <b>$4,500,000</b> (not Houston at $12.0M), Northside&rsquo;s financing type is <b>Agency (Fannie Mae)</b> on an industrial refinance, and Gulf Coast&rsquo;s financing type is <b>unset</b> &mdash; the field is optional on the request form and that request left it blank, which is what the <i>Not specified</i> cell in the table now shows. Riverside&rsquo;s unit count, purchase price, NOI and Sources&nbsp;&amp;&nbsp;uses were re-scaled to the observed $4.5M loan so the summary cannot contradict its own header <span class="note">[~]</span>; the numbers are still sample, only their magnitude is now anchored. Sponsors, summaries, the seven deals added for volume (Lakeline, Crescent, Pearl, Old Town, and &mdash; 26 Aug, for the board&rsquo;s shape &mdash; Harborview, Magnolia, Foundry) and the other twenty-six bankers &mdash; including every colleague sharing an account, and the one Prospector-sourced contact at Ironwood &mdash; are sample data, invented so the scoring, the filters and the account rollup have something to bite on. The blue <i>observed</i> badge the lender tables carried came off on 31 Aug (Tanya) &mdash; provenance stays in the data flags and this strip, off the demo surface.</li>
-      <li><b>One clock vocabulary for timestamps, 31 Aug</b> <span class="note">[&#128161; rec &middot; sandbox 31 Aug]</span> &mdash; a sandbox sweep found four date formats on one dashboard: &ldquo;August 4th at 4:43 PM&rdquo; on loan requests, &ldquo;04/08/2026&rdquo; on matches (DD/MM &mdash; a US reader parses April), and the same lender date rendered &ldquo;3 weeks ago&rdquo; by the lenders table but &ldquo;27 days ago&rdquo; by the dashboard widgets. Every relative value is an unlabeled &ldquo;Updated N ago&rdquo; that stamps the lender <i>record&rsquo;s</i> touch time, never the relationship &mdash; and the View results page, the surface closest to a communication inbox, shows no dates at all (&ldquo;Previously Saved&rdquo; and &ldquo;already contacted&rdquo; both undated). The rule the prototype demonstrates: absolute short dates for records (the deals table&rsquo;s <b>Updated</b> column, &ldquo;Digest sent 6 Aug&rdquo;), relative time only for activity fresher than two weeks, and every relative value labeled with its verb &mdash; saved-lender rows read <i>viewed 2 days ago</i> (a bare &ldquo;2 days ago&rdquo; repeated the product&rsquo;s unlabeled-clock mistake), <i>not viewed yet</i> replaces the dash, and Midtown&rsquo;s 14-day-old engagement crossed the freshness horizon to <i>viewed 17 Aug</i> &mdash; past two weeks the question &ldquo;is this fresh?&rdquo; has one answer, so the date takes over. Last-contact recency stays impossible until contact logging exists (priority 2): a timestamp cannot precede the event it stamps.</li>
-      <li><b>The matches table dropped its scoring chrome, 31 Aug</b> <span class="note">[&#128161; rec &middot; Figma mockup]</span> &mdash; the evaluated-count strip (strong / partial / outside / hidden), the fit slider with its below-the-cut line, the <b>Fit</b> column and the per-row criteria chips all came off; what remains is what the live lenders table actually has: company/contact, loan range, <b>Property type</b> (new column, same two-chips-then-<i>+N more</i> anatomy as financing), financing type. The scoring strip and slider were invented UI with no product counterpart &mdash; fit is still computed underneath, ordering the rows and gating the 60% bar, it just is not printed. <b>Hide</b> left the row for a kebab menu (the deals table&rsquo;s own <code>.rowkebab</code> / <code>.cardmenu</code> anatomy), joined by <b>Report inaccurate criteria</b> &mdash; previously a card-footer link, now a danger item next to the row it disputes, which is where the shipped page&rsquo;s Report Issue sits too. The cut-release path died with the slider: <i>Find Lenders</i> now lands on the 60%+ list rather than releasing the cut to 0 for near-misses.</li>
+      <li><b>One clock vocabulary for timestamps, 31 Aug</b> <span class="note">[&#128161; rec &middot; sandbox 31 Aug]</span> &mdash; a sandbox sweep found four date formats on one dashboard: &ldquo;August 4th at 4:43 PM&rdquo; on loan requests, &ldquo;04/08/2026&rdquo; on matches (DD/MM &mdash; a US reader parses April), and the same lender date rendered &ldquo;3 weeks ago&rdquo; by the lenders table but &ldquo;27 days ago&rdquo; by the dashboard widgets. Every relative value is an unlabeled &ldquo;Updated N ago&rdquo; that stamps the lender <i>record&rsquo;s</i> touch time, never the relationship &mdash; and the View results page, the surface closest to a communication inbox, shows no dates at all (&ldquo;Previously Saved&rdquo; and &ldquo;already contacted&rdquo; both undated). The rule the prototype demonstrates: absolute short dates for records (the deals table&rsquo;s <b>Updated</b> column), relative time only for activity fresher than two weeks, and every relative value labeled with its verb &mdash; <i>last active 3 months ago</i> on a matches row and <i>Added 2 days ago</i> on a Prospector row, never a bare &ldquo;2 days ago&rdquo;, which is the product&rsquo;s own unlabeled-clock mistake. Past two weeks the question &ldquo;is this fresh?&rdquo; has one answer, so the date takes over. <span class="note">[~]</span> The digest clock that carried these examples until 31 Aug &mdash; <i>Digest sent 6 Aug &middot; viewed 2 days ago</i> &mdash; was removed the same day for want of a backend that produces either half; the rule outlived its exemplar. Last-contact recency stays impossible until contact logging exists (priority 2): a timestamp cannot precede the event it stamps.</li>
+      <li><b>The matches table dropped its scoring chrome, 31 Aug</b> <span class="note">[&#128161; rec &middot; Figma mockup]</span> &mdash; the evaluated-count strip (strong / partial / outside / hidden), the fit slider with its below-the-cut line, the <b>Fit</b> column and the per-row criteria chips all came off; what remains is what the live lenders table actually has: company/contact, loan range, <b>Property type</b> (new column, same two-chips-then-<i>+N more</i> anatomy as financing), financing type. The scoring strip and slider were invented UI with no product counterpart &mdash; fit is still computed underneath, ordering the rows and gating the 60% bar, it just is not printed. <b>Hide</b> left the row for a kebab menu (the deals table&rsquo;s own <code>.rowkebab</code> / <code>.cardmenu</code> anatomy), joined by <b>Report inaccurate criteria</b> &mdash; previously a card-footer link, now a danger item next to the row it disputes, which is where the shipped page&rsquo;s Report Issue sits too. The cut-release path died with the slider: <i>Find Lenders</i> now lands on the 60%+ list rather than releasing the cut to 0 for near-misses. <b>A footer strip, tried and removed 31 Aug</b> (Tanya) &mdash; the saved tab&rsquo;s directory-door anatomy was repeated under Matches for an afternoon: a boundary sentence left (<i>Hiding a lender is per-deal and reversible &mdash; they are not notified, and they stay countable in the strip above</i>) and <b>Report inaccurate criteria</b> as a text link right. It came off the same day; the dispute action stays in the row kebab, where it sits next to the criteria it contests, and Matches ends at the table again. What survives it is the count the sentence needed: the results bar prints <i>&middot; N hidden</i> when the deal hides anyone &mdash; the count that vanished with the evaluated-count strip, resurfaced in the one place the bar already counts things.</li>
+      <li><b>Bulk actions reached Saved lenders, 31 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the matches selbar anatomy, with the verbs translated for a list that is already saved: <b>Set outreach</b> (a dropdown in the bar &mdash; outreach happens in batches, and the shipped Chan Portfolio deal holds 24 saved lenders) and <b>Remove from deal</b>, one undo restoring the lot. Email-bulk stayed off &mdash; a mail merge this product cannot send &mdash; and Hide belongs to Matches. Institutions are pickable &mdash; Remove applies to them &mdash; but Set outreach skips them with a note in the bar: outreach describes something done to a person, and a Prospector row has no person on file. Setting outreach promotes a just-saved row into the saved store, which also fixed a silent no-op the per-row dropdown had on rows saved this session.</li>
+      <li><b>Execution Support, 31 Aug</b> <span class="note">[sandbox Aug 17]</span> &mdash; the one element of the live &ldquo;Lenders selected for my deal&rdquo; panel the prototype still lacked. <code>OpsRequestButtons.tsx</code>: Pro-only free concierge, POST <code>/loan_requests/:id/ops_requests</code>; a partial-unique index allows one open request per deal, so the shipped button disables itself once clicked. Here the control sits in the header of <i>Lenders on this deal</i> &mdash; what Ops works is this deal&rsquo;s lender outreach &mdash; as a button that becomes the state: <i>Execution Support requested</i> (blue) after the click, <i>Ops working on it</i> (green, <code>STATUS_LABEL</code>&rsquo;s own words) once Ops picks it up; Midtown is seeded in progress so both states are on screen. The undo toast doubles as cancel, which the shipped page does not offer. <span class="note">[~]</span> The broker is assumed Pro; the non-Pro state &mdash; disabled button plus &ldquo;Available on Pro&rdquo; upgrade copy &mdash; is documented, not drawn.</li>
+      <li><b>The directory door opens, 31 Aug</b> <span class="note">[T]</span> &mdash; <i>Search directory</i> on the saved tab is now a real link to a deal-scoped Banks &amp; Credit Unions page: a radius select (25 to 250 miles), the count from the same formula the door prints so the two can never disagree, distance-sorted rows, and <b>Save to deal</b> per row &mdash; the round trip Tony&rsquo;s Prospector ask implies, since what a broker saves lands back on Saved lenders as a Prospector row (undo included; already-saved institutions read &#10003; Saved). Deal-scoped rather than the global lenders tab on purpose: the door promised &ldquo;N near <i>this deal</i>&rdquo;, and the page opens holding that promise, with <i>Back to saved lenders</i> as the return leg. <span class="note">[~]</span> Rows and counts are sample; live this is the FDIC/NCUA directory query the product already runs. Credit unions print NCUA charter rather than FDIC cert &mdash; a label the saved-tab Prospector rows now match.</li>
     </ul>
   </details>
 </div>
@@ -1489,6 +1503,37 @@ function prospectsFor(id) {
     .map(a => ({ ...a, p: PROSPECTS.find(x => x.acct === a.acct) }));
 }
 
+/* The Banks & Credit Unions directory, scoped to a deal. [~] Rows and counts
+   are sample; live, both come from the FDIC/NCUA directory query the product
+   already runs, radius from the deal's zip. dirCount at 100 miles is the
+   figure the saved-tab door prints — one formula, so the door and the results
+   page cannot disagree. */
+function dirLoc(d) { return d.zip || (d.city ? d.city + ", " + d.state : d.state); }
+function dirCount(d, radius) {
+  const base = 30 + (d.zip ? parseInt(d.zip, 10) % 60 : 45);
+  return Math.round(base * ({ 25: 0.3, 50: 0.55, 100: 1, 250: 1.6 }[radius] || 1));
+}
+const DIR_RADII = [
+  { v: "25",  label: "Within 25 miles"  },
+  { v: "50",  label: "Within 50 miles"  },
+  { v: "100", label: "Within 100 miles" },
+  { v: "250", label: "Within 250 miles" }
+];
+const DIRECTORY = [
+  { acct:"comerica",   co:"Comerica Bank",                   inst:"Bank",         cert:"983",   branches:14, mi:4  },
+  { acct:"texascap",   co:"Texas Capital Bank",              inst:"Bank",         cert:"34383", branches:6,  mi:7  },
+  { acct:"frost",      co:"Frost Bank",                      inst:"Bank",         cert:"5560",  branches:11, mi:2  },
+  { acct:"aplusfcu",   co:"A+ Federal Credit Union",         inst:"Credit Union", cert:"67494", branches:8,  mi:3  },
+  { acct:"ufcu",       co:"University Federal Credit Union", inst:"Credit Union", cert:"24794", branches:9,  mi:5  },
+  { acct:"amplify",    co:"Amplify Credit Union",            inst:"Credit Union", cert:"67807", branches:5,  mi:9  },
+  { acct:"prosperity", co:"Prosperity Bank",                 inst:"Bank",         cert:"12224", branches:7,  mi:12 },
+  { acct:"indfin",     co:"Independent Financial",           inst:"Bank",         cert:"3076",  branches:4,  mi:18 },
+  { acct:"rbank",      co:"R Bank",                          inst:"Bank",         cert:"58513", branches:3,  mi:24 },
+  { acct:"firsttx",    co:"First Texas Bank",                inst:"Bank",         cert:"3129",  branches:3,  mi:31 },
+  { acct:"southside",  co:"Southside Bank",                  inst:"Bank",         cert:"17925", branches:5,  mi:62 },
+  { acct:"broadway",   co:"Broadway Bank",                   inst:"Bank",         cert:"18468", branches:6,  mi:84 }
+];
+
 /* ===========================================================
    Fit. Computed from five weighted criteria, never typed.
    Property type and geography are knock-outs; a financing miss
@@ -1537,12 +1582,15 @@ function savedIdsFor(id) { return new Set(savedFor(id).map(s => s.lender).concat
 const S = {
   route: "deals", dealId: null, tab: "matches",
   view: "list",
-  q: "", sort: "updated", propFilter: new Set(), finFilter: new Set(), locFilter: new Set(), open: null, msExpand: new Set(),
+  q: "", sort: "updated", propFilter: new Set(), finFilter: new Set(), locFilter: new Set(), amtFilter: new Set(), open: null, msExpand: new Set(),
   status: {},            /* dealId -> status, so a change persists */
-  mq: "", picked: new Set(), hidden: {}, savedNow: {}, savedRm: {},
+  mq: "", picked: new Set(), spicked: new Set(), hidden: {}, savedNow: {}, savedRm: {},
   /* grouping is on by default: the flat list is the bug Tony reported, so the
      corrected view is the one a broker lands on. [💡 rec] */
   grpAcct: true, acctShut: new Set(), acctRm: {},
+  /* Execution Support per deal: undefined | "requested" | "in_progress".
+     Midtown is seeded in progress so the working state is on screen. [~] */
+  ops: { midtown: "in_progress" }, dirRadius: 100,
   cardMenu: null, cardSub: false, selOpen: null,
   settingsOpen: false, setDrill: null, hideLanes: new Set(),
   sumClosed: new Set(),
@@ -1636,22 +1684,34 @@ const STATE_NAME = Object.fromEntries(US_STATES);
 const locLabel = d => d.city ? d.city + ", " + d.state : (STATE_NAME[d.state] || d.state);
 const locFull  = d => locLabel(d) + (d.zip ? " " + d.zip : "");
 
+/* Loan amount filters by bucket, not min/max inputs [T] — Tony ranked it
+   third on 26 Aug ("a lender asks what else the broker is working on, and
+   size is one of the first things they screen by"). Buckets rather than a
+   min/max pair [💡 rec]: the deal's amount is one number, so a size class
+   answers the screening question, and the audit's Min/Max finding showed
+   what free-typed bounds do to a list. Boundaries are sample. */
+const AMT_BUCKETS = ["Under $1M", "$1M \u2013 $5M", "$5M \u2013 $10M", "$10M \u2013 $25M", "$25M+"];
+const amtBucket = m => m < 1 ? "Under $1M" : m < 5 ? "$1M \u2013 $5M" : m < 10 ? "$5M \u2013 $10M" : m < 25 ? "$10M \u2013 $25M" : "$25M+";
+
 const FILTERS = [
   /* Status is not a filter: the board's lanes and the table's status column
      already slice by it. Transaction type is not one either (removed 26 Aug):
      matching never reads transaction_type, deal names already carry the word,
      and neither the live rows nor Janover's board surface it — the deal
      detail's Transaction fact is its home. Question 76 still asks whether
-     the concept exists apart from financing at all. */
-  { key:"prop", title:"Property type",    set:() => S.propFilter, of:d => d.property,               opts:() => PROPERTY_TYPES,
-    groups:() => PROPERTY_GROUPS.map(x => ({ g:x.g, v:x.v })), searchable:true },
-  { key:"fin",  title:"Execution Type", set:() => S.finFilter, of:d => d.financing,              opts:() => FINANCING_TYPES, searchable:true, col:"fin" },
+     the concept exists apart from financing at all.
+     Order is Tony's stated ranking, 26 Aug [T]: State first, then Property
+     type, Loan amount, Execution Type — the last droppable if one must go. */
   /* State, not "City, ST" (27 Aug): matching scores geography by state and
      never by city, the intake form asks State* (MSA cut, zip separate), and
      the create form leaves city optional — a city-less deal rendered ", TX".
      Canonical 51 like Property type's canonical 24; the table's Location
      column keeps city + state. */
-  { key:"loc",  title:"State",            set:() => S.locFilter,  of:d => STATE_NAME[d.state] || d.state,  opts:() => US_STATES.map(x => x[1]), searchable:true, ph:"Search states\u2026", col:"loc" }
+  { key:"loc",  title:"State",            set:() => S.locFilter,  of:d => STATE_NAME[d.state] || d.state,  opts:() => US_STATES.map(x => x[1]), searchable:true, ph:"Search states\u2026", col:"loc" },
+  { key:"prop", title:"Property type",    set:() => S.propFilter, of:d => d.property,               opts:() => PROPERTY_TYPES,
+    groups:() => PROPERTY_GROUPS.map(x => ({ g:x.g, v:x.v })), searchable:true },
+  { key:"amt",  title:"Loan amount",      set:() => S.amtFilter,  of:d => amtBucket(d.amt),        opts:() => AMT_BUCKETS, col:"amt" },
+  { key:"fin",  title:"Execution Type", set:() => S.finFilter, of:d => d.financing,              opts:() => FINANCING_TYPES, searchable:true, col:"fin" }
 ];
 
 /* a count is computed against every filter except its own, so a zero means
@@ -1682,11 +1742,11 @@ const SELCAR = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stro
    component. `key` is "<kind>:<id>" and is what the click handler routes on;
    opts are {v, label, tone?}. A tone paints the same dot the trigger shows, so
    the open list carries the colour vocabulary the row does. */
-function selCtl(key, opts, cur, label) {
+function selCtl(key, opts, cur, label, ph) {
   const open = S.selOpen === key;
   /* an empty cur draws a placeholder instead of silently claiming opts[0] —
      the form selects start unset; every pre-existing caller passes a set cur */
-  const sel = opts.find(o => o.v === cur) || (cur ? opts[0] || { label: "" } : { label: "Select\u2026", ph: true });
+  const sel = opts.find(o => o.v === cur) || (cur ? opts[0] || { label: "" } : { label: ph || "Select\u2026", ph: true });
   return `<button type="button" class="sel__trg" data-sel="${esc(key)}"
       aria-haspopup="listbox" aria-expanded="${open}" aria-label="${esc(label)}">
       <span class="sel__val${sel.ph ? " ph" : ""}">${esc(sel.label)}</span>
@@ -1708,7 +1768,33 @@ function applySel(key, v) {
   const i = key.indexOf(":"), kind = key.slice(0, i), id = key.slice(i + 1);
   if (kind === "d") { S.status[id] = v; return; }
   if (kind === "nd") { S.draft[id] = v; return; }
-  const rec = SAVED.find(x => x.deal === S.dealId && x.lender === Number(id));
+  if (kind === "dr") { S.dirRadius = Number(v); return; }
+  if (kind === "bo") {
+    /* bulk outreach. Institutions are skipped — outreach describes something
+       done to a person, and a Prospector row has no person on file. A fresh
+       just-saved row is promoted into SAVED so the value sticks. */
+    const prior = [];
+    S.spicked.forEach(x => {
+      if (typeof x === "string") return;
+      let rec = SAVED.find(r => r.deal === id && r.lender === x);
+      if (!rec && S.savedNow[id] && S.savedNow[id][x]) {
+        rec = { deal: id, lender: x, status: "pending", disp: "not_yet_contacted", seen: "\u2014" };
+        SAVED.push(rec);
+      }
+      if (rec) { prior.push([rec, rec.disp]); rec.disp = v; }
+    });
+    S.spicked.clear();
+    S.undo = { msg: "Outreach set to " + dispLabel(v) + " on " + prior.length + (prior.length === 1 ? " lender." : " lenders."),
+               fn: () => prior.forEach(p => p[0].disp = p[1]) };
+    return;
+  }
+  let rec = SAVED.find(x => x.deal === S.dealId && x.lender === Number(id));
+  if (!rec && kind === "md" && S.savedNow[S.dealId] && S.savedNow[S.dealId][Number(id)]) {
+    /* the same promote — without it the dropdown on a row saved this session
+       wrote into nothing and silently reverted on the next render */
+    rec = { deal: S.dealId, lender: Number(id), status: "pending", disp: "not_yet_contacted", seen: "\u2014" };
+    SAVED.push(rec);
+  }
   if (!rec) return;
   if (kind === "ms") rec.status = v; else rec.disp = v;
 }
@@ -2005,9 +2091,9 @@ const CARET = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" strok
    institution row says No contacts yet in three cells, the banker row has a
    name, a title, criteria and a Save button. What the badge stopped saying is
    said in words on the meta line instead, where it costs no second token.
-   [~] The digest line is inferred from digests being tied to registration. */
+   [~] Alerting is tied to registration; the cadence behind it is question 78. */
 const srcBadge = l => l.src === "prospector"
-  ? `<span class="src" title="Came from the Banks &amp; Credit Unions directory. An admin at Prism called the branch and found this person; not registered, so no weekly digest until they are.">Prospector</span>`
+  ? `<span class="src" title="Came from the Banks &amp; Credit Unions directory. An admin at Prism called the branch and found this person; not registered, so the platform cannot alert them about a deal until they are.">Prospector</span>`
   : "";
 /* the stage, in words rather than a second chip */
 const srcLine = l => l.src === "prospector" ? " · found by Prism, not registered" : "";
@@ -2541,6 +2627,17 @@ function renderDeal(d) {
     <div class="card" id="lenderscard">
       <div class="card__hd">
         <h2>Lenders on this deal</h2>
+        <span class="r">${
+          /* OpsRequestButtons.tsx: Pro-only free concierge; a partial-unique
+             index allows one open request per deal, so the state replaces the
+             button. The labels are STATUS_LABEL's own. It sits on this card
+             because what Ops works is the deal's lender outreach. */
+          S.ops[d.id] === "in_progress"
+            ? `<span class="badge badge--outline tone-green" title="The Ops team is working this deal's lender outreach with you. They follow up off-platform.">✓ Ops working on it</span>`
+          : S.ops[d.id] === "requested"
+            ? `<span class="badge badge--outline tone-blue" title="Request received — one open request per deal. The Ops team follows up off-platform.">Execution Support requested</span>`
+            : `<button class="btn btn--outline btn--sm" type="button" id="opsReq" title="Free on Pro: the Ops team works the deal with you — outreach, packaging, lender follow-up.">Request Execution Support</button>`
+        }</span>
       </div>
       <div class="card__ct">
         <div class="seg" role="group" aria-label="Lenders view">
@@ -2569,6 +2666,59 @@ function renderDeal(d) {
     ${tabs}`;
 }
 
+/* The directory page behind the saved-tab door. [T] Tony's Prospector asks,
+   26 Aug: zip required so the radius correlates, count surfaced before the
+   search. Deal-scoped on purpose — the door promised "N near this deal", so
+   the page opens holding that promise: same location, same formula, same
+   count, and every Save lands back on this deal's Saved tab as a Prospector
+   row. [~] Rows are sample; live this is the FDIC/NCUA directory query. */
+function renderDirectory(d) {
+  const radius = S.dirRadius, n = dirCount(d, radius);
+  const rows = DIRECTORY.filter(r => r.mi <= radius).sort((a, b) => a.mi - b.mi);
+  const savedAccts = new Set(SAVED_ACCT.filter(a => a.deal === d.id && !(S.acctRm[d.id] && S.acctRm[d.id].has(a.acct))).map(a => a.acct));
+  const body = rows.map(r => `<tr>
+      <td class="nm-cell" style="white-space:normal">
+        <span class="nml"><b>${esc(r.co)}</b></span>
+        <span>${r.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)} · no contact person on file</span>
+      </td>
+      <td data-l="Type">${esc(r.inst)}</td>
+      <td class="num" data-l="Branches nearby">${r.branches}</td>
+      <td class="num" data-l="Distance">${r.mi} mi</td>
+      <td class="actions-cell"><div class="rowacts" style="justify-content:flex-end">
+        ${savedAccts.has(r.acct)
+          ? `<span class="badge badge--outline tone-green">✓ Saved</span>`
+          : `<button class="btn btn--sm" type="button" data-dirsave="${r.acct}">Save to deal</button>`}
+      </div></td>
+    </tr>`).join("");
+  return `
+    <div class="crumb"><a href="#/deals">Deals</a><span class="sep">›</span><a href="#/deal/${d.id}/saved">${esc(d.name)}</a><span class="sep">›</span><span>Directory</span></div>
+    <div class="head">
+      <div>
+        <h1>Banks &amp; Credit Unions</h1>
+        <span class="sub">Scoped to this deal — what you save here lands on its Saved lenders tab as a Prospector row.</span>
+      </div>
+      <div class="head__acts">
+        <a class="btn btn--outline" href="#/deal/${d.id}/saved">Back to saved lenders</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="cut" style="padding-top:14px">
+        <span class="stat">${selCtl("dr:" + d.id, DIR_RADII, String(radius), "Search radius")}</span>
+        <span class="lbl" style="margin-left:auto"><b style="color:var(--foreground)">${n}</b>&nbsp;institutions within ${radius} miles of ${esc(dirLoc(d))}</span>
+      </div>
+      ${rows.length ? `<div class="tscroll">
+        <table class="t">
+          <thead><tr><th>Institution</th><th>Type</th><th>Branches nearby</th><th>Distance</th><th></th></tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>` : `<div class="empty"><b>No sample rows within ${radius} miles</b>
+        <p>Widen the radius — the live page would still count ${n} institutions here.</p></div>`}
+      <div class="dirdoor">
+        <span>Showing ${rows.length} of ${n} — a sample of what the live FDIC and NCUA directory query returns. Saving an institution adds a Prospector row: no contact person yet, so no digest and no outreach until one is found.</span>
+      </div>
+    </div>`;
+}
+
 function matchesTab(d, all) {
   const hid = S.hidden[d.id] || new Set();
   const q = S.mq.trim().toLowerCase();
@@ -2595,7 +2745,7 @@ function matchesTab(d, all) {
         <input type="checkbox" id="grpacct" ${S.grpAcct ? "checked" : ""}><span class="bx">✓</span>
         <span class="lbl" style="color:var(--foreground)">Group by account</span>
       </label>
-      <span class="lbl" style="margin-left:auto">${rows.length} ${rows.length === 1 ? "banker" : "bankers"} · ${nAcct} ${nAcct === 1 ? "account" : "accounts"}</span>
+      <span class="lbl" style="margin-left:auto">${rows.length} ${rows.length === 1 ? "banker" : "bankers"} · ${nAcct} ${nAcct === 1 ? "account" : "accounts"}${hid.size ? ` · ${hid.size} hidden` : ""}</span>
     </div>`;
 
   const selbar = S.picked.size ? `
@@ -2705,15 +2855,33 @@ function savedTab(d) {
   const pros = prospectsFor(d.id);
   if (!rows.length && !pros.length) {
     return `<div class="empty"><b>No lenders saved to this deal yet</b>
-      <p>Saving a lender here is what puts the deal in front of them — saved lenders receive the weekly digest when a deal matches their criteria.</p>
+      <p>Saving a lender here is what puts the deal in front of them — saved lenders get an email alert when a deal matches their criteria, at whatever frequency they set on their own profile.</p>
       <div class="acts"><button class="btn btn--sm" type="button" data-tab="matches">See the ${matchCount(d)} matches at ${acctCount(d)} ${acctCount(d) === 1 ? "account" : "accounts"}</button></div></div>`;
   }
-  const head = `<tr><th>Lender</th><th>Loan range</th><th>Property type</th><th>Financing type</th><th>Outreach</th><th></th></tr>`;
+  const pickIds = rows.map(s => s.lender).concat(pros.map(a => a.acct));
+  const allPicked = pickIds.length > 0 && pickIds.every(x => S.spicked.has(x));
+  const head = `<tr>
+    <th style="width:34px"><span class="chk"><input type="checkbox" id="spickall" aria-label="Select all saved lenders" ${allPicked ? "checked" : ""}><span class="bx">✓</span></span></th>
+    <th>Lender</th><th>Loan range</th><th>Property type</th><th>Financing type</th><th>Outreach</th><th></th></tr>`;
+  /* bulk verbs are the two that survive translation to a saved list: Set
+     outreach (a batch job — outreach happens in batches; the shipped Chan
+     Portfolio deal holds 24 saved) and Remove. Email-bulk stays off — a mail
+     merge this product cannot send — and Hide belongs to Matches. [💡 rec] */
+  const instSel = [...S.spicked].filter(x => typeof x === "string").length;
+  const selbar = S.spicked.size ? `
+    <div class="selbar">
+      <b>${S.spicked.size}</b> selected${instSel ? `<span style="opacity:.75">· Set outreach skips ${instSel === 1 ? "the institution" : "the " + instSel + " institutions"} — outreach needs a person</span>` : ""}
+      <div class="r">
+        <span class="stat">${selCtl("bo:" + d.id, DISPOSITION, "", "Set outreach for every selected lender", "Set outreach\u2026")}</span>
+        <button class="btn btn--outline btn--sm" type="button" id="rmSel">Remove from deal</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="clrSSel">Clear</button>
+      </div>
+    </div>` : "";
   /* One editable column. Outreach (disposition) is the broker's own log, so it
      keeps the dropdown; status is the lender's answer, so it renders as a
      read-only badge once the lender has actually acted — you cannot dropdown
      someone else's answer. The passive statuses (pending, open request, under
-     review) already show as the digest clock in Last activity. Rows sort
+     review) have no surface of their own until outreach is logged. Rows sort
      hottest first — the funnel order Janover's mailbox counts walk. [💡 rec] */
   const RANK = { quoted: 0, interested_under_review: 1, has_not_responded: 2, not_yet_contacted: 3 };
   rows.sort((a, b) => (RANK[a.disp] ?? 9) - (RANK[b.disp] ?? 9));
@@ -2724,13 +2892,11 @@ function savedTab(d) {
     const ex = S.expanded.has(l.id);
     const finList = ex ? l.fin : l.fin.slice(0, 2);
     const propList = ex ? l.prop : l.prop.slice(0, 2);
-    return `<tr>
+    return `<tr class="${S.spicked.has(l.id) ? "sel" : ""}">
+      <td class="pick-cell"><span class="chk"><input type="checkbox" data-spick="${l.id}" aria-label="Select ${esc(l.ct)}" ${S.spicked.has(l.id) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="white-space:normal">
         <span class="nml"><b>${esc(l.ct)}</b>${srcBadge(l)}</span>
         <span>${esc(l.role)} · ${esc(l.co)} · ${esc(l.inst)}${srcLine(l)}</span>
-        <span style="font-size:12px">${s.fresh
-          ? "Saved just now · included in the next weekly digest"
-          : "Digest sent 6 Aug · " + (s.seen === "—" ? "not viewed yet" : "viewed " + esc(s.seen))}</span>
       </td>
       <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
       <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:200px">
@@ -2770,11 +2936,12 @@ function savedTab(d) {
      categories. The stage is legible from the row rather than the chip: here
      three cells say there is nobody to act on. */
   const prosRows = pros.map(a => `
-    <tr>
+    <tr class="${S.spicked.has(a.acct) ? "sel" : ""}">
+      <td class="pick-cell"><span class="chk"><input type="checkbox" data-spicka="${a.acct}" aria-label="Select ${esc(a.p.co)}" ${S.spicked.has(a.acct) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="white-space:normal">
         <span class="nml"><b>${esc(a.p.co)}</b><span class="src" title="An institution from the Banks &amp; Credit Unions directory, with no contact person on file yet.">Prospector</span></span>
-        <span>${esc(a.p.inst)} · FDIC cert ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
-        <span style="font-size:12px">Added ${esc(a.added)} · no digest, because a digest goes to a person</span>
+        <span>${esc(a.p.inst)} · ${a.p.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
+        <span style="font-size:12px">Added ${esc(a.added)} · nobody to alert until this account has a contact</span>
       </td>
       <td class="num" data-l="Loan range"><span class="unset" title="Loan range, financing services and property types all live on a banker. This institution has none on file, so there is nothing to compare against the deal.">No contacts yet</span></td>
       <td class="chips-cell" data-l="Property type"><span class="unset">—</span></td>
@@ -2794,9 +2961,18 @@ function savedTab(d) {
       </div></td>
     </tr>`).join("");
 
-  return `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${body}${prosRows}</tbody></table></div>
-    <div class="card__ct" style="padding-top:12px">
-      
+  /* The directory door. [T] Tony, 26 Aug, third session raising Prospector:
+     surface the count before the search — "75 banks within a 100-mile
+     radius of this property. Perform a search now" — with zip (or city +
+     state) required so the radius correlates. The door sits on Saved lenders
+     because its results land here: an institution picked from the directory
+     can never appear under Matches — no banker, no credit box, nothing to
+     score. [~] The count is sample, derived from the deal's zip; the live
+     number would come from the FDIC directory the product already searches. */
+  return selbar + `<div class="tscroll" style="border-top:1px solid var(--border)"><table class="t"><thead>${head}</thead><tbody>${body}${prosRows}</tbody></table></div>
+    <div class="dirdoor">
+      <span><b>${dirCount(d, 100)} banks and credit unions</b> within 100 miles of ${esc(dirLoc(d))} — institutions matching can't see, because nobody there is registered.</span>
+      <a class="doorlnk" href="#/deal/${d.id}/directory">Search directory &rarr;</a>
     </div>`;
 }
 
@@ -3047,6 +3223,9 @@ function render() {
   const view = document.getElementById("view");
   if (S.route === "form") {
     view.innerHTML = renderDealForm();
+  } else if (S.route === "dir") {
+    const d = dealById(S.dealId);
+    view.innerHTML = d ? renderDirectory(d) : renderDeals();
   } else if (S.route === "deal") {
     const d = dealById(S.dealId);
     view.innerHTML = d ? renderDeal(d) : renderDeals();
@@ -3082,9 +3261,12 @@ function render() {
   placeCardMenu();
   placeSelectPop();
   fitMsValues();
+  /* one undo toast, ever. Without the sweep, two undo-producing actions in a
+     row stack their toasts, and a spent one lingers with a dead button. */
+  document.querySelectorAll(".toast.tundo").forEach(x => x.remove());
   if (S.undo) {
     const t = document.createElement("div");
-    t.className = "toast";
+    t.className = "toast tundo";
     t.innerHTML = `<span>${esc(S.undo.msg)}</span><button type="button" id="undo">Undo</button>`;
     document.body.appendChild(t);
   }
@@ -3096,8 +3278,10 @@ function route() {
   /* /edit is tested first — the plain deal route's tab group is optional, so
      "/deal/x/edit" would otherwise match it with the "/edit" left dangling */
   const me = h === "/deals/new" ? [null, null] : h.match(/^\/deal\/([a-z0-9-]+)\/edit$/);
-  const m = me ? null : h.match(/^\/deal\/([a-z0-9-]+)(?:\/(matches|saved|docs))?/);
+  const md = me ? null : h.match(/^\/deal\/([a-z0-9-]+)\/directory$/);
+  const m = me || md ? null : h.match(/^\/deal\/([a-z0-9-]+)(?:\/(matches|saved|docs))?/);
   if (me) { S.route = "form"; S.dealId = me[1]; }
+  else if (md) { S.route = "dir"; S.dealId = md[1]; }
   else if (m) { S.route = "deal"; S.dealId = m[1]; if (m[2]) S.tab = m[2] === "docs" ? "matches" : m[2]; }
   else { S.route = "deals"; S.dealId = null; }
   S.secEdit = null;
@@ -3498,6 +3682,62 @@ document.addEventListener("click", e => {
   if (t.id === "clrSel") { S.picked.clear(); render(); return; }
   if (t.id === "saveSel") { S.picked.forEach(id => saveLender(S.dealId, id, true)); S.picked.clear(); render(); return; }
   if (t.id === "hideSel") { S.picked.forEach(id => hideLender(S.dealId, id, true)); S.picked.clear(); render(); return; }
+
+  if (t.id === "clrSSel") { S.spicked.clear(); render(); return; }
+  if (t.id === "rmSel") {
+    /* one undo restores the lot — bulk removal without a bulk regret path
+       would make the checkbox column the most dangerous thing on the page */
+    const id = S.dealId, moves = [];
+    S.spicked.forEach(x => {
+      if (typeof x === "string") {
+        S.acctRm[id] = S.acctRm[id] || new Set(); S.acctRm[id].add(x);
+        moves.push(() => S.acctRm[id].delete(x));
+      } else if (S.savedNow[id] && S.savedNow[id][x]) {
+        delete S.savedNow[id][x];
+        moves.push(() => { S.savedNow[id][x] = true; });
+      } else {
+        S.savedRm[id] = S.savedRm[id] || new Set(); S.savedRm[id].add(x);
+        moves.push(() => S.savedRm[id].delete(x));
+      }
+    });
+    const n = S.spicked.size; S.spicked.clear();
+    S.undo = { msg: n + " removed from this deal. The people among them stop receiving this deal's digest.",
+               fn: () => moves.forEach(f => f()) };
+    render(); return;
+  }
+
+  if (t.id === "opsReq") {
+    /* POST /loan_requests/:id/ops_requests. The undo toast doubles as cancel,
+       which the shipped page does not offer. */
+    S.ops[S.dealId] = "requested";
+    S.undo = { msg: "Execution Support requested — the Ops team works the deal with you and follows up off-platform. Free on Pro; one open request per deal.",
+               fn: () => delete S.ops[S.dealId] };
+    render(); return;
+  }
+
+  const dsv = t.closest("[data-dirsave]");
+  if (dsv) {
+    const acct = dsv.dataset.dirsave, id = S.dealId;
+    const rec = DIRECTORY.find(x => x.acct === acct);
+    let undoFn = null;
+    if (S.acctRm[id] && S.acctRm[id].has(acct)) {
+      /* removed earlier this session — saving again just un-removes it */
+      S.acctRm[id].delete(acct);
+      undoFn = () => S.acctRm[id].add(acct);
+    } else if (!SAVED_ACCT.some(a => a.deal === id && a.acct === acct)) {
+      if (!PROSPECTS.some(p => p.acct === acct)) {
+        PROSPECTS.push({ acct: rec.acct, co: rec.co, inst: rec.inst, cert: rec.cert,
+                         branches: rec.branches, near: rec.mi + " mi from the property" });
+      }
+      SAVED_ACCT.push({ deal: id, acct, added: "today" });
+      undoFn = () => {
+        const i = SAVED_ACCT.findIndex(a => a.deal === id && a.acct === acct && a.added === "today");
+        if (i >= 0) SAVED_ACCT.splice(i, 1);
+      };
+    }
+    if (undoFn) S.undo = { msg: rec.co + " saved to this deal. It lands on Saved lenders as a Prospector row.", fn: undoFn };
+    render(); return;
+  }
 });
 
 function saveLender(dealId, id, quiet) {
@@ -3511,15 +3751,15 @@ function saveLender(dealId, id, quiet) {
   render();
 }
 function removeSaved(dealId, id) {
-  /* removal is the deliberate exit — it also stops the weekly digest, so it
+  /* removal is the deliberate exit — it also stops the deal's alerts, so it
      gets a verb and an undo, never an icon flick */
   if (S.savedNow[dealId] && S.savedNow[dealId][id]) {
     delete S.savedNow[dealId][id];
-    S.undo = { msg: lenderById(id).co + " removed from saved lenders. They stop receiving this deal's digest.", fn: () => { S.savedNow[dealId][id] = true; } };
+    S.undo = { msg: lenderById(id).co + " removed from saved lenders. They stop being alerted about this deal.", fn: () => { S.savedNow[dealId][id] = true; } };
   } else {
     S.savedRm[dealId] = S.savedRm[dealId] || new Set();
     S.savedRm[dealId].add(id);
-    S.undo = { msg: lenderById(id).co + " removed from saved lenders. They stop receiving this deal's digest.", fn: () => S.savedRm[dealId].delete(id) };
+    S.undo = { msg: lenderById(id).co + " removed from saved lenders. They stop being alerted about this deal.", fn: () => S.savedRm[dealId].delete(id) };
   }
   render();
 }
@@ -3535,6 +3775,7 @@ function hardReset() {
   S.q = ""; S.sort = "updated"; S.view = "list"; S.tab = "matches"; S.sumTab = "ov";
   FILTERS.forEach(f => f.set().clear()); S.picked.clear(); S.expanded.clear(); S.open = null; S.oq = "";
   S.mq = ""; S.hidden = {}; S.savedNow = {}; S.savedRm = {}; S.undo = null;
+  S.spicked.clear(); S.ops = { midtown: "in_progress" }; S.dirRadius = 100;
   S.grpAcct = true; S.acctShut = new Set(); S.acctRm = {};
   S.cardMenu = null; S.cardSub = false; S.selOpen = null; S.lb = null;
   S.settingsOpen = false; S.setDrill = null; S.hideLanes.clear(); S.sumClosed = new Set(); S.secEdit = null;
@@ -3687,6 +3928,17 @@ document.addEventListener("change", e => {
   }
   const pick = t.closest("[data-pick]");
   if (pick) { const id = Number(pick.dataset.pick); t.checked ? S.picked.add(id) : S.picked.delete(id); render(); return; }
+
+  if (t.id === "spickall") {
+    const d = dealById(S.dealId);
+    const ids = savedFor(d.id).map(s => s.lender).concat(savedNowFor(d.id)).concat(prospectsFor(d.id).map(a => a.acct));
+    t.checked ? ids.forEach(x => S.spicked.add(x)) : S.spicked.clear();
+    render(); return;
+  }
+  const spk = t.closest("[data-spick]");
+  if (spk) { const id = Number(spk.dataset.spick); t.checked ? S.spicked.add(id) : S.spicked.delete(id); render(); return; }
+  const spka = t.closest("[data-spicka]");
+  if (spka) { const a = spka.dataset.spicka; t.checked ? S.spicked.add(a) : S.spicked.delete(a); render(); return; }
 });
 
 /* dropzone: names only — the files are never read, nothing leaves the browser */
