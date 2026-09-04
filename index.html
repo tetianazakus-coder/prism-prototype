@@ -265,7 +265,8 @@
   .btn--ghost:hover { background: var(--accent); color: var(--accent-foreground); }
   .btn--secondary { background: var(--secondary); color: var(--secondary-foreground); }
   .btn--secondary:hover { background: color-mix(in srgb, var(--secondary) 80%, transparent); }
-  .btn--link { background: none; border: 0; color: var(--primary); text-decoration: underline; text-underline-offset: 4px; height: auto; padding: 0; }
+  .btn--link { background: none; border: 0; box-shadow: none; color: var(--primary); text-decoration: none; text-underline-offset: 4px; height: auto; padding: 0; gap: 5px; }
+  .btn--link:hover { background: none; text-decoration: underline; }
   .btn--sm { height: 32px; padding: 8px 12px; gap: 6px; }
   .btn--xs { height: 24px; padding: 4px 8px; gap: 4px; font-size: 12px; }
   .btn:disabled { opacity: .5; pointer-events: none; }
@@ -451,6 +452,10 @@
   .sel__trg { display: flex; align-items: center; gap: 8px; border: 0; background: none;
               font-size: 13px; font-weight: 500; cursor: pointer; padding: 2px 0; color: inherit; }
   .sel__car { flex: none; line-height: 0; opacity: .5; color: var(--muted-foreground); }
+  /* the deals bar's filter-chip anatomy (.ms__lbl): label medium, value regular —
+     one pattern for labeled dropdown filters on toolbars */
+  .sel__lbl { font-weight: 500; }
+  .sel__lbl + .sel__val { font-weight: 400; }
   /* the table caps the control so a long status label cannot set the column
      width; the eight current statuses all fit under it, so the cap is a guard
      for whatever the vocabulary grows into */
@@ -495,9 +500,33 @@
     border-top: 1px solid var(--border); background: color-mix(in srgb, var(--muted) 20%, transparent);
     padding: 10px 18px; border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
   .dirdoor b { color: var(--foreground); font-weight: 600; }
-  .dirdoor .doorlnk { margin-left: auto; flex: 0 0 auto; background: none; border: 0; padding: 0; cursor: pointer;
-    font: inherit; font-size: 13px; font-weight: 500; color: var(--primary); white-space: nowrap; }
-  .dirdoor .doorlnk:hover { text-decoration: underline; }
+  .dirdoor .btn--link { margin-left: auto; flex: 0 0 auto; font-size: 13px; white-space: nowrap; }
+  /* "Update zip code" to the right of the count — Tony's own placement,
+     spoken twice on the 31 Aug call [T]: brokers in a hurry enter wrong zips,
+     then see the wrong lender set. [C] Chris co-asked ("we probably need to
+     make the zip code editable") and confirmed the write-back: an edit here
+     edits the deal, no bounce through the deal form. */
+  /* Back is navigation, not an action — so it leaves the head's action slot
+     (that corner is for what a page does, not where it came from) and becomes
+     the quiet top-left link above the title that detail pages converge on
+     [💡 rec · Mobbin 4 Sep: Perplexity, Deel, Cloudflare, Jira — Jira runs
+     it alongside a breadcrumb, as here]. */
+  .backlnk { display: inline-flex; align-items: center; gap: 5px; margin: 2px 0 10px;
+    font-size: 13px; font-weight: 500; color: var(--muted-foreground); text-decoration: none; }
+  .backlnk:hover, .backlnk:focus-visible { color: var(--primary); text-decoration: underline; text-underline-offset: 4px; }
+  /* the count line holds text and a 24px control — flex centering, not
+     baseline flow, keeps the pencil on the text's optical center */
+  .ziprow { display: inline-flex; align-items: center; }
+  .zipbtn { position: relative; display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; margin-left: 4px; padding: 0; border: 0; border-radius: var(--radius-sm);
+    background: none; cursor: pointer; color: var(--muted-foreground); }
+  .zipbtn:hover, .zipbtn:focus-visible { color: var(--primary); background: var(--muted); }
+  /* an icon button with no label says what it does on hover — the .ctrm rule.
+     Anchored above-right so the tip never covers the count it belongs to. */
+  .zipbtn .tt { bottom: calc(100% + 6px); right: -4px; padding: 6px 9px; font-size: 12px; line-height: 1.35; white-space: nowrap; }
+  .zipbtn:hover .tt, .zipbtn:focus-visible .tt { opacity: 1; visibility: visible; }
+  .zipedit { display: inline-flex; align-items: center; gap: 6px; }
+  .zipedit .zipinp { width: 76px; height: 28px; padding: 2px 8px; font-size: 13px; }
 
   /* ---- MultiSelect. ui/multi-select.tsx: trigger is min-h-9 w-fit px-3 py-1.5
           rounded-md border-input shadow-xs, and the selected values render as
@@ -648,7 +677,10 @@
     border-radius: var(--radius-md); padding: 4px; box-shadow: var(--shadow-md); cursor: default; }
   .cardmenu [role="menuitem"] { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 8px;
     background: none; border: 0; border-radius: calc(var(--radius-md) - 2px); cursor: pointer; text-align: left;
-    font: inherit; font-size: 13px; color: var(--popover-foreground); white-space: nowrap; }
+    font: inherit; font-size: 13px; color: var(--popover-foreground); white-space: nowrap;
+    /* the menu gained an anchor — View profile is a destination, not a verb —
+       and an anchor arrives underlined */
+    text-decoration: none; }
   .cardmenu [role="menuitem"]:hover, .cardmenu [role="menuitem"]:focus-visible { background: var(--accent); }
   .cardmenu [role="menuitem"] svg { flex: none; color: var(--muted-foreground); }
   .cardmenu [role="menuitem"].danger, .cardmenu [role="menuitem"].danger svg { color: var(--destructive); }
@@ -904,8 +936,13 @@
   .acctband { padding: 6px 12px 6px 4px; cursor: pointer; }
   .acctband .bw { display: flex; align-items: center; gap: 8px; min-height: 24px; }
   .acctband .an { font-weight: 600; font-size: 14px; color: var(--foreground); white-space: nowrap; }
+  .acctband .an a { color: inherit; text-decoration: none; }
+  .acctband .an a:hover { color: var(--primary); text-decoration: underline; }
   .acctband .am { font-size: 12px; color: var(--muted-foreground); font-weight: 400; white-space: nowrap; }
   .acctband .asv { color: var(--color-success); }
+  /* the shortlist counter is gold like its star — green here would claim
+     "saved", which is the other list */
+  .acctband .ash { color: var(--color-brand-gold-text); }
   .acctband .ar { margin-left: auto; padding-left: 16px; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--foreground); }
   .acctcar { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 0; background: none; cursor: pointer; color: var(--muted-foreground); flex: 0 0 auto; }
   .acctcar svg { transition: transform .12s ease; }
@@ -1501,13 +1538,186 @@
   .tgl__sw[aria-pressed="true"] { background: var(--primary); }
   .tgl__sw[aria-pressed="true"] i { left: 18px; }
 
+  /* ---------- Home — screen 01.4, the post-login landing ---------- */
+  .home { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  .home__hd { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .home__hd h1 { font-size: 22px; font-weight: 600; }
+  .home__hd .when { font-size: 13px; color: var(--muted-foreground); margin-top: 3px; }
+  .home__grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+  .home__col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  /* needs attention — a neutral card, not a gold panel. The zone is an action
+     list, not an Alert: the 4 Sep Mobbin sweep (Salesforce To Do, Zendesk
+     attention table, Remote Things-to-do, Rox Recommended Actions) has every
+     product carrying urgency on the ROW — a chip, a date, a label — inside a
+     plain container; full-surface colour is reserved for account-level
+     exceptions (Dialpad's verify-identity banner). Two unlike events in one
+     cream wrapper read as one alarm. [💡 rec · Mobbin 4 Sep] */
+  .att__row { display: flex; align-items: center; gap: 11px; padding: 9px 10px; margin: 0 -10px; border-radius: var(--radius-md); }
+  .att__ic { flex: none; width: 28px; height: 28px; border-radius: 9999px; display: grid; place-items: center; }
+  .att__ic--gold { background: color-mix(in srgb, var(--brand-gold) 16%, #fff); color: var(--color-brand-gold-text); }
+  .att__ic--muted { background: var(--muted); color: var(--muted-foreground); }
+  .att__tx { min-width: 0; }
+  .att__tx b { display: block; font-size: 13.5px; font-weight: 600; }
+  .att__tx span { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
+  .att__hot { color: var(--color-brand-gold-text); font-weight: 600; }
+  .home .card__ct { padding: 8px 18px; }
+  .att__row .btn { margin-left: auto; flex: none; }
+  /* setup checklist — whole row is the link */
+  .chk { display: flex; align-items: center; gap: 11px; padding: 9px 10px; margin: 0 -10px; border-radius: var(--radius-md); text-decoration: none; color: inherit; }
+  .chk:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+  .chk__c { flex: none; width: 22px; height: 22px; border-radius: 9999px; border: 1.5px solid var(--brand-border-300); display: grid; place-items: center; color: #fff; }
+  .chk--done .chk__c { background: var(--color-success); border-color: var(--color-success); }
+  .chk__tx { min-width: 0; }
+  .chk__tx b { display: block; font-size: 13.5px; font-weight: 500; }
+  .chk__tx span { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
+  .chk--done .chk__tx b { color: var(--muted-foreground); font-weight: 400; }
+  .chk__go { margin-left: auto; color: var(--muted-foreground); font-size: 16px; }
+  /* entry points and coming-soon rows share the checklist's row anatomy */
+  .qa a, .qa .soon { display: flex; align-items: center; gap: 11px; padding: 9px 10px; margin: 0 -10px; border-radius: var(--radius-md); text-decoration: none; color: inherit; }
+  .qa a:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+  .qa__ic { flex: none; width: 32px; height: 32px; border-radius: var(--radius-md); background: var(--accent); color: var(--primary); display: grid; place-items: center; }
+  .qa__tx { min-width: 0; }
+  .qa__tx b { display: block; font-size: 13.5px; font-weight: 500; }
+  .qa__tx span { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
+  .qa .soon { color: var(--muted-foreground); }
+  .qa .soon .qa__ic { background: var(--muted); color: var(--muted-foreground); }
+  .qa .soon .pill { margin-left: auto; flex: none; }
+  /* activity — status dot reuses the table's tone vocabulary */
+  .actrow { display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: 0 -10px; border-radius: var(--radius-md); text-decoration: none; color: inherit; font-size: 13.5px; }
+  .actrow:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+  .actrow .d { width: 8px; height: 8px; border-radius: 9999px; flex: none; }
+  .actrow .nm { font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .actrow .meta { margin-left: auto; flex: none; color: var(--muted-foreground); font-size: 12.5px; }
   @media (max-width: 900px) {
+    .home__grid { grid-template-columns: minmax(0, 1fr); }
     .prof { grid-template-columns: minmax(0, 1fr); }
     .profnav { position: static; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px; margin-bottom: 4px; }
     .profnav a { border: 1px solid var(--border); }
     .profnav a .st { display: none; }
     .packs, .fldrow--2 { grid-template-columns: minmax(0, 1fr); }
   }
+  /* ---------- Lender profile: the account, and the contacts beneath it -------
+     Roadmap row 14, confirmed by Tony 27 Aug: "the institution as one record
+     with its contacts beneath it, its criteria, and its history with this
+     broker across all deals," and four actions — view the profile, contact
+     through the platform, add to a deal, save to the shortlist. [T]
+
+     Almost none of this is new furniture. The title band is .head, every
+     section is a .card, the roster and the history are .t tables, the criteria
+     grid is .facts, the chips are .pill — the same components the matches
+     table uses, so a broker who walks down from a row to its profile reads the
+     same vocabulary one grain finer. Only four things had to be drawn: the
+     identity mark, the action bar, the modal, and the match-reason block. */
+  .lpid { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  /* an institution is not a person and must not wear a person's circle: the
+     roll-up's whole point is that the two grains are different objects, and if
+     the header marks read alike a broker two clicks deep cannot tell which one
+     they are on. Person: round, navy, initials. Institution: squared, muted,
+     a building. [💡 rec] */
+  .lpav { width: 46px; height: 46px; flex: none; border-radius: 9999px; display: grid; place-items: center;
+    font-size: 15px; font-weight: 600; background: var(--brand-navy-600); color: #fff; }
+  .lpav--inst { border-radius: var(--radius-md); background: var(--brand-surface-50);
+    color: var(--brand-navy-600); border: 1px solid var(--brand-border-100); }
+  .lpacts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  /* the standalone search's query sentence — Janover's device, placed under
+     the filter bar where the +N chips make the query illegible [comp 4 Sep] */
+  .lsent { display: flex; align-items: center; gap: 9px; margin-top: 10px; padding: 8px 12px;
+    border: 1px solid rgb(191, 214, 240); background: rgb(239, 246, 253); border-radius: var(--radius-md);
+    font-size: 12.5px; line-height: 1.45; color: var(--foreground); }
+  .lsent svg { flex: none; color: var(--brand-navy-600); }
+  .lsent b { font-weight: 500; }
+  .lsent .r { margin-left: auto; flex: none; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  @media (max-width: 900px) { .lsent { flex-wrap: wrap; } .lsent .r { margin-left: 24px; } }
+  /* the in-bar shortlist toggle: a filter drawn at the bar's control height,
+     gold when pressed — the star's color, never green (that is "saved") */
+  .lshort-chip { display: inline-flex; align-items: center; height: 32px; padding: 0 11px;
+    border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card);
+    font: inherit; font-size: 13px; font-weight: 500; color: var(--muted-foreground);
+    cursor: pointer; box-shadow: var(--shadow-xs); }
+  .lshort-chip:hover { color: var(--foreground); }
+  .lshort-chip.on { background: color-mix(in srgb, var(--brand-gold) 14%, #fff);
+    border-color: color-mix(in srgb, var(--brand-gold) 45%, #fff); color: var(--color-brand-gold-text); box-shadow: none; }
+  /* selection column: as narrow as its checkbox */
+  .selth, .selcell { width: 30px; padding-right: 2px; }
+  /* the selection's action bar, gold like the state it edits */
+  .bulkbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 12px;
+    padding: 8px 12px; border: 1px solid color-mix(in srgb, var(--brand-gold) 45%, #fff);
+    background: color-mix(in srgb, var(--brand-gold) 10%, #fff); border-radius: var(--radius-md); }
+  .bulkbar .bb-n { font-weight: 600; font-size: 13px; color: var(--color-brand-gold-text);
+    font-variant-numeric: tabular-nums; }
+  /* a source cut inside the filter bar sizes to the bar's 32px controls */
+  .seg--sm button { height: 26px; padding: 0 10px; font-size: 12.5px; }
+  /* the star and its label are two children of a button, and a button is not a
+     flex container by default — without this they sit flush against each other */
+  .lpstar { display: inline-flex; align-items: center; gap: 7px; }
+  .lpstar svg { flex: none; color: var(--color-brand-gold-text); }
+  .btn[aria-pressed="true"] .lpstar svg { color: var(--color-brand-gold-text); }
+  /* the icon-only star in a roster row: square, so it does not read as a
+     truncated label */
+  .rowacts .btn--sm > svg { display: block; color: var(--color-brand-gold-text); }
+  /* .lbl has no base rule — it is defined only inside .cut and .selwrap, so
+     the same class in a card header or a table cell would render as body text.
+     Scoped here rather than promoted to a global: widening it would restyle
+     every existing use on the page. */
+  .lp .lbl, .lp .card__hd .lbl { font-size: 12.5px; font-weight: 400; color: var(--muted-foreground); }
+  /* same for .hint, which is scoped to .fld */
+  .lp .hint { font-size: 12px; line-height: 1.45; color: var(--muted-foreground); }
+
+  /* why this contact matched, when a deal is in scope. Janover prints the
+     matched filters as chips on every result row [comp 4 Sep]; ours prints the
+     five scored criteria with a pass mark, because the score exists here and
+     is already computed — scoreOf runs on every row in the matches table and
+     the number is thrown away. The deal-scoped profile is the one place it can
+     be spent without putting an invented percentage on a table Tony has not
+     seen a score on. [💡 rec] */
+  .lpwhy { display: flex; flex-wrap: wrap; gap: 7px; }
+  .lpwhy .w { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 9999px;
+    font-size: 12px; font-weight: 500; border: 1px solid var(--border); color: var(--muted-foreground); background: var(--card); }
+  .lpwhy .w.hit { border-color: color-mix(in srgb, var(--color-success) 35%, #fff);
+    background: color-mix(in srgb, var(--color-success) 10%, #fff); color: #2f6b23; }
+  .lpwhy .w .m { font-size: 11px; opacity: .8; font-variant-numeric: tabular-nums; }
+
+  /* coverage, not criteria. The account band in the matches table already
+     refuses to roll a credit box up to the institution, and this page must
+     make the same refusal visible rather than quietly widen a range: the
+     figures are the roster's span and the label says so. */
+  .lpcov { border: 1px dashed var(--brand-border-300); border-radius: var(--radius-md);
+    padding: 11px 14px; background: color-mix(in srgb, var(--muted) 30%, transparent); }
+  .lpcov .lbl { display: block; margin-bottom: 8px; font-size: 12px; color: var(--muted-foreground); }
+
+  /* the deal picker and the contact composer. Janover puts both behind a
+     centred modal [comp 4 Sep]. The page already owns one overlay — .lbov,
+     the photo viewer — so the dimmer keeps that z-index band and only the
+     panel is new. */
+  .mov { position: fixed; inset: 0; z-index: 92; background: rgba(15, 23, 42, .55);
+    display: flex; align-items: flex-start; justify-content: center; padding: 56px 16px 24px; overflow: auto; }
+  .mdl { width: 100%; max-width: 560px; background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .mdl__hd { display: flex; align-items: flex-start; gap: 12px; padding: 15px 18px 13px; border-bottom: 1px solid var(--border); }
+  .mdl__hd h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .mdl__hd p { margin: 3px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); }
+  .mdl__hd .x { margin-left: auto; flex: none; border: 0; background: none; padding: 0 2px; font-size: 19px;
+    line-height: 1; cursor: pointer; color: var(--muted-foreground); }
+  .mdl__hd .x:hover { color: var(--foreground); }
+  .mdl__bd { padding: 14px 18px; max-height: 56vh; overflow: auto; }
+  .mdl__ft { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-top: 1px solid var(--border); }
+  .mdl__ft .note { margin-right: auto; max-width: 300px; font-size: 11.5px; line-height: 1.4; color: var(--muted-foreground); }
+  .dpick { display: flex; align-items: center; gap: 12px; width: 100%; margin-bottom: 8px; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card);
+    font: inherit; text-align: left; cursor: pointer; }
+  .dpick:last-child { margin-bottom: 0; }
+  .dpick:hover { border-color: color-mix(in srgb, var(--brand-navy-600) 40%, #fff); background: color-mix(in srgb, var(--muted) 35%, transparent); }
+  .dpick .t { min-width: 0; }
+  .dpick .t b { display: block; font-size: 13.5px; font-weight: 600; }
+  .dpick .t span { display: block; margin-top: 1px; font-size: 12.5px; color: var(--muted-foreground); }
+  .dpick .r { margin-left: auto; flex: none; font-size: 12px; color: var(--muted-foreground); }
+  .dpick[disabled] { cursor: default; opacity: .62; }
+  .dpick[disabled]:hover { border-color: var(--border); background: var(--card); }
+  @media (max-width: 900px) {
+    .lpid { gap: 10px; }
+    .mov { padding: 24px 12px; }
+  }
+
   .proto a.plink { color: #d5dbe4; border: 1px solid #3c4657; border-radius: var(--radius-sm); padding: 3px 9px; font-family: var(--font-mono); font-size: 11px; text-decoration: none; }
   .proto a.plink:hover { background: #232c3a; }
 </style>
@@ -1517,7 +1727,7 @@
     <span class="dot"></span>
     <b>Prototype</b>
     <span class="note">
-      Deals · deal detail · create/edit deal · lenders on a deal. Built from the LenderPrism repo at <code>9f3427fc</code> — its tokens, its component metrics, its enums.
+      Home · Deals · deal detail · create/edit deal · lenders on a deal. Built from the LenderPrism repo at <code>9f3427fc</code> — its tokens, its component metrics, its enums.
     </span>
     <a class="plink" href="#/auth" style="margin-left:auto">Sign up / log in</a>
     <a class="plink" href="#/profile">Broker profile</a>
@@ -1566,7 +1776,33 @@
       <li><b>The matches table dropped its scoring chrome, 31 Aug</b> <span class="note">[&#128161; rec &middot; Figma mockup]</span> &mdash; the evaluated-count strip (strong / partial / outside / hidden), the fit slider with its below-the-cut line, the <b>Fit</b> column and the per-row criteria chips all came off; what remains is what the live lenders table actually has: company/contact, loan range, <b>Property type</b> (new column, same two-chips-then-<i>+N more</i> anatomy as the execution chips), execution type. <b>That column was renamed <i>Financing type</i> &rarr; <i>Execution Type</i> on 1 Sep</b> (Tanya) <span class="note">[&#128161; rec]</span> &mdash; both lender tables printed <i>Financing type</i> over the same vocabulary the deals table has always headed <i>Execution Type</i>, and Tony&rsquo;s own filter ranking names it Execution Type. One vocabulary was being labelled two ways on two screens a click apart; the deals list won because the client&rsquo;s word is the one already on it. The data, the filter and <code>FINANCING_TYPES</code> are untouched &mdash; this is the label only. The scoring strip and slider were invented UI with no product counterpart &mdash; fit is still computed underneath, ordering the rows and gating the 60% bar, it just is not printed. <b>Hide</b> left the row for a kebab menu (the deals table&rsquo;s own <code>.rowkebab</code> / <code>.cardmenu</code> anatomy), joined by <b>Report inaccurate criteria</b> &mdash; previously a card-footer link, now a danger item next to the row it disputes, which is where the shipped page&rsquo;s Report Issue sits too. The cut-release path died with the slider: <i>Find Lenders</i> now lands on the 60%+ list rather than releasing the cut to 0 for near-misses. <b>A footer strip, tried and removed 31 Aug</b> (Tanya) &mdash; the saved tab&rsquo;s directory-door anatomy was repeated under Matches for an afternoon: a boundary sentence left (<i>Hiding a lender is per-deal and reversible &mdash; they are not notified, and they stay countable in the strip above</i>) and <b>Report inaccurate criteria</b> as a text link right. It came off the same day; the dispute action stays in the row kebab, where it sits next to the criteria it contests, and Matches ends at the table again. What survives it is the count the sentence needed: the results bar prints <i>&middot; N hidden</i> when the deal hides anyone &mdash; the count that vanished with the evaluated-count strip, resurfaced in the one place the bar already counts things.</li>
       <li><b>Bulk actions reached Saved lenders, 31 Aug</b> <span class="note">[&#128161; rec]</span> &mdash; the matches selbar anatomy, with the verbs translated for a list that is already saved: <b>Set outreach</b> (a dropdown in the bar &mdash; outreach happens in batches, and the shipped Chan Portfolio deal holds 24 saved lenders) and <b>Remove from deal</b>, one undo restoring the lot. Email-bulk stayed off &mdash; a mail merge this product cannot send &mdash; and Hide belongs to Matches. Institutions are pickable &mdash; Remove applies to them &mdash; but Set outreach skips them with a note in the bar: outreach describes something done to a person, and a Prospector row has no person on file. Setting outreach promotes a just-saved row into the saved store, which also fixed a silent no-op the per-row dropdown had on rows saved this session.</li>
       <li><b>Execution Support, 31 Aug</b> <span class="note">[sandbox Aug 17]</span> &mdash; the one element of the live &ldquo;Lenders selected for my deal&rdquo; panel the prototype still lacked. <code>OpsRequestButtons.tsx</code>: Pro-only free concierge, POST <code>/loan_requests/:id/ops_requests</code>; a partial-unique index allows one open request per deal, so the shipped button disables itself once clicked. Here the control sits in the header of <i>Lenders on this deal</i> &mdash; what Ops works is this deal&rsquo;s lender outreach &mdash; as a button that becomes the state: <i>Execution Support requested</i> (blue) after the click, <i>Ops working on it</i> (green, <code>STATUS_LABEL</code>&rsquo;s own words) once Ops picks it up; Midtown is seeded in progress so both states are on screen. The undo toast doubles as cancel, which the shipped page does not offer. <span class="note">[~]</span> The broker is assumed Pro; the non-Pro state &mdash; disabled button plus &ldquo;Available on Pro&rdquo; upgrade copy &mdash; is documented, not drawn.</li>
-      <li><b>The directory door opens, 31 Aug</b> <span class="note">[T]</span> &mdash; <i>Search directory</i> on the saved tab is now a real link to a deal-scoped Banks &amp; Credit Unions page: a radius select (25 to 250 miles), the count from the same formula the door prints so the two can never disagree, distance-sorted rows, and <b>Save to deal</b> per row &mdash; the round trip Tony&rsquo;s Prospector ask implies, since what a broker saves lands back on Saved lenders as a Prospector row (undo included; already-saved institutions read &#10003; Saved). Deal-scoped rather than the global lenders tab on purpose: the door promised &ldquo;N near <i>this deal</i>&rdquo;, and the page opens holding that promise, with <i>Back to saved lenders</i> as the return leg. <span class="note">[~]</span> Rows and counts are sample; live this is the FDIC/NCUA directory query the product already runs. Credit unions print NCUA charter rather than FDIC cert &mdash; a label the saved-tab Prospector rows now match.</li>
+      <li><b>The Lenders tab opens, 4 Sep</b> <span class="note">[T]</span> &mdash; Tony&rsquo;s Figma comment #4, 21 Aug, verbatim: <i>&ldquo;This should allow brokers to search the entire lender data set without creating a deal.&rdquo;</i> The rail carried a Lenders item all along with nothing behind it &mdash; clicking it fell through to Deals silently. Cieden&rsquo;s own 26 Aug action item asks for the same thing from the other side (<i>separate Create Deal from Search Lenders; enable standalone lender search</i>), because in the shipped product deal creation is a side effect of lender search and a broker who only wants to look something up has to invent a deal to do it. Sean asked for it independently and named the competitor&rsquo;s version &mdash; <i>&ldquo;Lender Intelligence &hellip; this is something that you can&rsquo;t really do in LenderPRISM&rdquo;</i> <span class="note">[doc Aug 18]</span>.
+
+      <b>The filters are Tony&rsquo;s four, in his order</b> <span class="note">[T &middot; 26 Aug]</span> &mdash; State, Property type, Loan amount, Execution Type &mdash; drawn by the same <code>msCtl</code> the deals bar uses. That took a real change: both counters (<code>countFor</code>, <code>baseCountFor</code>) were hardwired to <code>DEALS</code> and <code>FILTERS</code>, and a lender is not a deal &mdash; a deal carries one property type, a lender a list; a deal has one amount, a lender a range that spans buckets. So the counters now read the descriptor (<code>pop</code>, <code>fam</code>, <code>hit</code>, <code>pass</code>), the deal filters supply none of those and behave exactly as before, and the amount filter tests <b>range overlap</b>, not bucket equality &mdash; a broker picking $5M&ndash;$10M is asking who would look at a deal that size, and a lender writing $1M&ndash;$25M would. <span class="note">[~]</span>
+
+      <b>Network and Prospector stay two tabs</b> <span class="note">[T &middot; 26 Aug]</span> &mdash; Tony: both flows stay, <i>&ldquo;genuinely different processes given how the system is built&rdquo;</i>, cleaned up rather than merged. The data agrees: three of the four filters are meaningless against an institution with nobody on file, so one table would blank three columns on half its rows. What <i>is</i> demoted to a filter here is the other source axis &mdash; registered vs found-by-Prism, a badge on a deal&rsquo;s matches &mdash; because over the whole network it earns a control, which is the exact demotion the audit recommended for this page and the matches note said belonged here <span class="note">[&#128161; rec]</span>. The Prospector tab asks for a zip before it lists anything: off a deal there is no zip to inherit, and Tony&rsquo;s ask &mdash; zip required so the radius correlates, count surfaced &mdash; survives with the broker supplying the place. Saving an institution stays on the deal&rsquo;s own directory page; here the destination is the profile, since a Prospector row has no criteria to search and no deal to save to. <span class="note">[~]</span>
+
+      <b>The query sentence returns, in the right place this time</b> <span class="note">[comp 4 Sep]</span> &mdash; Janover prints <i>&ldquo;You are searching for: SBA 504 lenders offering $2M+ financing&hellip;&rdquo;</i> under its filter bar. The prototype tried that sentence on a deal&rsquo;s matches tab and removed it &mdash; no filters there to read it off. Here there are four, their selections collapse behind +N, and the sentence is the one place the whole query stays legible &mdash; <i>&ldquo;Agency (Fannie Mae) lenders lending $25M+ on Multifamily in Texas.&rdquo;</i>
+
+      <b>&#9888; What this page does not have: a score.</b> Fit is computed against a deal and there is no deal, so nothing is ranked, no percentage prints, and the sort control names what it actually sorts on (recency, name, size). Every competitor either scores fit or states the routing rule &mdash; the standalone search is a lookup tool, not a match engine, and dressing it as one would put an invented number on the largest table in the product. The moment a lender is taken <i>to</i> a deal &mdash; the picker prints per-deal fit &mdash; the score appears, because there is now a deal to compute it against. <span class="note">[&#128161; rec]</span> Row actions are the profile&rsquo;s own three &mdash; Add to a deal, shortlist star, kebab with View profile / Contact / Report &mdash; and the save toast learned to name the deal when the deal is not on screen. <span class="note">[~]</span> Also fixed in passing: the rail&rsquo;s Lenders item now lights on this route and on bare lender profiles, where before no route existed to light it.</li>
+      <li><b>The lender profile lands, 4 Sep</b> <span class="note">[T]</span> <span class="note">[&#128161; rec]</span> &mdash; roadmap row 14, which Tony confirmed on 27 August: <i>&ldquo;the institution as one record with its contacts beneath it, its criteria, and its history with this broker across all deals&rdquo;</i>, with four actions &mdash; view the profile, contact through the platform, add to a deal, save to the shortlist <span class="note">[T &middot; 26 Aug]</span>. Only the roll-up existed. Of the four actions the prototype had one and a half: <i>Save to deal</i> on a row, and <i>Report inaccurate criteria</i> in the kebab. <b>There was no profile at all</b> &mdash; no route, no page, no way in &mdash; which is awkward given the largest unexplained number in the study is about this exact page: 28 sessions ran a search, <b>8 opened a lender profile, a 71% drop</b> <span class="note">[doc Aug 19]</span>. A profile that reprints its row earns no opens, so the two things a row cannot carry lead the page instead: the roster in one direction, the history in the other.
+
+      <b>Two pages, because the data insists.</b> The account band already refuses to roll a credit box up to the institution &mdash; <i>a credit box belongs to a person</i> &mdash; so the account page cannot print &ldquo;criteria&rdquo; without contradicting the table one level up. It prints <b>Coverage across the roster</b>, in a dashed panel that says in words what it is: <i>&ldquo;This is a span, not a credit box. Sunbelt Agency Group does not lend &mdash; its bankers do, on 5 different sets of criteria. No single deal is eligible for the whole range below.&rdquo;</i> Everything that can only be true of a person is on the person: criteria, territory, the shortlist, the four actions. The two header marks differ on purpose &mdash; a person gets a round navy circle with initials, an institution a squared muted tile with a building &mdash; because the roll-up&rsquo;s whole point is that these are different objects, and a broker two clicks deep must be able to tell which one they are standing on. <span class="note">[~]</span>
+
+      <b>The history is half real.</b> <code>SAVED</code> already records every (deal, lender) pair with its outreach state; reading it across <i>all</i> deals rather than one is the whole feature, and it is free. What it cannot hold is a relationship that closed &mdash; <code>SAVED</code> is live deals only &mdash; so <code>LHIST</code> supplies those <span class="note">[~]</span>, and live rows lead with an <i>Open</i> badge and a link back to the deal while closed rows carry an outcome. This is the item the research names <i>&ldquo;the best value-to-effort item in the study&rdquo;</i> <span class="note">[doc Aug 19]</span>: two brokers independently, and Tony from support calls, said no broker can tell which lenders a deal has already gone to. <span class="note">[~]</span> <b>&#9888; The outcome vocabulary is the finding, not the data.</b> Three of the five values are <code>DISPOSITION</code>&rsquo;s own; <i>Funded</i> and <i>Lost to another lender</i> are not, because both LenderPrism enums stop at <i>Quoted</i> &mdash; the same gap the saved-lenders note records. A closed engagement has nowhere to land in the product today, so those two badges carry a <i>no&nbsp;enum</i> marker rather than pretending otherwise. Worth a line to Chris before it ships.
+
+      <b>Why this matched, spent once.</b> <code>scoreOf</code> runs on every row of the matches table and the number is thrown away there, because a percentage on a table Tony has not seen one on would be inventing a product decision. On a <i>deal-scoped</i> profile it costs nothing: the five criteria print as pass/fail chips with their weights, over the fit figure. Janover prints matched filters as chips on every result row <span class="note">[comp 4 Sep]</span> &mdash; but theirs echoes the filters the user just typed, which is why the same county repeats on all fourteen lines; ours states what the engine actually did. Wrangle groups its reasons by weight <span class="note">[mobbin Aug 13]</span>, which is what the weight number does here.
+
+      <b>One deliberate departure from Janover.</b> Its deal picker footer reads <i>&ldquo;This Originator will be added to the shortlist automatically&rdquo;</i>, fusing two of Tony&rsquo;s four actions into one act. Ours does not, in Tony&rsquo;s own words: the shortlist is <i>&ldquo;a top 20&ndash;25 they&rsquo;ve worked with&rdquo;</i> <span class="note">[T &middot; 13 Aug]</span> &mdash; a curated list, and auto-writing every contacted lender to it would pass 25 in a week and turn curation into a log. The footer states the omission so nobody reads it as an oversight. <span class="note">[&#128161; rec]</span> The shortlist is otherwise Tony&rsquo;s row 19 answer exactly: <b>per broker, not per deal</b> <span class="note">[T &middot; 27 Aug]</span>, so it is a plain set on the broker and never touches <code>SAVED</code>; the toast names which of the two lists moved, because <i>Saved</i> already means something else two feet away on the same page. <span class="note">[~]</span> <b>&#9888;</b> Row 19 is one of the three cost-conditional yeses &mdash; <i>&ldquo;not worth building if it is time-consuming&rdquo;</i> &mdash; and still has no estimate. Drawn so there is something to price. Contacting a lender <i>does</i> save them to the deal, because a lender you have pitched is on the deal whether or not you pressed the other button, and leaving them off would make the Saved tab lie about who has seen it.
+
+      <b>The composer is honest about what it is not.</b> <i>Contact through the platform</i> is one of the four confirmed actions <span class="note">[T &middot; 26 Aug]</span>, but the pipe under it is <b>row 33</b> &mdash; Tony&rsquo;s <i>&ldquo;yes to both&rdquo;</i> with the cost deferred to Chris and no estimate &mdash; so the footer says so rather than letting a working-looking Send imply a mailer exists. Same reasoning that took the digest clock off the rows. It follows Janover&rsquo;s order &mdash; <i>Send a Deal</i> opens <i>Select a Deal</i> <span class="note">[comp 4 Sep]</span> &mdash; because a message to a lender with no deal on it has nothing to say, so a composer opened without a deal in scope asks for one first.
+
+      <b>The institution with nobody on file is a different object, not an empty table.</b> Opening Comerica&rsquo;s profile gives no roster, no coverage panel and no criteria &mdash; it explains why (<i>it came from the FDIC and NCUA directory, so it can never appear in a scored match list</i>) and offers the one action that moves it, the paid <i>Find a contact</i> with its 7-day refund <span class="note">[T &middot; row 16]</span>. Its history still works: a Prospector save is a relationship event even with nobody to have had it, and the row says <i>Nobody on file</i> in the Banker column.
+
+      <b>Where the doors are.</b> Every lender name on the page is now a link, and the two grains go to two places: on a grouped matches row the band name opens the institution and the banker name opens the person; flat, the bold company name opens the institution and the contact name in the meta line opens the person. Same on Saved lenders, on the Prospector rows, and in the directory. The row kebab gained the three actions it lacked, above the existing <i>Hide</i>. One guard was needed: the account band toggles on click, so the link inside it had to be excluded or a single click would both navigate and collapse the group it was leaving.
+
+      <span class="note">[~]</span> <b>Still open, and it is Tony&rsquo;s own question.</b> He confirmed row 14 and asked back what <i>default grouping</i> means &mdash; ours to answer, not his. The answer this build makes: <b>grouping is the axis the lender list stacks on when the broker has not picked one, and the default is the institution</b>, because that is the unit a broker holds a relationship with and it is Tony&rsquo;s own 14 August ask (<i>&ldquo;people should roll up to Accounts within the search results&rdquo;</i>). The switch is what it costs to see the flat list back. One line, and row 14 closes. <span class="note">[&#128161; rec]</span></li>
+      <li><b>The directory door opens, 31 Aug</b> <span class="note">[T]</span> &mdash; <i>Search directory</i> on the saved tab is now a real link to a deal-scoped Banks &amp; Credit Unions page: a radius select (25 to 250 miles), the count from the same formula the door prints so the two can never disagree, distance-sorted rows, and <b>Save to deal</b> per row &mdash; the round trip Tony&rsquo;s Prospector ask implies, since what a broker saves lands back on Saved lenders as a Prospector row (undo included; already-saved institutions read &#10003; Saved). Deal-scoped rather than the global lenders tab on purpose: the door promised &ldquo;N near <i>this deal</i>&rdquo;, and the page opens holding that promise, with <i>Back to saved lenders</i> as the return leg &mdash; redrawn 4 Sep from an outline button in the action corner to the quiet top-left link above the title that detail pages converge on <span class="note">[&#128161; rec &middot; Mobbin 4 Sep: Perplexity, Deel, Cloudflare, Jira &mdash; Jira runs it alongside a breadcrumb, as here; the top-right corner is for page actions, and back is navigation]</span> &mdash; then retired the same day when crumbs were cut to end at the parent: the crumb&rsquo;s deal segment links to the Saved tab, so it is the return leg and a second back affordance beside it was the same link twice. The footer note was rewritten the same day, then cut to product copy only (Tanya, 4 Sep: the UI carries nothing that would not ship): <i>digest</i> came out &mdash; the word asserts the question-17 mechanism &mdash; and the sample-rows disclaimer moved off screen into this note; the surviving sentence then merged into the subtitle and the footer strip came off the page (Tanya, 4 Sep). So, stated here instead: the table draws 12 sample rows against the formula count, and live both come from the FDIC/NCUA query; the empty state is the rural-zip case and its copy points at the radius and the zip control. <span class="note">[~]</span> Rows and counts are sample; live this is the FDIC/NCUA directory query the product already runs. Credit unions print NCUA charter rather than FDIC cert &mdash; a label the saved-tab Prospector rows now match. <b>Tony named the page, seen 4 Sep</b> <span class="note">[T]</span> &mdash; Figma comment on the directory frame: <i>&ldquo;Let&rsquo;s call this &lsquo;The Prospector&rsquo; &mdash; &lsquo;Search for Banks &amp; Credit unions by Radius&rsquo;&rdquo;</i>. The h1 is now <i>The Prospector</i>, his descriptor opens the subtitle, and the door button reads <i>Search the Prospector</i> &mdash; which closes the one-page-three-labels drift and the 13 Aug Cieden naming action item for this side of the pair. <b>The zip edits in place, 4 Sep</b> <span class="note">[T]</span> <span class="note">[C]</span> &mdash; Tony, 31 Aug, emphatic, with his own placement: <i>&ldquo;71 institutions within 100 miles of 78701 &mdash; maybe to the right of that, you can add update zip code&rdquo;</i> &mdash; brokers in a hurry enter wrong zips, then see the wrong lender set. Chris co-asked and confirmed the write-back on the call (<i>&ldquo;if they edit the zip code on the prospect results, we&rsquo;ll edit on the deal&rdquo;</i> &mdash; Tony: <i>&ldquo;Yes. It should tie back to the deal&rdquo;</i>). So the edit is an icon button right of the count &mdash; pencil, with an <i>Update zip code</i> tooltip (Tanya, 4 Sep: icon over label); the edit writes back to the deal rather than bouncing through the deal form (undo restores the deal&rsquo;s old zip). The map view Tony kept is not drawn <span class="note">[C]</span> &mdash; Chris is assessing retention. <span class="note">[~]</span> One unit is ours, not the product&rsquo;s: rows aggregate to institutions with a branches-nearby count, and Tony&rsquo;s 27 Aug tracker note calls institution-level aggregation future work &mdash; whether the live radius query returns institutions or branch locations is now question 84. <b>The radius select became a labeled filter chip, 4 Sep</b> (Tanya) <span class="note">[&#128161; rec]</span> &mdash; the deals bar already draws its filters as <i>label + value + caret</i> chips, and this toolbar drew the same kind of control as a bare value (<i>Within 100 miles</i>). One pattern now: a visible <i>Radius</i> label at the chip&rsquo;s weight, values shed the <i>Within</i> the label carries (<i>100 miles</i>), and the Bank/CU Prospects tab&rsquo;s copy of the control follows &mdash; wherever a labeled dropdown filter sits on a toolbar, it reads the same way.</li>
       <li><b>Sign up / log in is on <code>#/auth</code>, 3 Sep</b> <span class="note">[C]</span> &mdash; the roadmap sheet and both page inventories carry the same <i>Sign up / log in</i> row: a role selector before sign-up <b>and</b> before log-in &mdash; borrower, broker, lender &mdash; then three separate paths. The broker form is the one the brief specifies: first name, last name and email required, company and phone optional. The wall stays and the paywall moves later, so search, deal creation and matches all sit behind sign-up but before payment &mdash; which is why submitting any path lands on Deals with nothing asked for. Gating per Chris: borrowers and lenders ungated, the broker is the monetised role, and the free tier is one loan search with full interaction with that search&rsquo;s matches &mdash; the note under the broker form says exactly that. <span class="note">[~]</span> The borrower and lender sign-up forms are specified nowhere; they are drawn with the three required identity fields only, so the paths exist without inventing fields the brief doesn&rsquo;t have. The broker path is one account step &mdash; the five agreed fields <span class="note">[T]</span> <span class="note">[agreed]</span> plus password and confirm &mdash; because the tracker places deal creation <b>behind</b> sign-up, so the deal wizard is Flow 04 inside the app, not part of auth. A funnel-first variant (three deal steps before the account, prefilled &mdash; drawn 3 Sep, then rolled back to the tracker) is parked in <code>signup-simplification-proposal.md</code> as a <span class="note">[💡 rec]</span> for Tony and Chris. Plan selection stays out of sign-up (gate placement is Flow 08.3). Borrower and lender keep the plain account step; password and confirm sit with the identity fields per the first-session spec <span class="note">[T]</span> <span class="note">[agreed]</span>. Log in is email and password only &mdash; the one deliberate departure from the tracker row: the first-session spec keeps the role selector off log-in, because the account already knows its role and a wrong tile reproduces the very mis-registration defect the selector exists to prevent <span class="note">[💡 rec]</span> &mdash; flagged to raise with Tony, not settled. All fields are inert, as is <i>Forgot password</i>. The page shell is the split brand panel — direction 02 of the Mobbin layout exploration (3 Sep) <span class="note">[💡 rec]</span>: navy panel left with role-tailored headline, three value lines and a stat band, committed card unchanged on the right; the panel copy swaps per role, log-in and the role selector share the generic set. The live product ships the same split with a stock photo, so the shell is continuity, not novelty. Panel stats are the live marketing site&rsquo;s own figures &mdash; 1,500+ Non-Bank Lenders · 10,000+ Banks &amp; Credit Unions · 90,000+ U.S. Locations &mdash; walked in the sandbox 3 Sep. Under 980px the panel drops and the page degrades to the centered card. <b>The panel was tightened, 3 Sep</b> <span class="note">[&#128161; rec]</span> &mdash; the column split went 45/55 to 50/50, because the wider half was the emptier one: 936px of grey holding a 440px card against 766px of designed navy. Inside the panel <code>h2</code> and the stat band each carried <code>margin: auto</code>, so free space divided itself between them and the message floated at whatever height the copy left over &mdash; 194px of dead navy above it, 204px below. Wordmark, message and stats are now three declared zones under <code>space-between</code>. The generic set&rsquo;s copy changed with it: two of its three lines were the same claim (<i>Borrowers and lenders join free</i>, <i>No payment until you upgrade</i>), and the first of those left brokers out of a panel that log-in shows to returning brokers. Now one capability line, one mechanism line drawn from the app&rsquo;s own scoring copy (amount, property type, geography, execution type), and one price line. Generic also gained the sub-line the three role panels already had. <span class="note">[~]</span> Whether <i>free to join, pay on upgrade</i> is the right claim for every role is a pricing question for Tony &mdash; the borrower panel already says <i>No payment at any point</i> instead. The three ticks became <code>aria-hidden</code> spans; as <code>&lt;b&gt;</code> they announced &ldquo;check&rdquo; to a screen reader and carried a colour rather than emphasis. <b>Then the claims were validated, 3 Sep</b> <span class="note">[repo Aug 14]</span> and two were withdrawn. <i>Match deals against live lending criteria</i> &mdash; on the generic and broker panels both &mdash; is contradicted by <code>generate_matches</code>, which fires on loan-request create, update and admin trigger and never when a lender edits their criteria; staleness is on Tony&rsquo;s own pain-point list <span class="note">[C]</span> and the repair is an open roadmap item, so the signup panel was advertising the defect. It reads <i>every lender whose criteria fit</i> now, which is true of the exact-string array overlap the product runs. The <i>Scored on&hellip;</i> line lasted one hour: the live matcher is boolean, not weighted, and the fit score is still something Tony and Chris are to discuss <span class="note">[meeting Aug 14]</span>, so the five factors are named without the word &mdash; and all five, recent appetite included, where the first draft dropped it for line length. The sub-line lost <i>the whole lender network</i> for the same reason: the 10,000+ and 90,000+ figures are the marketing directory, and nothing sourced says matching spans it. <span class="note">[~]</span> Q83 asks Tony to confirm both replacements before any of this is marketing. The free-tier note under <i>Create account</i> came down from four lines to two (Tanya, 3 Sep): it enumerated search, deal creation and matches as separate openings, which is three ways of saying the account works immediately. It keeps the two facts a broker acts on &mdash; one loan search with full match access, and a 7&#8209;day trial before any paid plan charges &mdash; and the non-breaking hyphen stops <i>7-day</i> splitting across the line. <span class="note">[~]</span></li>
       <li><b>The broker profile is on <code>#/profile</code>, 3 Sep</b> <span class="note">[C]</span> <span class="note">[💡 rec]</span> &mdash; the page inventory&rsquo;s <i>Broker profile</i> row: everything the six-step sign-up form used to ask moves here as a first-session step, <b>contact fields prefill every deal from here</b>, and this profile is what feeds the public broker directory. Three sections against <b>one record</b>, which is the whole point &mdash; today a broker is described in three places that do not know about each other <span class="note">[sandbox Aug 13]</span>: <code>/profile</code> &rsaquo; Profile Info (name, company, title, phones, state, city), <code>/profile</code> &rsaquo; Areas of Focus (property types, min/max loan, a <i>Pitch</i> box) and <code>/broker-profile</code> (headshot, cover photo, a <i>Bio</i>, links). <b>Public listing is that third page</b> &mdash; the shipped <i>Public Profile</i>, &ldquo;your LenderPrism Pro broker profile, visible to borrowers searching for brokers&rdquo; <span class="note">[sandbox 3 Sep]</span> &mdash; brought inside the profile it belongs to and given the preview it never had, so a broker can see what they are submitting. Its own rules are kept: headshot required and cover photo optional with a branded band when skipped, one 500-character bio, LinkedIn and website, <i>Save draft</i> beside <i>Submit for review</i>, and the same gate (<i>headshot and bio required to submit</i>). Named <i>listing</i> rather than <i>profile</i> because it now sits inside one <span class="note">[💡 rec &middot; first-session spec 01.3]</span>. Two consequences the consolidation removes: a broker <b>writes themselves up twice</b> into fields that do not feed each other, and <b>the fields the directory searches on are not on the page called profile</b>. Section names follow the shipped left nav <span class="note">[sandbox 3 Sep]</span> &mdash; Profile &middot; Areas of Focus &middot; Password &middot; Membership &middot; Sign out &mdash; with Public listing added, <b>Password and Membership moved out to <a href="#/account">#/account</a></b>, which is a route of its own and not a fourth section here <span class="note">[sheet 3 Sep]</span>, and <b>Sign out kept only in the account menu at the foot of the rail</b> <span class="note">[💡 rec]</span> &mdash; it was in both places, as it is in the shipped app (settings nav <i>and</i> top-bar dropdown), and the menu copy is the one that is reachable from every route rather than only from the two a leaving broker is least likely to be on. Four things are ours <span class="note">[💡 rec]</span>: <b>Pitch is retired</b> in favour of one Bio (it costs nothing &mdash; the shipped Pitch renders, accepts text and cannot save: the field is absent from the form&rsquo;s initial values and from the controller&rsquo;s permitted list <span class="note">[repo Aug 31]</span>); <b>states you operate in is editable</b>, which it has never been in the product, since sign-up collects it, the profile tab hides it from brokers and the write only ever adds rows <span class="note">[repo Aug 31]</span>; the <b>listing has a review state</b> with a stated turnaround, because Q34 &mdash; who reviews a profile before it enters the directory, and how long &mdash; is unanswered and the waiting broker is shown nothing today; and <b>alerts</b>, which have no surface in the product at all. The identity block is the <b>source of truth the deal form reads</b> <span class="note">[T]</span> &mdash; Tony confirmed the profile holds first name, last name, email and phone (roadmap sheet, Prefill row, 21 Aug) &mdash; so editing a name here changes the contact line on <i>New deal</i> and the name on the rail. <b>Email stays editable</b>, as it is in the live product; the note under it is a recommendation, not a rule &mdash; a sign-in address that changes should confirm the new address first, and whether it does today is unrecorded <span class="note">[~]</span>. Membership, the territory picker and the credit packs are no longer on this page &mdash; see the Account note below. The property-type list is the shipped 24 <span class="note">[⚠ conflict]</span> &mdash; the SREO workbook defines 18 and the licence structure 7, and which governs is the same open question as Flow 08.1. The file picker is inert; <i>Upload a photo</i> stands a headshot in so the card and the meter can be seen finished.</li>
 
@@ -1589,7 +1825,7 @@
 
     <div class="rail__grp">
       <div class="rail__menu">
-        <a href="#/deals" data-nav="home" title="Home">
+        <a href="#/home" data-nav="home" title="Home">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg>
           <span class="nm">Home</span></a>
         <a href="#/deals" class="on" data-nav="deals" title="Deals">
@@ -2214,6 +2450,89 @@ function prospectsFor(id) {
     .map(a => ({ ...a, p: PROSPECTS.find(x => x.acct === a.acct) }));
 }
 
+/* ---------- the two things a profile carries that a row cannot ----------
+
+   1 · History with this broker across all deals. Roadmap row 14 asks for it
+   by name, and [[research-insights-2026-08-19]] makes it the most valuable
+   thing on the page: two brokers independently, and Tony from support calls,
+   said no broker can tell which lenders a deal has already gone to — named
+   there "the best value-to-effort item in the study". It is also the answer to
+   the leak in the same document: 28 sessions searched, 8 opened a profile, and
+   a profile that only repeats its row earns no opens.
+
+   Half of that history is real and computed — SAVED already records every
+   (deal, lender) pair the broker holds with its outreach state, and reading it
+   across all deals instead of one is the whole feature. The other half cannot
+   be: SAVED holds live deals only, so a relationship that closed in March is
+   invisible. LHIST supplies those. [~] Every row here is sample.
+
+   ⚠ The outcome vocabulary is the problem, not the data. Three of these
+   values are DISPOSITION's own; "funded" and "lost" are not, because both
+   LenderPrism enums stop at Quoted — the same finding the saved-lenders note
+   records. So a closed engagement has nowhere to land in the product today,
+   and the two values below are drawn, not sourced. Worth a line to Chris
+   before this ships. [💡 rec] */
+const LOUT = {
+  funded:    { label:"Funded",            tone:"green", enum:false },
+  quoted:    { label:"Quoted",            tone:"blue",  enum:true  },
+  declined:  { label:"Not a Fit",         tone:"red",   enum:true  },
+  no_reply:  { label:"Has Not Responded", tone:"muted", enum:true  },
+  lost:      { label:"Lost to another lender", tone:"muted", enum:false }
+};
+const LHIST = [
+  { l:26, deal:"Cypress Point Apartments",  amt:18,  prop:"Multifamily",         out:"funded",   on:"Mar 2026" },
+  { l:26, deal:"Alamo Heights Retail",      amt:6.2, prop:"Retail-Multi Tenant", out:"declined", on:"Nov 2025" },
+  { l:25, deal:"Cypress Point Apartments",  amt:18,  prop:"Multifamily",         out:"quoted",   on:"Feb 2026" },
+  { l:21, deal:"Live Oak Senior Living",    amt:24,  prop:"Senior Housing",      out:"funded",   on:"Jan 2026" },
+  { l:21, deal:"Bastrop Student Village",   amt:12,  prop:"Student Housing",     out:"lost",     on:"Sep 2025" },
+  { l:24, deal:"Live Oak Senior Living",    amt:24,  prop:"Senior Housing",      out:"quoted",   on:"Jan 2026" },
+  { l:22, deal:"Bastrop Student Village",   amt:12,  prop:"Student Housing",     out:"no_reply", on:"Sep 2025" },
+  { l:16, deal:"Braunig Industrial Park",   amt:4.4, prop:"Industrial",          out:"funded",   on:"Dec 2025" },
+  { l:16, deal:"Seguin Strip Center",       amt:2.1, prop:"Retail-Single Tenant",out:"funded",   on:"Jun 2025" },
+  { l:1,  deal:"Pflugerville Flex II",      amt:9,   prop:"Industrial",          out:"declined", on:"Oct 2025" }
+];
+/* live half: the same pairs the Saved lenders tab draws, read across every
+   deal rather than one. Sorted newest first is not possible — SAVED carries
+   "6 days ago" strings, not dates — so live rows lead and closed rows follow,
+   which is also the order a broker wants: what is open, then what happened. */
+function histFor(id) {
+  const live = SAVED.filter(s => s.lender === id && !(S.savedRm[s.deal] && S.savedRm[s.deal].has(id)))
+    .map(s => ({ live:true, deal:(dealById(s.deal) || {}).name || s.deal, id:s.deal,
+                 amt:(dealById(s.deal) || {}).amt, prop:(dealById(s.deal) || {}).property,
+                 disp:s.disp, on:s.seen }));
+  const now = Object.keys(S.savedNow).filter(dl => S.savedNow[dl] && S.savedNow[dl][id])
+    .map(dl => ({ live:true, deal:(dealById(dl) || {}).name || dl, id:dl,
+                  amt:(dealById(dl) || {}).amt, prop:(dealById(dl) || {}).property,
+                  disp:"not_yet_contacted", on:"just now" }));
+  return live.concat(now, LHIST.filter(h => h.l === id));
+}
+/* an account's history is its roster's, plus the institutions saved from the
+   directory — a Prospector save is a relationship event even though nobody is
+   on file to have had it. Each row keeps the banker it belongs to: rolling the
+   names off would leave the broker asking "who at Sunbelt quoted that?", which
+   is the question the page exists to answer. */
+function acctHist(acct) {
+  const out = [];
+  NETWORK.filter(l => l.acct === acct).forEach(l => histFor(l.id).forEach(h => out.push({ ...h, who:l.ct })));
+  SAVED_ACCT.filter(a => a.acct === acct && !(S.acctRm[a.deal] && S.acctRm[a.deal].has(acct)))
+    .forEach(a => out.push({ live:true, prospect:true, deal:(dealById(a.deal) || {}).name || a.deal, id:a.deal,
+                             amt:(dealById(a.deal) || {}).amt, prop:(dealById(a.deal) || {}).property,
+                             disp:"not_yet_contacted", on:a.added, who:null }));
+  return out;
+}
+const rosterOf = acct => NETWORK.filter(l => l.acct === acct);
+/* an account exists in two places: NETWORK, where it has bankers, and
+   PROSPECTS/DIRECTORY, where it is an institution with nobody on file. Both
+   are lender profiles and the page has to open on either — the second is the
+   case the shipped tab split cannot draw at all. */
+function acctRec(acct) {
+  const r = rosterOf(acct);
+  if (r.length) return { acct, co:r[0].co, inst:r[0].inst, roster:r,
+    cert:(PROSPECTS.find(x => x.acct === acct) || DIRECTORY.find(x => x.acct === acct) || {}).cert };
+  const p = PROSPECTS.find(x => x.acct === acct) || DIRECTORY.find(x => x.acct === acct);
+  return p ? { acct, co:p.co, inst:p.inst, cert:p.cert, branches:p.branches, roster:[] } : null;
+}
+
 /* The Banks & Credit Unions directory, scoped to a deal. [~] Rows and counts
    are sample; live, both come from the FDIC/NCUA directory query the product
    already runs, radius from the deal's zip. dirCount at 100 miles is the
@@ -2224,11 +2543,31 @@ function dirCount(d, radius) {
   const base = 30 + (d.zip ? parseInt(d.zip, 10) % 60 : 45);
   return Math.round(base * ({ 25: 0.3, 50: 0.55, 100: 1, 250: 1.6 }[radius] || 1));
 }
+/* [T] Tony, 31 Aug: edits from the Prospector page update the deal — via a
+   link, not by bouncing the broker back to the deal form. The undo puts the
+   old zip back on the deal too, since that is what the edit changed. */
+function zipCommit() {
+  const f = document.getElementById("zipinp");
+  const d = DEALS.find(x => x.id === S.dealId);
+  if (!f || !d) return;
+  const v = f.value.trim();
+  if (!/^\d{5}$/.test(v)) {
+    S.undo = { msg: "A zip is five digits. The count still runs on " + dirLoc(d) + "." };
+    render(); return;
+  }
+  const was = d.zip;
+  S.zipEdit = false;
+  if (v === was) { render(); return; }
+  d.zip = v;
+  S.undo = { msg: "Zip updated to " + v + ". The deal is updated too, not just this search.",
+             fn: () => { d.zip = was; } };
+  render();
+}
 const DIR_RADII = [
-  { v: "25",  label: "Within 25 miles"  },
-  { v: "50",  label: "Within 50 miles"  },
-  { v: "100", label: "Within 100 miles" },
-  { v: "250", label: "Within 250 miles" }
+  { v: "25",  label: "25 miles"  },
+  { v: "50",  label: "50 miles"  },
+  { v: "100", label: "100 miles" },
+  { v: "250", label: "250 miles" }
 ];
 const DIRECTORY = [
   { acct:"comerica",   co:"Comerica Bank",                   inst:"Bank",         cert:"983",   branches:14, mi:4  },
@@ -2302,9 +2641,45 @@ const S = {
   /* grouping is on by default: the flat list is the bug Tony reported, so the
      corrected view is the one a broker lands on. [💡 rec] */
   grpAcct: true, acctShut: new Set(), acctRm: {},
+  /* The shortlist. [T] Page inventory row 19, 27 Aug: "Per broker, not per
+     deal." So it is a plain set on the broker, not a (deal, lender) pair the
+     way SAVED is — and the profile prints both, because "I rate this banker"
+     and "this banker is on the Riverside deal" are different claims that a
+     single Saved control would fuse. Tony's 13 Aug framing gives the size:
+     rework Preferred lenders as "a top 20–25 they've worked with".
+     It holds contacts, not institutions. A relationship is with a person, and
+     an institution with nobody on file has nobody to have had one with — the
+     same reason an account cannot carry a credit box. [💡 rec]
+     ⚠ Cost-conditional: Tony's yes came with "not worth building if it is
+     time-consuming" and no estimate exists. Drawn so there is something to
+     price rather than to pre-empt the answer. [~] The three seeded are sample. */
+  short: new Set([1, 26, 8]),
+  /* Lender profile. All three in the hash — account, contact (null on the
+     account page) and the deal the visit is scoped to (null when the profile
+     is reached outside a deal). A profile a broker cannot paste to a colleague
+     is a profile they will screenshot instead. */
+  lAcct: null, lId: null, lFor: null,
+  /* the standalone lender search. Its own query and its own four filter sets:
+     they narrow a different population from the deals bar and sharing the sets
+     would let a state chosen on one page silently filter the other. lSrc is
+     the Network / Prospector split, demoted from a tab to a segment — see
+     renderLenders for why that is allowed to happen here and nowhere else. */
+  lq: "", lSort: "active", lSrc: "all", lShort: false, lTab: "network",
+  lLoc: new Set(), lProp: new Set(), lAmt: new Set(), lFin: new Set(),
+  /* row selection on the standalone page, for the bulk save below. Page-local
+     UI state like acctShut, not a filter: clearing filters leaves it alone. */
+  lSel: new Set(),
+  /* the Prospector half needs a place before it can count a radius. [T] Tony,
+     26 Aug: make zip required, or city and state, so a radius correlation can
+     be made. Off a deal there is no zip to inherit, so the broker types one. */
+  pZip: "", pRadius: 100,
+  /* the two modals: the deal picker behind "Add to a deal", and the composer
+     behind "Contact through the platform". sent records what the session has
+     already sent, so the button can stop lying about it. */
+  dealPick: null, compose: null, sent: {},
   /* Execution Support per deal: undefined | "requested" | "in_progress".
      Midtown is seeded in progress so the working state is on screen. [~] */
-  ops: { midtown: "in_progress" }, dirRadius: 100,
+  ops: { midtown: "in_progress" }, dirRadius: 100, zipEdit: false,
   /* A paid contact request against a Prospector institution.
      "dealId:acct" -> { state:"working"|"returned", due, left, on }. [T] Tony,
      page inventory row 16, 27 Aug: pending reads "working" or "in progress",
@@ -2332,7 +2707,10 @@ const S = {
   /* Account is a second route, not a fifth profile section — see ACC_SECS.
      Its own section key, so walking from one to the other and back lands
      where each was left. */
-  accSec: "plan"
+  accSec: "plan",
+  /* Home checklist, third item: "browse lenders" has no record of its own to
+     read, so using the launcher once IS completing it. [~] */
+  seenLenders: false
 };
 DEALS.forEach(d => S.status[d.id] = d.status);
 /* pristine copy — Reset restores edited deal fields, not just statuses.
@@ -2449,6 +2827,60 @@ const FILTERS = [
   { key:"fin",  title:"Execution Type", set:() => S.finFilter, of:d => d.financing,              opts:() => FINANCING_TYPES, searchable:true, col:"fin" }
 ];
 
+/* ---------- the standalone lender search ---------------------------------
+   Tony, Figma comment #4, 21 Aug, verbatim: "This should allow brokers to
+   search the entire lender data set without creating a deal." [T] Cieden's own
+   26 Aug action item says the same thing from the other side — separate Create
+   Deal from Search Lenders — because in the shipped product deal creation is a
+   side effect of searching for lenders, and a broker who only wants to look
+   something up has to invent a deal to do it.
+
+   Sean asked for it independently, and named the competitor's version:
+   "Lender Intelligence — standalone lender search without a deal, same
+   filters, with phone and email, coverage area, send-a-deal directly from the
+   profile", followed by "This is something that you can't really do in
+   LenderPRISM … there's no contact anywhere". [doc Aug 18]
+
+   The filters are Tony's own list, 26 Aug, in his own order [T]: State,
+   Property type, Loan amount, Execution Type — the last droppable if one must
+   go. Same order as the deals bar, and the same control: msCtl reads a
+   descriptor, so the only new code is what a lender is, not how a filter works.
+
+   ⚠ One thing a deal-scoped search has that this cannot: a fit score. Fit is
+   computed against a deal, and there is no deal — so nothing here is ranked and
+   the page says so instead of implying an order. That is a real gap against
+   Janover, whose standalone search still prints matching filters per row; it is
+   also honest, and the sort control names what it is sorting on. [~] */
+const LFILTERS = [
+  { key:"lloc",  title:"State", set:() => S.lLoc, opts:() => US_STATES.map(x => x[1]), searchable:true, ph:"Search states…",
+    hit:(l, v) => l.st.includes(STATE_ABBR[v] || v),
+    pass:(l, set) => [...set].some(v => l.st.includes(STATE_ABBR[v] || v)) },
+  { key:"lprop", title:"Property type", set:() => S.lProp, opts:() => PROPERTY_TYPES,
+    groups:() => PROPERTY_GROUPS.map(x => ({ g:x.g, v:x.v })), searchable:true,
+    hit:(l, v) => l.prop.includes(v),
+    pass:(l, set) => [...set].some(v => l.prop.includes(v)) },
+  /* a deal has one amount and lands in one bucket; a lender has a range and
+     spans several, so the test is overlap rather than equality. A broker
+     picking "$5M – $10M" is asking who would look at a deal that size, and a
+     lender writing $1M–$25M would. */
+  { key:"lamt",  title:"Loan amount", set:() => S.lAmt, opts:() => AMT_BUCKETS,
+    hit:(l, v) => { const b = AMT_RANGE[v]; return l.lo <= b[1] && l.hi >= b[0]; },
+    pass:(l, set) => [...set].some(v => { const b = AMT_RANGE[v]; return l.lo <= b[1] && l.hi >= b[0]; }) },
+  { key:"lfin",  title:"Execution Type", set:() => S.lFin, opts:() => FINANCING_TYPES, searchable:true,
+    hit:(l, v) => l.fin.includes(v),
+    pass:(l, set) => [...set].some(v => l.fin.includes(v)) }
+];
+const AMT_RANGE = {
+  "Under $1M": [0, 1], "$1M – $5M": [1, 5], "$5M – $10M": [5, 10],
+  "$10M – $25M": [10, 25], "$25M+": [25, Infinity]
+};
+LFILTERS.forEach(f => {
+  f.removable = true; f.fam = LFILTERS;
+  f.pop = () => NETWORK.filter(l => S.lSrc === "all" || l.src === S.lSrc);
+  f.q = () => S.lq;
+  f.txt = l => l.co + " " + l.ct + " " + l.role + " " + l.inst;
+});
+
 /* every filter chip carries its own X too, 3 Sep — one control, one affordance
    on both surfaces. The clear-all X stays beside them: per-chip removal is the
    correction, clear-all is the reset, and a value hidden behind +N is still only
@@ -2481,25 +2913,40 @@ const MSX = {
 };
 /* every ms handler resolves its source through this, so a new non-filter
    multiselect needs an MSX entry and nothing else */
-const msSrc = k => FILTERS.find(f => f.key === k) || MSX[k];
+const msSrc = k => FILTERS.find(f => f.key === k) || LFILTERS.find(f => f.key === k) || MSX[k];
 
 /* a count is computed against every filter except its own, so a zero means
    that combination is genuinely empty rather than merely deselected */
 /* how many deals of this value exist at all, ignoring every filter — the
    baseline that separates "excluded by your other filters" (dim) from "no
    sample deal happens to use this canonical value" (normal, not dimmed) */
-const baseCountFor = (f, value) => DEALS.filter(d => f.of(d) === value).length;
+/* Both counters were hardwired to DEALS and FILTERS. They now read the
+   descriptor, because the lender search filters the same way on a different
+   population: a deal carries one property type, a lender carries a list, so
+   "does this row hold this value" and "does this row pass this filter" had to
+   become the descriptor's business rather than an === against a scalar. The
+   deal filters supply neither and fall back to exactly what they did before. */
+const msFam = f => f.fam || FILTERS;
+const msPop = f => f.pop ? f.pop() : DEALS;
+const msTxt = f => f.txt || (d => d.name + " " + d.city + " " + d.state + " " + d.property + " " + d.financing);
+const msQ   = f => (f.q ? f.q() : S.q);
+/* does this row carry this one value */
+const msHit = (f, row, v) => f.hit ? f.hit(row, v) : f.of(row) === v;
+/* does this row survive this filter's whole selection */
+const msPass = (f, row, set) => f.pass ? f.pass(row, set) : set.has(f.of(row));
+
+const baseCountFor = (f, value) => msPop(f).filter(r => msHit(f, r, value)).length;
 
 function countFor(f, value) {
-  const q = S.q.trim().toLowerCase();
-  return DEALS.filter(d => {
-    if (q && !(d.name + " " + d.city + " " + d.state + " " + d.property + " " + d.financing).toLowerCase().includes(q)) return false;
-    for (const other of FILTERS) {
+  const q = msQ(f).trim().toLowerCase(), txt = msTxt(f);
+  return msPop(f).filter(r => {
+    if (q && !txt(r).toLowerCase().includes(q)) return false;
+    for (const other of msFam(f)) {
       if (other.key === f.key) continue;
       const set = other.set();
-      if (set.size && !set.has(other.of(d))) return false;
+      if (set.size && !msPass(other, r, set)) return false;
     }
-    return f.of(d) === value;
+    return msHit(f, r, value);
   }).length;
 }
 
@@ -2513,13 +2960,14 @@ const XSM = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke=
    component. `key` is "<kind>:<id>" and is what the click handler routes on;
    opts are {v, label, tone?}. A tone paints the same dot the trigger shows, so
    the open list carries the colour vocabulary the row does. */
-function selCtl(key, opts, cur, label, ph) {
+function selCtl(key, opts, cur, label, ph, withLbl) {
   const open = S.selOpen === key;
   /* an empty cur draws a placeholder instead of silently claiming opts[0] —
      the form selects start unset; every pre-existing caller passes a set cur */
   const sel = opts.find(o => o.v === cur) || (cur ? opts[0] || { label: "" } : { label: ph || "Select\u2026", ph: true });
   return `<button type="button" class="sel__trg" data-sel="${esc(key)}"
       aria-haspopup="listbox" aria-expanded="${open}" aria-label="${esc(label)}">
+      ${withLbl ? `<span class="sel__lbl">${esc(label)}</span>` : ""}
       <span class="sel__val${sel.ph ? " ph" : ""}">${esc(sel.label)}</span>
       <span class="sel__car" aria-hidden="true">${SELCAR}</span>
     </button>
@@ -2556,6 +3004,9 @@ function applySel(key, v) {
     return;
   }
   if (kind === "dr") { S.dirRadius = Number(v); return; }
+  /* the standalone lender search's sort, and the Prospector tab's radius */
+  if (kind === "lsort") { S.lSort = v; return; }
+  if (kind === "pr") { S.pRadius = Number(v); return; }
   /* section editor on the deal's Financing tab. id is "<object>.<field>",
      the same path the text inputs carry on data-se. */
   if (kind === "se") {
@@ -3409,9 +3860,9 @@ function renderDealForm() {
 
   return `
     <div class="crumbrow">
-      <div class="crumb"><a href="#/deals">Deals</a><span class="sep">›</span>${editing
-        ? `<a href="#/deal/${editing.id}">${esc(editing.name)}</a><span class="sep">›</span><span>Edit</span>`
-        : `<span>New deal</span>`}</div>
+      <div class="crumb"><a href="#/deals">Deals</a>${editing
+        ? `<span class="sep">›</span><a href="#/deal/${editing.id}">${esc(editing.name)}</a>`
+        : ""}</div>
     </div>
     <div class="head">
       <div>
@@ -3525,7 +3976,7 @@ function renderDeal(d) {
     </div>`;
 
   return `
-    <div class="crumb"><a href="#/deals">Deals</a><span class="sep">›</span><span>${esc(d.name)}</span></div>
+    <div class="crumb"><a href="#/deals">Deals</a></div>
     <div class="head">
       <div>
         <h1>${esc(d.name)}</h1>
@@ -3547,14 +3998,21 @@ function renderDeal(d) {
    search. Deal-scoped on purpose — the door promised "N near this deal", so
    the page opens holding that promise: same location, same formula, same
    count, and every Save lands back on this deal's Saved tab as a Prospector
-   row. [~] Rows are sample; live this is the FDIC/NCUA directory query. */
+   row. [~] Rows are sample; live this is the FDIC/NCUA directory query —
+   though whether that query returns institutions or branch locations is open
+   (question 84): Tony's 27 Aug tracker note calls institution-level
+   aggregation future work, so the one-row-per-institution shape and the
+   branches-nearby count are ours until he confirms. [T][C] 31 Aug: "Update zip code"
+   sits right of the count — Tony's own placement — and the edit writes back
+   to the deal ("it should tie back to the deal", confirmed by Chris), because
+   brokers in a hurry enter wrong zips, then see the wrong lender set. */
 function renderDirectory(d) {
   const radius = S.dirRadius, n = dirCount(d, radius);
   const rows = DIRECTORY.filter(r => r.mi <= radius).sort((a, b) => a.mi - b.mi);
   const savedAccts = new Set(SAVED_ACCT.filter(a => a.deal === d.id && !(S.acctRm[d.id] && S.acctRm[d.id].has(a.acct))).map(a => a.acct));
   const body = rows.map(r => `<tr>
       <td class="nm-cell" style="white-space:normal">
-        <span class="nml"><b>${esc(r.co)}</b></span>
+        <span class="nml"><b><a href="${lpHref(r.acct, null, d.id)}">${esc(r.co)}</a></b></span>
         <span>${r.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)} · no contact person on file</span>
       </td>
       <td data-l="Type">${esc(r.inst)}</td>
@@ -3567,31 +4025,736 @@ function renderDirectory(d) {
       </div></td>
     </tr>`).join("");
   return `
-    <div class="crumb"><a href="#/deals">Deals</a><span class="sep">›</span><a href="#/deal/${d.id}/saved">${esc(d.name)}</a><span class="sep">›</span><span>Directory</span></div>
+    <div class="crumb"><a href="#/deals">Deals</a><span class="sep">›</span><a href="#/deal/${d.id}/saved">${esc(d.name)}</a></div>
     <div class="head">
       <div>
-        <h1>Banks &amp; Credit Unions</h1>
-        <span class="sub">Scoped to this deal — what you save here lands on its Saved lenders tab as a Prospector row.</span>
-      </div>
-      <div class="head__acts">
-        <a class="btn btn--outline" href="#/deal/${d.id}/saved">Back to saved lenders</a>
+        <h1>The Prospector</h1>
+        <span class="sub">Search for banks and credit unions by radius. Saved institutions land on this deal’s Saved lenders tab as Prospector rows.</span>
       </div>
     </div>
     <div class="card">
       <div class="cut" style="padding-top:14px">
-        <span class="stat">${selCtl("dr:" + d.id, DIR_RADII, String(radius), "Search radius")}</span>
-        <span class="lbl" style="margin-left:auto"><b style="color:var(--foreground)">${n}</b>&nbsp;institutions within ${radius} miles of ${esc(dirLoc(d))}</span>
+        <span class="stat">${selCtl("dr:" + d.id, DIR_RADII, String(radius), "Radius", null, true)}</span>
+        <span class="lbl ziprow" style="margin-left:auto"><b style="color:var(--foreground)">${n}</b>&nbsp;institutions within ${radius} miles of&nbsp;${S.zipEdit
+          ? `<span class="zipedit"><input class="inp zipinp" id="zipinp" inputmode="numeric" maxlength="5" value="${esc(d.zip || "")}" aria-label="Property zip">
+              <button class="btn btn--sm" type="button" data-zipok>Update</button>
+              <button class="btn btn--sm btn--ghost" type="button" data-zipcancel>Cancel</button></span>`
+          : `${esc(dirLoc(d))}
+             <button class="zipbtn" type="button" data-zipedit aria-label="Update zip code">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+              <span class="tt">Update zip code. The deal's zip changes too.</span></button>`}</span>
       </div>
       ${rows.length ? `<div class="tscroll">
         <table class="t">
           <thead><tr><th>Institution</th><th>Type</th><th>Branches nearby</th><th>Distance</th><th></th></tr></thead>
           <tbody>${body}</tbody>
         </table>
-      </div>` : `<div class="empty"><b>No sample rows within ${radius} miles</b>
-        <p>Widen the radius — the live page would still count ${n} institutions here.</p></div>`}
-      <div class="dirdoor">
-        <span>Showing ${rows.length} of ${n} — a sample of what the live FDIC and NCUA directory query returns. Saving an institution adds a Prospector row: no contact person yet, so no digest and no outreach until one is found.</span>
+      </div>` : `<div class="empty"><b>No institutions within ${radius} miles of ${esc(dirLoc(d))}</b>
+        <p>Widen the radius, or update the zip if it is wrong.</p></div>`}
+    </div>`;
+}
+
+/* ---------- #/lenders — the whole network, with no deal attached -----------
+   Tony, Figma comment #4, 21 Aug, verbatim: "This should allow brokers to
+   search the entire lender data set without creating a deal." [T] The rail has
+   carried a Lenders item all along with nothing behind it — clicking it fell
+   through to Deals. Cieden's own 26 Aug action says the same from the other
+   side, separate Create Deal from Search Lenders, because in the shipped
+   product deal creation is a side effect of searching for lenders and a broker
+   who only wants to look something up has to invent a deal to do it.
+
+   Sean asked for it independently and named the competitor's version: "Lender
+   Intelligence — standalone lender search without a deal, same filters, with
+   phone and email, coverage area, send-a-deal directly from the profile",
+   followed by "This is something that you can't really do in LenderPRISM …
+   there's no contact anywhere". [doc Aug 18]
+
+   The filters are Tony's own four, 26 Aug, in his own order [T]: State,
+   Property type, Loan amount, Execution Type. Same order as the deals bar and
+   the same control — msCtl reads a descriptor, so the only new code here is
+   what a lender is, not how a filter works.
+
+   Two tabs, because Tony was explicit that Network and Prospector "both stay …
+   they are genuinely different processes given how the system is built", and
+   asked for them cleaned up and made intuitive, not merged. [T] The data
+   agrees: three of his four filters are meaningless against a Prospector row,
+   which is an institution with nobody on file and therefore no credit box, so
+   one table would have to blank three columns on half its rows. What does get
+   demoted to a filter is the other source axis — whether a registered banker
+   arrived through the network or was found by Prism — which is a badge on a
+   deal's matches and earns a control here, where the population is large
+   enough to be worth cutting. [💡 rec]
+
+   ⚠ What this page cannot have: a fit score. Fit is computed against a deal
+   and there is no deal, so nothing is ranked and no percentage is printed.
+   Every competitor either scores fit or states the routing rule
+   ([[competitor-analysis]] F3), so the honest move is to name the sort rather
+   than imply an order. The standalone search is a lookup tool, not a match
+   engine, and it should not dress as one. [~] */
+
+/* Janover's "You are searching for: SBA 504 lenders offering $2M+ financing
+   for Rehab facility or Strip mall in Maricopa County from Bank, Credit Union,
+   or Non Bank SBA Lender" [comp 4 Sep]. This sentence was tried on a deal's
+   matches tab and removed — there are no filters there to read it off, so it
+   restated the deal back at the reader. Here it does the job it was built for:
+   the filter bar collapses selections behind +N, and this is the one place the
+   whole query is legible in a line. */
+function lsSentence() {
+  const g = k => [...(LFILTERS.find(f => f.key === k).set())];
+  const fin = g("lfin"), prop = g("lprop"), amt = g("lamt"), loc = g("lloc");
+  const bits = [fin.length ? fin.join(" or ") + " lenders" : "Lenders"];
+  if (amt.length) bits.push("lending " + amt.join(" or "));
+  if (prop.length) bits.push("on " + prop.join(" or "));
+  if (loc.length) bits.push("in " + loc.join(", "));
+  if (S.lSrc !== "all") bits.push(S.lSrc === "prospector" ? "found by Prism" : "registered on the network");
+  if (S.lShort) bits.push("on your shortlist");
+  if (S.lq.trim()) bits.push('matching "' + S.lq.trim() + '"');
+  return bits.length === 1 ? "Every lender on the network." : bits.join(" ") + ".";
+}
+
+const L_SORTS = [
+  { v:"active", label:"Most recently active" },
+  { v:"name",   label:"Institution A–Z" },
+  { v:"hi",     label:"Largest loan first" }
+];
+
+function lenderRows() {
+  const q = S.lq.trim().toLowerCase();
+  const rows = NETWORK.filter(l => {
+    if (S.lSrc !== "all" && l.src !== S.lSrc) return false;
+    if (S.lShort && !isShort(l.id)) return false;
+    if (q && !(l.co + " " + l.ct + " " + l.role + " " + l.inst).toLowerCase().includes(q)) return false;
+    for (const f of LFILTERS) { const set = f.set(); if (set.size && !f.pass(l, set)) return false; }
+    return true;
+  });
+  const by = {
+    active:(a, b) => a.mo - b.mo || a.co.localeCompare(b.co),
+    name:(a, b) => a.co.localeCompare(b.co) || a.ct.localeCompare(b.ct),
+    hi:(a, b) => b.hi - a.hi || a.co.localeCompare(b.co)
+  };
+  return rows.sort(by[S.lSort] || by.active);
+}
+
+function lenderTable(rows) {
+  /* the selection column. One star at a time cannot build a top 20-25: the
+     shortlist's first session is a bulk job, and Sales Navigator ships this
+     exact anatomy for it - a checkbox per row, a select-all, one labelled
+     action on the selection. [comp 4 Sep] */
+  const allSel = rows.length > 0 && rows.every(l => S.lSel.has(l.id));
+  const head = `<tr><th class="selth"><label class="chk" title="Select every banker shown"><input type="checkbox" id="lselall" ${allSel ? "checked" : ""} aria-label="Select all bankers shown"><span class="bx">\u2713</span></label></th><th>Lender</th><th>Loan range</th><th>Property type</th><th>Execution Type</th><th>State</th><th></th></tr>`;
+  /* the matches table's own row anatomy, minus the deal-scoped columns and
+     plus State — which a deal's match list has no room for and which is half
+     of what Tony says a contact carries */
+  const row = (l, sub) => {
+    const ex = S.expanded.has(l.id), menuOpen = S.cardMenu === "ls:" + l.id;
+    const propList = ex ? l.prop : l.prop.slice(0, 2), finList = ex ? l.fin : l.fin.slice(0, 2);
+    return `<tr class="${sub ? "subrow" : ""}">
+      <td class="selcell" data-l="Select"><label class="chk" aria-label="Select ${esc(l.ct)}"><input type="checkbox" data-lsel="${l.id}" ${S.lSel.has(l.id) ? "checked" : ""}><span class="bx">\u2713</span></label></td>
+      <td class="nm-cell" style="max-width:300px;white-space:normal">
+        <span class="nml"><b><a href="${sub ? lpHref(l.acct, l.id) : lpHref(l.acct, null)}">${sub ? esc(l.ct) : esc(l.co)}</a></b>${srcBadge(l)}${isShort(l.id) ? `<span class="badge badge--outline tone-gold" title="On your shortlist">★</span>` : ""}</span>
+        <span>${sub ? esc(l.role) : `<a href="${lpHref(l.acct, l.id)}">${esc(l.ct)}</a> · ` + esc(l.inst)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}${srcLine(l)}</span>
+      </td>
+      <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
+      <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:190px">
+        ${propList.map(x => `<span class="pill" title="${esc(x)}">${esc(x)}</span>`).join("")}
+        ${l.prop.length > 2 ? `<button class="more" type="button" data-exp="${l.id}">${ex ? "less" : "+" + (l.prop.length - 2) + " more"}</button>` : ""}</td>
+      <td class="chips-cell" data-l="Execution Type" style="white-space:normal;max-width:200px">
+        ${finList.map(x => `<span class="pill" title="${esc(x)}">${esc(x)}</span>`).join("")}
+        ${l.fin.length > 2 ? `<button class="more" type="button" data-exp="${l.id}">${ex ? "less" : "+" + (l.fin.length - 2) + " more"}</button>` : ""}</td>
+      <td data-l="State" style="white-space:normal;max-width:110px">${l.st.join(" · ")}</td>
+      <td class="actions-cell"><div class="rowacts">
+        <button class="btn btn--sm" type="button" data-lpadd="${l.id}">Add to a deal</button>
+        <button class="btn btn--outline btn--sm" type="button" data-lpshort="${l.id}" aria-pressed="${isShort(l.id)}"
+          aria-label="${isShort(l.id) ? "Remove " + esc(l.ct) + " from your shortlist" : "Save " + esc(l.ct) + " to your shortlist"}"
+          title="${isShort(l.id) ? "On your shortlist" : "Save to your shortlist"}">${isShort(l.id) ? STARF : STAR}</button>
+        <button type="button" class="rowkebab" data-kebab="ls:${l.id}" aria-haspopup="menu" aria-expanded="${menuOpen}" aria-label="Actions for ${esc(l.ct)}">${KEBAB}</button>
+        ${menuOpen ? `<div class="cardmenu" role="menu" aria-label="Lender actions" draggable="false">
+          <a role="menuitem" href="${lpHref(l.acct, l.id)}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+            View profile</a>
+          <button type="button" role="menuitem" data-lpcontact="${l.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 6.5 9 6 9-6"/></svg>
+            Contact through the platform</button>
+          <div class="cardmenu__sep"></div>
+          <button type="button" role="menuitem" class="danger" data-inert="Report inaccurate criteria opens the same form the shipped page has — the dispute lands next to the criteria it contests.">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            Report inaccurate criteria</button>
+        </div>` : ""}
+      </div></td>
+    </tr>`;
+  };
+
+  if (!S.grpAcct) return `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${rows.map(l => row(l, false)).join("")}</tbody></table></div>`;
+
+  const groups = [], byAcct = new Map();
+  for (const l of rows) {
+    if (!byAcct.has(l.acct)) { const g = { acct:l.acct, rows:[] }; byAcct.set(l.acct, g); groups.push(g); }
+    byAcct.get(l.acct).rows.push(l);
+  }
+  const body = groups.map(g => {
+    const first = g.rows[0], n = g.rows.length, shut = S.acctShut.has(g.acct);
+    const lo = Math.min(...g.rows.map(x => x.lo)), hi = Math.max(...g.rows.map(x => x.hi));
+    const sv = g.rows.filter(x => isShort(x.id)).length;
+    return `<tr class="acctrow"><td colspan="7" class="acctband" data-acct="${g.acct}"><div class="bw">
+      <button class="acctcar${shut ? " shut" : ""}" type="button" aria-expanded="${!shut}" aria-label="${shut ? "Show" : "Hide"} the ${n} ${n === 1 ? "banker" : "bankers"} at ${esc(first.co)}">${CARET}</button>
+      <span class="an"><a href="${lpHref(g.acct, null)}">${esc(first.co)}</a></span>
+      <span class="am">${esc(first.inst)} · ${n} ${n === 1 ? "banker" : "bankers"}${sv ? ` · <span class="ash">★ ${sv} shortlisted</span>` : ""}</span>
+      <span class="ar">${money(lo)} – ${money(hi)} <span class="am">across ${n} ${n === 1 ? "banker" : "bankers"}</span></span>
+    </div></td></tr>` + (shut ? "" : g.rows.map(l => row(l, true)).join(""));
+  }).join("");
+  return `<div class="tscroll"><table class="t"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+/* The Prospector half. Same directory the deal-scoped page draws, but off a
+   deal there is no zip to inherit, so the broker supplies one — which is
+   Tony's 26 Aug ask restated without a deal to hang it on: "make zip code
+   required in the form (or city and state) so a radius correlation can be
+   made", and "surface the count — 75 banks and credit unions within a
+   100-mile radius of this property". [T] Until there is a location the tab
+   asks for one rather than listing a national directory nobody can act on. */
+function prospectorTab() {
+  const zip = S.pZip.trim(), ok = /^\d{5}$/.test(zip);
+  if (!ok) {
+    return `<div class="empty" style="padding:38px 20px">
+      <b>Where are you looking?</b>
+      <p>Prospector searches banks and credit unions by radius, so it needs a place before it can count one. Enter the property's zip — the same field the deal form requires, asked here because there is no deal to take it from.</p>
+      <div class="acts">
+        <span class="search" style="max-width:170px"><input class="inp" id="pzip" type="text" inputmode="numeric" maxlength="5" placeholder="Zip code" aria-label="Zip code" value="${esc(S.pZip)}"></span>
       </div>
+      ${/\D/.test(zip) || zip.length >= 5 ? `<p class="hint" style="margin-top:9px;color:var(--destructive)">Five digits.</p>` : ""}
+    </div>`;
+  }
+  const n = dirCount({ zip }, S.pRadius);
+  const rows = DIRECTORY.filter(r => r.mi <= S.pRadius).sort((a, b) => a.mi - b.mi);
+  return `<div class="cut" style="padding-top:14px">
+      <span class="search" style="max-width:140px"><input class="inp" id="pzip" type="text" inputmode="numeric" maxlength="5" aria-label="Zip code" value="${esc(S.pZip)}"></span>
+      <span class="stat">${selCtl("pr:0", DIR_RADII, String(S.pRadius), "Radius", null, true)}</span>
+      <span class="lbl" style="margin-left:auto"><b style="color:var(--foreground)">${n}</b>&nbsp;institutions within ${S.pRadius} miles of ${esc(zip)}</span>
+    </div>
+    ${rows.length ? `<div class="tscroll"><table class="t">
+      <thead><tr><th>Institution</th><th>Type</th><th>Branches nearby</th><th>Distance</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        <td class="nm-cell" style="white-space:normal">
+          <span class="nml"><b><a href="${lpHref(r.acct, null)}">${esc(r.co)}</a></b></span>
+          <span>${r.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)} · no contact person on file</span>
+        </td>
+        <td data-l="Type">${esc(r.inst)}</td>
+        <td class="num" data-l="Branches nearby">${r.branches}</td>
+        <td class="num" data-l="Distance">${r.mi} mi</td>
+        <td class="actions-cell"><div class="rowacts" style="justify-content:flex-end">
+          <a class="btn btn--outline btn--sm" href="${lpHref(r.acct, null)}">View profile</a>
+        </div></td>
+      </tr>`).join("")}</tbody></table></div>`
+    : `<div class="empty"><b>No sample rows within ${S.pRadius} miles</b>
+        <p>Widen the radius — the live page would still count ${n} institutions here.</p></div>`}
+    <div class="dirdoor">
+      <span>Showing ${rows.length} of ${n} — a sample of what the live FDIC and NCUA directory query returns. Saving one to a deal happens from the deal, where the radius comes off its own zip; here the profile is the destination, because a Prospector row carries no criteria to search on and there is no deal to save it to.</span>
+    </div>`;
+}
+
+function lsBar() {
+  return `<div class="search" style="max-width:280px">
+    <span class="mag" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg></span>
+    <input class="inp" id="lq" type="search" placeholder="Name, institution or title" aria-label="Search lenders" value="${esc(S.lq)}">
+  </div>`;
+}
+
+function renderLenders() {
+  const rows = lenderRows();
+  const nAcct = new Set(rows.map(l => l.acct)).size;
+  const anyF = LFILTERS.some(f => f.set().size) || S.lShort || S.lSrc !== "all" || !!S.lq.trim();
+  const pros = S.lTab === "prospector";
+
+  const results = rows.length ? `
+    <div class="cut">
+      ${lsBar()}
+      <label class="chk" style="display:inline-flex;align-items:center;gap:7px;cursor:pointer">
+        <input type="checkbox" id="lgrp" ${S.grpAcct ? "checked" : ""}><span class="bx">✓</span>
+        <span class="lbl" style="color:var(--foreground)">Group by account</span>
+      </label>
+      <span class="stat" style="margin-left:auto">${selCtl("lsort:0", L_SORTS, S.lSort, "Sort lenders")}</span>
+      <span class="lbl">${rows.length} ${rows.length === 1 ? "banker" : "bankers"} · ${nAcct} ${nAcct === 1 ? "account" : "accounts"}</span>
+    </div>
+    ${(() => {
+      if (!S.lSel.size) return "";
+      const n = S.lSel.size, toAdd = [...S.lSel].filter(id => !S.short.has(id)).length;
+      return `<div class="bulkbar" role="region" aria-label="Selection actions">
+        <span class="bb-n">${n} selected</span>
+        ${toAdd ? `<button class="btn btn--sm" type="button" id="lbulkstar" ${toAdd < n ? `title="${n - toAdd} of the selected ${n - toAdd === 1 ? "is" : "are"} already on it"` : ""}><span class="lpstar">${STAR}Save ${toAdd} ${toAdd === 1 ? "banker" : "bankers"} to shortlist</span></button>`
+          : `<button class="btn btn--outline btn--sm" type="button" id="lbulkunstar"><span class="lpstar">${STARF}Remove ${n} ${n === 1 ? "banker" : "bankers"} from shortlist</span></button>`}
+        <button class="btn btn--ghost btn--sm" type="button" id="lselclr">Clear selection</button>
+      </div>`;
+    })()}
+    ${lenderTable(rows)}` : `
+    <div class="cut">${lsBar()}<span class="lbl" style="margin-left:auto">0 of ${NETWORK.length} bankers</span></div>
+    ${(() => {
+      /* an empty result names its actual cause — the shortlist being empty,
+         the query matching nothing, or the filters cutting too deep — and
+         offers that cause's cure, not a generic one. The wrong diagnosis
+         ("widen a filter") on an empty shortlist would send a broker hunting
+         through filters they never set. */
+      const hasF = LFILTERS.some(f => f.set().size), q = S.lq.trim();
+      if (S.lShort && !hasF && !q) return `<div class="empty"><b>Nothing on your shortlist yet</b>
+        <p>The shortlist is your standing list of preferred lenders — yours across every deal, aimed at a top 20–25. Star a banker anywhere (${STAR} on a row or a profile) and they land here.</p>
+        <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="lclr">Browse the network</button></div>
+      </div>`;
+      if (q) return `<div class="empty"><b>No lender matches “${esc(q)}”</b>
+        <p>Search covers names, institutions and titles${hasF || S.lShort || S.lSrc !== "all" ? " — within your current filters" : ""}.</p>
+        <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="lqclr">Clear search</button>${hasF || S.lShort || S.lSrc !== "all" ? `<button class="btn btn--ghost btn--sm" type="button" id="lclr">Clear everything</button>` : ""}</div>
+      </div>`;
+      return `<div class="empty"><b>No lender matches these filters</b>
+        <p>${NETWORK.length} bankers are on the network. Widen a filter or drop one — State and Property type exclude the most.</p>
+        <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="lclr">Clear all filters</button></div>
+      </div>`;
+    })()}`;
+
+  return `
+    <div class="head">
+      <div>
+        <h1>Lenders</h1>
+        <span class="sub">The whole network, with no deal attached — search it, then take what you find to a deal.</span>
+      </div>
+      ${/* a "My shortlist" header chip lived here for an hour — the door to a
+           filter that was hidden among the view toggles. Once the filter moved
+           into the bar as a visible pressed chip (Tanya's question), the header
+           copy became a second control for the same state two inches away, the
+           same duplication the profile nav's cross-links were removed for.
+           The #/lenders/shortlist address survives it. */""}
+      <div class="head__acts"><a class="btn btn--outline" href="#/deals/new">Create a deal</a></div>
+    </div>
+    <div class="card">
+      <div class="card__ct">
+        <div class="seg" role="group" aria-label="Lender source">
+          <button type="button" class="${pros ? "" : "on"}" data-ltab="network" aria-pressed="${!pros}">Network <span class="ct">${NETWORK.length}</span></button>
+          <button type="button" class="${pros ? "on" : ""}" data-ltab="prospector" aria-pressed="${pros}">Prospector</button>
+        </div>
+        <p class="hint" style="margin:9px 0 0;max-width:76ch">${pros
+          ? "Banks and credit unions from the FDIC and NCUA directory, by radius. Nobody is on file at these, so they carry no criteria and can never appear in a scored match list — a contact is sourced by Prism for a credit."
+          : "Registered lenders, and the bankers Prism has found inside institutions. Every one carries a credit box, which is the thing a search reads."}</p>
+      </div>
+      ${pros ? "" : `<div class="card__ct" style="padding-top:0">
+        <div class="msbar">
+          ${/* the shortlist leads the bar. It is a filter — it narrows the
+               population and the sentence reads it (Tanya) — but a different
+               kind from the four beside it: they describe the lender, this
+               scopes whose universe is searched, mine or everyone's. Scope
+               before criteria is Janover's own arrangement — "My Contacts
+               Only" leads its Lender Intelligence panel [comp 4 Sep] — and it
+               is how the query composes: within my shortlist, TX, Multifamily.
+               A results-bar checkbox and a header chip both preceded it; the
+               checkbox hid a filter among view toggles, and the chip became a
+               second control for the same state once this one existed. */""}
+          <button type="button" class="lshort-chip${S.lShort ? " on" : ""}" id="lshort" aria-pressed="${S.lShort}"
+            title="${S.lShort ? "Showing only your shortlist" : "Only lenders on your shortlist — your standing top 20–25, across every deal"}">
+            <span class="lpstar">${S.lShort ? STARF : STAR}Shortlist${S.lShort ? ` · ${lenderRows().length}` : ""}</span>
+          </button>
+          ${LFILTERS.map(f => msCtl(f)).join("")}
+          <span class="seg seg--sm" role="group" aria-label="Source">
+            ${[["all", "All"], ["network", "Registered"], ["prospector", "Found by Prism"]].map(([v, lbl]) =>
+              `<button type="button" class="${S.lSrc === v ? "on" : ""}" data-lsrc="${v}" aria-pressed="${S.lSrc === v}">${lbl}</button>`).join("")}
+          </span>
+          ${anyF ? `<button class="clrall" type="button" id="lclr">Clear all filters</button>` : ""}
+        </div>
+        <div class="lsent">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <span>You are searching for: <b>${esc(lsSentence())}</b></span>
+          <span class="r">${rows.length} of ${NETWORK.length}</span>
+        </div>
+      </div>`}
+      ${pros ? prospectorTab() : results}
+    </div>`;
+}
+
+/* ---------- Lender profile: the account, and the contacts beneath it -------
+   Roadmap row 14, confirmed by Tony 27 Aug: "the institution as one record
+   with its contacts beneath it, its criteria, and its history with this broker
+   across all deals," with four actions — view the profile, contact through the
+   platform, add to a deal, save to the shortlist. [T · 26 & 27 Aug]
+
+   Two pages, because the requirement names two grains and the data insists on
+   the split. An institution has no credit box: the matches table already
+   refuses to roll one up ("a credit box belongs to a person"), so the account
+   page prints **coverage** — the roster's span, labelled as a span — and the
+   contact page prints criteria. Everything that can only be true of a person
+   lives on the person: the four actions, the territory, the shortlist.
+
+   ⚠ Why the profile has to be worth opening. [[research-insights-2026-08-19]]:
+   28 sessions ran a search, 8 opened a lender profile — a 71% drop, and the
+   largest unexplained leak in the study. A profile that reprints its row earns
+   no opens, so the two things a row cannot carry lead the page: the roster in
+   one direction and the history in the other. */
+
+const STAR = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3.6 2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.95 6.75 19.7l1-5.85L3.5 9.75l5.9-.85z"/></svg>`;
+const STARF = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="m12 3.6 2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.95 6.75 19.7l1-5.85L3.5 9.75l5.9-.85z"/></svg>`;
+
+const lpHref = (acct, id, deal) => "#/lender/" + acct + (id ? "/c/" + id : "") + (deal ? "/for/" + deal : "");
+const isShort = id => S.short.has(id);
+
+/* the crumb is the visit's own path, not the object's: a profile reached from
+   the Riverside deal says so and returns there, because that is where the
+   broker's work is. Opened outside a deal there is no lender index to be a
+   parent — the network is only reachable through a deal today — so the trail
+   is two levels and the deal segment is simply absent. [~]
+   Crumbs end at the parent, 4 Sep [💡 rec]: the h1 directly below already
+   names the current page, so the leaf was the title printed twice one line
+   apart (Atlassian filters the last crumb for exactly this reason; GOV.UK and
+   Polaris end at the parent; komoot/Artlist on Mobbin show the cost of not).
+   Every link in a crumb is now somewhere else. */
+function lpCrumb(dealId, acct, co, leaf) {
+  const d = dealId ? dealById(dealId) : null;
+  const parts = [`<a href="#/deals">Deals</a>`];
+  if (d) parts.push(`<a href="#/deal/${d.id}/matches">${esc(d.name)}</a>`);
+  if (leaf) parts.push(`<a href="${lpHref(acct, null, dealId)}">${esc(co)}</a>`);
+  return `<div class="crumb">${parts.join(`<span class="sep">›</span>`)}</div>`;
+}
+
+/* Three of Tony's four actions. The fourth — "view the profile" — is the page
+   you are standing on, and a button to here would be the same category error
+   the profile nav's cross-links were. [T · 26 Aug]
+
+   Add to a deal splits on scope. Inside a deal it is Save to deal, the same
+   verb and the same handler as the matches table, because the destination is
+   already chosen; outside one it opens the picker, which is Janover's shape
+   for the identical problem [comp 4 Sep]. */
+function lpActs(l, dealId) {
+  const saved = dealId ? savedIdsFor(dealId).has(l.id) : false;
+  const sh = isShort(l.id), sent = S.sent[l.id];
+  return `<div class="lpacts">
+    ${sent
+      ? `<span class="badge badge--outline tone-green" title="Sent through the platform this session. Live, the thread would carry the lender's reply.">✓ Contacted</span>`
+      : `<button class="btn" type="button" data-lpcontact="${l.id}">Contact through the platform</button>`}
+    ${dealId
+      ? (saved
+        ? `<span class="badge badge--outline tone-green">✓ On ${esc(dealById(dealId).name)}</span>`
+        : `<button class="btn btn--outline" type="button" data-save="${l.id}">Save to this deal</button>`)
+      : `<button class="btn btn--outline" type="button" data-lpadd="${l.id}">Add to a deal</button>`}
+    <button class="btn btn--outline" type="button" data-lpshort="${l.id}" aria-pressed="${sh}"
+      title="${sh ? "On your shortlist. The shortlist is yours, not the deal's." : "Your shortlist is per broker, not per deal — it follows you across every deal you run."}">
+      <span class="lpstar">${sh ? STARF : STAR}${sh ? "On your shortlist" : "Save to shortlist"}</span></button>
+  </div>`;
+}
+
+/* Why this matched, spent only where a deal is in scope. The five criteria and
+   their weights are scoreOf's own — the number is computed on every row of the
+   matches table and thrown away there, because a percentage on a table Tony
+   has not seen one on would be inventing a product decision. On a deal-scoped
+   profile it costs nothing and answers the question the row raises. Janover
+   prints matched filters as chips on every result [comp 4 Sep]; Wrangle groups
+   them by weight [mobbin Aug 13], which is what the weight figure does here. */
+function lpWhy(l, d) {
+  const { pc, c } = scoreOf(l, d);
+  const rows = [
+    ["amount",    `${money(d.amt)} inside ${money(l.lo)}–${money(l.hi)}`, `${money(d.amt)} outside ${money(l.lo)}–${money(l.hi)}`],
+    ["property",  d.property, `${d.property} — not in their box`],
+    ["geography", d.state, `${d.state} — outside their territory`],
+    ["financing", d.financing || "Execution not specified", `${d.financing || "Execution"} — not one they do`],
+    ["appetite",  l.mo === 0 ? "Active this month" : `Active ${l.mo} ${l.mo === 1 ? "month" : "months"} ago`,
+                  `Quiet for ${l.mo} months`]
+  ];
+  return `<div class="card">
+    <div class="card__hd"><h2>Why ${esc(l.ct)} matched ${esc(d.name)}</h2>
+      <span class="r"><span class="badge badge--outline tone-${band(pc) === "strong" ? "green" : "blue"}">${pc}% fit</span></span></div>
+    <div class="card__ct">
+      <div class="lpwhy">${rows.map(([k, yes, no]) =>
+        `<span class="w${c[k] ? " hit" : ""}">${c[k] ? "✓" : "✕"} ${esc(c[k] ? yes : no)}<span class="m">${WEIGHTS[k]}</span></span>`).join("")}</div>
+      <p class="hint" style="margin:10px 0 0">Weights are the engine's, out of 100. Property type and geography are knock-outs — missing either caps the score below the bar however the rest add up.</p>
+    </div>
+  </div>`;
+}
+
+/* one history table, drawn twice. The account passes who:true to add the
+   banker column, because "Sunbelt quoted that deal" is not an answer — the
+   broker needs the name to pick up the phone. Live rows carry the deal's
+   outreach state and link back to it; closed rows carry an outcome. */
+function histCard(rows, withWho, title, empty) {
+  if (!rows.length) return `<div class="card"><div class="card__hd"><h2>${esc(title)}</h2></div>
+    <div class="empty" style="padding:30px 20px"><b>${esc(empty)}</b>
+      <p>Deals appear here as you save this ${withWho ? "institution's bankers" : "lender"} to them, and stay after the deal closes.</p></div></div>`;
+  const live = rows.filter(r => r.live).length;
+  return `<div class="card">
+    <div class="card__hd"><h2>${esc(title)}</h2>
+      <span class="r lbl">${rows.length} ${rows.length === 1 ? "deal" : "deals"}${live ? ` · ${live} open` : ""}</span></div>
+    <div class="tscroll"><table class="t">
+      <thead><tr><th>Deal</th><th>Amount</th>${withWho ? "<th>Banker</th>" : ""}<th>Outcome</th><th>When</th></tr></thead>
+      <tbody>${rows.map(r => {
+        const o = r.live ? null : LOUT[r.out];
+        const dt = r.live ? (DISPOSITION.find(x => x.v === r.disp) || {}) : null;
+        return `<tr>
+          <td class="nm-cell" style="white-space:normal">
+            <span class="nml"><b>${r.live && r.id ? `<a href="#/deal/${r.id}/saved">${esc(r.deal)}</a>` : esc(r.deal)}</b>${r.live ? `<span class="src">Open</span>` : ""}</span>
+            <span>${esc(r.prop || "—")}${r.prospect ? " · saved as an institution, no contact on file" : ""}</span>
+          </td>
+          <td class="num" data-l="Amount" style="white-space:nowrap">${r.amt ? money(r.amt) : "—"}</td>
+          ${withWho ? `<td data-l="Banker">${r.who ? esc(r.who) : `<span class="lbl">Nobody on file</span>`}</td>` : ""}
+          <td data-l="Outcome"><span class="badge badge--outline tone-${(o || dt).tone}">${esc((o || dt).label)}</span>${o && !o.enum ? `<span class="src" title="This outcome has no enum in the product — both LenderPrism vocabularies stop at Quoted, so a closed engagement has nowhere to land today.">no enum</span>` : ""}</td>
+          <td data-l="When" style="white-space:nowrap">${esc(r.on || "—")}</td>
+        </tr>`;
+      }).join("")}</tbody>
+    </table></div>
+  </div>`;
+}
+
+/* ---------- the two modals behind the action bar --------------------------
+   Both are Janover's shape, because Janover has solved the identical problem
+   and the broker population overlaps [comp 4 Sep]. Send a Deal opens Select a
+   Deal — deal name, one-line summary, updated date, and Create New Deal at the
+   foot for the deal that does not exist yet.
+
+   One deliberate departure. Janover's picker footer reads "This Originator
+   will be added to the shortlist automatically", which fuses two of Tony's
+   four actions into one act. Ours does not, for a reason in Tony's own words:
+   the shortlist is "a top 20–25 they've worked with" [T · 13 Aug] — a curated
+   list, and auto-adding every lender a deal is sent to would pass 25 in a
+   week and turn curation into a log. The two verbs stay separate and the
+   footer says so, so nobody reads the omission as an oversight. [💡 rec] */
+
+/* one row per deal, shared by both modals */
+function dpickRow(d, disabled, right) {
+  return `<button class="dpick" type="button" ${disabled ? "disabled" : `data-dpick="${d.id}"`}>
+    <span class="t"><b>${esc(d.name)}</b><span>${money(d.amt)} · ${esc(d.property)} · ${esc(locLabel(d))}${d.financing ? " · " + esc(d.financing) : ""}</span></span>
+    <span class="r">${right}</span>
+  </button>`;
+}
+
+function dealPickModal() {
+  const l = NETWORK.find(x => x.id === S.dealPick);
+  if (!l) return "";
+  return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Add to a deal">
+    <div class="mdl">
+      <div class="mdl__hd">
+        <div><h2>Add ${esc(l.ct)} to a deal</h2>
+          <p>Saving a lender to a deal is what puts the deal in front of them — saved lenders get an email alert when a deal matches their criteria.</p></div>
+        <button type="button" class="x" data-mclose aria-label="Close">×</button>
+      </div>
+      <div class="mdl__bd">
+        ${DEALS.map(d => {
+          const on = savedIdsFor(d.id).has(l.id);
+          const { pc } = scoreOf(l, d);
+          return dpickRow(d, on, on ? `<span class="badge badge--outline tone-green">✓ Already on</span>`
+            : `${pc}% fit`);
+        }).join("")}
+      </div>
+      <div class="mdl__ft">
+        <span class="note">Unlike Janover, adding to a deal does not also shortlist. The shortlist is your top 20–25, and it stops being that if every deal writes to it. [💡&nbsp;rec]</span>
+        <a class="btn btn--outline" href="#/deals/new">Create a deal</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* the composer. What it draws is Tony's "contact via the platform" [T · 26 Aug],
+   one of the four confirmed actions.
+   ⚠ It depends on a build that is not funded: page inventory row 33, send the
+   deal to lenders from inside the platform, is Tony's "yes to both" with the
+   cost deferred to Chris and no estimate. The footer says so rather than
+   letting a working-looking Send imply the pipe exists. [~] */
+function composeModal() {
+  const l = NETWORK.find(x => x.id === (S.compose && S.compose.id));
+  if (!l) return "";
+  const d = S.compose.deal ? dealById(S.compose.deal) : null;
+  const first = l.ct.split(/\s+/)[0];
+  const body = d
+    ? `<div class="mdl__bd">
+        <div class="fld" style="margin-bottom:12px">
+          <label>To</label>
+          <div class="lpid" style="gap:9px">
+            <span class="lpav" style="width:32px;height:32px;font-size:12px">${esc(l.ct.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase())}</span>
+            <div><b style="font-size:13.5px">${esc(l.ct)}</b>
+              <span class="sub" style="display:block;font-size:12.5px">${esc(l.role)} · ${esc(l.co)}</span></div>
+          </div>
+        </div>
+        <div class="fld" style="margin-bottom:12px">
+          <label>About</label>
+          <div class="dpick" style="cursor:default"><span class="t"><b>${esc(d.name)}</b>
+            <span>${money(d.amt)} · ${esc(d.property)} · ${esc(locLabel(d))}</span></span>
+            <span class="r"><button type="button" class="uselink" data-cdeal>Change</button></span></div>
+        </div>
+        <div class="fld">
+          <label for="cmsg">Message</label>
+          <span class="fldwho">Goes to ${esc(first)} inside the platform, with the Loan Request Package attached. Your name, firm and reply address are on it.</span>
+          <textarea class="inp" id="cmsg" rows="7">${esc(
+            `Hi ${first},\n\n` +
+            `I'm working a ${money(d.amt)} ${String(d.txType || "request").toLowerCase()} on ${d.units ? d.units + " units of " : ""}${d.property.toLowerCase()} in ${locLabel(d)}. ` +
+            `It reads inside your box — ${money(l.lo)}–${money(l.hi)}${l.st.includes(d.state) ? ", " + d.state : ""}${l.fin.includes(d.financing) ? ", " + d.financing : ""}.\n\n` +
+            `The Loan Request Package is attached. Happy to send the rent roll and T-12 if it is worth a look.\n\n` +
+            `${ME.name}\n${ME.firm}`)}</textarea>
+        </div>
+      </div>`
+    /* no deal attached: the first step is picking one, which is exactly
+       Janover's Send a Deal → Select a Deal order. A message to a lender with
+       no deal on it is a message with nothing to say. */
+    : `<div class="mdl__bd">
+        <p class="hint" style="margin:0 0 12px">Pick the deal this message is about. Contacting a lender without one gives them nothing to answer.</p>
+        ${DEALS.map(d => dpickRow(d, false, `${scoreOf(l, d).pc}% fit`)).join("")}
+      </div>`;
+  return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Contact ${esc(l.ct)}">
+    <div class="mdl">
+      <div class="mdl__hd">
+        <div><h2>Contact ${esc(l.ct)}</h2>
+          <p>${d ? "Sent inside the platform, so the reply lands on the deal rather than in your inbox." : "Through the platform — the thread stays on the deal."}</p></div>
+        <button type="button" class="x" data-mclose aria-label="Close">×</button>
+      </div>
+      ${body}
+      ${d ? `<div class="mdl__ft">
+        <span class="note">⚠ Platform send is row 33 — Tony's "yes to both", cost deferred to Chris, no estimate. Nothing leaves this prototype. [~]</span>
+        <button class="btn btn--outline" type="button" data-mclose>Cancel</button>
+        <button class="btn" type="button" id="csend">Send</button>
+      </div>` : ""}
+    </div>
+  </div>`;
+}
+
+function renderLenderContact(l, dealId) {
+  const d = dealId ? dealById(dealId) : null;
+  const sib = rosterOf(l.acct).filter(x => x.id !== l.id);
+  const inits = l.ct.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  return `
+    ${lpCrumb(dealId, l.acct, l.co, l.ct)}
+    <div class="head">
+      <div class="lpid">
+        <span class="lpav">${esc(inits)}</span>
+        <div>
+          <h1>${esc(l.ct)}</h1>
+          <span class="sub">${esc(l.role)} at <a href="${lpHref(l.acct, null, dealId)}">${esc(l.co)}</a> · ${esc(l.inst)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}${l.src === "prospector" ? " · found by Prism, not registered" : ""}</span>
+        </div>
+      </div>
+    </div>
+    <div class="lp">
+      <div class="card"><div class="card__ct">${lpActs(l, dealId)}</div></div>
+      ${d ? lpWhy(l, d) : ""}
+      <div class="card">
+        <div class="card__hd"><h2>What ${esc(l.ct.split(/\s+/)[0])} lends on</h2>
+          <span class="r lbl">Their box, not the institution's</span></div>
+        <div class="card__ct">
+          <div class="facts">
+            <div class="fact"><div class="k">Loan range</div><div class="v num">${money(l.lo)} – ${money(l.hi)}</div></div>
+            <div class="fact"><div class="k">Territory</div><div class="v">${l.st.join(" · ")}</div></div>
+            <div class="fact"><div class="k">Institution type</div><div class="v">${esc(l.inst)}</div></div>
+            <div class="fact"><div class="k">Source</div><div class="v">${l.src === "prospector" ? "Prospector" : "Registered on the network"}</div></div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="k" style="font-size:12px;color:var(--muted-foreground);margin-bottom:5px">Property types</div>
+            ${l.prop.map(x => `<span class="pill">${esc(x)}</span>`).join("")}
+          </div>
+          <div style="margin-top:12px">
+            <div class="k" style="font-size:12px;color:var(--muted-foreground);margin-bottom:5px">Execution types</div>
+            ${l.fin.map(x => `<span class="pill">${esc(x)}</span>`).join("")}
+          </div>
+        </div>
+        <div class="card__ft"><span>Criteria are the lender's own, edited on their side. <button type="button" class="uselink" data-inert="Report inaccurate criteria opens the same form the shipped page has — the dispute lands next to the criteria it contests.">Report inaccurate criteria</button></span></div>
+      </div>
+      ${histCard(histFor(l.id), false, "Your history with " + l.ct, "No deals with " + l.ct + " yet")}
+      ${sib.length ? `<div class="card">
+        <div class="card__hd"><h2>Also at ${esc(l.co)}</h2>
+          <span class="r"><a class="uselink" href="${lpHref(l.acct, null, dealId)}">See the institution →</a></span></div>
+        <div class="tscroll"><table class="t">
+          <thead><tr><th>Banker</th><th>Loan range</th><th>Property type</th><th>Territory</th><th></th></tr></thead>
+          <tbody>${sib.map(x => `<tr>
+            <td class="nm-cell" style="white-space:normal">
+              <span class="nml"><b><a href="${lpHref(x.acct, x.id, dealId)}">${esc(x.ct)}</a></b>${srcBadge(x)}</span>
+              <span>${esc(x.role)}</span>
+            </td>
+            <td class="num" data-l="Loan range" style="white-space:nowrap">${money(x.lo)} – ${money(x.hi)}</td>
+            <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:200px">${x.prop.slice(0, 2).map(pt => `<span class="pill">${esc(pt)}</span>`).join("")}${x.prop.length > 2 ? `<span class="lbl"> +${x.prop.length - 2}</span>` : ""}</td>
+            <td data-l="Territory">${x.st.join(" · ")}</td>
+            <td class="actions-cell"><div class="rowacts"><a class="btn btn--outline btn--sm" href="${lpHref(x.acct, x.id, dealId)}">View profile</a></div></td>
+          </tr>`).join("")}</tbody>
+        </table></div>
+      </div>` : ""}
+    </div>`;
+}
+
+function renderLenderAcct(acct, dealId) {
+  const a = acctRec(acct);
+  if (!a) return renderDeals();
+  const d = dealId ? dealById(dealId) : null;
+  const r = a.roster, hist = acctHist(acct);
+  const savedIds = dealId ? savedIdsFor(dealId) : new Set();
+  const k = dealId + ":" + acct, fc = S.findc[k];
+  const uniq = key => [...new Set(r.flatMap(x => x[key]))];
+
+  /* the roster is the requirement's "contacts beneath it", and it is the same
+     table the matches view draws one level up — same columns, same two-chips
+     anatomy — plus territory, which the matches table has no room for and
+     which is half of what the requirement says a contact carries. */
+  const roster = r.length ? `<div class="tscroll"><table class="t">
+      <thead><tr><th>Contact</th><th>Loan range</th><th>Property type</th><th>Execution Type</th><th>Territory</th><th></th></tr></thead>
+      <tbody>${r.map(l => `<tr>
+        <td class="nm-cell" style="white-space:normal;max-width:260px">
+          <span class="nml"><b><a href="${lpHref(acct, l.id, dealId)}">${esc(l.ct)}</a></b>${srcBadge(l)}${isShort(l.id) ? `<span class="badge badge--outline tone-gold" title="On your shortlist">★</span>` : ""}</span>
+          <span>${esc(l.role)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}</span>
+        </td>
+        <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
+        <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:190px">${l.prop.slice(0, 2).map(x => `<span class="pill">${esc(x)}</span>`).join("")}${l.prop.length > 2 ? `<span class="lbl"> +${l.prop.length - 2}</span>` : ""}</td>
+        <td class="chips-cell" data-l="Execution Type" style="white-space:normal;max-width:200px">${l.fin.slice(0, 2).map(x => `<span class="pill">${esc(x)}</span>`).join("")}${l.fin.length > 2 ? `<span class="lbl"> +${l.fin.length - 2}</span>` : ""}</td>
+        <td data-l="Territory" style="white-space:normal;max-width:120px">${l.st.join(" · ")}</td>
+        <td class="actions-cell"><div class="rowacts">
+          ${dealId && savedIds.has(l.id)
+            ? `<span class="badge badge--outline tone-green">✓ Saved</span>`
+            : `<button class="btn btn--sm" type="button" ${dealId ? `data-save="${l.id}"` : `data-lpadd="${l.id}"`}>${dealId ? "Save to deal" : "Add to a deal"}</button>`}
+          <button class="btn btn--outline btn--sm" type="button" data-lpshort="${l.id}" aria-pressed="${isShort(l.id)}"
+            aria-label="${isShort(l.id) ? "Remove " + esc(l.ct) + " from your shortlist" : "Save " + esc(l.ct) + " to your shortlist"}"
+            title="${isShort(l.id) ? "On your shortlist" : "Save to your shortlist — yours across every deal, not this one's"}">${isShort(l.id) ? STARF : STAR}</button>
+          <a class="btn btn--outline btn--sm" href="${lpHref(acct, l.id, dealId)}">View profile</a>
+        </div></td>
+      </tr>`).join("")}</tbody>
+    </table></div>`
+    /* the case the shipped tab split cannot draw: an institution with nobody on
+       file. It is not an empty table, it is a different object — no criteria, so
+       it can never appear in a scored match list — and the only action that
+       moves it is the paid one. [T · row 16, 27 Aug] */
+    : `<div class="empty" style="padding:34px 20px">
+        <b>No contact person on file</b>
+        <p>${esc(a.co)} came from the FDIC and NCUA directory, not from the network, so nobody here has a credit box. That is why it can never appear in a scored match list — matching reads a box, and a box belongs to a banker.</p>
+        <div class="acts">${
+          !dealId ? `<span class="lbl">Open this institution from a deal to ask Prism to find a contact.</span>`
+          : fc && fc.state === "working" ? `<span class="badge badge--outline tone-blue">Working — an admin is calling the branch${fc.due ? `, due ${esc(fc.due)}` : ""}</span>`
+          : fc && fc.state === "returned" ? `<span class="badge badge--outline tone-muted">Nobody found by ${esc(fc.on)} — the credit came back</span>
+              <button class="btn btn--sm" type="button" data-findc="${acct}">Ask again</button>`
+          : `<button class="btn btn--sm" type="button" data-findc="${acct}" title="Spends 1 credit. Prism's team phones the branches to find the commercial real estate lender. If nobody is found in 7 days the credit is returned.">Find a contact</button>`
+        }</div>
+      </div>`;
+
+  return `
+    ${lpCrumb(dealId, acct, a.co, null)}
+    <div class="head">
+      <div class="lpid">
+        <span class="lpav lpav--inst"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 21V8l8-5 8 5v13"/><path d="M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01"/></svg></span>
+        <div>
+          <h1>${esc(a.co)}</h1>
+          <span class="sub">${esc(a.inst)}${a.cert ? ` · ${a.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(a.cert)}` : ""} · ${r.length ? `${r.length} ${r.length === 1 ? "banker" : "bankers"}` : "no contacts on file"}${a.branches ? ` · ${a.branches} branches` : ""}</span>
+        </div>
+      </div>
+    </div>
+    <div class="lp">
+      <div class="card">
+        <div class="card__hd"><h2>Contacts</h2>
+          <span class="r lbl">${r.length ? "The contact is the unit that matches — each carries their own box" : "Institution record"}</span></div>
+        ${roster}
+      </div>
+      ${r.length ? `<div class="card">
+        <div class="card__hd"><h2>Coverage across the roster</h2></div>
+        <div class="card__ct">
+          <div class="lpcov">
+            <span class="lbl">This is a span, not a credit box. ${esc(a.co)} does not lend — its bankers do, on ${r.length} different sets of criteria. No single deal is eligible for the whole range below; ${r.length === 1 ? "the one banker" : "each banker"} is scored on their own.</span>
+            <div class="facts">
+              <div class="fact"><div class="k">Widest range</div><div class="v num">${money(Math.min(...r.map(x => x.lo)))} – ${money(Math.max(...r.map(x => x.hi)))}</div></div>
+              <div class="fact"><div class="k">Property types</div><div class="v num">${uniq("prop").length} across the roster</div></div>
+              <div class="fact"><div class="k">Execution types</div><div class="v num">${uniq("fin").length} across the roster</div></div>
+              <div class="fact"><div class="k">States</div><div class="v">${uniq("st").sort().join(" · ")}</div></div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="k" style="font-size:12px;color:var(--muted-foreground);margin-bottom:5px">Property types anyone here will look at</div>
+            ${uniq("prop").sort().map(x => `<span class="pill">${esc(x)}</span>`).join("")}
+          </div>
+          <div style="margin-top:12px">
+            <div class="k" style="font-size:12px;color:var(--muted-foreground);margin-bottom:5px">Execution types anyone here will look at</div>
+            ${uniq("fin").sort().map(x => `<span class="pill">${esc(x)}</span>`).join("")}
+          </div>
+        </div>
+      </div>` : ""}
+      ${histCard(hist, true, "Your history with " + a.co, "No deals with " + a.co + " yet")}
     </div>`;
 }
 
@@ -3663,8 +4826,8 @@ function matchesTab(d, all) {
     return `<tr class="${sub ? "subrow " : ""}${S.picked.has(l.id) ? "sel" : ""}">
       <td class="pick-cell"><span class="chk"><input type="checkbox" data-pick="${l.id}" aria-label="Select ${esc(l.co)}" ${S.picked.has(l.id) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="max-width:340px;white-space:normal">
-        <span class="nml"><b>${sub ? esc(l.ct) : esc(l.co)}</b>${srcBadge(l)}</span>
-        <span>${sub ? esc(l.role) : esc(l.ct) + " · " + esc(l.inst)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}${srcLine(l)}</span>
+        <span class="nml"><b><a href="${sub ? lpHref(l.acct, l.id, d.id) : lpHref(l.acct, null, d.id)}">${sub ? esc(l.ct) : esc(l.co)}</a></b>${srcBadge(l)}${isShort(l.id) ? `<span class="badge badge--outline tone-gold" title="On your shortlist">★</span>` : ""}</span>
+        <span>${sub ? esc(l.role) : `<a href="${lpHref(l.acct, l.id, d.id)}">${esc(l.ct)}</a> · ` + esc(l.inst)} · ${l.mo === 0 ? "active this month" : "last active " + l.mo + (l.mo === 1 ? " month" : " months") + " ago"}${srcLine(l)}</span>
       </td>
       <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
       <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:200px">
@@ -3681,6 +4844,16 @@ function matchesTab(d, all) {
           : `<button class="btn btn--sm" type="button" data-save="${l.id}">Save to deal</button>`}
         <button type="button" class="rowkebab" data-kebab="ml:${l.id}" aria-haspopup="menu" aria-expanded="${menuOpen}" aria-label="Actions for ${esc(l.co)}">${KEBAB}</button>
         ${menuOpen ? `<div class="cardmenu" role="menu" aria-label="Lender actions" draggable="false">
+          <a role="menuitem" href="${lpHref(l.acct, l.id, d.id)}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+            View profile</a>
+          <button type="button" role="menuitem" data-lpcontact="${l.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 6.5 9 6 9-6"/></svg>
+            Contact through the platform</button>
+          <button type="button" role="menuitem" data-lpshort="${l.id}">
+            ${isShort(l.id) ? STARF : STAR}
+            ${isShort(l.id) ? "Remove from shortlist" : "Save to shortlist"}</button>
+          <div class="cardmenu__sep"></div>
           <button type="button" role="menuitem" data-hide="${l.id}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
             Hide</button>
@@ -3712,7 +4885,7 @@ function matchesTab(d, all) {
       <td class="pick-cell"><span class="chk"><input type="checkbox" data-apick="${g.acct}" aria-label="Select every banker at ${esc(first.co)}" ${picked ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td colspan="5" class="acctband" data-acct="${g.acct}"><div class="bw">
         <button class="acctcar${shut ? " shut" : ""}" type="button" aria-expanded="${!shut}" aria-label="${shut ? "Show" : "Hide"} the ${n} ${n === 1 ? "banker" : "bankers"} at ${esc(first.co)}">${CARET}</button>
-        <span class="an">${esc(first.co)}</span>
+        <span class="an"><a href="${lpHref(g.acct, null, d.id)}">${esc(first.co)}</a></span>
         <span class="am">${esc(first.inst)} · ${n} ${n === 1 ? "banker" : "bankers"}${(() => {
           const np = g.rows.filter(r => r.l.src === "prospector").length;
           return np ? " · " + np + " from Prospector" : "";
@@ -3771,8 +4944,8 @@ function savedTab(d) {
     return `<tr class="${S.spicked.has(l.id) ? "sel" : ""}">
       <td class="pick-cell"><span class="chk"><input type="checkbox" data-spick="${l.id}" aria-label="Select ${esc(l.ct)}" ${S.spicked.has(l.id) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="white-space:normal">
-        <span class="nml"><b>${esc(l.ct)}</b>${srcBadge(l)}</span>
-        <span>${esc(l.role)} · ${esc(l.co)} · ${esc(l.inst)}${srcLine(l)}</span>
+        <span class="nml"><b><a href="${lpHref(l.acct, l.id, d.id)}">${esc(l.ct)}</a></b>${srcBadge(l)}${isShort(l.id) ? `<span class="badge badge--outline tone-gold" title="On your shortlist">★</span>` : ""}</span>
+        <span>${esc(l.role)} · <a href="${lpHref(l.acct, null, d.id)}">${esc(l.co)}</a> · ${esc(l.inst)}${srcLine(l)}</span>
       </td>
       <td class="num" data-l="Loan range" style="white-space:nowrap">${money(l.lo)} – ${money(l.hi)}</td>
       <td class="chips-cell" data-l="Property type" style="white-space:normal;max-width:200px">
@@ -3829,7 +5002,7 @@ function savedTab(d) {
     <tr class="${S.spicked.has(a.acct) ? "sel" : ""}">
       <td class="pick-cell"><span class="chk"><input type="checkbox" data-spicka="${a.acct}" aria-label="Select ${esc(a.p.co)}" ${S.spicked.has(a.acct) ? "checked" : ""}><span class="bx">✓</span></span></td>
       <td class="nm-cell" style="white-space:normal">
-        <span class="nml"><b>${esc(a.p.co)}</b><span class="src" title="An institution from the Banks &amp; Credit Unions directory, with no contact person on file yet.">Prospector</span></span>
+        <span class="nml"><b><a href="${lpHref(a.acct, null, d.id)}">${esc(a.p.co)}</a></b><span class="src" title="An institution from the Banks &amp; Credit Unions directory, with no contact person on file yet.">Prospector</span></span>
         <span>${esc(a.p.inst)} · ${a.p.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
         <span style="font-size:12px">Added ${esc(a.added)}</span>
       </td>
@@ -3865,8 +5038,9 @@ function savedTab(d) {
      number would come from the FDIC directory the product already searches. */
   return selbar + `<div class="tscroll" style="border-top:1px solid var(--border)"><table class="t"><thead>${head}</thead><tbody>${body}${prosRows}</tbody></table></div>
     <div class="dirdoor">
-      <span><b>${dirCount(d, 100)} banks and credit unions</b> within 100 miles of ${esc(dirLoc(d))} — institutions matching can't see, because nobody there is registered.</span>
-      <a class="doorlnk" href="#/deal/${d.id}/directory">Search directory &rarr;</a>
+      <span>There are <b>${dirCount(d, 100)} banks and credit unions</b> within a 100 mile radius of ${esc(dirLoc(d))}. Use The Prospector to enrich your search.</span>
+      <a class="btn btn--link" href="#/deal/${d.id}/directory">Search the Prospector
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
     </div>`;
 }
 
@@ -4293,7 +5467,7 @@ function renderBrokerSignup(foot) {
 /* Direction 02 from the Mobbin layout exploration (3 Sep, deck:
    auth-layout-directions) — split brand panel. The live product already
    ships split-screen auth with a stock photo; this replaces the photo with
-   the brand surface and role-tailored copy. [\u{1F4A1} rec] Broker panel
+   the brand surface and role-tailored copy. [💡 rec] Broker panel
    wears the live site's "For Mortgage Brokers" badge (briefcase pill), no
    sub-line. The free-tier note is the live funnel's facts [sandbox 3 Sep]
    but no longer its wording: it ran four lines, and compacting it to two
@@ -4398,7 +5572,7 @@ function authSubmit() {
   if (a.pass2 !== a.pass) m.pass2 = "Passwords don\u2019t match.";
   S.authErr = m;
   if (Object.keys(m).length) { render(); return; }
-  location.hash = "#/deals";
+  location.hash = "#/home";
 }
 
 /* ===========================================================
@@ -4975,6 +6149,183 @@ function profSaveBtns(sec) {
   return `<button class="btn" type="button" data-psave="${sec}">Save</button>`;
 }
 
+/* ---------- Home — screen 01.4, the post-login landing ----------
+   [C] tracker row: "Replaces the retired home page as the post-login landing.
+   First session shows a setup checklist — complete your profile, create your
+   first deal, browse lenders. Returning shows activity. Three entry points in
+   one click." Structure per first-session-screens-spec 01.4 [💡 rec]: greeting
+   with a freshness stamp (the one part of Janover's dashboard that does its
+   job), a Needs-attention strip that NAMES each item and carries its action
+   (Janover's says "1 item need your attention" and names nothing), the setup
+   checklist retiring itself row by row, then entry points + activity for the
+   returner. Deliberately excluded, same spec: the tile grid of counters, the
+   pipeline funnel bar, any time-saved metric — the closest observed user
+   ignores exactly that screen ("I live pretty much in the deals section",
+   Sean, 18 Aug) while asking of Prism "where do I start?". The launcher
+   answers that once and gets out of the way.
+   Attention rows: a returned Prospector credit and a low balance read real
+   state (S.findc, S.credits). The opportunity row is the spec's first source
+   and the one widget that survived the 14 Aug retirement ("leads survive on
+   it" [agreed]); its mechanism is Tony's row-21 answer [T] — 24-hour window,
+   borrower identity hidden until accept — its deal facts are sample [~], and
+   its action is an inert lever because the Opportunities surface is not drawn.
+   The fourth source, a contact request delivered, stays undrawn: it is the
+   arrival half of the findc cycle and needs a notification surface (row 25's
+   dependency) to be honest. [~]
+   The checklist and the Start-here card are one slot in two states, never
+   both: their rows are the same three destinations, so showing both printed
+   the launcher twice (Tanya, 4 Sep). Checklist (left, main slot — where the
+   shipped product serves the Prospector ad) while any item is open; entry
+   points (right) once setup is done. The header's own + New deal button came
+   off the same day for the same reason — third copy of the same door. [~]
+   Q45 (done-for-you vs do-it-yourself) decides the copy of the third checklist
+   item and third entry point; "Browse lenders" is the tracker's own DIY
+   wording, flagged in the spec as the variable to put to Tony. Coming-soon
+   rows: Messages [T · 27 Aug, rail six] and Reminders [T · 31 Aug, his word,
+   corrected from Tasks]; capped at two per the 31 Aug rec. */
+function renderHome() {
+  const hrs = new Date().getHours();
+  const greet = hrs < 12 ? "Good morning" : hrs < 17 ? "Good afternoon" : "Good evening";
+  const stamp = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  const gaps = profGaps();
+
+  const att = [];
+  Object.entries(S.findc).forEach(([key, fc]) => {
+    if (fc.state !== "returned") return;
+    const [dealId, acct] = key.split(":");
+    const d = dealById(dealId);
+    const co = (PROSPECTS.find(p => p.acct === acct) || {}).co || "an institution";
+    att.push({ t: "A credit came back", href: d ? `#/deal/${d.id}/saved` : "#/account/credits", act: "See lenders",
+               ic: "refund", tone: "muted",
+               s: `Nobody found at ${co}${d ? ` for ${d.name}` : ""} — refunded ${fc.on}.` });
+  });
+  if (S.credits <= 1) att.push({
+    t: S.credits ? "Last credit" : "Out of credits", href: "#/account/credits", act: "Buy credits",
+    ic: "credit", tone: "muted",
+    s: "A contact request holds one credit for up to 7 days." });
+  /* An opportunity inside its response window — the one dashboard widget that
+     survived the 14 Aug retirement ("leads survive on it" [agreed]), and the
+     spec's first attention source. The mechanism is Tony's, page inventory
+     row 21 [T]: 24-hour window, the broker sees everything except the
+     borrower's name and contact until accept. The deal facts are sample [~];
+     the Opportunities surface itself is not drawn yet, so the action is an
+     inert lever, not a dead link. */
+  /* routed leads presuppose an established broker — territory, focus, a live
+     listing. A first-session account has none of that, so the sample
+     opportunity only appears once the account has deals. [~] */
+  if (DEALS.length) att.unshift({
+    t: "New opportunity", inert: "Opportunities \u2014 the routed-leads surface is not drawn in this prototype yet. The row shows the 24-hour response window from Tony\u2019s row-21 answer; the deal facts are sample.",
+    act: "Review", ic: "opp", tone: "gold", hot: "14 hours left to respond.",
+    s: "$2.75M \u00b7 Multifamily \u00b7 Dallas, TX. Borrower details unlock when you accept." });
+
+  const steps = [
+    { done: !gaps.length, href: "#/profile", t: "Complete your profile",
+      s: gaps.length ? `${gaps.length} to add — ${gaps.slice(0, 2).map(g => g[1]).join(", ")}${gaps.length > 2 ? "\u2026" : ""}` : "Everything a lender looks for is on it." },
+    { done: DEALS.length > 0, href: "#/deals/new", t: "Create your first deal",
+      s: DEALS.length ? `${DEALS.length} deals in your pipeline.` : "A name, an amount and a property type are enough to start." },
+    { done: !!S.seenLenders, href: "#/lenders", flag: true, t: "Browse lenders",
+      s: S.seenLenders ? "You know who is out there." : "See who finances deals like yours before you need one." }
+  ];
+  const doneN = steps.filter(x => x.done).length;
+
+  /* recency from the updated strings the deals already carry — "4 Aug" etc. */
+  const MONN = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
+  const dkey = v => { const m = /^(\d+) (\w+)/.exec(v || ""); return m ? (MONN[m[2]] || 0) * 31 + +m[1] : 0; };
+  const recent = DEALS.slice().sort((a, b) => dkey(b.updated) - dkey(a.updated)).slice(0, 5);
+
+  const CHECK = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>`;
+
+  return `
+    <div class="home">
+      <div class="home__hd">
+        <div>
+          <h1>${greet}, ${esc(PROFILE.first)}</h1>
+          <div class="when">${recent.length ? "Here\u2019s where your pipeline stands" : "Let\u2019s get you set up"} \u00b7 ${stamp}</div>
+        </div>
+      </div>
+
+      ${att.length ? `<div class="card" role="region" aria-label="Needs attention">
+        <div class="card__hd"><h2>Needs attention</h2></div>
+        <div class="card__ct">
+        ${att.map(a => `<div class="att__row">
+          <span class="att__ic att__ic--${a.tone}">${
+            a.ic === "opp" ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><circle cx="12" cy="9" r="3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>`
+            : a.ic === "refund" ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>`
+            : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>`}</span>
+          <span class="att__tx"><b>${esc(a.t)}</b><span>${esc(a.s)}${a.hot ? ` <i class="att__hot">${esc(a.hot)}</i>` : ""}</span></span>
+          ${a.inert ? `<button class="btn btn--outline" type="button" data-inert="${esc(a.inert)}">${esc(a.act)}</button>`
+            : `<a class="btn btn--outline" href="${a.href}">${esc(a.act)}</a>`}
+        </div>`).join("")}
+        </div>
+      </div>` : ""}
+
+      <div class="home__grid">
+        <div class="home__col">
+          ${doneN < steps.length ? `<div class="card">
+            <div class="card__hd"><h2>Get set up</h2><span class="r">${doneN} of ${steps.length} done</span></div>
+            <div class="card__ct">
+              ${steps.map(x => `<a class="chk${x.done ? " chk--done" : ""}" href="${x.href}"${x.flag ? " data-homelenders" : ""}>
+                <span class="chk__c">${x.done ? CHECK : ""}</span>
+                <span class="chk__tx"><b>${esc(x.t)}</b><span>${esc(x.s)}</span></span>
+                <span class="chk__go" aria-hidden="true">\u203a</span>
+              </a>`).join("")}
+            </div>
+          </div>` : ""}
+
+          ${recent.length ? `<div class="card">
+            <div class="card__hd"><h2>Recent activity</h2><a class="btn btn--link" href="#/deals">All deals
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+            <div class="card__ct">
+              ${recent.length ? recent.map(d => `
+                <a class="actrow" href="#/deal/${d.id}">
+                  <span class="d d-${statusMeta(S.status[d.id]).tone}"></span>
+                  <span class="nm">${esc(d.name)}</span>
+                  <span class="meta">${esc(S.status[d.id])} \u00b7 updated ${esc(d.updated)}</span>
+                </a>`).join("")
+              : `<div class="hint">Nothing yet — your deals show up here as they move.</div>`}
+            </div>
+          </div>` : ""}
+        </div>
+
+        <div class="home__col">
+          ${doneN === steps.length ? `<div class="card">
+            <div class="card__hd"><h2>Start here</h2></div>
+            <div class="card__ct qa">
+              <a href="#/deals/new">
+                <span class="qa__ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                <span class="qa__tx"><b>Create a deal</b><span>Start from the facts you have.</span></span>
+              </a>
+              <a href="#/lenders" data-homelenders>
+                <span class="qa__ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg></span>
+                <span class="qa__tx"><b>Browse lenders</b><span>Your saved network and the directory.</span></span>
+              </a>
+              <a href="#/leads">
+                <span class="qa__ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><circle cx="12" cy="9" r="3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span>
+                <span class="qa__tx"><b>Open an opportunity</b><span>Borrower requests routed to you.</span></span>
+              </a>
+            </div>
+          </div>` : ""}
+
+          <div class="card">
+            <div class="card__hd"><h2>Coming soon</h2></div>
+            <div class="card__ct qa">
+              <div class="soon">
+                <span class="qa__ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                <span class="qa__tx"><b>Messages</b><span>Lender replies, in the app instead of your inbox.</span></span>
+                <span class="pill">Soon</span>
+              </div>
+              <div class="soon">
+                <span class="qa__ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M5 3 2 6M19 3l3 3"/></svg></span>
+                <span class="qa__tx"><b>Reminders</b><span>Follow-ups you set against a deal.</span></span>
+                <span class="pill">Soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function renderProfile() {
   /* gaps drive the nav badges only. There is no page-level progress bar: a
      meter implies a task with an end, and nothing on this page is required —
@@ -5043,10 +6394,17 @@ function render() {
   document.getElementById("app").classList.toggle("app--auth", S.route === "auth");
   if (S.route === "auth") {
     view.innerHTML = renderAuth();
+  } else if (S.route === "home") {
+    view.innerHTML = renderHome();
   } else if (S.route === "profile") {
     view.innerHTML = renderProfile();
   } else if (S.route === "account") {
     view.innerHTML = renderAccount();
+  } else if (S.route === "lenders") {
+    view.innerHTML = renderLenders();
+  } else if (S.route === "lender") {
+    const l = S.lId ? NETWORK.find(x => x.id === S.lId) : null;
+    view.innerHTML = l ? renderLenderContact(l, S.lFor) : renderLenderAcct(S.lAcct, S.lFor);
   } else if (S.route === "form") {
     view.innerHTML = renderDealForm();
   } else if (S.route === "dir") {
@@ -5083,12 +6441,27 @@ function render() {
     const first = view.querySelector(".lbx");
     if (first) first.focus();
   }
+  /* the modals mount the same way the lightbox does — appended to #view after
+     it is rebuilt, so nothing about them survives a render they were not part
+     of. Only one can be open: the composer's deal step and the picker answer
+     different questions and stacking them would leave two dimmers. */
+  const mv = S.compose ? composeModal() : S.dealPick != null ? dealPickModal() : "";
+  if (mv) {
+    view.insertAdjacentHTML("beforeend", mv);
+    const f = view.querySelector(".mdl textarea, .mdl .dpick:not([disabled]), .mdl .x");
+    if (f) f.focus();
+  }
   /* Account is a rail destination [T · 27 Aug, Flow 01 row 5, the one row on
      the tracker marked Done], so it lights its own item. The profile is not —
      it is reached from the account menu at the foot — so on that route no item
      is lit, rather than leaving Deals lit on a page that is not Deals. */
   document.querySelectorAll(".rail a[data-nav]").forEach(a =>
     a.classList.toggle("on", S.route === "account" ? a.dataset.nav === "account"
+      : S.route === "home" ? a.dataset.nav === "home"
+      : S.route === "lenders" ? a.dataset.nav === "lenders"
+      /* a lender profile lights Lenders when reached bare, Deals when the
+         visit is deal-scoped — the rail marks where the broker's work is */
+      : S.route === "lender" ? a.dataset.nav === (S.lFor ? "deals" : "lenders")
       : S.route !== "profile" && a.dataset.nav === "deals"));
   placeCardMenu();
   placeSelectPop();
@@ -5159,11 +6532,43 @@ function route() {
     S.open = null; S.oq = ""; S.msExpand = new Set();
     render(); return;
   }
+  if (/^\/home\/?$/.test(h)) {
+    S.route = "home"; S.dealId = null;
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set();
+    render(); return;
+  }
+  /* the standalone search — Tony's Figma comment #4. The tab is in the hash
+     so Prospector can be linked and lands where the link promised. */
+  const mls = h.match(/^\/lenders(?:\/(prospector|shortlist))?\/?$/);
+  if (mls) {
+    S.route = "lenders"; S.dealId = null; S.lTab = mls[1] === "prospector" ? "prospector" : "network";
+    /* /lenders/shortlist is the shortlist's address — the same page with the
+       filter on, so the list is linkable without being a third tab: tabs are
+       the source axis and the shortlist is a subset of Network, not a source */
+    S.lShort = mls[1] === "shortlist" ? true : S.lShort;
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
+    render(); return;
+  }
+  /* Lender profile. Three segments, all optional after the first: the account,
+     the contact beneath it, and the deal the visit is scoped to. S.dealId is
+     set from that last one on purpose — Save to deal, Find a contact and Hide
+     are the same handlers the matches table uses, and they read S.dealId. One
+     assignment here is cheaper and safer than a second copy of each. */
+  const ml = h.match(/^\/lender\/([a-z0-9-]+)(?:\/c\/(\d+))?(?:\/for\/([a-z0-9-]+))?\/?$/);
+  if (ml) {
+    S.route = "lender"; S.lAcct = ml[1]; S.lId = ml[2] ? Number(ml[2]) : null;
+    S.lFor = ml[3] || null; S.dealId = S.lFor;
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
+    render(); return;
+  }
   const me = h === "/deals/new" ? [null, null] : h.match(/^\/deal\/([a-z0-9-]+)\/edit$/);
   const md = me ? null : h.match(/^\/deal\/([a-z0-9-]+)\/directory$/);
   const m = me || md ? null : h.match(/^\/deal\/([a-z0-9-]+)(?:\/(matches|saved|docs))?/);
   if (me) { S.route = "form"; S.dealId = me[1]; }
-  else if (md) { S.route = "dir"; S.dealId = md[1]; }
+  else if (md) { S.route = "dir"; S.dealId = md[1]; S.zipEdit = false; }
   else if (m) { S.route = "deal"; S.dealId = m[1]; if (m[2]) S.tab = m[2] === "docs" ? "matches" : m[2]; }
   else { S.route = "deals"; S.dealId = null; }
   S.secEdit = null;
@@ -5180,7 +6585,7 @@ document.addEventListener("click", e => {
   const rb = e.target.closest("[data-authrole]");
   if (rb) { location.hash = `#/auth/signup/${rb.dataset.authrole}`; return; }
   if (e.target.closest("#authSubmit")) authSubmit();
-  else if (e.target.closest("#authLogin")) location.hash = "#/deals";
+  else if (e.target.closest("#authLogin")) location.hash = "#/home";
 });
 document.addEventListener("input", e => {
   if (S.route !== "auth") return;
@@ -5211,6 +6616,7 @@ MOBILE.addEventListener("change", e => { if (!e.matches) setNav(false); });
 /* ---------- clicks ---------- */
 document.addEventListener("click", e => {
   const t = e.target;
+  if (t.closest("[data-homelenders]")) S.seenLenders = true;
   if (S.open && !t.closest(".ms")) { S.open = null; S.oq = ""; S.msExpand = new Set(); render(); }
   if (S.cardMenu && !t.closest(".cardmenu") && !t.closest("[data-kebab]")) { S.cardMenu = null; S.cardSub = false; render(); }
   if (S.selOpen && !t.closest(".sel__pop") && !t.closest("[data-sel]")) { S.selOpen = null; render(); }
@@ -5664,12 +7070,106 @@ document.addEventListener("click", e => {
   if (stab) { S.sumTab = stab.dataset.sumtab; render(); return; }
   const tab = t.closest("[data-tab]");
   if (tab) { S.tab = tab.dataset.tab; render(); return; }
+  /* the lenders page's two tabs live in the hash so either can be linked */
+  const ltab = t.closest("[data-ltab]");
+  if (ltab) { location.hash = ltab.dataset.ltab === "prospector" ? "#/lenders/prospector" : "#/lenders"; return; }
+  const lsrc = t.closest("[data-lsrc]");
+  if (lsrc) { S.lSrc = lsrc.dataset.lsrc; render(); return; }
+  if (t.closest("#lshort")) {
+    S.lShort = !S.lShort;
+    /* keep the address honest: leaving the filter while standing on its hash
+       walks back to plain /lenders instead of lying about what is shown */
+    if (!S.lShort && location.hash.includes("/lenders/shortlist")) { location.hash = "#/lenders"; return; }
+    render(); return;
+  }
+  if (t.id === "lclr") {
+    LFILTERS.forEach(f => f.set().clear());
+    S.lShort = false; S.lSrc = "all"; S.lq = ""; S.open = null;
+    /* clearing away the shortlist filter while on its address: same honesty
+       rule as the checkbox — the hash must not promise what is not applied */
+    if (location.hash.includes("/lenders/shortlist")) { location.hash = "#/lenders"; return; }
+    render(); return;
+  }
+  if (t.id === "lqclr") { S.lq = ""; render(); return; }
+  if (t.closest("#lbulkstar")) {
+    const ids = [...S.lSel].filter(id => !S.short.has(id));
+    ids.forEach(id => S.short.add(id));
+    S.undo = { msg: (ids.length === 1 ? NETWORK.find(x => x.id === ids[0]).ct + " is" : ids.length + " bankers are") + " on your shortlist, yours across every deal.",
+      fn: () => ids.forEach(id => S.short.delete(id)) };
+    S.lSel.clear(); render(); return;
+  }
+  if (t.closest("#lbulkunstar")) {
+    const ids = [...S.lSel];
+    ids.forEach(id => S.short.delete(id));
+    S.undo = { msg: (ids.length === 1 ? NETWORK.find(x => x.id === ids[0]).ct + " came" : ids.length + " bankers came") + " off your shortlist. Any deal they are saved to keeps them.",
+      fn: () => ids.forEach(id => S.short.add(id)) };
+    S.lSel.clear(); render(); return;
+  }
+  if (t.closest("#lselclr")) { S.lSel.clear(); render(); return; }
 
   const exp = t.closest("[data-exp]");
   if (exp) { const id = Number(exp.dataset.exp); S.expanded.has(id) ? S.expanded.delete(id) : S.expanded.add(id); render(); return; }
 
   const save = t.closest("[data-save]");
   if (save) { saveLender(S.dealId, Number(save.dataset.save)); return; }
+
+  /* ---------- the lender profile's three actions ---------------------------
+     Save to deal is not among them: it is data-save above, unchanged, because
+     the route sets S.dealId and the verb is the same verb. [T · 26 Aug] */
+
+  /* Contact through the platform. Carries the scoped deal in if there is one,
+     and asks for one if there is not — a message to a lender with no deal on
+     it has nothing to say, which is why Janover's Send a Deal opens Select a
+     Deal rather than a blank compose window [comp 4 Sep]. */
+  const lpc = t.closest("[data-lpcontact]");
+  if (lpc) { S.cardMenu = null; S.dealPick = null;
+    S.compose = { id: Number(lpc.dataset.lpcontact), deal: S.lFor || null }; render(); return; }
+
+  const lpa = t.closest("[data-lpadd]");
+  if (lpa) { S.cardMenu = null; S.compose = null; S.dealPick = Number(lpa.dataset.lpadd); render(); return; }
+
+  /* Save to shortlist. Per broker, not per deal [T · row 19, 27 Aug], so this
+     writes to one set and never touches SAVED. The toast says which of the two
+     lists moved, because "Saved" already means something else two feet away on
+     the same page and the words have to do the separating. */
+  const lps = t.closest("[data-lpshort]");
+  if (lps) {
+    const id = Number(lps.dataset.lpshort), l = NETWORK.find(x => x.id === id), on = S.short.has(id);
+    on ? S.short.delete(id) : S.short.add(id);
+    S.undo = { msg: on
+      ? l.ct + " came off your shortlist. Any deal they are saved to keeps them."
+      : l.ct + " is on your shortlist — yours, across every deal, not this one's.",
+      fn: () => { on ? S.short.add(id) : S.short.delete(id); } };
+    render(); return;
+  }
+
+  /* the picker's rows do double duty: inside the composer they attach the deal
+     and stay open, inside Add to a deal they save and close. */
+  const dp = t.closest("[data-dpick]");
+  if (dp) {
+    const did = dp.dataset.dpick;
+    if (S.compose) { S.compose.deal = did; render(); return; }
+    const id = S.dealPick; S.dealPick = null;
+    saveLender(did, id);
+    return;
+  }
+  if (t.closest("[data-cdeal]")) { S.compose.deal = null; render(); return; }
+
+  if (t.id === "csend") {
+    const l = NETWORK.find(x => x.id === S.compose.id), dl = dealById(S.compose.deal);
+    S.sent[S.compose.id] = S.compose.deal;
+    /* sending is also saving: a lender you have pitched is on the deal whether
+       or not you pressed the other button first, and leaving them off would
+       make the Saved tab lie about who has seen it. */
+    if (!savedIdsFor(dl.id).has(l.id)) saveLender(dl.id, l.id, true);
+    S.compose = null;
+    S.undo = { msg: "Sent to " + l.ct + " about " + dl.name + ". They are on the deal now; the reply lands there. Nothing left the prototype." };
+    render(); return;
+  }
+
+  /* one closer for both. The dimmer carries data-mclose as well as the buttons,
+     so a click outside the panel closes it — every modal sampled does. */
+  if (t.closest("[data-mclose]")) { S.compose = null; S.dealPick = null; render(); return; }
 
   const hide = t.closest("[data-hide]");
   if (hide) { S.cardMenu = null; hideLender(S.dealId, Number(hide.dataset.hide)); return; }
@@ -5694,7 +7194,10 @@ document.addEventListener("click", e => {
   const fc = t.closest("[data-findc]");
   if (fc) {
     S.cardMenu = null;
-    const a = fc.dataset.findc, k = S.dealId + ":" + a, prev = S.findc[k], co = PROSPECTS.find(x => x.acct === a).co;
+    /* the profile page can open on a directory institution the broker has not
+       saved yet, so the name has to be looked up in both places */
+    const a = fc.dataset.findc, k = S.dealId + ":" + a, prev = S.findc[k],
+      co = (PROSPECTS.find(x => x.acct === a) || DIRECTORY.find(x => x.acct === a) || { co: a }).co;
     if (S.credits < 1) {
       S.undo = { msg: "No credits left, so the search cannot be placed. Buy credits from the sidebar." };
       render(); return;
@@ -5709,7 +7212,8 @@ document.addEventListener("click", e => {
   const fx = t.closest("[data-findcx]");
   if (fx) {
     S.cardMenu = null;
-    const a = fx.dataset.findcx, k = S.dealId + ":" + a, prev = S.findc[k], co = PROSPECTS.find(x => x.acct === a).co;
+    const a = fx.dataset.findcx, k = S.dealId + ":" + a, prev = S.findc[k],
+      co = (PROSPECTS.find(x => x.acct === a) || DIRECTORY.find(x => x.acct === a) || { co: a }).co;
     delete S.findc[k];
     S.credits += 1;
     S.undo = { msg: "Search cancelled at " + co + ". The credit is back on your balance.",
@@ -5717,7 +7221,10 @@ document.addEventListener("click", e => {
     render(); return;
   }
 
-  const acc = t.closest("[data-acct]");
+  /* the whole band toggles, but the account name inside it is now a link to
+     the institution's profile — without this guard one click would both
+     navigate and collapse the group it was leaving. */
+  const acc = t.closest("a") ? null : t.closest("[data-acct]");
   if (acc) { const a = acc.dataset.acct; S.acctShut.has(a) ? S.acctShut.delete(a) : S.acctShut.add(a); render(); return; }
 
   if (t.id === "clrmq") { S.mq = ""; render(); return; }
@@ -5757,6 +7264,16 @@ document.addEventListener("click", e => {
     render(); return;
   }
 
+  if (t.closest("[data-zipedit]")) {
+    S.zipEdit = true; render();
+    /* the click promised an edit — land in the field, old zip selected */
+    const f = document.getElementById("zipinp");
+    if (f) { f.focus(); f.select(); }
+    return;
+  }
+  if (t.closest("[data-zipcancel]")) { S.zipEdit = false; render(); return; }
+  if (t.closest("[data-zipok]")) { zipCommit(); return; }
+
   const dsv = t.closest("[data-dirsave]");
   if (dsv) {
     const acct = dsv.dataset.dirsave, id = S.dealId;
@@ -5788,7 +7305,11 @@ function saveLender(dealId, id, quiet) {
   S.savedNow[dealId] = S.savedNow[dealId] || {};
   S.savedNow[dealId][id] = true;
   if (!quiet) {
-    S.undo = { msg: lenderById(id).co + " saved to this deal.", fn: () => { delete S.savedNow[dealId][id]; } };
+    /* "this deal" only when the deal is on screen — from the standalone
+       search's picker there is no deal in view, so the toast names it */
+    const here = S.dealId === dealId;
+    S.undo = { msg: lenderById(id).co + " saved to " + (here ? "this deal." : (dealById(dealId) || {}).name + "."),
+               fn: () => { delete S.savedNow[dealId][id]; } };
   }
   render();
 }
@@ -5817,8 +7338,12 @@ function hardReset() {
   S.q = ""; S.sort = "updated"; S.view = "list"; S.tab = "matches"; S.sumTab = "ov";
   FILTERS.forEach(f => f.set().clear()); S.picked.clear(); S.expanded.clear(); S.open = null; S.oq = "";
   S.mq = ""; S.hidden = {}; S.savedNow = {}; S.savedRm = {}; S.undo = null;
-  S.spicked.clear(); S.ops = { midtown: "in_progress" }; S.dirRadius = 100;
+  S.spicked.clear(); S.ops = { midtown: "in_progress" }; S.dirRadius = 100; S.zipEdit = false; S.seenLenders = false;
   S.grpAcct = true; S.acctShut = new Set(); S.acctRm = {};
+  S.short = new Set([1, 26, 8]); S.sent = {}; S.compose = null; S.dealPick = null;
+  S.lq = ""; S.lSort = "active"; S.lSrc = "all"; S.lShort = false; S.lTab = "network";
+  S.lLoc = new Set(); S.lProp = new Set(); S.lAmt = new Set(); S.lFin = new Set();
+  S.pZip = ""; S.pRadius = 100;
   S.cardMenu = null; S.cardSub = false; S.selOpen = null; S.lb = null;
   S.settingsOpen = false; S.setDrill = null; S.hideLanes.clear(); S.sumClosed = new Set(); S.secEdit = null;
   S.authMode = "signup"; S.authRole = null; S.authErr = null;
@@ -5910,6 +7435,8 @@ document.addEventListener("input", e => {
   }
   if (t.id === "q")  { S.q  = t.value; render(); focusBack("q"); return; }
   if (t.id === "mq") { S.mq = t.value; render(); focusBack("mq"); return; }
+  if (t.id === "lq") { S.lq = t.value; render(); focusBack("lq"); return; }
+  if (t.id === "pzip") { S.pZip = t.value; render(); focusBack("pzip"); return; }
   if (t.id === "oq") { S.oq = t.value; render(); focusBack("oq"); return; }
   const df = t.closest("[data-df]");
   if (df) {
@@ -5986,6 +7513,17 @@ document.addEventListener("change", e => {
   /* the File as… branch that stood here went with the native <select>; the
      assignment is applySel's "da:" case, reached by the shared click handler */
   if (t.id === "grpacct") { S.grpAcct = t.checked; render(); return; }
+  if (t.id === "lgrp") { S.grpAcct = t.checked; render(); return; }
+  if (t.id === "lselall") {
+    lenderRows().forEach(l => t.checked ? S.lSel.add(l.id) : S.lSel.delete(l.id));
+    render(); return;
+  }
+  const lsel = t.closest("[data-lsel]");
+  if (lsel) {
+    const id = Number(lsel.dataset.lsel);
+    t.checked ? S.lSel.add(id) : S.lSel.delete(id);
+    render(); return;
+  }
   const apick = t.closest("[data-apick]");
   if (apick) {
     /* selecting an account selects its people — the account is a heading, and
@@ -6082,6 +7620,16 @@ document.addEventListener("dragend", () => {
 });
 
 document.addEventListener("keydown", e => {
+  if (e.target && e.target.id === "zipinp") {
+    if (e.key === "Enter") { e.preventDefault(); zipCommit(); }
+    else if (e.key === "Escape") { S.zipEdit = false; render(); }
+    return;
+  }
+  /* above the lightbox, because a modal opened over a page that also has a
+     photo viewer must be the thing Escape closes first */
+  if (S.compose || S.dealPick != null) {
+    if (e.key === "Escape") { S.compose = null; S.dealPick = null; render(); return; }
+  }
   if (S.lb != null) {
     if (e.key === "Escape") { S.lb = null; render(); return; }
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
