@@ -1275,7 +1275,7 @@
   /* ---------- Broker profile (#/profile) and Account (#/account).
        One stylesheet for both: they are siblings with the same shell, and
        the split between them is what each holds, not how each looks. ---------- */
-  .pbanner { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 14px;
+  .pbanner { display: flex; align-items: center; gap: 10px; max-width: 1120px; margin-bottom: 14px; padding: 10px 14px;
     border: 1px solid rgb(191, 214, 240); background: rgb(239, 246, 253); border-radius: var(--radius-md);
     font-size: 13px; line-height: 1.45; color: var(--foreground); }
   .pbanner svg { flex: none; color: var(--brand-navy-600); }
@@ -1410,6 +1410,26 @@
     border-radius: var(--radius-md); padding: 11px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
   .lbanner svg { flex: none; }
   .lbanner--live { border-color: rgb(205, 228, 194); background: rgb(240, 248, 236); color: #2f6b23; }
+  /* Review is the one state with a shape — submitted, being judged, then the
+     directory — so it gets a track where the other two get a sentence. The
+     sub-labels carry the two anxieties in order: when did I do my part, and
+     when does the answer come. [💡 rec — Q34's turnaround is ours] */
+  .lbanner--stack { display: block; }
+  .ltrack { display: flex; align-items: center; gap: 9px; font-size: 12.5px; font-weight: 600; }
+  .ltrack .lstep { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .ltrack .lstep .ldot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid currentColor; flex: none; }
+  .ltrack .lstep.done .ldot { background: currentColor; }
+  .ltrack .lstep.todo { opacity: .5; font-weight: 500; }
+  .ltrack .lstep i { font-style: normal; font-weight: 400; opacity: .8; }
+  .ltrack .lbar { flex: 1; max-width: 64px; height: 2px; border-radius: 1px; background: currentColor; opacity: .8; }
+  .ltrack .lbar.todo { opacity: .25; }
+  .lnote { margin-top: 8px; font-size: 12.5px; }
+  .lnote b { font-weight: 600; }
+  .lfields { border: 0; padding: 0; margin: 0; min-inline-size: auto; }
+  .lfields:disabled { opacity: .6; }
+  .lchip { position: absolute; top: 8px; right: 8px; z-index: 1; padding: 2px 9px; border-radius: 9999px;
+    font-size: 11px; font-weight: 600; background: color-mix(in srgb, var(--brand-gold) 16%, #fff); color: var(--color-brand-gold-text);
+    border: 1px solid color-mix(in srgb, var(--brand-gold) 38%, #fff); }
   /* Upload fields: dashed dropzone when empty, file row when filled — the
      two-state pattern the 3 Sep Mobbin pass found wherever uploads live in
      forms (Deel's Custom branding is the closest analog: per-field zone,
@@ -1442,6 +1462,20 @@
   .plan__hd .pill { margin-left: auto; background: rgb(233, 245, 228); color: #2f6b23; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 9999px; }
   .plan ul { margin: 0; padding-left: 17px; font-size: 13px; line-height: 1.7; color: var(--muted-foreground); }
   .plan ul b { color: var(--foreground); font-weight: 500; }
+  .plan__price { margin-left: auto; font-size: 13px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  .plan__hd .plan__price + .pill { margin-left: 0; }
+  .plan__renew { margin-top: 10px; font-size: 12.5px; color: var(--muted-foreground); }
+  .plan__renew b { color: var(--foreground); font-weight: 600; }
+  .bills { margin-top: 6px; }
+  .billrow { display: flex; align-items: center; gap: 12px; padding: 13px 2px; border-top: 1px solid var(--border); font-size: 13.5px; }
+  .billrow > div:first-child { flex: 1; min-width: 0; }
+  .billrow .sub { display: block; font-size: 12.5px; color: var(--muted-foreground); font-weight: 400; margin-top: 2px; }
+  .billrow .pill, .inv .pill { background: rgb(233, 245, 228); color: #2f6b23; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 9999px; }
+  .inv { display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-top: 1px solid var(--border); font-size: 13px; }
+  .inv:first-child { border-top: 0; padding-top: 2px; }
+  .inv .d { width: 92px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  .inv .what { flex: 1; }
+  .inv .amt { font-variant-numeric: tabular-nums; font-weight: 600; }
 
   .licrow { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 9px 0; border-top: 1px solid var(--border); }
   .licrow:first-of-type { border-top: 0; }
@@ -1487,7 +1521,7 @@
     </span>
     <a class="plink" href="#/auth" style="margin-left:auto">Sign up / log in</a>
     <a class="plink" href="#/profile">Broker profile</a>
-    <a class="plink" href="#/account">Account</a>
+    <button type="button" data-ppub="live" title="Prototype lever: stands in for the Q34 reviewer — pushes the listing to its live state from anywhere">Listing → live</button>
     <button type="button" id="reset">Reset</button>
   </div>
   <details>
@@ -1776,6 +1810,7 @@ const PROFILE = {
      write only ever adds rows [repo Aug 31]. Editable here. [💡 rec] */
   states: ["TX", "AZ", "TN"],
   bio: "", linkedin: "", website: "", headshot: false, cover: false,
+  submittedAt: "Sep 3, 4:12 PM",
   listing: "draft",              /* draft | review | live — Q34 is the turnaround */
   notify: { matches: true, docs: true, digest: false },
   licenses: [{ state: "TX", cat: "Multifamily" }]
@@ -4621,12 +4656,25 @@ function profListing() {
     <div class="lsplit">
     <div class="card">
       <div class="card__ct">
+        ${st.cls === "review" ? `
+        <div class="lbanner lbanner--stack">
+          <div class="ltrack">
+            <span class="lstep done"><span class="ldot"></span>Submitted <i>· ${esc(PROFILE.submittedAt)}</i></span>
+            <span class="lbar"></span>
+            <span class="lstep now"><span class="ldot"></span>In review <i>· up to 2 business days</i></span>
+            <span class="lbar todo"></span>
+            <span class="lstep todo"><span class="ldot"></span>Live</span>
+          </div>
+          <div class="lnote">We’ll email <b>${esc(PROFILE.email)}</b> the moment it’s decided.
+            Fields are locked while in review — withdraw to edit.</div>
+        </div>` : `
         <div class="lbanner${st.cls === "live" ? " lbanner--live" : ""}">
           ${st.cls === "live"
             ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>`
             : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`}
           <span>${st.say}</span>
-        </div>
+        </div>`}
+        <fieldset class="lfields"${PROFILE.listing === "review" ? " disabled" : ""}>
         <!-- the who-lines here answer a different question from the ones on
              Identity and contact. Everything in this section is public by
              definition, so "who sees it" is not the useful axis — where it
@@ -4680,6 +4728,7 @@ function profListing() {
           <input class="inp" id="p_li" data-pf="linkedin" autocomplete="off" value="${esc(PROFILE.linkedin)}" placeholder="linkedin.com/in/…"></div>
         <div class="fld"><label for="p_web">Website <span class="opt">(optional)</span></label>
           <input class="inp" id="p_web" data-pf="website" autocomplete="off" value="${esc(PROFILE.website)}" placeholder="sandboxcapital.com"></div>
+        </fieldset>
         <!-- A readback panel stood here until 3 Sep (Tanya) — "One bio, not two"
              (the Pitch/Bio consolidation) and "Two business days is ours" (the
              Q34 review-turnaround gap). Removed as annotation on a working page:
@@ -4695,14 +4744,14 @@ function profListing() {
           ? `<button class="btn btn--outline" type="button" data-psave="listing">Save draft</button>
              <button class="btn" type="button" data-ppub="review"${ready ? "" : " disabled"}>Submit for review</button>`
           : PROFILE.listing === "review"
-          ? `<button class="btn btn--outline" type="button" data-ppub="draft">Withdraw</button>
-             <button class="btn" type="button" data-ppub="live">Approve (prototype)</button>`
+          ? `<button class="btn btn--outline" type="button" data-ppub="draft">Withdraw</button>`
           : `<button class="btn btn--outline" type="button" data-ppub="draft">Unpublish</button>
              <button class="btn" type="button" data-psave="listing">Save changes</button>`}
       </div>
     </div>
     <aside class="lside" aria-label="How your listing appears to borrowers">
       <div class="lcard">
+        ${PROFILE.listing === "review" ? `<span class="lchip">In review</span>` : ""}
         <div class="lcard__cov${PROFILE.cover ? " lcard__cov--own" : ""}"></div>
         <div class="lcard__bd">
           <div class="lcard__top">
@@ -4725,7 +4774,6 @@ function profListing() {
 function accPassword() {
   return `
     <div class="card">
-      <div class="card__hd"><h2>Password</h2></div>
       <div class="card__ct">
         <div class="fldrow fldrow--2">
           <div class="fld"><label for="p_pw0">Current password</label>
@@ -4738,8 +4786,6 @@ function accPassword() {
           <div class="fld"><label for="p_pw2">Confirm new password</label>
             <input class="inp" id="p_pw2" type="password" data-inert="Password change — out of prototype scope."></div>
         </div>
-        <div class="hint">One validator, shown while you type. The shipped app enforces five rules at sign-up
-          and length only at log-in — the same password, two standards.</div>
       </div>
       <div class="card__ft"><button class="btn btn--outline" type="button" data-inert="Password change — out of prototype scope.">Update password</button></div>
     </div>`;
@@ -4775,44 +4821,64 @@ function accNotify() {
     </div>`;
 }
 
-/* Flow 07 · 1, Olesia's row. What is drawn is the shipped Membership tab
-   [sandbox 3 Sep]. Tony superseded its commercial shape on 28 Aug — two tiers,
-   not three — but the paywall screens are hers, so the change is stated rather
-   than designed here, and the stale plan is not presented as current. */
+/* Flow 07 · 1, Olesia's row, drawn to its requirement [sheet 3 Sep]: current
+   plan, what it unlocks, renewal, upgrade, add-on state, payment method and
+   invoices — all seven, in that order down the page. The commercial facts are
+   Tony's 28 Aug two-tier scheme [T]: Essential $149–199, Pro $499, Capitalize
+   add-on $149, MF Accelerator removed. Everything else is sample data so the
+   layout can be seen full [~] — the Essential/Pro feature split most of all,
+   which is nobody's decision yet. Essential is quoted as a range; the card
+   shows the floor until the point in it is chosen. Pricing goes live only
+   after the redesign ships; the paywall screens themselves stay Olesia's. */
 function accPlan() {
   return `
     <div class="card">
-      <div class="card__hd"><h2>Membership</h2><span class="r">Broker Partner</span></div>
+      <div class="card__hd"><h2>Current plan</h2></div>
       <div class="card__ct">
         <div class="plan">
-          <div class="plan__hd"><b>Broker Partner</b><span class="pill">Active</span></div>
+          <div class="plan__hd"><b>Essential</b><span class="plan__price">$149 / month</span><span class="pill">Active</span></div>
           <ul>
-            <li>Everything in MF-CRE Accelerator, plus</li>
-            <li><b>White-glove back-office support</b></li>
-            <li><b>Participation licences</b> by territory and asset class, limited</li>
-            <li>Opt in to third-party <b>loan maturity data</b></li>
-            <li><b>Broker Spotlight</b> promotion, and early positioning in the InvestorPrism marketplace</li>
-            <li><b>Lead generation</b> — borrowers driven to the platform and connected with brokers</li>
+            <li><b>Deal posting and matching</b> — every deal, the full lender match list</li>
+            <li><b>Outreach</b> — contact matched lenders straight from a deal</li>
+            <li><b>Public listing</b> in the broker directory</li>
+            <li><b>Execution support</b> requests</li>
           </ul>
+          <div class="plan__renew">Renews <b>October 3, 2026</b> · billed monthly</div>
         </div>
-        <div style="display:flex;gap:10px;margin-top:14px">
-          <button class="btn" type="button" data-inert="Manage Billing — Stripe customer portal. Out of prototype scope.">Manage billing</button>
-          <button class="btn btn--outline" type="button" data-inert="Cancel Membership — out of prototype scope. Worth knowing: Stripe grants the 7-day trial only to customers with no prior subscription, so a broker who cancels and returns is charged on day one while the funnel still says free trial.">Cancel membership</button>
+        <div class="bills">
+          <div class="billrow">
+            <div><b>Capitalize add-on</b> — $149 / month
+              <span class="sub">Equity-side matching through the InvestorPrism marketplace.</span></div>
+            <span class="pill">Active</span>
+            <button class="btn btn--outline" type="button" data-inert="Manage add-on — Stripe customer portal. Out of prototype scope.">Manage</button>
+          </div>
+          <div class="billrow">
+            <div><b>Pro</b> — $499 / month
+              <span class="sub">Adds white-glove back-office support, loan-maturity data, Broker Spotlight and lead generation.</span></div>
+            <button class="btn" type="button" data-inert="Upgrade — the paywall screens are Olesia's row (Flow 07 · 1). Out of prototype scope.">Upgrade to Pro</button>
+          </div>
+          <div class="billrow">
+            <div><b>Payment method</b>
+              <span class="sub">Visa ending 4242 · expires 08/28</span></div>
+            <button class="btn btn--outline" type="button" data-inert="Update payment method — Stripe customer portal. Out of prototype scope.">Update</button>
+          </div>
         </div>
       </div>
-      <div class="card__ft" style="justify-content:flex-start">
-        <span class="msg">The last "Lead generation" line is what
-          <a href="#/profile/listing">your public listing</a> is for.</span>
+      <div class="card__ft">
+        <button class="btn btn--outline" type="button" data-inert="Cancel Membership — out of prototype scope. Worth knowing: Stripe grants the 7-day trial only to customers with no prior subscription, so a broker who cancels and returns is charged on day one while the funnel still says free trial.">Cancel membership</button>
       </div>
     </div>
 
-    <div class="warnpanel">
-      <b>This plan is superseded and the replacement is not drawn.</b> Tony, 28 Aug: <i>two subscriptions —
-      Essential at $149–199 and Pro at $499, each with a Capitalize add-on at $149. MF Accelerator is
-      removed. Essential moves up from $99 because perceived value is the problem, not price.</i> The row is
-      unblocked and the paywall screens can now be drawn — they are <b>Olesia's</b>, and the pricing itself
-      goes live only after the redesign ships. What is above is the shipped tab, kept so the section is not
-      empty; it is not the target state.
+    <div class="card">
+      <div class="card__hd"><h2>Invoices</h2></div>
+      <div class="card__ct">
+        <div class="inv"><span class="d">Sep 3, 2026</span><span class="what">Essential + Capitalize add-on</span><span class="amt">$298.00</span><span class="pill">Paid</span>
+          <button class="btn btn--outline" type="button" data-inert="Invoice PDF — Stripe hosted invoice. Out of prototype scope.">PDF</button></div>
+        <div class="inv"><span class="d">Aug 3, 2026</span><span class="what">Essential + Capitalize add-on</span><span class="amt">$298.00</span><span class="pill">Paid</span>
+          <button class="btn btn--outline" type="button" data-inert="Invoice PDF — Stripe hosted invoice. Out of prototype scope.">PDF</button></div>
+        <div class="inv"><span class="d">Jul 3, 2026</span><span class="what">Essential</span><span class="amt">$149.00</span><span class="pill">Paid</span>
+          <button class="btn btn--outline" type="button" data-inert="Invoice PDF — Stripe hosted invoice. Out of prototype scope.">PDF</button></div>
+      </div>
     </div>`;
 }
 
@@ -4966,7 +5032,6 @@ function renderAccount() {
       <div>
         <div class="profhd">
           <h1>${esc(sec.title)}${sec.tip ? `<button type="button" class="infoq" aria-label="About this section">${INFO}<span class="tt" role="tooltip">${sec.tip}</span></button>` : ""}</h1>
-          <div class="profhd__row">${esc(sec.row)}</div>
         </div>
         ${body}
       </div>
@@ -5303,6 +5368,8 @@ document.addEventListener("click", e => {
   if (ppub) {
     const was = PROFILE.listing;
     PROFILE.listing = ppub.dataset.ppub;
+    if (PROFILE.listing === "review") PROFILE.submittedAt =
+      new Date().toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
     S.undo = { msg: PROFILE.listing === "review" ? "Listing submitted for review."
              : PROFILE.listing === "live" ? "Listing is live in the broker directory."
              : "Listing withdrawn. Nothing of yours is public.",
