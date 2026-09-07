@@ -1608,6 +1608,16 @@
   .att__tx b { display: block; font-size: 13.5px; font-weight: 600; }
   .att__tx span { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
   .att__hot { color: var(--color-brand-gold-text); font-weight: 600; }
+  /* all-clear strip — stands exactly where the attention card goes, so a
+     quiet morning reads as a statement, not a gap (Anna, 7 Sep). It carries
+     the same doors the attention rows open, demoted to text links: when
+     nothing is urgent, nothing gets a button. */
+  .clear { display: flex; align-items: center; gap: 11px; padding: 13px 18px; }
+  .clear__ic { flex: none; width: 28px; height: 28px; border-radius: 9999px; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--color-success) 12%, #fff); color: var(--color-success); }
+  .clear__tx { font-size: 13.5px; color: var(--muted-foreground); }
+  .clear__go { margin-left: auto; display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+  .clear__go .btn--link { font-size: 13px; }
   .home .card__ct { padding: 8px 18px; }
   /* hairline between rows, comp Designivation 7 Sep; on the row below, so the
      hover wash keeps its rounded top and the first row meets the header clean */
@@ -1624,6 +1634,13 @@
     font-variant-numeric: tabular-nums; }
   .kpi__s { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
   .kpi--gold .kpi__lb svg, .kpi--gold .kpi__n { color: var(--color-brand-gold-text); }
+  /* first-session network band (Anna, 7 Sep): the KPI anatomy carrying the
+     marketplace's own figures [sandbox 3 Sep] — real numbers a brand-new
+     account already has, in the same top slot the broker's own numbers take
+     once deals exist (Anna moved it up from below the grid, 7 Sep: one
+     anatomy across states). All three door to the lenders surface, which is
+     also the checklist's unfinished third step. [💡 rec] */
+  .kpis--net { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .att__row .btn { margin-left: auto; flex: none; }
   /* setup checklist — whole row is the link */
   .chk { display: flex; align-items: center; gap: 11px; padding: 9px 10px; margin: 0 -10px; border-radius: var(--radius-md); text-decoration: none; color: inherit; }
@@ -2275,40 +2292,18 @@ const ME = {
    and a lender reading "transaction manager" knows who they have reached. [~] */
 const CONTACT_ROLES = ["Assistant", "Transaction manager", "Analyst", "Co-broker", "Other"];
 
-/* Sample deal photos [~]. Inline SVG data URIs so the file stays
-   self-contained and the prototype keeps working from a file:// path with no
-   asset directory; the map's offline fallback schematic follows the same rule.
-   Deliberately illustrative, not photographic: these sit on a deal page a
-   client will read, and a stock photograph there would assert a building
-   that does not exist. */
-const phSvg = (sky, ground, body) => "data:image/svg+xml," + encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
-    <rect width="640" height="400" fill="${sky}"/>
-    <rect y="330" width="640" height="70" fill="${ground}"/>${body}
-  </svg>`);
-const phWin = (x, y, cols, rows, w = 26, h = 20, gx = 40, gy = 32) => {
-  let o = "";
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++)
-    o += `<rect x="${x + c * gx}" y="${y + r * gy}" width="${w}" height="${h}" fill="#eae4d8" opacity=".9"/>`;
-  return o;
-};
+/* Sample deal photos [~]. Real photographs (Anna, 8 Sep) replacing the
+   drawn SVG stand-ins that shipped 28 Aug; the stand-in rationale — an
+   illustration cannot assert a building that does not exist — lost to the
+   layout reading as a placeholder next to real product chrome. The files
+   live beside this HTML in assets/, so relative paths resolve both from
+   the local server root and the published Pages URL; a file:// open still
+   works as long as the images travel with the file. */
 const PH = [
-  { name: "Riverside — street elevation.svg", url: phSvg("#8aa6c6", "#6c8f5a",
-      `<rect x="96" y="168" width="188" height="168" fill="#55657a"/>${phWin(116, 186, 4, 4)}
-       <rect x="316" y="120" width="232" height="216" fill="#4a5a6e"/>${phWin(340, 140, 5, 5)}
-       <rect x="286" y="286" width="60" height="50" fill="#3d4a5c"/>`) },
-  { name: "Riverside — courtyard.svg", url: phSvg("#93aecb", "#7ba060",
-      `<rect x="60" y="150" width="150" height="186" fill="#5b6b80"/>${phWin(78, 168, 3, 5)}
-       <rect x="430" y="150" width="150" height="186" fill="#5b6b80"/>${phWin(448, 168, 3, 5)}
-       <ellipse cx="320" cy="300" rx="96" ry="30" fill="#8fbf74"/>
-       <circle cx="320" cy="238" r="46" fill="#5f8f4c"/><rect x="314" y="262" width="12" height="48" fill="#6b5540"/>`) },
-  { name: "Riverside — unit interior.svg", url: phSvg("#e7e1d6", "#c3b7a4",
-      `<rect x="0" y="0" width="640" height="330" fill="#efe9de"/>
-       <rect x="360" y="70" width="220" height="180" fill="#b9cbdd" stroke="#8fa3b8" stroke-width="6"/>
-       <rect x="466" y="70" width="8" height="180" fill="#8fa3b8"/>
-       <rect x="70" y="228" width="240" height="86" rx="10" fill="#6f7f93"/>
-       <rect x="96" y="206" width="52" height="26" rx="6" fill="#8c9bad"/>
-       <rect x="352" y="286" width="248" height="14" rx="6" fill="#a8977f"/>`) },
+  { name: "Riverside — street elevation.jpg", url: "riverside-1.jpg" },
+  { name: "Riverside — poolside.jpg", url: "riverside-2.jpg" },
+  { name: "Riverside — courtyard.jpg", url: "riverside-3.jpg" },
+  { name: "Riverside — carport.jpg", url: "riverside-4.jpg" },
 ];
 
 const DEALS = [
@@ -2964,7 +2959,11 @@ const S = {
   accSec: "plan",
   /* Home checklist, third item: "browse lenders" has no record of its own to
      read, so using the launcher once IS completing it. [~] */
-  seenLenders: false
+  seenLenders: false,
+  /* the sample opportunity's 24-hour window, closable from the console only:
+     real ones expire on their own, and the quiet home state has to be
+     reachable to design against. [~] */
+  oppGone: false
 };
 DEALS.forEach(d => S.status[d.id] = d.status);
 /* pristine copy — Reset restores edited deal fields, not just statuses.
@@ -6774,7 +6773,7 @@ function renderHome() {
   /* routed leads presuppose an established broker — territory, focus, a live
      listing. A first-session account has none of that, so the sample
      opportunity only appears once the account has deals. [~] */
-  if (DEALS.length) att.unshift({
+  if (DEALS.length && !S.oppGone) att.unshift({
     t: "New opportunity", inert: "Opportunities \u2014 the routed-leads surface is not drawn in this prototype yet. The row shows the 24-hour response window from Tony\u2019s row-21 answer; the deal facts are sample.",
     act: "Review", ic: "opp", tone: "gold", hot: "14 hours left to respond.",
     s: "$2.75M \u00b7 Multifamily \u00b7 Dallas, TX. Borrower details unlock when you accept." });
@@ -6799,7 +6798,11 @@ function renderHome() {
      same SAVED pairs the saved tabs draw plus the recorded credit return.
      Passive states (pending, open request, not yet contacted) are not events
      and stay out. The seen strings are sample, so ordering ranks "N days ago"
-     above absolute dates rather than parsing real timestamps. [~] */
+     above absolute dates rather than parsing real timestamps. [~]
+     The card renders in every state (Anna, 7 Sep): with no events it gets
+     the .empty anatomy naming what will land here, and the copy splits on
+     whether a deal exists - a dealless account is told to create one, not
+     to save lenders to a deal it does not have. [💡 rec] */
   const akey = v => { const m = /^(\d+) days? ago$/.exec(v || ""); return m ? 1000 - +m[1] : v === "just now" ? 1001 : dkey(v); };
   const feed = SAVED.map(s => {
     const l = lenderById(s.lender), d = dealById(s.deal);
@@ -6843,6 +6846,24 @@ function renderHome() {
         </div>
       </div>
 
+      ${!DEALS.length ? `<div class="kpis kpis--net">
+        <a class="card kpi" href="#/lenders">
+          <span class="kpi__lb"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Non-bank lenders</span>
+          <b class="kpi__n">1,500+</b>
+          <span class="kpi__s">in the lender network</span>
+        </a>
+        <a class="card kpi" href="#/lenders">
+          <span class="kpi__lb"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg>Banks &amp; credit unions</span>
+          <b class="kpi__n">10,000+</b>
+          <span class="kpi__s">in the Prospector directory</span>
+        </a>
+        <a class="card kpi" href="#/lenders">
+          <span class="kpi__lb"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>U.S. locations</span>
+          <b class="kpi__n">90,000+</b>
+          <span class="kpi__s">searchable by radius</span>
+        </a>
+      </div>` : ""}
+
       ${att.length ? `<div class="card card--att" role="region" aria-label="Needs attention">
         <div class="card__hd"><h2>Needs attention</h2></div>
         <div class="card__ct">
@@ -6856,6 +6877,16 @@ function renderHome() {
             : `<a class="btn btn--outline" href="${a.href}">${esc(a.act)}</a>`}
         </div>`).join("")}
         </div>
+      </div>` : ""}
+
+      ${!att.length && DEALS.length ? `<div class="card clear" role="status">
+        <span class="clear__ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></span>
+        <span class="clear__tx">Nothing needs your attention right now.</span>
+        <span class="clear__go">
+          <a class="btn btn--link" href="#/deals/new">New deal</a>
+          <a class="btn btn--link" href="#/lenders">Browse lenders</a>
+          <button class="btn btn--link" type="button" data-inert="Opportunities \u2014 the routed-leads surface is not drawn in this prototype yet. A real quiet state would open the most recent one.">Open an opportunity</button>
+        </span>
       </div>` : ""}
 
       ${DEALS.length ? `<div class="kpis">
@@ -6894,10 +6925,10 @@ function renderHome() {
             </div>
           </div>` : ""}
 
-          ${feed.length ? `<div class="card">
-            <div class="card__hd"><h2>Recent activity</h2><a class="btn btn--link" href="#/deals">All deals
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
-            <div class="card__ct">
+          <div class="card">
+            <div class="card__hd"><h2>Recent activity</h2>${feed.length ? `<a class="btn btn--link" href="#/deals">All deals
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>` : ""}</div>
+            ${feed.length ? `<div class="card__ct">
               ${feed.map(e => `
                 <a class="feed" href="${e.href}">
                   ${e.av === "you" ? `<span class="lpav feed__av">${esc(profInits())}</span>`
@@ -6905,8 +6936,11 @@ function renderHome() {
                     : `<span class="lpav feed__av">${esc(e.av.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase())}</span>`}
                   <span class="feed__tx"><span class="s">${e.tx}</span><span class="when">${esc(e.when)}</span></span>
                 </a>`).join("")}
-            </div>
-          </div>` : ""}
+            </div>` : `<div class="empty"><b>No activity yet</b>
+              <p>${DEALS.length ? "Save lenders to a deal and their interest, reviews and quotes land here as they happen." : "Create a deal and save lenders to it. Their interest, reviews and quotes land here."}</p>
+              <div class="acts">${DEALS.length ? `<a class="btn btn--outline btn--sm" href="#/deals">Open a deal</a>` : `<a class="btn btn--outline btn--sm" href="#/deals/new">Create a deal</a>`}</div>
+            </div>`}
+          </div>
         </div>
 
         <div class="home__col">
@@ -6929,6 +6963,7 @@ function renderHome() {
           </div>
         </div>
       </div>
+
     </div>`;
 }
 
@@ -8040,7 +8075,7 @@ function hardReset() {
   S.q = ""; S.sort = "updated"; S.view = "list"; S.tab = "matches"; S.sumTab = "ov";
   FILTERS.forEach(f => f.set().clear()); S.picked.clear(); S.expanded.clear(); S.open = null; S.oq = "";
   S.mq = ""; S.hidden = {}; S.savedNow = {}; S.savedRm = {}; S.undo = null;
-  S.spicked.clear(); S.ops = { midtown: "in_progress" }; S.dirRadius = 100; S.zipEdit = false; S.seenLenders = false;
+  S.spicked.clear(); S.ops = { midtown: "in_progress" }; S.dirRadius = 100; S.zipEdit = false; S.seenLenders = false; S.oppGone = false;
   S.grpAcct = true; S.acctShut = new Set(); S.acctRm = {};
   S.short = new Set([1, 26, 8]); S.sent = {}; S.compose = null; S.dealPick = null; S.dirPick = null;
   S.lq = ""; S.lSort = "active"; S.lShort = false; S.lTab = "network";
