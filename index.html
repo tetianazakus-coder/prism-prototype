@@ -2547,6 +2547,50 @@
      62ch is the file's own reading measure, the .head p max-width at 66ch
      minus the row's own indent. */
   .billrow .sub { display: block; max-width: 62ch; font-size: 12.5px; color: var(--muted-foreground); font-weight: 400; margin-top: 2px; }
+  /* The annual anchor, 17 Sep. The row printed "billed yearly, was $199" in
+     caption grey - the same size and weight as everything else on the line, so
+     nothing read as a former price, and the sentence stated the cost rather
+     than the benefit. Three facts in one run-on where the screen already says
+     two of them: the segment above asserts Annual -20% and the header says
+     "billed yearly", so the row's copy of the cadence is the third statement
+     and it is what was occupying the saving's space. Struck price, then the
+     year's saving - the shape of every comparable in the 16 Sep sweep (Motion
+     "$240 -> $144 - save $480", Wix "SAVE $468"). Emphasis by WEIGHT, not
+     colour: gold in this file means attention and green means success, and a
+     saving is neither, so a tinted chip here would assert a register that is
+     not true. [Tanya, 17 Sep] */
+  .billrow .was { display: inline; text-decoration: line-through; color: var(--muted-foreground); }
+  .billrow .yrsave { display: inline; font-weight: 600; }
+  /* A tick beside a two-line label belongs to the name, not to the block
+     (Tanya, 17 Sep). .billrow centres its children, which is right for every
+     other row in the file because their control is a button as tall as the
+     text beside it. Screen 9's row is the one place the control is 16px and
+     the label is two lines, and centring put the box 10px below the name it
+     selects - reading as a mark against the pair, or against the sub.
+
+     The fix is not a nudge. align-items:flex-start hands every child the same
+     top, and .chk is then given the name's own line box - 1.45em against the
+     row's 13.5px is 19.575px, the exact height of the <b> beside it - so the
+     16px .bx centres inside that rather than inside the row. Written in em so
+     it tracks the row's font-size instead of restating a measured number.
+
+     The Sent pill needs nothing: at 21px it top-aligns to within 0.7px of the
+     same centre. And this is a modifier, not a change to .billrow, because
+     the other nine call sites are single-line rows where flex-start and
+     center are the same pixel - the rule would be invisible on all of them
+     until one of them grew a second line, which is how a shared class quietly
+     acquires a behaviour nobody chose.
+
+     Then 1px down from there (Tanya, 17 Sep). A line box is centred on the em
+     box, and Inter's Semi Bold cap sits high inside it - less of the leading
+     falls above the capitals than below them - so a geometrically centred box
+     reads a hair high against a run of caps. This is an optical correction on
+     top of a computed one, which is why it stays a separate declaration rather
+     than a changed constant: 1.45em is still the name's line box, and the 1px
+     is still a judgement. .chk is already position:relative for its own
+     input, so top costs nothing and carries the hit target with the box. */
+  .billrow--pick { align-items: flex-start; }
+  .billrow--pick > .chk { height: 1.45em; top: 1px; }
   /* The allowance meter, 15 Sep. Sixteen Plan & billing pages sampled on Mobbin
      - Synthesia, Teachable, Rox, Clay, Base44, Hume AI, AutoSend, beehiiv,
      OpenAI Platform, Cofounder, Seline, ManyChat, Gemini, Twingate, PandaDoc,
@@ -2944,6 +2988,51 @@
   /* the held-request line takes its own row: it is the state of a thing in
      flight, not part of the sentence explaining what the record is missing */
   .lptail .st { flex: 1 1 100%; }
+  /* The found strip is the one .lptail whose news is good, and until 17 Sep it
+     wore a treatment written for the opposite case. The grey-not-a-headline
+     rule directly above (Tanya, 14 Sep) was set for "No lending criteria on
+     file" — a strip reporting something MISSING, deliberately downranked so a
+     bordered band under a populated table would not read as a warning about
+     the row above it — and it ends by leaving the strip's "only emphasis to
+     the button that can change it". The found strip has no button, because the
+     thing has already happened. So the rule handed the one paid-for success in
+     this cycle less emphasis than the failure beside it, which is the reverse
+     of what it was written to do.
+
+     The fix is the state marker, not a weight change. Every other surface
+     marks this state — the deal row wears the green chip, Needs attention
+     wears an icon — and the profile, which is where both of those LINK TO,
+     was the only one saying it in unmarked prose. Reusing the row's own badge
+     keeps one vocabulary for one fact, and the sentence stays grey, which the
+     14 Sep rule was right about for a reason it could not have had then: the
+     badge now carries the rank, so the prose does not have to.
+
+     It also has to name the banker. One strip under a whole table is
+     unambiguous with one person on the roster and floats under both with two
+     — Ironwood is the case, one registered banker and one Prospector find at
+     the same institution — so the name is what ties the dates to a row.
+
+     baseline, not centre and not flex-start (Tanya, 17 Sep: "align text
+     horizontally"). The two things beside each other here are both RUNS OF
+     TEXT, and .lptail's centre aligned their BOXES: the badge is 23.4px tall
+     (12px × 1.45, plus 2px padding and 1px border on each side) against the
+     sentence's 18.85px line box, so centring the boxes put the badge's words
+     2.3px below the words they introduce — visible at the size the section is
+     read at, and the kind of miss that reads as sloppiness rather than as a
+     decision. flex-start was the first fix and it is the same error upside
+     down: it aligns the box TOPS, which leaves the badge's words 2.3px low
+     for the same reason.
+
+     Baseline is the one alignment that is about the text rather than the box.
+     .badge is inline-flex, so its baseline is its own label's baseline, and
+     aligning that to the paragraph's first-line baseline is exactly the thing
+     being asked for — at two different font sizes, which is the case where
+     centring is always a little wrong. It also survives the wrap the previous
+     comment was defending against: a second line pushes nothing, because the
+     badge stays locked to the FIRST line's baseline, which is the line it
+     belongs to. Figma's auto-layout has the same alignment by the same name,
+     so 17G is set to BASELINE rather than approximated with a nudge. */
+  .lptail--found { align-items: baseline; }
   /* the in-bar shortlist toggle: a filter drawn at the bar's control height,
      gold when pressed — the filled bookmark's color, never green (that is "saved") */
   .lshort-chip { display: inline-flex; align-items: center; height: 36px; padding: 0 12px;
@@ -4517,22 +4606,25 @@
 
 /* app/models/loan_request_match.rb — enum status, six values.
    The repo ships UI labels only for disposition, so these six
-   are title-cased from the enum and marked as ours. */
+   are derived from the enum and marked as ours — which is also why the
+   casing is ours to set: sentence case, 17 Sep. */
 const MATCH_STATUS = [
   { v:"pending",      label:"Pending",      tone:"muted" },
-  { v:"open_request", label:"Open Request", tone:"blue"  },
-  { v:"under_review", label:"Under Review", tone:"gold"  },
+  { v:"open_request", label:"Open request", tone:"blue"  },
+  { v:"under_review", label:"Under review", tone:"gold"  },
   { v:"interested",   label:"Interested",   tone:"green" },
-  { v:"not_a_fit",    label:"Not a Fit",    tone:"red"   },
+  { v:"not_a_fit",    label:"Not a fit",    tone:"red"   },
   { v:"declined",     label:"Declined",     tone:"red"   }
 ];
 
-/* app/(dashboard)/lenders/types.ts — DISPOSITION_OPTIONS, labels verbatim */
+/* app/(dashboard)/lenders/types.ts — DISPOSITION_OPTIONS. The words are the
+   shipped repo's, verbatim; the casing is ours and is sentence case from
+   17 Sep, the same split the Find Lenders label got on 14 Sep. */
 const DISPOSITION = [
-  { v:"not_yet_contacted",       label:"Not Yet Contacted",       tone:"gold"  },
-  { v:"has_not_responded",       label:"Has Not Responded",       tone:"muted" },
-  { v:"interested_under_review", label:"Interested - Under Review", tone:"blue" },
-  { v:"not_a_fit_disposition",   label:"Not a Fit",               tone:"red"   },
+  { v:"not_yet_contacted",       label:"Not yet contacted",       tone:"gold"  },
+  { v:"has_not_responded",       label:"Has not responded",       tone:"muted" },
+  { v:"interested_under_review", label:"Interested - under review", tone:"blue" },
+  { v:"not_a_fit_disposition",   label:"Not a fit",               tone:"red"   },
   { v:"quoted",                  label:"Quoted",                  tone:"green" }
 ];
 
@@ -4565,7 +4657,7 @@ const DEAL_STATUS = [
   { v:"Processing",     label:"Processing",     tone:"blue"  },
   { v:"Funded",         label:"Funded",         tone:"green" },
   { v:"Dead",           label:"Dead",           tone:"red"   },
-  { v:"On Hold",        label:"On Hold",        tone:"muted" }
+  { v:"On hold",        label:"On hold",        tone:"muted" }
 ];
 
 /* ===========================================================
@@ -4596,15 +4688,15 @@ const PROFILE = {
   office: "", mobile: "(602) 555-0134", city: "Austin", state: "TX",
   /* the four the sandbox account has claimed, in the shipped 24-value
      vocabulary — which of the three competing lists governs is open */
-  types: ["Multifamily", "Industrial", "Hotel/Motel", "Retail-Multi Tenant"],
+  types: ["Multifamily", "Industrial", "Hotel/motel", "Retail-multi tenant"],
   /* Executions, added 12 Sep for Tony's Figma comment on this section [T]:
      "We should add 'Executions' which is currently our list of 'Transaction
      Details' in our existing forms." The list he attached is the canonical 17
      this file already runs on, not the 9 on his Zoho form. Seeded to match the
      property types above — an agency/bridge/permanent broker on multifamily,
      industrial, hotel and retail — so the field is seen populated. [~] */
-  fins: ["Agency (Fannie Mae)", "Permanent | Fixed-Rate",
-         "Bridge / Short-Term Debt (<3 Yrs)", "Balance Sheet Debt"],
+  fins: ["Agency (Fannie Mae)", "Permanent | fixed-rate",
+         "Bridge / short-term debt (<3 yrs)", "Balance sheet debt"],
   minLoan: "1000000", maxLoan: "25000000",
   /* collected at sign-up and then unreachable in the shipped product:
      the field is hidden from brokers on the Areas of Focus tab and the
@@ -4653,7 +4745,7 @@ const DEALS = [
     financing:"Agency (Fannie Mae)", ltv:70, status:"Outreach",
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     /* one seeded contact so the deal page has the case to show — sample [~] */
-    contacts:[{ name:"Dana Reyes", role:"Transaction manager", email:"dana@sandboxcapital.com", phone:"(602) 555-0148" }],
+    contacts:[{ name:"Dana Reyes", role:"Transaction Manager", email:"dana@sandboxcapital.com", phone:"(602) 555-0148" }],
     /* Riverside is the one deal seeded with photos [~], so the rail's
        photo-above-map arrangement is visible without uploading anything
        first — every other deal shows the map alone, which is the common
@@ -4667,9 +4759,9 @@ const DEALS = [
        70% LTV implies a $6.4M basis, and the unit count, NOI and Sources & uses
        follow from it. [~] */
     units:42, occupancy:93.5, built:2016, price:6.4,
-    su:{ sources:[["Senior Debt",4500000],["Cash contributed by Sponsors & KPs",1700000],["Cash raised via Syndication",775000]],
-         uses:[["Purchase Price",6400000],["CapEx",320000],["Lender Origination Fees",45000],["Mortgage Broker Fee",56000],["Legal Fees",60000],["Third-Party Reports",34000],["Other Closing Costs",60000]] },
-    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"4-Year",
+    su:{ sources:[["Senior debt",4500000],["Cash contributed by sponsors & KPs",1700000],["Cash raised via syndication",775000]],
+         uses:[["Purchase price",6400000],["CapEx",320000],["Lender origination fees",45000],["Mortgage broker fee",56000],["Legal fees",60000],["Third-party reports",34000],["Other closing costs",60000]] },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"4-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
     plan:{ strategy:"Renovate & increase rents", timeline:"24 months to stabilized", noi:352000, exit:"Long-term hold" },
     mgmt:{ kind:"Third-Party", co:"Bayou Residential Management", props:12, units:2400 },
@@ -4694,17 +4786,17 @@ const DEALS = [
   },
   {
     id:"midtown", name:"Midtown Retail Permanent Debt", observed:"all",
-    amt:3.1, property:"Retail-Multi Tenant", city:"Dallas", state:"TX", zip:"75201", addr:"2310 McKinney Ave",
+    amt:3.1, property:"Retail-multi tenant", city:"Dallas", state:"TX", zip:"75201", addr:"2310 McKinney Ave",
     financing:"Agency (Fannie Mae)", ltv:65, status:"Quoting",
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:88.0, built:2004, balance:2.35,
     summary:"Permanent debt to retire a maturing bridge facility on a nine-tenant neighbourhood centre. Anchor lease renewed through 2033; the borrower is rate-sensitive and will trade proceeds for term.",
-    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"No IO",
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"No IO",
             prepay:"Okay with yield maintenance", hold:"10 years" },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 no repositioning planned", noi:268000, exit:"Long-term hold" },
     mgmt:{ kind:"Borrower Affiliated", co:"Kessler Retail Services", props:4, units:null },
-    su:{ sources:[["Senior Debt",3100000]],
-         uses:[["Pay Off Outstanding Balance",2350000],["CapEx",575000],["Lender Origination Fees",31000],["Mortgage Broker Fee",39000],["Legal Fees",45000],["Third-Party Reports",28000],["Other Closing Costs",32000]] },
+    su:{ sources:[["Senior debt",3100000]],
+         uses:[["Pay off outstanding balance",2350000],["CapEx",575000],["Lender origination fees",31000],["Mortgage broker fee",39000],["Legal fees",45000],["Third-party reports",28000],["Other closing costs",32000]] },
     sw:{ strengths:"The anchor renewed through 2033, so more than half the income is contracted past the term of the loan being sought. Projected NOI of $268,000 is an 8.6% debt yield on $3.1M, and the 2004 vintage means the CapEx here is tenant improvement rather than building work.",
         weaknesses:"Twelve per cent vacant across a nine-tenant centre, and one anchor carries the rent roll \u2014 a single departure moves the coverage. Mitigating: the anchor is the tenant with the longest remaining term, the borrower is taking no interest-only so the loan amortises from month one, and yield maintenance was accepted to buy the lowest fixed rate." },
     sponsor:{ name:"Kessler Midtown Holdings", lead:"R. Kessler", track:"4 retail centres, 1 exit", principals:1, liquidity:1.6, worth:7.4, years:9,
@@ -4720,12 +4812,12 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:100, built:1998, balance:4.1,
     summary:"Cash-out refinance on a fully leased 140,000 sq ft last-mile distribution building. Single tenant, seven years remaining, annual escalations of 3%.",
-    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan","CMBS Loan"], program:"10-Yr", io:"3-Year",
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan","CMBS loan"], program:"10-Yr", io:"3-Year",
             prepay:"Okay with defeasance", hold:"10 years" },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 single tenant, seven years remaining", noi:563000, exit:"Long-term hold" },
     mgmt:{ kind:"Self-Managed", co:"Northside Logistics Partners", props:9, units:null },
-    su:{ sources:[["Senior Debt",6400000]],
-         uses:[["Pay Off Outstanding Balance",4100000],["Cash Out to Sponsor",1950000],["Lender Origination Fees",64000],["Mortgage Broker Fee",80000],["Legal Fees",55000],["Third-Party Reports",42000],["Other Closing Costs",109000]] },
+    su:{ sources:[["Senior debt",6400000]],
+         uses:[["Pay off outstanding balance",4100000],["Cash out to sponsor",1950000],["Lender origination fees",64000],["Mortgage broker fee",80000],["Legal fees",55000],["Third-party reports",42000],["Other closing costs",109000]] },
     sw:{ strengths:"One hundred per cent leased with seven years remaining and 3% annual escalations, so the income steps up through the whole term. At 60% LTV this is the least levered request in the pipeline, and $563,000 of NOI is an 8.8% debt yield on $6.4M.",
         weaknesses:"Single-tenant, which means occupancy is binary: the building is either fully leased or empty, and the 1998 shell would need capital to re-tenant. Mitigating: seven years of remaining term outruns any near-term rollover, the sponsor has 21 years and nine industrial assets behind it, and 60% leverage leaves room to carry a vacancy." },
     sponsor:{ name:"Northside Logistics Partners", lead:"D. Ferraro", track:"9 industrial assets, 5 exits", principals:3, liquidity:6.8, worth:24.5, years:21,
@@ -4734,7 +4826,7 @@ const DEALS = [
   },
   {
     id:"gulf", name:"Gulf Coast Hotel Bridge Loan", observed:"name+location",
-    amt:8.25, property:"Hotel/Motel", city:"Tampa", state:"FL", zip:"33602", addr:"915 Bayshore Blvd",
+    amt:8.25, property:"Hotel/motel", city:"Tampa", state:"FL", zip:"33602", addr:"915 Bayshore Blvd",
     /* Type of Financing is optional on the request form and this request left it
        unset — so the empty value is the product's, not a gap in our data. It is the
        only deal that carries it, and it is what makes the empty state visible. */
@@ -4742,12 +4834,12 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     units:132, occupancy:71.2, built:2009, price:11.0,
     summary:"Bridge facility to acquire and reposition a 132-key select-service hotel two blocks from the convention centre. Eighteen-month business plan, PIP budgeted at $2.1M, exit to agency or CMBS on stabilisation.",
-    terms:{ executions:["Bridge Loan"], program:"Floater", io:"Full-Term IO",
+    terms:{ executions:["Bridge loan"], program:"Floater", io:"Full-Term IO",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"3 years" },
     plan:{ strategy:"Reposition", timeline:"18 months to stabilized", noi:1180000, exit:"Refinance" },
     mgmt:{ kind:"Third-Party", co:"Bayshore Hotel Management", props:7, units:940 },
-    su:{ sources:[["Senior Debt",8250000],["C-Pace",600000],["Preferred Equity",1500000],["Cash contributed by Sponsors & KPs",1350000],["Cash raised via Syndication",800000]],
-         uses:[["Purchase Price",11000000],["CapEx",1000000],["Lender Origination Fees",124000],["Mortgage Broker Fee",103000],["Legal Fees",95000],["Third-Party Reports",68000],["Other Closing Costs",110000]] },
+    su:{ sources:[["Senior debt",8250000],["C-Pace",600000],["Preferred equity",1500000],["Cash contributed by sponsors & KPs",1350000],["Cash raised via syndication",800000]],
+         uses:[["Purchase price",11000000],["CapEx",1000000],["Lender origination fees",124000],["Mortgage broker fee",103000],["Legal fees",95000],["Third-party reports",68000],["Other closing costs",110000]] },
     sw:{ strengths:"Two blocks from the convention centre, which is the demand driver the whole plan runs on, and the sponsor has eleven hotels and six exits behind it. The PIP is fully budgeted at $1.0M rather than assumed, with $600,000 of it carried by a C-PACE assessment rather than by equity, and full-term interest-only holds debt service flat across the eighteen-month plan.",
         weaknesses:"Occupancy is 71.2% going in and the exit is a refinance, so the plan depends on both stabilising the asset and a receptive debt market in three years. The stack is also the busiest here: $600,000 of C-PACE and $1.5M of preferred equity sit between the loan and the sponsor, so a senior lender is underwriting an intercreditor and an assessment that ranks ahead of its own lien. Mitigating: $2.15M of sponsor and syndicated cash still sits beneath all of it, the hold is set to three years against an eighteen-month plan, and stabilised NOI of $1.18M would be a 14.3% debt yield on the senior loan and 13.3% including the assessment \u2014 wide enough to absorb a miss." },
     sponsor:{ name:"Causeway Hospitality Group", lead:"T. Okonkwo", track:"11 hotels, 6 exits", principals:2, liquidity:9.2, worth:41.0, years:18,
@@ -4758,17 +4850,17 @@ const DEALS = [
      enough rows to filter — no part of them is observed */
   {
     id:"lakeline", name:"Lakeline Self-Storage Refinance", observed:false,
-    amt:4.6, property:"Self-Storage", city:"Orlando", state:"FL", zip:"32803", addr:"4120 E Colonial Dr",
-    financing:"Balance Sheet Debt", ltv:65, status:"Screening",
+    amt:4.6, property:"Self-storage", city:"Orlando", state:"FL", zip:"32803", addr:"4120 E Colonial Dr",
+    financing:"Balance sheet debt", ltv:65, status:"Screening",
     created:"29 Jul", updated:"11 Aug", txType:"Refinance",
     units:610, occupancy:88.4, built:2017, balance:3.7,
     summary:"Rate-and-term refinance of a 610-unit climate-controlled self-storage facility, stabilised at 88% for six consecutive quarters. Existing bank loan matures in November.",
-    terms:{ executions:["CMBS Loan"], program:"10-Yr", io:"1-Year",
+    terms:{ executions:["CMBS loan"], program:"10-Yr", io:"1-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised at 88% for six consecutive quarters", noi:391000, exit:"Refinance" },
     mgmt:{ kind:"Self-Managed", co:"Sunbelt Storage Partners", props:9, units:5400 },
-    su:{ sources:[["Senior Debt",4600000]],
-         uses:[["Pay Off Outstanding Balance",3700000],["CapEx",620000],["Lender Origination Fees",46000],["Mortgage Broker Fee",58000],["Legal Fees",48000],["Third-Party Reports",31000],["Other Closing Costs",97000]] },
+    su:{ sources:[["Senior debt",4600000]],
+         uses:[["Pay off outstanding balance",3700000],["CapEx",620000],["Lender origination fees",46000],["Mortgage broker fee",58000],["Legal fees",48000],["Third-party reports",31000],["Other closing costs",97000]] },
     sw:{ strengths:"Six consecutive quarters at 88% is a stabilisation record rather than a projection, and the 2017 build means the climate control is current. $391,000 of NOI is an 8.5% debt yield on $4.6M at 65% leverage.",
         weaknesses:"The existing bank loan matures, so this is a refinance on someone else\u2019s clock rather than the sponsor\u2019s. Mitigating: the asset is already stabilised so no lease-up has to happen first, the request is rate-and-term rather than a cash-out, and self-management across nine assets and 5,400 units in this market keeps the operating cost base known." },
     sponsor:{ name:"Sunbelt Storage Partners", lead:"K. Reyes", track:"9 storage assets, 2 exits", principals:3, liquidity:2.8, worth:12.4, years:11,
@@ -4777,17 +4869,17 @@ const DEALS = [
   },
   {
     id:"crescent", name:"Crescent Senior Living Acquisition", observed:false,
-    amt:9.75, property:"Senior Housing", city:"Phoenix", state:"AZ", zip:"85012", addr:"3550 N Central Ave",
+    amt:9.75, property:"Senior housing", city:"Phoenix", state:"AZ", zip:"85012", addr:"3550 N Central Ave",
     financing:"Agency (Fannie Mae)", ltv:72, status:"Screening",
     created:"2 Aug", updated:"9 Aug", txType:"Acquisition",
     units:96, occupancy:91.0, built:2012, price:13.5,
     summary:"Acquisition of a 96-unit independent-living community with an in-place operator staying on under a new management agreement. Seeking agency execution with a 35-year amortisation.",
-    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan","FHA/HUD"], program:"10-Yr", io:"2-Year",
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan","FHA/HUD"], program:"10-Yr", io:"2-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
     plan:{ strategy:"Stabilize", timeline:"12 months to stabilized", noi:812000, exit:"Long-term hold" },
     mgmt:{ kind:"Third-Party", co:"Desert Bloom Senior Living", props:11, units:1240 },
-    su:{ sources:[["Senior Debt",9750000],["Mezz Debt",1600000],["Cash contributed by Sponsors & KPs",1900000],["Cash raised via Syndication",800000]],
-         uses:[["Purchase Price",13500000],["CapEx",150000],["Lender Origination Fees",98000],["Mortgage Broker Fee",122000],["Legal Fees",82000],["Third-Party Reports",48000],["Other Closing Costs",50000]] },
+    su:{ sources:[["Senior debt",9750000],["Mezz debt",1600000],["Cash contributed by sponsors & KPs",1900000],["Cash raised via syndication",800000]],
+         uses:[["Purchase price",13500000],["CapEx",150000],["Lender origination fees",98000],["Mortgage broker fee",122000],["Legal fees",82000],["Third-party reports",48000],["Other closing costs",50000]] },
     sw:{ strengths:"The in-place operator stays on under a new management agreement, so the plan does not depend on an operator transition \u2014 the usual failure point in seniors. 91% occupied at a 2012 vintage, with only $150,000 of CapEx budgeted, and both agency and HUD executions are open to it.",
         weaknesses:"Independent living is the operator-sensitive end of the property type, the sponsor has four senior assets and one exit against a $13.5M purchase, and a $1.6M mezzanine piece takes total leverage to 84% \u2014 the highest here, and an intercreditor the senior lender has to agree to. Mitigating: the operator has 1,240 units under management in this market, $2.7M of common equity still sits beneath both loans, and stabilised NOI of $812,000 is an 8.3% debt yield on the senior and 7.2% across the whole stack, with two years of interest-only to reach it." },
     sponsor:{ name:"Cactus Wren Capital", lead:"D. Whitehorse", track:"4 senior assets, 1 exit", principals:2, liquidity:5.6, worth:22.7, years:9,
@@ -4796,17 +4888,17 @@ const DEALS = [
   },
   {
     id:"pearl", name:"Pearl District Office Refinance", observed:false,
-    amt:7.2, property:"Office-Multi Tenant", city:"New York", state:"NY", zip:"10013", addr:"148 Lafayette St",
-    financing:"Balance Sheet Debt", ltv:58, status:"Leads",
+    amt:7.2, property:"Office-multi tenant", city:"New York", state:"NY", zip:"10013", addr:"148 Lafayette St",
+    financing:"Balance sheet debt", ltv:58, status:"Leads",
     created:"15 Jul", updated:"6 Aug", txType:"Refinance",
     occupancy:82.5, built:1998, balance:5.9,
     summary:"Cash-neutral refinance of a boutique eight-storey office building, 82% leased across eleven tenants with a 4.2-year WALT. Draft — rent roll still being assembled.",
-    terms:{ executions:["CMBS Loan","Bridge Loan"], program:"5-Yr", io:"1-Year",
+    terms:{ executions:["CMBS loan","Bridge loan"], program:"5-Yr", io:"1-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"5 years" },
     plan:{ strategy:"Stabilize", timeline:"24 months to stabilized", noi:634000, exit:"Sell" },
     mgmt:{ kind:"Third-Party", co:"Lafayette Property Services", props:14, units:null },
-    su:{ sources:[["Senior Debt",7200000],["Cash contributed by Sponsors & KPs",300000]],
-         uses:[["Pay Off Outstanding Balance",5900000],["CapEx",1150000],["Lender Origination Fees",72000],["Mortgage Broker Fee",90000],["Legal Fees",130000],["Third-Party Reports",58000],["Other Closing Costs",100000]] },
+    su:{ sources:[["Senior debt",7200000],["Cash contributed by sponsors & KPs",300000]],
+         uses:[["Pay off outstanding balance",5900000],["CapEx",1150000],["Lender origination fees",72000],["Mortgage broker fee",90000],["Legal fees",130000],["Third-party reports",58000],["Other closing costs",100000]] },
     sw:{ strengths:"Eleven tenants across eight floors, so no single departure moves the rent roll, and the 4.2-year WALT outruns the five-year term being sought. The request is cash-neutral at 58% LTV \u2014 the lowest leverage in the pipeline \u2014 and $1.15M of leasing capital is funded inside the loan rather than assumed.",
         weaknesses:"Office in 2026, 82.5% leased in a 1998 building, and the exit is a sale into a property type lenders are pricing defensively. Mitigating: leverage is 58%, the sponsor carries $6.1M of liquidity against a $7.2M loan, and the CapEx line is sized to lease the vacant 17.5% rather than to reposition the building. The rent roll is still being assembled, so every figure here is the sponsor\u2019s until it is verified." },
     sponsor:{ name:"Mercer Street Holdings", lead:"A. Petrov", track:"7 office assets, 3 exits", principals:4, liquidity:6.1, worth:35.8, years:16,
@@ -4815,17 +4907,17 @@ const DEALS = [
   },
   {
     id:"oldtown", name:"Old Town Mixed-Use Bridge", observed:false,
-    amt:5.4, property:"Mixed-Use", city:"San Antonio", state:"TX", zip:"78205", addr:"310 E Commerce St",
-    financing:"Bridge / Short-Term Debt (<3 Yrs)", ltv:68, status:"Dead",
+    amt:5.4, property:"Mixed-use", city:"San Antonio", state:"TX", zip:"78205", addr:"310 E Commerce St",
+    financing:"Bridge / short-term debt (<3 yrs)", ltv:68, status:"Dead",
     created:"12 Jul", updated:"28 Jul", txType:"Acquisition",
     units:24, occupancy:64.0, built:1962, price:7.4,
     summary:"Duplicate of an earlier submission for the same property — archived. Ground-floor retail with 24 lofts above, heavy-lift reposition of a 1962 building.",
-    terms:{ executions:["Bridge Loan"], program:"Floater", io:"Full-Term IO",
+    terms:{ executions:["Bridge loan"], program:"Floater", io:"Full-Term IO",
             prepay:"Must have no prepay (fewer competitive options)", hold:"3 years" },
     plan:{ strategy:"Reposition", timeline:"24 months to stabilized", noi:486000, exit:"Refinance" },
     mgmt:{ kind:"Borrower Affiliated", co:"Alamo Urban Management", props:5, units:96 },
-    su:{ sources:[["Senior Debt",5400000],["Cash contributed by Sponsors & KPs",1600000],["Cash raised via Syndication",900000]],
-         uses:[["Purchase Price",7400000],["CapEx",300000],["Lender Origination Fees",54000],["Mortgage Broker Fee",68000],["Legal Fees",40000],["Third-Party Reports",22000],["Other Closing Costs",16000]] },
+    su:{ sources:[["Senior debt",5400000],["Cash contributed by sponsors & KPs",1600000],["Cash raised via syndication",900000]],
+         uses:[["Purchase price",7400000],["CapEx",300000],["Lender origination fees",54000],["Mortgage broker fee",68000],["Legal fees",40000],["Third-party reports",22000],["Other closing costs",16000]] },
     sw:{ strengths:"Ground-floor retail under 24 lofts on a downtown block, and $2.5M of sponsor and syndicated equity sits beneath a 68% loan. Full-term interest-only with no prepay holds debt service flat and leaves the exit refinance unpenalised.",
         weaknesses:"A 1962 building at 64% occupancy is a heavy-lift reposition, and $300,000 of CapEx is thin against a building of that age. Mitigating: the sponsor is borrower-affiliated on management so the operating plan and the ownership are the same people, and the hold is three years against a twenty-four-month plan. This request is a duplicate of an earlier submission and was archived, so none of it was underwritten." },
     sponsor:{ name:"Alamo Urban Ventures", lead:"R. Casillas", track:"5 mixed-use assets, 2 exits", principals:2, liquidity:1.9, worth:8.6, years:7,
@@ -4844,17 +4936,17 @@ const DEALS = [
      table frame. */
   {
     id:"harborview", name:"Harborview Student Housing Acquisition", observed:false,
-    amt:10.5, property:"Student Housing", city:"Austin", state:"TX", zip:"78705", addr:"2222 Rio Grande St",
+    amt:10.5, property:"Student housing", city:"Austin", state:"TX", zip:"78705", addr:"2222 Rio Grande St",
     financing:"Agency (Freddie Mac)", ltv:70, status:"Leads",
     created:"22 Aug", updated:"25 Aug", txType:"Acquisition",
     units:184, occupancy:96.0, built:2014, price:13.9,
     summary:"Acquisition of a 184-bed purpose-built student housing asset four blocks from campus, pre-leased at 96% for the coming academic year. Intake received; sizing not started.",
-    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"3-Year",
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"3-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 pre-leased at 96% for the coming year", noi:892000, exit:"Long-term hold" },
     mgmt:{ kind:"Third-Party", co:"Campus Living Group", props:6, units:1860 },
-    su:{ sources:[["Senior Debt",10500000],["Institutional GP/LP Equity",3500000],["Cash contributed by Sponsors & KPs",400000]],
-         uses:[["Purchase Price",13900000],["CapEx",180000],["Lender Origination Fees",105000],["Mortgage Broker Fee",131000],["Legal Fees",45000],["Third-Party Reports",39000]] },
+    su:{ sources:[["Senior debt",10500000],["Institutional GP/LP Equity",3500000],["Cash contributed by sponsors & KPs",400000]],
+         uses:[["Purchase price",13900000],["CapEx",180000],["Lender origination fees",105000],["Mortgage broker fee",131000],["Legal fees",45000],["Third-party reports",39000]] },
     sw:{ strengths:"Pre-leased at 96% for the coming academic year, so the income is contracted before closing rather than projected, and four blocks from campus is the distance the property type is priced on. Purpose-built in 2014, so $180,000 of CapEx is the whole capital plan.",
         weaknesses:"Student housing re-leases its entire rent roll every twelve months, the sponsor has three assets and one exit against a $13.9M purchase, and its own cash in the deal is $400,000 against $3.5M from an institutional LP \u2014 a 10% co-invest is the thin end of what a lender wants to see. Mitigating: the manager runs 1,860 beds in this market, $3.9M of equity still sits beneath a 70% agency loan and the LP is one decision-maker rather than a retail syndication, and three years of interest-only covers two full leasing cycles before amortisation starts." },
     sponsor:{ name:"Longhorn Campus Partners", lead:"J. Okafor", track:"3 student assets, 1 exit", principals:2, liquidity:3.4, worth:14.6, years:8,
@@ -4864,16 +4956,16 @@ const DEALS = [
   {
     id:"magnolia", name:"Magnolia Court Multifamily Refinance", observed:false,
     amt:14.2, property:"Multifamily", city:"Charleston", state:"SC", zip:"29401", addr:"78 Magnolia Rd",
-    financing:"Permanent | Fixed-Rate", ltv:64, status:"Leads",
+    financing:"Permanent | fixed-rate", ltv:64, status:"Leads",
     created:"24 Aug", updated:"26 Aug", txType:"Refinance",
     units:248, occupancy:94.8, built:2019, balance:11.4,
     summary:"Refinance of a 248-unit Class A community out of a maturing construction facility. Stabilised eighteen months; the sponsor wants a ten-year fixed and is testing whether proceeds support a partial return of capital.",
-    terms:{ executions:["Fannie Mae / Freddie Mac Fixed Rate Loan"], program:"10-Yr", io:"5-Year",
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"5-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised eighteen months", noi:1164000, exit:"Long-term hold" },
     mgmt:{ kind:"Third-Party", co:"Lowcountry Residential", props:9, units:2140 },
-    su:{ sources:[["Senior Debt",14200000]],
-         uses:[["Pay Off Outstanding Balance",11400000],["Cash Out to Sponsor",2155000],["CapEx",118000],["Lender Origination Fees",142000],["Mortgage Broker Fee",178000],["Legal Fees",95000],["Third-Party Reports",62000],["Other Closing Costs",50000]] },
+    su:{ sources:[["Senior debt",14200000]],
+         uses:[["Pay off outstanding balance",11400000],["Cash out to sponsor",2155000],["CapEx",118000],["Lender origination fees",142000],["Mortgage broker fee",178000],["Legal fees",95000],["Third-party reports",62000],["Other closing costs",50000]] },
     sw:{ strengths:"A 2019 Class A asset stabilised for eighteen months at 94.8%, taking out a construction facility \u2014 the risk the lender is asked to price has already been retired by the sponsor. At 64% LTV, $1.164M of NOI is an 8.2% debt yield, and five years of interest-only on a ten-year fixed is the widest coverage window in the pipeline.",
         weaknesses:"The construction loan matures, so the timetable belongs to the maturing lender and not to the borrower, and $2.155M of the proceeds returns development equity rather than staying in the asset. Mitigating: the sponsor holds $7.9M of liquidity against a $14.2M request, the asset needs no capital beyond $118,000, and the take-out is a straightforward agency execution on a stabilised Class A property." },
     sponsor:{ name:"Palmetto Court Holdings", lead:"S. Delacroix", track:"6 multifamily assets, 2 exits", principals:3, liquidity:7.9, worth:29.3, years:13,
@@ -4883,16 +4975,16 @@ const DEALS = [
   {
     id:"foundry", name:"Foundry Flex Industrial Purchase", observed:false,
     amt:5.8, property:"Industrial", city:"Charlotte", state:"NC", zip:"28202", addr:"1129 S Tryon St",
-    financing:"Balance Sheet Debt", ltv:62, status:"Screening",
+    financing:"Balance sheet debt", ltv:62, status:"Screening",
     created:"18 Aug", updated:"24 Aug", txType:"Acquisition",
     units:null, occupancy:87.5, built:2006, price:9.1,
     summary:"Purchase of a 92,000 sq ft multi-tenant flex industrial park, 87% leased across six tenants with a 3.1-year WALT. Package being assembled; two rent-roll gaps outstanding.",
-    terms:{ executions:["CMBS Loan","Bridge Loan"], program:"7-Yr", io:"2-Year",
+    terms:{ executions:["CMBS loan","Bridge loan"], program:"7-Yr", io:"2-Year",
             prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
     plan:{ strategy:"Stabilize", timeline:"18 months to stabilized", noi:522000, exit:"Sell" },
     mgmt:{ kind:"Borrower Affiliated", co:"Catawba Asset Services", props:5, units:null },
-    su:{ sources:[["Senior Debt",5800000],["Cash contributed by Sponsors & KPs",2700000],["Cash raised via Syndication",1000000]],
-         uses:[["Purchase Price",9100000],["CapEx",180000],["Lender Origination Fees",58000],["Mortgage Broker Fee",73000],["Legal Fees",44000],["Third-Party Reports",31000],["Other Closing Costs",14000]] },
+    su:{ sources:[["Senior debt",5800000],["Cash contributed by sponsors & KPs",2700000],["Cash raised via syndication",1000000]],
+         uses:[["Purchase price",9100000],["CapEx",180000],["Lender origination fees",58000],["Mortgage broker fee",73000],["Legal fees",44000],["Third-party reports",31000],["Other closing costs",14000]] },
     sw:{ strengths:"Six tenants across 92,000 sq ft, so the vacancy is spread rather than concentrated, and flex industrial in Charlotte is the tightest sub-market the pipeline touches. $3.7M of equity sits beneath a 62% loan and $522,000 of NOI is a 9.0% debt yield \u2014 the widest of any stabilised request here.",
         weaknesses:"A 3.1-year WALT is shorter than the seven-year term being sought, so the rent roll turns over inside the loan, and two rent-roll gaps are still open in the package. Mitigating: 62% leverage and a 9% debt yield leave room for re-leasing downtime, the sponsor manages the asset itself, and two years of interest-only covers the eighteen-month stabilisation." },
     sponsor:{ name:"Catawba Industrial Group", lead:"B. Nkemelu", track:"5 industrial assets, 2 exits", principals:2, liquidity:4.7, worth:19.1, years:12,
@@ -4905,76 +4997,76 @@ const DEALS = [
    actually seen; the other twenty-six are sample data with criteria
    written so the scoring has something to discriminate on. */
 const NETWORK = [
-  { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", role:"Principal", acct:"sandbox", src:"network", inst:"Debt Fund", observed:true, lo:1, hi:25, mo:0,
-    prop:["Multifamily","Industrial","Retail-Multi Tenant","Mixed-Use"], st:["TX","FL","GA","NC"],
-    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | Fixed-Rate","Bridge / Short-Term Debt (<3 Yrs)","CMBS"],
+  { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", role:"Principal", acct:"sandbox", src:"network", inst:"Debt fund", observed:true, lo:1, hi:25, mo:0,
+    prop:["Multifamily","Industrial","Retail-multi tenant","Mixed-use"], st:["TX","FL","GA","NC"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | fixed-rate","Bridge / short-term debt (<3 yrs)","CMBS"],
     adm:{ by:"Tony Talamas", on:"12 Jun", mo:3,
       txt:"Lena is the fastest read in the network on anything already stabilised, usually back inside two days. She will not open a construction take-out until the certificate of occupancy is in hand, so send those with it attached or expect a bounce." } },
-  { id:2,  co:"Sunbelt Agency Group", ct:"Nadia Coleman", role:"Managing Director, Agency", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:3, hi:50, mo:0,
-    prop:["Multifamily","Senior Housing","Student Housing"], st:["TX","OK","AZ","NM","GA"],
-    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","FHA/HUD","Permanent | Fixed-Rate"] },
-  { id:3,  co:"Harbor Point Advisors", ct:"Alexis Nwosu", role:"Managing Partner", acct:"harbor", src:"network", inst:"Non-Bank / Investment Fund", lo:2, hi:30, mo:2,
-    prop:["Multifamily","Mixed-Use","Retail-Multi Tenant"], st:["TX","LA","FL"],
-    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Bridge / Short-Term Debt (<3 Yrs)"],
+  { id:2,  co:"Sunbelt Agency Group", ct:"Nadia Coleman", role:"Managing Director, Agency", acct:"sunbelt", src:"network", inst:"Agency lender", lo:3, hi:50, mo:0,
+    prop:["Multifamily","Senior housing","Student housing"], st:["TX","OK","AZ","NM","GA"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","FHA/HUD","Permanent | fixed-rate"] },
+  { id:3,  co:"Harbor Point Advisors", ct:"Alexis Nwosu", role:"Managing Partner", acct:"harbor", src:"network", inst:"Non-bank / investment fund", lo:2, hi:30, mo:2,
+    prop:["Multifamily","Mixed-use","Retail-multi tenant"], st:["TX","LA","FL"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Bridge / short-term debt (<3 yrs)"],
     adm:{ by:"Tony Talamas", on:"4 Aug", mo:1,
       txt:"Harbor Point moved their credit committee to fortnightly in May, so an indicative quote that used to come back in a week now takes two. Alexis is straight about it and will give you the next committee date if you ask for it." } },
-  { id:4,  co:"Meridian Debt Partners", ct:"Alice Chen", role:"Director, Originations", acct:"meridian", src:"network", inst:"Non-Bank / Investment Fund", lo:1, hi:15, mo:0,
-    prop:["Retail-Multi Tenant","Self-Storage","Industrial"], st:["TX","OK"],
-    fin:["Bridge / Short-Term Debt (<3 Yrs)","CMBS"] },
-  { id:5,  co:"Cobalt Street Capital", ct:"Sofia Marchetti", role:"VP, CRE Lending", acct:"cobalt", src:"network", inst:"Debt Fund", lo:2, hi:50, mo:0,
-    prop:["Retail-Multi Tenant","Mixed-Use","Office-Multi Tenant"], st:["TX","NY","NJ"],
-    fin:["Mezz Debt","Equity (Preferred)","Bridge / Short-Term Debt (<3 Yrs)"] },
-  { id:6,  co:"Northline Capital", ct:"Dana Ortiz", role:"SVP, Real Estate Finance", acct:"northline", src:"network", inst:"Life Insurance Company", lo:10, hi:75, mo:0,
-    prop:["Multifamily","Senior Housing","Student Housing"], st:["AZ","CA","NV","TX"],
-    fin:["Permanent | Fixed-Rate","Agency (Fannie Mae)","Agency (Freddie Mac)","Balance Sheet Debt"] },
-  { id:7,  co:"Fielding Life & Annuity", ct:"Robert Nakamura", role:"Managing Director", acct:"fielding", src:"network", inst:"Life Insurance Company", lo:15, hi:100, mo:6,
-    prop:["Multifamily","Senior Housing","Assisted Living / Memory Care"], st:["AZ","TX","NM"],
-    fin:["Permanent | Fixed-Rate","FHA/HUD"],
+  { id:4,  co:"Meridian Debt Partners", ct:"Alice Chen", role:"Director, Originations", acct:"meridian", src:"network", inst:"Non-bank / investment fund", lo:1, hi:15, mo:0,
+    prop:["Retail-multi tenant","Self-storage","Industrial"], st:["TX","OK"],
+    fin:["Bridge / short-term debt (<3 yrs)","CMBS"] },
+  { id:5,  co:"Cobalt Street Capital", ct:"Sofia Marchetti", role:"VP, CRE Lending", acct:"cobalt", src:"network", inst:"Debt fund", lo:2, hi:50, mo:0,
+    prop:["Retail-multi tenant","Mixed-use","Office-multi tenant"], st:["TX","NY","NJ"],
+    fin:["Mezz debt","Equity (preferred)","Bridge / short-term debt (<3 yrs)"] },
+  { id:6,  co:"Northline Capital", ct:"Dana Ortiz", role:"SVP, Real Estate Finance", acct:"northline", src:"network", inst:"Life insurance company", lo:10, hi:75, mo:0,
+    prop:["Multifamily","Senior housing","Student housing"], st:["AZ","CA","NV","TX"],
+    fin:["Permanent | fixed-rate","Agency (Fannie Mae)","Agency (Freddie Mac)","Balance sheet debt"] },
+  { id:7,  co:"Fielding Life & Annuity", ct:"Robert Nakamura", role:"Managing Director", acct:"fielding", src:"network", inst:"Life insurance company", lo:15, hi:100, mo:6,
+    prop:["Multifamily","Senior housing","Assisted living / memory care"], st:["AZ","TX","NM"],
+    fin:["Permanent | fixed-rate","FHA/HUD"],
     adm:{ by:"Tony Talamas", on:"2 Mar", mo:6,
       txt:"Fielding sets its allocation once a year and they were close to fully committed when we last spoke. Worth a call before you package anything for them, because a full book is a decline that no criteria screen can predict." } },
   { id:8,  co:"Piedmont Regional Bank", ct:"Grace Whitfield", role:"SVP, Commercial Real Estate", acct:"piedmont", src:"network", inst:"Bank", lo:1, hi:12, mo:1,
-    prop:["Industrial","Office-Owner/User","Retail-Single Tenant"], st:["GA","NC","SC","TN"],
-    fin:["Balance Sheet Debt","Construction Loans"],
+    prop:["Industrial","Office-owner/user","Retail-single tenant"], st:["GA","NC","SC","TN"],
+    fin:["Balance sheet debt","Construction loans"],
     adm:{ by:"Tony Talamas", on:"28 Aug", mo:0,
       txt:"Grace took over the CRE desk in April, after Piedmont lost the SVP who ran it. The bank's appetite has not changed on paper, but she is rebuilding the book and has been taking meetings on deals the old desk would have passed on." } },
-  { id:9,  co:"Atlantic Coast Credit Union", ct:"Miles Barrera", role:"VP, Member Business Lending", acct:"atlantic", src:"network", nj:12, inst:"Credit Union", lo:1, hi:8, mo:3,
-    prop:["Industrial","Multifamily","Mixed-Use"], st:["GA","FL","SC"],
-    fin:["Balance Sheet Debt","Permanent | Fixed-Rate"],
+  { id:9,  co:"Atlantic Coast Credit Union", ct:"Miles Barrera", role:"VP, Member Business Lending", acct:"atlantic", src:"network", nj:12, inst:"Credit union", lo:1, hi:8, mo:3,
+    prop:["Industrial","Multifamily","Mixed-use"], st:["GA","FL","SC"],
+    fin:["Balance sheet debt","Permanent | fixed-rate"],
     adm:{ by:"Tony Talamas", on:"19 May", mo:4,
       txt:"Member business lending here means the borrower has to join the credit union before anything can be underwritten, which adds about a week to the front of every file. Miles handles the membership side himself if you flag it to him early." } },
-  { id:10, co:"Gulf Bridge Credit", ct:"Ana Ferreira", role:"Director, Originations", acct:"gulfbridge", src:"network", inst:"Debt Fund", lo:5, hi:40, mo:0,
-    prop:["Hotel/Motel","Retail-Multi Tenant","Mixed-Use"], st:["FL","AL","MS","LA","TX"],
-    fin:["Bridge / Short-Term Debt (<3 Yrs)","Mezz Debt"] },
-  { id:11, co:"Bayfront Hospitality Finance", ct:"Owen Castellanos", role:"Managing Director", acct:"bayfront", src:"network", inst:"Non-Bank / Investment Fund", lo:5, hi:60, mo:1,
-    prop:["Hotel/Motel","RV Park","Marina"], st:["FL","GA","SC"],
-    fin:["Bridge / Short-Term Debt (<3 Yrs)","Construction Loans","CMBS"] },
+  { id:10, co:"Gulf Bridge Credit", ct:"Ana Ferreira", role:"Director, Originations", acct:"gulfbridge", src:"network", inst:"Debt fund", lo:5, hi:40, mo:0,
+    prop:["Hotel/motel","Retail-multi tenant","Mixed-use"], st:["FL","AL","MS","LA","TX"],
+    fin:["Bridge / short-term debt (<3 yrs)","Mezz debt"] },
+  { id:11, co:"Bayfront Hospitality Finance", ct:"Owen Castellanos", role:"Managing Director", acct:"bayfront", src:"network", inst:"Non-bank / investment fund", lo:5, hi:60, mo:1,
+    prop:["Hotel/motel","RV park","Marina"], st:["FL","GA","SC"],
+    fin:["Bridge / short-term debt (<3 yrs)","Construction loans","CMBS"] },
   { id:12, co:"Keystone CMBS Conduit", ct:"Priya Raman", role:"Executive Director", acct:"keystone", src:"network", nj:9, inst:"Conduit", lo:10, hi:150, mo:2,
-    prop:["Retail-Multi Tenant","Office-Multi Tenant","Industrial","Hotel/Motel"], st:["TX","FL","GA","AZ","NY","CA","IL"],
-    fin:["CMBS","Permanent | Fixed-Rate"] },
+    prop:["Retail-multi tenant","Office-multi tenant","Industrial","Hotel/motel"], st:["TX","FL","GA","AZ","NY","CA","IL"],
+    fin:["CMBS","Permanent | fixed-rate"] },
   { id:13, co:"Lakeshore Industrial Lending", ct:"Tom Vasquez", role:"SVP, Commercial Lending", acct:"lakeshore", src:"network", inst:"Bank", lo:3, hi:35, mo:0,
-    prop:["Industrial","Land","Manufactured Housing / Mobile Home Park"], st:["GA","TN","AL","NC"],
-    fin:["Balance Sheet Debt","Permanent | Fixed-Rate","Construction Loans"] },
-  { id:14, co:"Ridgeway Mezzanine", ct:"Hannah Oyelaran", role:"Principal", acct:"ridgeway", src:"network", inst:"Debt Fund", lo:2, hi:20, mo:4,
-    prop:["Multifamily","Industrial","Hotel/Motel"], st:["TX","FL","GA","AZ"],
-    fin:["Mezz Debt","Equity (Preferred)"] },
-  { id:15, co:"Presidio Structured Capital", ct:"Victor Hale", role:"Managing Director", acct:"presidio", src:"network", inst:"Non-Bank / Investment Fund", lo:8, hi:80, mo:9,
-    prop:["Multifamily","Office-Multi Tenant"], st:["CA","NV","AZ","TX"],
-    fin:["Bridge / Short-Term Debt (<3 Yrs)","Permanent | Fixed-Rate"] },
+    prop:["Industrial","Land","Manufactured housing / mobile home park"], st:["GA","TN","AL","NC"],
+    fin:["Balance sheet debt","Permanent | fixed-rate","Construction loans"] },
+  { id:14, co:"Ridgeway Mezzanine", ct:"Hannah Oyelaran", role:"Principal", acct:"ridgeway", src:"network", inst:"Debt fund", lo:2, hi:20, mo:4,
+    prop:["Multifamily","Industrial","Hotel/motel"], st:["TX","FL","GA","AZ"],
+    fin:["Mezz debt","Equity (preferred)"] },
+  { id:15, co:"Presidio Structured Capital", ct:"Victor Hale", role:"Managing Director", acct:"presidio", src:"network", inst:"Non-bank / investment fund", lo:8, hi:80, mo:9,
+    prop:["Multifamily","Office-multi tenant"], st:["CA","NV","AZ","TX"],
+    fin:["Bridge / short-term debt (<3 yrs)","Permanent | fixed-rate"] },
   { id:16, co:"Ironwood Community Bank", ct:"Sarah Lindqvist", role:"SVP, Commercial Real Estate", acct:"ironwood", src:"network", nj:4, inst:"Bank", lo:0.5, hi:6, mo:2,
-    prop:["Retail-Single Tenant","Office-Owner/User","Industrial","Multifamily"], st:["TX","OK","AR"],
-    fin:["Balance Sheet Debt"] },
-  { id:17, co:"Palmetto Storage Finance", ct:"Derek Mwangi", role:"Director, Credit", acct:"palmetto", src:"network", inst:"Debt Fund", lo:1, hi:18, mo:5,
-    prop:["Self-Storage","Industrial"], st:["FL","GA","SC","NC"],
-    fin:["Balance Sheet Debt","Bridge / Short-Term Debt (<3 Yrs)"] },
-  { id:18, co:"Anchor Senior Housing Capital", ct:"Ruth Delgado", role:"VP, Agency Production", acct:"anchor", src:"network", nj:6, inst:"Agency Lender", lo:5, hi:45, mo:1,
-    prop:["Senior Housing","Assisted Living / Memory Care","Nursing Facility"], st:["TX","AZ","CO"],
+    prop:["Retail-single tenant","Office-owner/user","Industrial","Multifamily"], st:["TX","OK","AR"],
+    fin:["Balance sheet debt"] },
+  { id:17, co:"Palmetto Storage Finance", ct:"Derek Mwangi", role:"Director, Credit", acct:"palmetto", src:"network", inst:"Debt fund", lo:1, hi:18, mo:5,
+    prop:["Self-storage","Industrial"], st:["FL","GA","SC","NC"],
+    fin:["Balance sheet debt","Bridge / short-term debt (<3 yrs)"] },
+  { id:18, co:"Anchor Senior Housing Capital", ct:"Ruth Delgado", role:"VP, Agency Production", acct:"anchor", src:"network", nj:6, inst:"Agency lender", lo:5, hi:45, mo:1,
+    prop:["Senior housing","Assisted living / memory care","Nursing facility"], st:["TX","AZ","CO"],
     fin:["FHA/HUD","Agency (Fannie Mae)","Agency (Freddie Mac)"] },
-  { id:19, co:"Calder & Bly Real Estate Credit", ct:"James Calder", role:"Founding Partner", acct:"calder", src:"network", nj:2, inst:"Debt Fund", lo:20, hi:200, mo:7,
-    prop:["Office-Multi Tenant","Multifamily","Industrial"], st:["NY","NJ","CT","IL"],
-    fin:["Permanent | Fixed-Rate","Mezz Debt"] },
-  { id:20, co:"Trailhead Construction Finance", ct:"Emma Bergström", role:"Director, Construction Finance", acct:"trailhead", src:"network", inst:"Non-Bank / Investment Fund", lo:4, hi:40, mo:1,
-    prop:["Build to Rent","Multifamily","Land"], st:["TX","AZ","NV","UT"],
-    fin:["Construction Loans","Land / Lot Development"] },
+  { id:19, co:"Calder & Bly Real Estate Credit", ct:"James Calder", role:"Founding Partner", acct:"calder", src:"network", nj:2, inst:"Debt fund", lo:20, hi:200, mo:7,
+    prop:["Office-multi tenant","Multifamily","Industrial"], st:["NY","NJ","CT","IL"],
+    fin:["Permanent | fixed-rate","Mezz debt"] },
+  { id:20, co:"Trailhead Construction Finance", ct:"Emma Bergström", role:"Director, Construction Finance", acct:"trailhead", src:"network", inst:"Non-bank / investment fund", lo:4, hi:40, mo:1,
+    prop:["Build to rent","Multifamily","Land"], st:["TX","AZ","NV","UT"],
+    fin:["Construction loans","Land / lot development"] },
 
   /* Colleagues. [T] Tony, 14 Aug: "we might have 5 bankers that work for a Company,
      like Wells Fargo or Chase. When a loan search is performed, those five lenders
@@ -4983,31 +5075,31 @@ const NETWORK = [
      Harbor Point carries the three drawn in the 18 Aug draft, same names and ranges.
      Criteria differ per banker because they do in the product — that is why an
      account cannot inherit one credit box. [~] All sample. */
-  { id:21, co:"Sunbelt Agency Group", ct:"Ethan Park", role:"SVP, Agency Production", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:3, hi:50, mo:0,
-    prop:["Multifamily","Senior Housing","Student Housing"], st:["TX","OK","AZ","NM","GA"],
-    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","FHA/HUD","Permanent | Fixed-Rate"] },
-  { id:22, co:"Sunbelt Agency Group", ct:"Monique Leclair", role:"Director, Agency", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:1, hi:20, mo:1,
-    prop:["Multifamily","Student Housing"], st:["TX","GA","NC"],
-    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | Fixed-Rate"] },
-  { id:23, co:"Sunbelt Agency Group", ct:"Victor Almeida", role:"VP, Originations", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:2, hi:25, mo:9,
-    prop:["Multifamily","Senior Housing"], st:["TX","AZ"],
+  { id:21, co:"Sunbelt Agency Group", ct:"Ethan Park", role:"SVP, Agency Production", acct:"sunbelt", src:"network", inst:"Agency lender", lo:3, hi:50, mo:0,
+    prop:["Multifamily","Senior housing","Student housing"], st:["TX","OK","AZ","NM","GA"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","FHA/HUD","Permanent | fixed-rate"] },
+  { id:22, co:"Sunbelt Agency Group", ct:"Monique Leclair", role:"Director, Agency", acct:"sunbelt", src:"network", inst:"Agency lender", lo:1, hi:20, mo:1,
+    prop:["Multifamily","Student housing"], st:["TX","GA","NC"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | fixed-rate"] },
+  { id:23, co:"Sunbelt Agency Group", ct:"Victor Almeida", role:"VP, Originations", acct:"sunbelt", src:"network", inst:"Agency lender", lo:2, hi:25, mo:9,
+    prop:["Multifamily","Senior housing"], st:["TX","AZ"],
     fin:["Agency (Fannie Mae)","FHA/HUD"] },
-  { id:24, co:"Sunbelt Agency Group", ct:"Renée Alvarado", role:"Managing Director, Real Estate", acct:"sunbelt", src:"network", inst:"Agency Lender", lo:3, hi:45, mo:2,
-    prop:["Multifamily","Mixed-Use"], st:["TX","NM"],
-    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | Fixed-Rate"] },
-  { id:25, co:"Harbor Point Advisors", ct:"Colin Marsh", role:"Director", acct:"harbor", src:"network", inst:"Non-Bank / Investment Fund", lo:1, hi:25, mo:3,
-    prop:["Multifamily","Retail-Multi Tenant"], st:["TX","LA"],
-    fin:["Agency (Fannie Mae)","Bridge / Short-Term Debt (<3 Yrs)"] },
-  { id:26, co:"Harbor Point Advisors", ct:"Yara Haddad", role:"VP, Originations", acct:"harbor", src:"network", inst:"Non-Bank / Investment Fund", lo:3, hi:35, mo:8,
-    prop:["Multifamily","Mixed-Use"], st:["TX","FL"],
+  { id:24, co:"Sunbelt Agency Group", ct:"Renée Alvarado", role:"Managing Director, Real Estate", acct:"sunbelt", src:"network", inst:"Agency lender", lo:3, hi:45, mo:2,
+    prop:["Multifamily","Mixed-use"], st:["TX","NM"],
+    fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | fixed-rate"] },
+  { id:25, co:"Harbor Point Advisors", ct:"Colin Marsh", role:"Director", acct:"harbor", src:"network", inst:"Non-bank / investment fund", lo:1, hi:25, mo:3,
+    prop:["Multifamily","Retail-multi tenant"], st:["TX","LA"],
+    fin:["Agency (Fannie Mae)","Bridge / short-term debt (<3 yrs)"] },
+  { id:26, co:"Harbor Point Advisors", ct:"Yara Haddad", role:"VP, Originations", acct:"harbor", src:"network", inst:"Non-bank / investment fund", lo:3, hi:35, mo:8,
+    prop:["Multifamily","Mixed-use"], st:["TX","FL"],
     fin:["Agency (Fannie Mae)","Agency (Freddie Mac)"] },
   /* Ironwood holds one banker of each source, which is the case the tab split
      cannot draw: today a bank with both a registered banker and a Prospector
      record has to appear in My Deals & Lenders and Bank/CU Prospects at once,
      holding half its people in either. [~] */
   { id:27, co:"Ironwood Community Bank", ct:"Wade Kimball", role:"VP, CRE Lending", acct:"ironwood", src:"prospector", inst:"Bank", lo:0.5, hi:12, mo:4,
-    prop:["Retail-Single Tenant","Industrial","Multifamily"], st:["TX","OK"],
-    fin:["Balance Sheet Debt"] },
+    prop:["Retail-single tenant","Industrial","Multifamily"], st:["TX","OK"],
+    fin:["Balance sheet debt"] },
   /* Wade above is a find with no record of the request that produced him - the
      file has shipped the AFTERMATH of a successful search since 31 Aug and
      never the search. Marisol is the same kind of row with the other half
@@ -5017,8 +5109,8 @@ const NETWORK = [
      the point - a find the broker paid for that cannot match anything is a
      find they were sold nothing by. */
   { id:90, co:"Amplify Credit Union", ct:"Marisol Reyes", role:"Commercial Lending Manager",
-    acct:"amplify", src:"prospector", inst:"Credit Union", lo:1, hi:10, mo:3,
-    prop:["Multifamily","Industrial"], st:["TX"], fin:["Balance Sheet Debt"] }
+    acct:"amplify", src:"prospector", inst:"Credit union", lo:1, hi:10, mo:3,
+    prop:["Multifamily","Industrial"], st:["TX"], fin:["Balance sheet debt"] }
 ];
 
 /* saved lenders — a (deal, lender) pair carries the status, not the lender.
@@ -5049,7 +5141,7 @@ const PROSPECTS = [
      the column no longer states. One wording now, the column's. */
   { acct:"comerica", co:"Comerica Bank",      inst:"Bank", cert:"983",   branches:14, near:"3 branches nearby" },
   { acct:"texascap", co:"Texas Capital Bank", inst:"Bank", cert:"34383", branches:6,  near:"2 branches nearby" },
-  { acct:"amplify",  co:"Amplify Credit Union", inst:"Credit Union", cert:"67807", branches:5, near:"2 branches nearby" }
+  { acct:"amplify",  co:"Amplify Credit Union", inst:"Credit union", cert:"67807", branches:5, near:"2 branches nearby" }
 ];
 /* saved as an account, not as a pair — there is no person to hold a status */
 const SAVED_ACCT = [
@@ -5094,20 +5186,20 @@ function prospectsFor(id) {
 const LOUT = {
   funded:    { label:"Funded",            tone:"green", enum:false },
   quoted:    { label:"Quoted",            tone:"blue",  enum:true  },
-  declined:  { label:"Not a Fit",         tone:"red",   enum:true  },
-  no_reply:  { label:"Has Not Responded", tone:"muted", enum:true  },
+  declined:  { label:"Not a fit",         tone:"red",   enum:true  },
+  no_reply:  { label:"Has not responded", tone:"muted", enum:true  },
   lost:      { label:"Lost to another lender", tone:"muted", enum:false }
 };
 const LHIST = [
   { l:26, deal:"Cypress Point Apartments",  amt:18,  prop:"Multifamily",         out:"funded",   on:"Mar 2026" },
-  { l:26, deal:"Alamo Heights Retail",      amt:6.2, prop:"Retail-Multi Tenant", out:"declined", on:"Nov 2025" },
+  { l:26, deal:"Alamo Heights Retail",      amt:6.2, prop:"Retail-multi tenant", out:"declined", on:"Nov 2025" },
   { l:25, deal:"Cypress Point Apartments",  amt:18,  prop:"Multifamily",         out:"quoted",   on:"Feb 2026" },
-  { l:21, deal:"Live Oak Senior Living",    amt:24,  prop:"Senior Housing",      out:"funded",   on:"Jan 2026" },
-  { l:21, deal:"Bastrop Student Village",   amt:12,  prop:"Student Housing",     out:"lost",     on:"Sep 2025" },
-  { l:24, deal:"Live Oak Senior Living",    amt:24,  prop:"Senior Housing",      out:"quoted",   on:"Jan 2026" },
-  { l:22, deal:"Bastrop Student Village",   amt:12,  prop:"Student Housing",     out:"no_reply", on:"Sep 2025" },
+  { l:21, deal:"Live Oak Senior Living",    amt:24,  prop:"Senior housing",      out:"funded",   on:"Jan 2026" },
+  { l:21, deal:"Bastrop Student Village",   amt:12,  prop:"Student housing",     out:"lost",     on:"Sep 2025" },
+  { l:24, deal:"Live Oak Senior Living",    amt:24,  prop:"Senior housing",      out:"quoted",   on:"Jan 2026" },
+  { l:22, deal:"Bastrop Student Village",   amt:12,  prop:"Student housing",     out:"no_reply", on:"Sep 2025" },
   { l:16, deal:"Braunig Industrial Park",   amt:4.4, prop:"Industrial",          out:"funded",   on:"Dec 2025" },
-  { l:16, deal:"Seguin Strip Center",       amt:2.1, prop:"Retail-Single Tenant",out:"funded",   on:"Jun 2025" },
+  { l:16, deal:"Seguin Strip Center",       amt:2.1, prop:"Retail-single tenant",out:"funded",   on:"Jun 2025" },
   { l:1,  deal:"Pflugerville Flex II",      amt:9,   prop:"Industrial",          out:"declined", on:"Oct 2025" }
 ];
 /* live half: the same pairs the Saved lenders tab draws, read across every
@@ -5506,9 +5598,9 @@ const DIRECTORY = [
   { acct:"comerica",   co:"Comerica Bank",                   inst:"Bank",         cert:"983",   branches:14, mi:4,  contacts:9  },
   { acct:"texascap",   co:"Texas Capital Bank",              inst:"Bank",         cert:"34383", branches:6,  mi:7,  contacts:12 },
   { acct:"frost",      co:"Frost Bank",                      inst:"Bank",         cert:"5560",  branches:11, mi:2,  contacts:7  },
-  { acct:"aplusfcu",   co:"A+ Federal Credit Union",         inst:"Credit Union", cert:"67494", branches:8,  mi:3,  contacts:2  },
-  { acct:"ufcu",       co:"University Federal Credit Union", inst:"Credit Union", cert:"24794", branches:9,  mi:5,  contacts:3  },
-  { acct:"amplify",    co:"Amplify Credit Union",            inst:"Credit Union", cert:"67807", branches:5,  mi:9,  contacts:1  },
+  { acct:"aplusfcu",   co:"A+ Federal Credit Union",         inst:"Credit union", cert:"67494", branches:8,  mi:3,  contacts:2  },
+  { acct:"ufcu",       co:"University Federal Credit Union", inst:"Credit union", cert:"24794", branches:9,  mi:5,  contacts:3  },
+  { acct:"amplify",    co:"Amplify Credit Union",            inst:"Credit union", cert:"67807", branches:5,  mi:9,  contacts:1  },
   { acct:"prosperity", co:"Prosperity Bank",                 inst:"Bank",         cert:"12224", branches:7,  mi:12, contacts:6  },
   { acct:"indfin",     co:"Independent Financial",           inst:"Bank",         cert:"3076",  branches:4,  mi:18, contacts:4  },
   { acct:"rbank",      co:"R Bank",                          inst:"Bank",         cert:"58513", branches:3,  mi:24, contacts:0  },
@@ -6371,7 +6463,7 @@ function sendModal() {
       <p>${esc(d.name)} · ${money(d.amt)} · one request, every recipient sees the same package</p></div>
       <button class="x" type="button" data-upx aria-label="Close">${XCLOSE}</button></div>
     <div class="mdl__bd">
-      ${ls.length ? ls.map(l => `<label class="billrow" style="cursor:pointer">
+      ${ls.length ? ls.map(l => `<label class="billrow billrow--pick" style="cursor:pointer">
         <span class="chk"><input type="checkbox" data-sendsel="${l.id}" ${S.sendSel.has(l.id) ? "checked" : ""}><span class="bx">\u2713</span></span>
         <div style="flex:1"><b>${esc(l.ct)}</b> <span class="sub">${esc(l.co)} · ${money(l.lo)} – ${money(l.hi)}</span></div>
         ${S.sent[l.id] ? `<span class="pill">Sent</span>` : ""}
@@ -6658,23 +6750,23 @@ const OPPS = [
     units:36, built:2001, occupancy:91.2, propValue:4.1, balance:2.1, maturity:"Jan 2027",
     recShort:"Today", recLong:"today, 9:12 AM", subShort:"5 Sep", hoursLeft:14,
     summary:"Rate-and-term refinance of a 36-unit garden-style community in Old East Dallas. The sponsor self-manages, the asset has held above 90% occupancy for two years, and the existing bank loan matures in January.",
-    borrower:{ name:"Marisol Delgado", role:"Managing partner", company:"Trinity Bend Capital", email:"m.delgado@trinitybend.com", phone:"(214) 555-0163" },
+    borrower:{ name:"Marisol Delgado", role:"Managing Partner", company:"Trinity Bend Capital", email:"m.delgado@trinitybend.com", phone:"(214) 555-0163" },
     status:"new" },
-  { id:"opp-sanantonio", amt:6.75, property:"Retail-Multi Tenant", txType:"Acquisition",
+  { id:"opp-sanantonio", amt:6.75, property:"Retail-multi tenant", txType:"Acquisition",
     city:"San Antonio", state:"TX", financing:"",
     sf:41500, built:2008, occupancy:96.0, price:9.6, underContract:"Yes", closeDate:"7 Nov",
     recShort:"Today", recLong:"today, 2:40 AM", subShort:"7 Sep", hoursLeft:7,
     summary:"Acquisition of a 41,500 sf neighborhood retail center anchored by a regional grocer, under contract at $9.6M with a 60-day close. The buyer wants quotes across bank and CMBS executions.",
     borrower:{ name:"Paul Okafor", role:"Principal", company:"Alamo Crossing Partners", email:"paul@alamocrossing.com", phone:"(210) 555-0117" },
     status:"new" },
-  { id:"opp-tampa", amt:3.2, property:"Mixed-Use", txType:"Acquisition",
-    city:"Tampa", state:"FL", financing:"Bridge Loan",
+  { id:"opp-tampa", amt:3.2, property:"Mixed-use", txType:"Acquisition",
+    city:"Tampa", state:"FL", financing:"Bridge loan",
     sf:18200, built:1988, price:4.3, closeDate:"16 Oct",
     recShort:"3 Sep", recLong:"3 Sep, 4:55 PM", subShort:"28 Aug", closed:"4 Sep", closedDays:4,
     summary:"Value-add acquisition of an 18,200 sf mixed-use building in Ybor City, retail below and eight apartments above, at 71% occupancy with a renovation budget.",
     borrower:null, status:"declined" },
   { id:"opp-houston", amt:5.0, property:"Industrial", txType:"Refinance",
-    city:"Houston", state:"TX", financing:"Balance Sheet Debt",
+    city:"Houston", state:"TX", financing:"Balance sheet debt",
     sf:88000, built:2012, occupancy:100, propValue:8.0, balance:4.2, maturity:"Aug 2027",
     recShort:"1 Sep", recLong:"1 Sep, 11:20 AM", subShort:"22 Aug", closed:"2 Sep", closedDays:6,
     summary:"Cash-out refinance of an 88,000 sf single-tenant distribution building on a new 7-year lease to a national logistics tenant.",
@@ -6758,20 +6850,20 @@ const statusIn = d => S.status[d.id];
    should match the property types we have for universal searches and lender
    criteria in all submission forms"  [T, 21 Aug].
    Two open discrepancies, deliberately left visible rather than papered over:
-   his own Zoho submission form carries 22 of these (no Build to Sell, no Note
-   Purchase Financing), and the shipped filter rail on My Deals and Lenders
+   his own Zoho submission form carries 22 of these (no Build to sell, no Note
+   purchase financing), and the shipped filter rail on My Deals and Lenders
    offers only four coarse buckets over the same data. The grouping below is the
    rollup that reconciles the two shapes — ours, not the client's  [💡 rec]. */
 const PROPERTY_GROUPS = [
-  { g:"Multifamily & residential", v:["Multifamily", "Build to Rent", "Build to Sell Single-Family & Condos",
-       "Single-Family Rentals (1-4 Units)", "Manufactured Housing / Mobile Home Park", "Student Housing"] },
-  { g:"Office",                    v:["Office-Multi Tenant", "Office-Single Tenant", "Office-Owner/User", "Medical Office"] },
-  { g:"Retail",                    v:["Retail-Multi Tenant", "Retail-Single Tenant"] },
-  { g:"Industrial & storage",      v:["Industrial", "Self-Storage"] },
-  { g:"Hospitality",               v:["Hotel/Motel"] },
-  { g:"Seniors & care",            v:["Senior Housing", "Assisted Living / Memory Care", "Nursing Facility"] },
+  { g:"Multifamily & residential", v:["Multifamily", "Build to rent", "Build to sell single-family & condos",
+       "Single-family rentals (1-4 units)", "Manufactured housing / mobile home park", "Student housing"] },
+  { g:"Office",                    v:["Office-multi tenant", "Office-single tenant", "Office-owner/user", "Medical office"] },
+  { g:"Retail",                    v:["Retail-multi tenant", "Retail-single tenant"] },
+  { g:"Industrial & storage",      v:["Industrial", "Self-storage"] },
+  { g:"Hospitality",               v:["Hotel/motel"] },
+  { g:"Seniors & care",            v:["Senior housing", "Assisted living / memory care", "Nursing facility"] },
   { g:"Land & development",        v:["Land"] },
-  { g:"Specialty & other",         v:["Mixed-Use", "Marina", "RV Park", "Note Purchase Financing", "Other"] }
+  { g:"Specialty & other",         v:["Mixed-use", "Marina", "RV park", "Note purchase financing", "Other"] }
 ];
 const PROPERTY_TYPES = PROPERTY_GROUPS.flatMap(x => x.v);
 
@@ -6787,8 +6879,8 @@ const PROPERTY_TYPES = PROPERTY_GROUPS.flatMap(x => x.v);
 /* Six groups over the same 17, the counterpart of PROPERTY_GROUPS above and
    ours in exactly the same way  [💡 rec] — the client has never grouped this
    list. They exist because Areas of focus draws both vocabularies as adjacent
-   chip fields on one card, and three strings are in both lists: Build to Rent,
-   Build to Sell Single-Family & Condos, Note Purchase Financing. That
+   chip fields on one card, and three strings are in both lists: Build to rent,
+   Build to sell single-family & condos, Note purchase financing. That
    duplication is ratified, not a bug to fix — Tanya asked on the deal form
    26 Aug whether they should leave PROPERTY_TYPES, Tony said keep them because
    lenders match on them [T, 27 Aug] and Christian confirmed [C, 3 Sep]. So the
@@ -6801,12 +6893,12 @@ const PROPERTY_TYPES = PROPERTY_GROUPS.flatMap(x => x.v);
    client has seen. */
 const FINANCING_GROUPS = [
   { g:"Agency & government",      v:["Agency (Fannie Mae)", "Agency (Freddie Mac)", "FHA/HUD"] },
-  { g:"Permanent & balance sheet", v:["Permanent | Fixed-Rate", "Balance Sheet Debt", "CMBS"] },
-  { g:"Bridge & short-term",      v:["Bridge / Short-Term Debt (<3 Yrs)", "Hard / Private Money"] },
-  { g:"Construction & development", v:["Construction Loans", "Land / Lot Development",
-       "Build to Rent", "Build to Sell Single-Family & Condos"] },
-  { g:"Subordinate & equity",     v:["Mezz Debt", "Equity (Preferred)", "Equity (LP/GP)"] },
-  { g:"Second lien & note purchase", v:["Second Lien Loans", "Note Purchase Financing"] }
+  { g:"Permanent & balance sheet", v:["Permanent | fixed-rate", "Balance sheet debt", "CMBS"] },
+  { g:"Bridge & short-term",      v:["Bridge / short-term debt (<3 yrs)", "Hard / private money"] },
+  { g:"Construction & development", v:["Construction loans", "Land / lot development",
+       "Build to rent", "Build to sell single-family & condos"] },
+  { g:"Subordinate & equity",     v:["Mezz debt", "Equity (preferred)", "Equity (LP/GP)"] },
+  { g:"Second lien & note purchase", v:["Second lien loans", "Note purchase financing"] }
 ];
 const FINANCING_TYPES = FINANCING_GROUPS.flatMap(x => x.v).sort();
 
@@ -7481,7 +7573,7 @@ function renderDeals() {
   return `
     <div class="head">
       <div>
-        <h1>Your Deals</h1>
+        <h1>Your deals</h1>
         <p>Every deal you have submitted, and the lenders matched to it. We hold the lending criteria and real contacts for hundreds of active multifamily and CRE lenders.</p>
       </div>
       <div class="head__acts">
@@ -8440,7 +8532,7 @@ function renderDirectory(d) {
   const body = rows.map(r => `<tr data-go="${lpHref(r.acct, null, d.id)}">
       <td class="nm-cell" style="white-space:normal">
         <span class="nml"><b><a href="${lpHref(r.acct, null, d.id)}">${esc(r.co)}</a></b></span>
-        <span>${r.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)}</span>
+        <span>${r.inst === "Credit union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)}</span>
       </td>
       <td data-l="Type">${esc(r.inst)}</td>
       <td class="num" data-l="Branches nearby">${r.branches}</td>
@@ -9556,7 +9648,7 @@ function prospectorTab() {
       <tbody>${rows.map(r => `<tr data-go="${lpHref(r.acct, null)}">
         <td class="nm-cell" style="white-space:normal">
           <span class="nml"><b><a href="${lpHref(r.acct, null)}">${esc(r.co)}</a></b></span>
-          <span>${r.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)}</span>
+          <span>${r.inst === "Credit union" ? "NCUA charter" : "FDIC cert"} ${esc(r.cert)}</span>
         </td>
         <td data-l="Type">${esc(r.inst)}</td>
         <td class="num" data-l="Branches nearby">${r.branches}</td>
@@ -11249,9 +11341,9 @@ function renderLenderAcct(acct, dealId) {
      on an account that has none, because the two are the same sentence at
      opposite ends of the same request. */
   const noCrit = r.length
-    ? (fndB ? `<div class="lptail">
-        <p>Prism found ${esc(fndB.ct)} here</p>
-        <p class="st">${esc(reqDates(fc))}. Their lending criteria came with them, so ${esc(a.co)} is matched like any registered lender.</p>
+    ? (fndB ? `<div class="lptail lptail--found">
+        <span class="badge badge--outline tone-green" title="An admin called the branch and added a named banker with their lending criteria, so this institution can be matched and contacted like any other.">✓ Contact found</span>
+        <p><b>${esc(fndB.ct)}</b> — ${esc(reqDates(fc))}. Their lending criteria came with them, so ${esc(a.co)} is matched like any registered lender.</p>
       </div>` : "")
     : mine.length
     ? `<div class="lptail">
@@ -11333,7 +11425,7 @@ function renderLenderAcct(acct, dealId) {
           <div class="card__hd"><h2>Institution</h2></div>
           <div class="card__ct">
             <div class="fact"><div class="k">Institution type</div><div class="v">${esc(a.inst)}</div></div>
-            ${a.cert ? `<div class="fact" style="margin-top:10px"><div class="k">${a.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"}</div><div class="v num">${esc(a.cert)}</div></div>` : ""}
+            ${a.cert ? `<div class="fact" style="margin-top:10px"><div class="k">${a.inst === "Credit union" ? "NCUA charter" : "FDIC cert"}</div><div class="v num">${esc(a.cert)}</div></div>` : ""}
             ${a.branches ? `<div class="fact" style="margin-top:10px"><div class="k">Branches</div><div class="v num">${a.branches}</div></div>` : ""}
             <div class="fact" style="margin-top:10px"><div class="k">Website</div>
               <div class="v"><button type="button" class="uselink" style="margin-left:0" data-inert="${SITETIP}">${esc(siteFor(a.co))}</button></div></div>
@@ -11608,7 +11700,7 @@ function savedTab(d) {
         <span class="nml"><b><a href="${lpHref(a.acct, null, d.id)}">${esc(a.p.co)}</a></b><span class="badge badge--outline tone-blue" title="${fnd
           ? "An institution from the Banks &amp; Credit Unions directory. Prism found " + esc(fnd.ct) + " inside it; the badge names how they arrived, and stays until they register."
           : "An institution from the Banks &amp; Credit Unions directory, with no contact person on file yet."}">Prospector</span></span>
-        <span>${esc(a.p.inst)} · ${a.p.inst === "Credit Union" ? "NCUA charter" : "FDIC cert"} ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
+        <span>${esc(a.p.inst)} · ${a.p.inst === "Credit union" ? "NCUA charter" : "FDIC cert"} ${esc(a.p.cert)} · ${esc(a.p.near)}</span>
         ${/* name and role on separate lines, which is the anatomy the roster
               table uses for exactly this pair. One line with a middle dot
               wrapped in this column and put the separator at the head of the
@@ -11672,7 +11764,7 @@ function savedTab(d) {
 
 /* Zoho \u00a73 Desired Terms and \u00a77 Business Plan vocabularies [T] \u2014
    verbatim from the multifamily form. */
-const TERM_EXECUTIONS = ["Fannie Mae / Freddie Mac Fixed Rate Loan", "FHA/HUD", "Bridge Loan", "CMBS Loan", "Preferred Equity", "Mezz", "GP/LP Equity", "Construction Loan"];
+const TERM_EXECUTIONS = ["Fannie Mae / Freddie Mac fixed rate loan", "FHA/HUD", "Bridge loan", "CMBS loan", "Preferred equity", "Mezz", "GP/LP equity", "Construction loan"];
 const TERM_PROGRAMS = ["5-Yr", "7-Yr", "10-Yr", "12-Yr", "30-Yr", "Floater"];
 const TERM_IOS = ["No IO", "1-Year", "2-Year", "3-Year", "4-Year", "5-Year", "Full-Term IO"];
 const TERM_PREPAYS = ["Okay with yield maintenance", "Okay with defeasance", "Prefer stepdown (5-4-3-2-1%)", "Must have no prepay (fewer competitive options)", "Indifferent"];
@@ -12943,9 +13035,24 @@ function accPlan() {
              missing one — there is no year to buy at $0. [Tanya, 16 Sep] */""}
         ${["essential", "accelerator", "pro"].map(k => {
           const p = TIERS[k], on = tierOf() === k && !trial, annualView = PLAN.billing === "annual";
+          /* annualView is the SEGMENT, not onAnnual(). The segment is a preview
+             control - it exists so a broker who is not yet on annual can price
+             it - and onAnnual() gates on hasAnnual(), the viewer's own tier,
+             which is null on Essential and on the trial. Reading it here would
+             blank the preview for exactly the brokers the control is for. The
+             two axes are different questions: what you would pay, and what you
+             are billed. [~] */
+          /* The saving is computed per ROW. annualSave() reads TCFG(), the tier
+             the broker is on, and this loop prices three - called here it would
+             quote Accelerator's $480 on Pro's row. The .tbd gate follows the
+             row's own tier for the same reason the price above it does: Pro's
+             $499 is contested (question 92), so $1,200 derived from it cannot
+             print firmer than its base. */
+          const tbd$ = txt => k === "pro" ? `<span class="tbd">${txt}</span>` : txt;
+          const yr = p.annual != null ? (p.price - p.annual) * 12 : 0;
           return `<div class="billrow" style="align-items:center">
             <div><b>${p.name}</b> — ${p.price ? (k === "pro" ? `<span class="tbd">$${annualView && p.annual ? p.annual : p.price}</span>` : `$${annualView && p.annual ? p.annual : p.price}`)
-                + " / month" + (annualView && p.annual ? `<span class="sub" style="display:inline"> billed yearly, was $${p.price}</span>` : "") : "free"}
+                + " / month" + (annualView && p.annual ? ` <s class="was">${tbd$("$" + p.price)}</s> · <b class="yrsave">Save ${tbd$(usd$(yr))} a year</b>` : "") : "free"}
               <span class="sub">${k === "essential"
                 ? `1 active deal · send to 3 · ${p.reveals} reveals a month`
                 : k === "accelerator"
@@ -14365,7 +14472,7 @@ document.addEventListener("click", e => {
       const k = sad.dataset.secadd;
       if (k === "terms" && !d.terms) d.terms = { executions: [], program: "", io: "", prepay: "", hold: "" };
       if (k === "plan" && !d.plan) d.plan = { strategy: "", timeline: "", noi: null, exit: "" };
-      if (k === "su" && !d.su) d.su = { sources: [["Senior Debt", 0]], uses: [["Purchase Price", 0]] };
+      if (k === "su" && !d.su) d.su = { sources: [["Senior debt", 0]], uses: [["Purchase price", 0]] };
       if (k === "sponsor" && !d.sponsor) d.sponsor = { name: "", lead: "", track: "", liquidity: null, worth: null, years: null, guarantors: "", credit: "" };
       if (k === "mgmt" && !d.mgmt) d.mgmt = { kind: "", co: "", props: null, units: null };
       if (k === "sw" && !d.sw) d.sw = { strengths: "", weaknesses: "" };
