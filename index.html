@@ -13258,7 +13258,11 @@ function accPassword() {
       <div class="card__ct">
         <div class="fldrow fldrow--2">
           <div class="fld"><label for="p_pw0">Current password</label>
-            <input class="inp" id="p_pw0" type="password" placeholder="········" data-inert="Password change — out of prototype scope."></div>
+            ${/* U+2022 BULLET, the glyph sign-in and sign-up already mask with.
+                  This field had U+00B7 MIDDLE DOT, which is smaller and sits on
+                  a lower axis, so the one password box a signed-in broker meets
+                  looked unlike the two they met on the way in. [Tanya, 17 Sep] */""}
+            <input class="inp" id="p_pw0" type="password" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" data-inert="Password change — out of prototype scope."></div>
           <div></div>
         </div>
         <div class="fldrow fldrow--2">
