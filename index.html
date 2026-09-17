@@ -471,6 +471,15 @@
   .dcap .umeter { width: 132px; margin-top: 0; }
   /* services already under way, read as deal state beside the deal's name */
   .head__st { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  /* .badge never reset text-decoration because until 17 Sep no badge was an
+     anchor — the memo chip beside these is a button. The two execution-support
+     chips are destinations now, so they underline unless told not to, and they
+     need the hover the button already had or nothing says they open. Scoped to
+     this strip rather than added to .badge: a badge is a label by default, and
+     making every one of the 200-odd in this file look clickable to fix two
+     would be the wrong direction. [~] */
+  .head__st a.badge { text-decoration: none; cursor: pointer; }
+  .head__st a.badge:hover { filter: brightness(0.97); }
   /* The memo badge is the request's handle [Mobbin sweep, 16 Sep]. Plain gives
      a productized-service order an Order ID to chase it with; here there is one
      open memo per deal, so the deal IS the reference and the badge beside its
@@ -505,6 +514,39 @@
   .btn--destructive:hover { background: color-mix(in srgb, var(--destructive) 90%, transparent); }
   .btn--link { background: none; border: 0; box-shadow: none; color: var(--primary); text-decoration: none; text-underline-offset: 4px; height: auto; padding: 0; gap: 5px; }
   .btn--link:hover { background: none; text-decoration: underline; }
+  /* A dialog footer's link keeps the box .btn gives every other control -
+     36 tall, 16 of horizontal padding - because the library draws it that way:
+     Figma's Button is Variant=link, Size=default, and the two footer links in
+     the file (See plan and billing on screen 6, Keep my plan on screen 15) are
+     both that instance at 36 high. .btn--link strips height and padding for
+     the inline links everywhere else, which is right for a link sitting in a
+     sentence and wrong for one sitting in a row of buttons: stripped, the
+     label sat above the footer's own line rather than on it.
+
+     Horizontal padding stays at zero, which is the part that is NOT the
+     library's default. A link's label is read as text, not as a button, so it
+     aligns with the text column the dialog already has - the title, the
+     description and the bullets all start at 24, and a padded link starts its
+     label at 40, a sixteenth of the dialog's width adrift from the column it
+     sits under. Keeping the box 36 tall keeps the hit target and the vertical
+     centring; dropping the side padding puts the label on the line. Figma
+     matches: Button link's own paddingLeft is overridden to 0 in
+     Modal/Sectioned. [Tanya, 17 Sep, on the upgrade dialog] */
+  .mdl__ft .btn--link { height: 36px; padding: 8px 0; }
+
+  /* The switch confirm's table. Its own prefix rather than .inv or .billrow:
+     both of those are rows on a card, sized for a page, and this is three
+     columns inside a 512 dialog. The middle column is what the broker has
+     today and is deliberately quieter than the right one, which is what they
+     would have - the comparison only reads if one side is the answer. */
+  .pswx { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .pswx th, .pswx td { padding: 8px 0; text-align: left; vertical-align: top; }
+  .pswx thead th { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted-foreground); padding-bottom: 6px; }
+  .pswx tbody tr + tr { border-top: 1px solid var(--border); }
+  .pswx tbody th { font-weight: 500; color: var(--foreground); width: 34%; }
+  .pswx tbody td { color: var(--muted-foreground); width: 33%; }
+  .pswx tbody td b { font-weight: 500; color: var(--foreground); }
   .btn--sm { height: 32px; padding: 8px 12px; gap: 6px; }
   .btn--xs { height: 24px; padding: 4px 8px; gap: 4px; font-size: 12px; }
   .btn:disabled { opacity: .5; pointer-events: none; }
@@ -1576,31 +1618,37 @@
   /* the vertical shell is a box rather than a band, and 1px reads as a hairline
      at that size */
   .empty.empty--slot { border-width: 1.5px; }
-  /* Add banker, inline in the section rather than in a modal - which is what
-     Tony's reference does: the form takes the place of the empty state inside
-     Contact Information, under the same heading. The border alone carries it:
-     solid against the dashed box it replaces, which is the whole distinction -
-     a slot with nothing in it, versus a slot being filled. It had a tinted
-     ground for an hour on 14 Sep and lost it (Tanya): every input inside is a
-     white field on that tint, so the panel read as a second surface behind the
-     form rather than the form's own edge, and nine fields of contrast noise
-     bought nothing the border was not already saying. */
-  /* capped, 14 Sep (Tanya: "is it good pattern?"). The form was drawn for the
-     drawer, where the chrome is the constraint - 563px, fields at 261px - and
-     then reused at 100% inside the account page's Contacts card, which is a
-     seven-column roster table at full shell width. Same component measured
-     1256px there, a first name at 607px and a title at 1226px: capacity for
-     seventy-odd characters in a field that holds eight, which stops reading as
-     a field and starts reading as a band. The cap is intrinsic rather than
-     relative so it does the work on both grains - the drawer clamps it to
-     within 3px of what it already drew, the page respects it. It also settles
-     the other half: a form the width of the table it sits under reads as that
-     table's row detail, and this one belongs to the institution, not to the
-     row above it. */
-  .abform { border: 1px solid var(--border); border-radius: var(--radius-md);
-    background: none; padding: 14px 14px 12px; max-width: 560px; }
-  .abform > h3 { font-size: 13.5px; font-weight: 600; margin: 0 0 12px; }
-  .abform .acts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+  /* Add banker is a dialog again, 17 Sep (Tanya). It was one until 14 Sep, came
+     inline that day on Tony's reference - the form taking the place of the
+     empty state inside Contact Information, under the same heading - and the
+     argument against a dialog was that this section also opens inside the
+     drawer, so it would be an overlay on an overlay. That cost is real and it
+     is paid rather than dodged: .mov is z-index 92 over the drawer's 89, so
+     the form arrives on top of the surface that raised it and that surface
+     stays open behind it, which is exactly what Cancel needs in order to put
+     the broker back where they were instead of on the table behind.
+     What the dialog buys is what the inline shell kept failing at. Nine fields
+     is not a state a region can hold: Contacts already draws two - the roster
+     and the empty case - and the form was being wedged in as a third, hiding
+     whichever tail the account happened to draw so the card could not explain
+     itself while it was being filled. It was also drawn on two grains at once,
+     the drawer's 563px and the account page's 1256px, and the second needed a
+     hand-set 560 cap to stop a first-name field measuring 607px. One dialog at
+     the system's own 512 replaces both shells, and .abform's border, its h3
+     and its cap go with them - the Dialog says all three already. */
+  /* the body does not scroll. .mdl__bd's 56vh cap is right for a list and
+     wrong for a form: a required field scrolled out of view is a field the
+     broker does not know is required, and the State select closes itself on
+     any scroll (the capture-phase listener at the foot of this file), so an
+     inner scrollbar would take the steady anchor away from the one control
+     that needs it. .mov scrolls the whole panel instead - what .mdl--ask
+     already does, for a plainer reason. */
+  .mdl--ab .mdl__bd { max-height: none; }
+  /* the invitation notice reuses .ldrinfo, the drawer's own info line, and it
+     is still a bare class at (0,1,0) so it paints here unchanged. Only its
+     tail moves: the 12px was buying the gap to the buttons, and .mdl__ft's own
+     24px inset buys that now. */
+  .mdl--ab .ldrinfo { margin-bottom: 0; }
   /* the waiting-list confirmation is an alert, which is a left-aligned
      icon-and-text block, inside an empty state that centres everything.
      Cap and centre the box, then let its own contents align left. */
@@ -1691,6 +1739,14 @@
   .docrow--pend { border-style: dashed; background: var(--muted); }
   .docrow--pend .docrow__nm { font-weight: 400; color: var(--muted-foreground); }
   .docrow--pend .docrow__tick { color: var(--muted-foreground); }
+  /* A slot with nothing in it and nothing asked for, 17 Sep. An ordinary row —
+     the only thing it does not have is the tick, because the only thing it is
+     missing is the file. It deliberately does NOT borrow --pend's fill: that
+     one means "asked for, waiting on the borrower", and a grey row with a
+     muted name is this file's shape for a disabled control. The document's
+     name is equally real whether or not the file has arrived, so it keeps its
+     weight; the tick column carries the state, which is the tick's job. */
+  .docrow--none .docrow__tick { color: var(--muted-foreground); }
   .docempty { display: flex; flex-direction: column; align-items: center; text-align: center;
     padding: 26px 0 30px; }
   .docempty__ic { display: grid; place-items: center; width: 42px; height: 42px;
@@ -1873,7 +1929,15 @@
   .amtwrap span { color: var(--muted-foreground); font-size: 14px; }
   .amtwrap input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 14px; }
   .fld.err .inp, .fld.err .fld__sel, .fld.err .amtwrap { border-color: var(--destructive); }
-  .fld .errmsg { font-size: 12px; color: var(--destructive); margin-top: 5px; }
+  /* Unscoped from `.fld .errmsg` on 17 Sep. Thirteen of the fourteen call sites
+     are inside a .fld and render identically either way; the fourteenth is the
+     contacts card's "a name and an email are what a lender needs", which sits
+     next to the Add a contact button in .card__ct and was therefore rendering
+     at 14px near-black — a validation warning indistinguishable from body copy.
+     Measured, not read: a bare .errmsg probes 14px / rgb(15,23,42) against the
+     scoped 12px / rgb(220,38,38). An error message is an error message wherever
+     it is put, and the scope was buying nothing. */
+  .errmsg { font-size: 12px; color: var(--destructive); margin-top: 5px; }
   .chleft { font-size: 12px; color: var(--muted-foreground); margin-top: 5px; }
   /* Contacts. The profile line is the read-only "lenders will reach you at"
      the improvement plan asked for; the rows under it are the per-deal override
@@ -1912,6 +1976,35 @@
   .coach ul { margin: 0; padding-left: 16px; }
   .coach li + li { margin-top: 4px; }
   .warnpanel { border: 1px solid color-mix(in srgb, var(--brand-gold) 38%, #fff); background: color-mix(in srgb, var(--brand-gold) 8%, #fff); color: var(--color-brand-gold-text); border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
+
+  /* Execution support — #/deal/:id/support — has no CSS of its own, 17 Sep.
+     It shipped with nine prefixed classes for one turn, on the reasoning that
+     this file's small type is almost all parent-scoped (`.hint` exists only as
+     `.fld .hint`, `.empty .hint`, `.lp .hint` and four more) so a new surface
+     must bring its own. That reasoning is right about borrowing a class blind
+     and wrong about what to do instead: the answer is to find the component
+     that already does the job, not to write a ninth one. Every one of the nine
+     had a counterpart already in the file, and four of them were near-identical
+     re-draws:
+
+       .exsup__opt/__ttl   → .billrow.billrow--pick + <b> + .sub. Same tick,
+                             name and description row; and .billrow--pick had
+                             already solved the alignment properly (the box gets
+                             the name's own 1.45em line box plus a 1px optical
+                             nudge) where the re-draw used a flat margin-top:2px.
+       .exsup__row/.tk     → .docrow / .docrow--pend. The same documents, and
+                             .docrow--pend already existed for exactly the third
+                             state the re-draw invented a ⏳ for — down to the
+                             wording "Requested from X · date · not yet uploaded".
+       .exsup__ask         → .fact, whose .k/.v is the file's key-value pair;
+                             .facts--rows is the 148px-column variant the
+                             150px-column re-draw was reaching for.
+       .exsup__sub         → .sub, which is global and identical bar a
+                             line-height.
+       .exsup__err         → .errmsg, unscoped above.
+
+     Nothing new was needed, and the two screens now inherit every later fix to
+     those five instead of drifting away from them. */
   .frmfoot { display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
   /* .okpanel lived here until 14 Sep — it is .alert--success now. .warnpanel
      stays, and deliberately: four of its five uses are prototype commentary
@@ -2000,6 +2093,23 @@
      overflow-y computes back to auto, and the scrolling box would survive the
      max-height coming off. The clip is still wanted for the rounded corner. */
   .tblwrap--opps { max-height: none; overflow-y: hidden; }
+
+  /* ---------- Monetization index (#/monetization) ---------- */
+  /* Prototype scaffolding, not a broker screen: it is reached from the grey
+     strip above the frame and from nowhere inside the rail, the same door
+     #/auth uses. The shell is .prof / .profnav unchanged - the profile and
+     account pages already own the side-nav-plus-pane shape, and a third copy
+     of it would be a third thing to keep in step. What follows is only what
+     .prof does not already carry, and it is prefixed rather than reaching for
+     .hint or .msg: both of those are scoped to ancestors this surface does not
+     have, which is the trap this file has now fallen into three times.
+     [Tanya, 17 Sep] */
+  .mzx__row { margin-top: 5px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    font-size: 11.5px; font-weight: 500; color: var(--muted-foreground); letter-spacing: 0.01em; }
+  .mzx__row a { color: var(--primary); }
+  .mzx__lede { margin: 0 0 14px; font-size: 13.5px; line-height: 1.55; max-width: 64ch; }
+  .mzx__note { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--muted-foreground); max-width: 64ch; }
+  .mzx__note b { font-weight: 600; color: var(--foreground); }
 
   /* ---------- Sign up / log in (#/auth) ---------- */
   /* qualified with .app on purpose. This was `.app--auth` alone, one class, and
@@ -3413,6 +3523,22 @@
   /* 12px from icon glyph to name: the button carries ~7px of its own hover
      padding past the glyph, so the cell contributes the remainder */
   .bmkcell + .nm-cell, .subrow .bmkcell + .nm-cell { padding-left: 5px; }
+  /* the added-contacts table in the Contacts card has no bookmark column, so
+     its names printed on the table edge while the roster's printed 27.5px in,
+     past the button. Two sets of names in one card on two axes, which is what
+     the eye reads first and the only thing in there that has to agree. The
+     lead is reserved with padding rather than an empty leading cell: the cell
+     would be a column held open for an action these records cannot have -
+     they are not on the network, so there is nothing to shortlist - and this
+     card already holds two columns open for em-dashes. 34.5 of bookmark cell
+     (4.5 + a 30px button + 0) + 5 of name-cell inset = 39.5 from the table
+     edge, the roster's name axis measured, not derived. The header stays at
+     12: the roster's "Contact" th spans the pair with colspan=2 and sits on
+     the same 12, so after this both tables read identically - header on one
+     axis, names on the other. Revisit if the bookmark button is resized.
+     [Tanya, 17 Sep] */
+  .t td.nm-cell--lead { padding-left: 39.5px; }
+
   .bmkbtn { width: 30px; height: 30px; flex: none; border: 0; background: none;
     border-radius: var(--radius-sm); cursor: pointer; color: var(--muted-foreground);
     display: grid; place-items: center; }
@@ -3891,7 +4017,19 @@
     background: color-mix(in srgb, var(--brand-blue-400) 10%, #fff);
     color: var(--color-congress-blue);
     font-size: 12.5px; line-height: 1.45; }
-  .ldrinfo svg { flex: none; margin-top: 1px; }
+  /* the icon centres on the first LINE of the text, not on the top of it.
+     align-items: flex-start puts a 14px glyph and an 18.125px line box both at
+     y 0, which leaves the glyph riding ~2px high - visible on the one-line
+     notice in the Add a banker dialog, where there is no second line to make
+     the block read as a block [Tanya, 17 Sep]. The 1px here was a hand-set
+     nudge in the right direction that stopped half way.
+     Derived, not tuned: half the difference between the line box the text
+     draws (1.45em, this rule's own line-height) and the glyph's own box. Both
+     terms are live, so changing either metric re-centres by itself. It centres
+     on the line box rather than on the cap band, which lands 0.06px apart at
+     this size (measured) - Inter's ascent and descent sit near enough
+     symmetrically around its caps for the cheaper of the two to be right. */
+  .ldrinfo svg { flex: none; margin-top: calc((1.45em - 14px) / 2); }
   .ldrcard { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 11px 13px;
     display: flex; align-items: center; gap: 12px; }
   .ldrcard .t { min-width: 0; }
@@ -3990,7 +4128,8 @@
     <span class="note">
       Home · Deals · deal detail · create/edit deal · lenders on a deal. Built from the LenderPrism repo at <code>9f3427fc</code> — its tokens, its component metrics, its enums.
     </span>
-    <a class="plink" href="#/auth" style="margin-left:auto">Sign up / log in</a>
+    <a class="plink" href="#/monetization" style="margin-left:auto">Monetization</a>
+    <a class="plink" href="#/auth">Sign up / log in</a>
     <button type="button" id="reset">Reset</button>
   </div>
 </div>
@@ -5375,9 +5514,21 @@ const S = {
      ever open, and a query typed against the last one is stale by the time the
      next opens — every door that opens a picker clears it. */
   dpq: "",
-  /* Execution Support per deal: undefined | "requested" | "in_progress".
-     Midtown is seeded in progress so the working state is on screen. [~] */
-  ops: { midtown: "in_progress" }, dirRadius: 100, zipEdit: false,
+  /* Execution Support per deal. This was a bare string — undefined |
+     "requested" | "in_progress" — until 17 Sep, when Tony's own reshaping of
+     the roadmap row turned the request into a two-screen flow and the record
+     had to start carrying what was actually asked for [T · page inventory
+     row 26]. Now an object: { st, ask, scope[], excl, by, hot }.
+
+     Midtown is seeded in progress AND seeded with answers, because a response
+     page whose read-back is empty cannot be reviewed — the whole point of the
+     second screen is that it carries the state and the outstanding items, and
+     a blank one demonstrates neither. The answers are sample [~]; the shape
+     is the part being proposed. */
+  ops: { midtown: { st: "in_progress", ask: "12 Sep",
+                    scope: ["model", "package", "outreach"], excl: "yes", by: "3 Oct",
+                    hot: "Rate-sensitive and will trade proceeds for term — he has already walked from two quotes over the rate." } },
+  dirRadius: 100, zipEdit: false,
   /* A paid contact request against a Prospector institution.
      "dealId:acct" -> { state:"working"|"returned", due, left, on }. [T] Tony,
      page inventory row 16, 27 Aug: pending reads "working" or "in progress",
@@ -5498,6 +5649,9 @@ const S = {
       lives on the read-only banner now, not inside a row the doc froze] */
   up: null, gate8: false, send: null, sendSel: new Set(),
   expiry: false, res0: null, cancelSt: null, cancelWhy: "", archived: new Set(),
+  /* the tier a Switch on Plan & billing is asking about - downward only,
+     since an upward Switch opens the upgrade prompt instead */
+  pswitch: null,
   roSlot: null,
   /* trialNew: the trial has started and its first deal has not been posted.
      Seeded false — the demo account opens with eleven deals, and a band that
@@ -5535,6 +5689,9 @@ const TIERS = {
   pro:         { name: "Pro",         price: 499, annual: 399, sendCap: null,  deals: null,
                  reveals: null, research: 25 }         /* reveals [T] · research ~ */
 };
+/* Order, for the one question the Change plan rows have to answer before
+   they do anything: is this Switch a purchase or a loss. */
+const TIER_RANK = { essential: 0, accelerator: 1, pro: 2 };
 const PACK = { n: 10, price: 49 };  /* top-up pack — size and price ~ */
 const PLAN = {
   tier: "trial",          /* trial | essential | accelerator | pro */
@@ -5698,6 +5855,12 @@ const money$ = n => tierOf() === "pro" ? `<span class="tbd">${usd$(n)}</span>` :
    the cap number nor the reset day. [~] */
 const allowResetOn = () => tierOf() === "essential" ? `<span class="tbd">1 Oct</span>` : "Oct 3";
 const allowResetIn = () => `<span class="tbd">6 days</span>`;
+/* The day a paid period ends, and until 17 Sep a local const inside the plan
+   screen - the same trap allowResetOn was lifted out of the day before. The
+   switch confirm has to name this date too: it is when the cheaper plan
+   actually starts, and a second literal would be a second thing to get wrong.
+   [~] The date itself is still a placeholder; nothing in the doc fixes it. */
+const RENEW_ON = "October 3, 2026";
 /* which deals count against Essential's one active deal: not archived, not
    Funded, not Dead — Funded is done and Dead is a post-mortem [~] */
 const activeDeals = () => DEALS.filter(d => !S.archived.has(d.id) &&
@@ -5752,15 +5915,30 @@ function planGo(to) {
    Figma's state board is grouped that way since 15 Sep, with both plan names
    drawn under each paid state so neither reads as a property of its tier [~].
 
-   The name slot reads "Accelerator trial", not "Trial · Accelerator" (Tanya,
-   15 Sep). The middot separates peer facts everywhere else in this file -
-   "14 bankers · 7 accounts", "1 credit held · 7 days left" - and trial and
-   Accelerator are not peers: one qualifies the other. As one noun phrase the
-   plan name sits where it sits on the other three cards, and the middot in
-   this header means one thing again. The word Accelerator stays because the
-   button's own gate sentence is "Keep Accelerator when the trial ends", and
-   because it is the doc's word for what the trial grants - though it is also
-   the tier Tony proposed deleting on 28 Aug, which is question 92 [T].
+   The name slot read "Accelerator trial" from 15 Sep to 17 Sep, and never
+   "Trial · Accelerator" (Tanya, 15 Sep): the middot separates peer facts
+   everywhere else in this file - "14 bankers · 7 accounts", "1 credit held ·
+   7 days left" - and trial and Accelerator are not peers, one qualifies the
+   other. That half still holds, and it is why the word never moved into a
+   middot here. It came off instead.
+
+   It now reads "Accelerator" alone (Olesia, 17 Sep, commenting on the Deals
+   frame in Figma - skip "Trial" here). On a trial day the word was printing
+   three times on one screen: trialStrip() is inserted at the top of #app on
+   every route but auth (:14776), Plan & billing names it in its own h2, and
+   this card said it a third time 752px lower down the same screen - far enough
+   apart to read as two separate claims rather than one repeated. What it alone
+   carries is the countdown and the meter, and both already say trial without
+   the noun. The cost is real and worth stating: the header on its own now
+   names a tier nobody is paying for, and it is only honest with the "N days
+   left" span beside it - so that span is not optional on this branch, and the
+   revisit trigger is the strip. If the strip is ever dismissed, deferred or
+   dropped, the word has to come back into the card.
+
+   The word Accelerator stays either way, because the button's own gate
+   sentence is "Keep Accelerator when the trial ends", and because it is the
+   doc's word for what the trial grants - though it is also the tier Tony
+   proposed deleting on 28 Aug, which is question 92 [T].
 
    A blue "Trial" badge beside the name was measured and not built. The stock
    .badge.tone-blue is color-mix(..., #fff) on all three properties and lands
@@ -5778,7 +5956,7 @@ function planCard() {
   if (PLAN.tier === "trial") {
     const warn = PLAN.trialLeft <= 3;
     return `<div class="plancard">
-      <div class="plancard__hd"><b>Accelerator trial</b><span class="st${warn ? " warn" : ""}">${PLAN.trialLeft} ${PLAN.trialLeft === 1 ? "day" : "days"} left</span></div>
+      <div class="plancard__hd"><b>Accelerator</b><span class="st${warn ? " warn" : ""}">${PLAN.trialLeft} ${PLAN.trialLeft === 1 ? "day" : "days"} left</span></div>
       <div class="plancard__meter"><i class="${warn ? "warn" : ""}" style="width:${Math.max(4, Math.round(PLAN.trialLeft / 14 * 100))}%"></i></div>
       <button class="btn btn--sm" type="button" data-up="accelerator" data-upgate="Keep Accelerator when the trial ends.">Upgrade now</button>
     </div>`;
@@ -5893,6 +6071,26 @@ function upModal() {
       </ul>
     </div>
     <div class="mdl__ft">
+      ${/* A third door, 17 Sep (Olesia, on the Figma frame: "Ability to view all
+           plans and compare - link to account - billing?"). The dialog sells one
+           tier and lists three bullets; a broker who wants the other two, or the
+           annual price, or what they are giving up, had no address for any of it
+           and the only non-buying control was a dismiss. Plan & billing already
+           answers all three - the Change plan card prices all three tiers on the
+           same axes and carries the Monthly/Annual segment - so this is a link
+           to a comparison that exists, not a new screen.
+
+           Same name as the other two doors to it (the trial strip and the
+           Opportunities teaser), for the reason the cancel flow gave up "Never
+           mind": one destination, one name. Mobbin's wording here splits - Plain
+           "Compare plans", Uxcel "View plans" - and either would have been a
+           second name for a door this file has already named twice.
+
+           Left slot, .mdl__ft .note's own position, so the primary stays
+           rightmost as it does in every other footer here. Hidden on Plan &
+           billing itself, where it would point at the page it is already on. */""}
+      ${S.route === "account" && S.accSec === "plan" ? ""
+        : `<button class="btn btn--link" style="margin-right:auto" type="button" data-upplans>See plan and billing</button>`}
       <button class="btn btn--outline" type="button" data-upx>${esc(g.alt || "Not now")}</button>
       <button class="btn" type="button" data-upgo="${g.to}" title="Simulated Stripe checkout: the plan changes and you land back on this screen with the action unblocked.">Upgrade</button>
     </div>
@@ -6032,10 +6230,20 @@ function gate8Modal() {
    3 lenders" - while the primary prints what will actually go. So "Upgrade to
    send to 12" was the third statement of an arithmetic the broker had read
    twice, and it is now "Upgrade", the same verb the other nine gates carry.
-   The secondary drops "instead" with the rest and reads "Send to 3", which is
+   The secondary drops "instead" with the rest and reads "Send to 3 lenders"
+   ("Send to 3" until 17 Sep, below), which is
    the label of the button it returns you to - the honest version of the
    promise, since like every secondary in this component it closes the prompt
    rather than acting. [Tanya, 15 Sep]
+
+   Confirmed from outside, 17 Sep. Olesia, reviewing the Figma twin, pinned
+   the task doc's fused row - "Send to 3 · Upgrade to send to 12" - and
+   asked whether all of it needed to be in the button: "Difficult to scan."
+   She had not read the 15 Sep call, so this is agreement arrived at
+   independently rather than an objection to answer, which is the reason it
+   is worth writing down at all. The fused row is no longer drawn in the
+   Figma file; it sits on the Archive page as group 4, and the Monetization
+   page now draws the built row alone. [Olesia, 17 Sep]
 
    The cap line was the one thing in that footer still shouting, 16 Sep. It
    carried class="msg" plus an inline margin-right:auto, and "msg" is defined
@@ -6050,8 +6258,8 @@ function gate8Modal() {
    .mdl__ft .note already existed for exactly this - margin-right:auto,
    max-width 300, 11.5px, --muted-foreground - and had no call sites. So the
    class is now .note and the inline style is gone. The line is a caption on
-   the button beside it, not a third claim: the broker reads "Send to 3", and
-   the cap sentence is there to explain the 3.
+   the button beside it, not a third claim: the broker reads the button, and
+   the cap sentence is there to say which tier set the number in it.
 
    And the row tick was the last bare checkbox in the file, 16 Sep. This is
    the third surface to carry that defect: the Details-tab editor was
@@ -6084,6 +6292,22 @@ function sendModal() {
   const cap = TCFG().sendCap, n = S.sendSel.size;
   const over = cap != null && n > cap;
   const next = tierOf() === "essential" ? "accelerator" : "pro";
+  /* The primary names its own object, 17 Sep (Tanya, against a reference).
+     "Send to 3" made the broker carry the noun across from the caption beside
+     it, and a bare count on a control that is about to act reads as an
+     abstraction - three of what, at the moment it matters most. The caption
+     is not redundant after this: it says which tier sets the 3, which is the
+     one thing the button still cannot say. What changes is that the primary
+     no longer depends on being read second.
+
+     Singular is real here, not defensive: a deal with one saved lender is the
+     ordinary early case, and "Send to 1 lenders" would be the kind of seam
+     that makes a prototype read as unfinished. The secondary in the upgrade
+     prompt takes the same label, because it is that button - the 15 Sep call
+     was that it reads as the button it returns you to, so the two cannot
+     drift apart. */
+  const goes = cap != null ? Math.min(n, cap) : n;
+  const sendLbl = k => `Send to ${k} ${k === 1 ? "lender" : "lenders"}`;
   return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Send loan request">
   <div class="mdl">
     <div class="mdl__hd"><div><h2>Send loan request</h2>
@@ -6100,8 +6324,8 @@ function sendModal() {
     </div>
     <div class="mdl__ft">
       ${cap != null ? `<span class="note">${TCFG().name} sends each request to <span class="tbd">${cap}</span> lenders.</span>` : ""}
-      ${over ? `<button class="btn btn--outline" type="button" data-up="${next}" data-upgate="You picked ${n} lenders — ${TCFG().name} sends to ${cap}." data-upalt="Send to ${cap}">Upgrade</button>` : ""}
-      <button class="btn" type="button" data-sendgo ${n ? "" : "disabled"}>Send to ${cap != null ? Math.min(n, cap) : n}</button>
+      ${over ? `<button class="btn btn--outline" type="button" data-up="${next}" data-upgate="You picked ${n} lenders — ${TCFG().name} sends to ${cap}." data-upalt="${sendLbl(cap)}">Upgrade</button>` : ""}
+      <button class="btn" type="button" data-sendgo ${n ? "" : "disabled"}>${sendLbl(goes)}</button>
     </div>
   </div></div>`;
 }
@@ -6160,6 +6384,132 @@ function expiryModal() {
     <div class="mdl__ft">
       <button class="btn btn--outline" type="button" data-expok>Continue on Essential</button>
       <button class="btn" type="button" data-up="accelerator" data-upgate="Pick up where the trial left off &mdash; every deal active again.">Keep Accelerator</button>
+    </div>
+  </div></div>`;
+}
+
+/* The switch confirm, 17 Sep. Olesia, on the Change plan card: "Switch flow -
+   show confirmation?" — and the honest answer was that Switch had no flow at
+   all. It called planGo() straight from the click, so a broker on Accelerator
+   pressing Switch beside Essential was on the free plan one frame later, with
+   deals over the cap and a toast that said "the way back from Stripe lands
+   here" — a sentence about a checkout that had not happened.
+
+   Twelve screens across two Mobbin queries [💡 rec · Mobbin 17 Sep], and they
+   split by DIRECTION rather than by product:
+
+   Going down, everybody confirms, and every one of them confirms by naming
+   what is lost rather than by asking whether you are sure. Vercel's Downgrade
+   Plan carries an amber block — the team "will be deleted", access goes
+   "immediately". Workable states the arithmetic and the mercy in two
+   sentences: "all jobs will be archived immediately. Your data can be
+   recovered if you reactivate". Lovable heads its list "Here is what will
+   change if you downgrade" and gives each row a number. Buffer draws the
+   whole thing as a table — feature, what you have, what you would have.
+
+   Going up, nobody asks. QuickBooks answers Upgrade with a billing review —
+   subscription summary, "What you'll pay today", then Change plan. There is
+   nothing to warn about when the only consequence is a charge, and a
+   confirm-before-the-charge is a second dialog in front of the one that
+   collects the money.
+
+   So Switch forks. Upward it opens the upgrade prompt, which is this file's
+   own checkout door and already says "Simulated Stripe checkout" on its
+   primary. Downward it opens this, which is a table of the axes that change,
+   built from the same three the Change plan rows use — deals, send-to,
+   reveals — plus research where it moves.
+
+   Two things it deliberately does not say. It gives no date and no proration:
+   nothing in the task doc or Overview v1.2 says whether a paid-to-cheaper
+   switch lands immediately or at the end of the period, and the cancel flow's
+   own answer (PLAN.leaving, "cancels Oct 3") is about cancelling rather than
+   switching. Question 110. And it does not call the deals lost: "data never
+   held hostage" is the doc's principle for exactly this moment [Overview
+   v1.2], so the read-only sentence is the one the expiry modal already uses
+   for the same landing. */
+function pswitchRows(from, to, fromKey, toKey) {
+  const rows = [], n = activeDeals().length;
+  /* Price leads, 17 Sep. The table had been four rows of loss with no mention
+     of the one axis that improves - the $199 that stops being charged, which
+     is the reason the broker opened this dialog at all. Every shipped analog
+     states the money somewhere: Atlassian pairs its loss bullets with a
+     Subscription details card ending "Due today USD 0.00", Upwork names the
+     card it is about to charge and at what rate. Ours named neither, which
+     framed a voluntary saving as pure subtraction. [💡 rec · Mobbin 17 Sep]
+     Pro keeps the .tbd treatment the file gives $499 everywhere else - the
+     figure is contested between Tony's grid and the Cieden proposal, question
+     92 - and it can only appear in the FROM column, since a switch up to Pro
+     is routed to the upgrade prompt and never reaches this modal. */
+  const cost = (t, k) => {
+    if (!t.price) return "Free";
+    const yr = onAnnual() && t.annual;
+    const s = usd$(yr ? t.annual : t.price) + " a month" + (yr ? ", billed yearly" : "");
+    return k === "pro" ? `<span class="tbd">${s}</span>` : s;
+  };
+  const cap = t => t.deals === null ? "Unlimited" : t.deals + (t.deals === 1 ? " active deal" : " active deals");
+  const send = t => t.sendCap === null ? "Every matched lender" : "Up to " + t.sendCap + " lenders a request";
+  const rev  = t => t.reveals === null ? "No monthly cap" : t.reveals + " a month";
+  const res  = t => t.research ? t.research + " a month" : "None";
+  if (cost(from, fromKey) !== cost(to, toKey)) rows.push(["Price", cost(from, fromKey), cost(to, toKey)]);
+  /* The count rides in the cell. It had been lifted out into an .alert--warning
+     band under the table for half of 17 Sep, on the reading that one loud
+     consequence beats four quiet rows - and the band came back out the same
+     day (Tanya). What that leaves is the shape the table had before: the one
+     row that costs the broker something today says so in its own cell, and
+     nothing else on the screen is raised above anything else. */
+  if (cap(from) !== cap(to)) rows.push(["Active deals", cap(from), cap(to)
+    + (to.deals !== null && n > to.deals ? " &mdash; " + (n - to.deals) + " of your " + n + " go read-only" : "")]);
+  if (send(from) !== send(to)) rows.push(["Lenders a request", send(from), send(to)]);
+  if (rev(from) !== rev(to))   rows.push(["Contact reveals", rev(from), rev(to)]);
+  if (res(from) !== res(to))   rows.push(["Research requests", res(from), res(to)]);
+  return rows;
+}
+function pswitchModal() {
+  const from = TCFG(), to = TIERS[S.pswitch], rows = pswitchRows(from, to, tierOf(), S.pswitch);
+  return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Move to ${to.name}">
+  <div class="mdl mdl--ask">
+    <div class="mdl__hd"><div><h2>Move to ${to.name}?</h2>
+      <p>You&rsquo;re on ${esc(from.name)}${PLAN.tier === "trial" ? " for the rest of the trial" : ""}. Here is what changes.</p></div>
+      <button class="x" type="button" data-psw="no" aria-label="Close">${XCLOSE}</button></div>
+    <div class="mdl__bd">
+      <table class="pswx">
+        <thead><tr><th></th><th>${esc(from.name)}</th><th>${esc(to.name)}</th></tr></thead>
+        ${/* The weight sits on the plan the broker HAS, not the one they are
+             moving to (Tanya, 17 Sep). It had been the other way for half the
+             day, on the argument that the destination is the subject of the
+             dialog. The column that answers "what am I giving up" is the one
+             worth reading, and the after-column is already carried by the
+             head, the title and both buttons. */""}
+        <tbody>${rows.map(r => `<tr><th scope="row">${r[0]}</th><td><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join("")}</tbody>
+      </table>
+      ${/* When, 17 Sep. The dialog had been silent on the one question every
+           shipped analog answers in a sentence: Atlassian leads with "Your
+           free plan will start on Mar 5, 2026", Notion says "available until
+           May 6, 2026. After that date, you'll automatically be downgraded"
+           and then repeats the date inside the button label, Upwork and Vercel
+           both say "immediately". Five references, five statements of timing,
+           and ours gave none. [💡 rec · Mobbin 17 Sep]
+
+           Which answer is still question 110 - nothing in the task doc or
+           Overview v1.2 says whether a paid-to-cheaper switch lands now or at
+           the period boundary, and whether the unused part is refunded. The
+           slot is built with the file's own most defensible reading [~]: the
+           period is already paid for, so the cheaper plan starts when the
+           dearer one would have renewed. That is the same boundary the cancel
+           flow uses (PLAN.leaving, Ends October 3) and the same boundary
+           allowResetOn settled for the allowances, so all three surfaces name
+           one date. The closing clause is lifted verbatim from the cancel
+           flow's Ends card - "nothing is billed again" - because it is the
+           same fact about the same day, and Tony's answer changes one string
+           here rather than a paragraph. */""}
+      <p class="hint" style="margin-top:12px">${esc(to.name)} starts on ${RENEW_ON}, when
+        ${esc(from.name)} would have renewed. ${to.price
+          ? "You are billed " + usd$(onAnnual() && to.annual ? to.annual : to.price) + " a month from then."
+          : "Nothing is billed again."}</p>
+    </div>
+    <div class="mdl__ft">
+      <button class="btn btn--outline" type="button" data-psw="no">Keep ${esc(from.name)}</button>
+      <button class="btn" type="button" data-psw="go">Move to ${esc(to.name)}</button>
     </div>
   </div></div>`;
 }
@@ -6872,6 +7222,9 @@ function applySel(key, v) {
      a record, because nothing exists to write to until the footer is pressed. */
   if (kind === "ab") { if (S.addBk) S.addBk.f[id] = v; return; }
   if (kind === "dr") { S.dirRadius = Number(v); return; }
+  /* the execution-support form's one select. Like "ab" it writes into the open
+     draft rather than a record — nothing exists to write to until Send. */
+  if (kind === "ops") { opsDraft()[id] = v; return; }
   /* the standalone lender search's sort, and the Prospector tab's radius */
   if (kind === "lsort") { S.lSort = v; return; }
   if (kind === "pr") { S.pRadius = Number(v); return; }
@@ -7921,7 +8274,7 @@ function renderDeal(d) {
   const all = scored(d);
   const sv = savedIdsFor(d.id).size;
   /* the two deal-level service requests and the overflow that holds them */
-  const memoSt = S.memo[d.id], opsSt = S.ops[d.id];
+  const memoSt = S.memo[d.id], opsSt = opsOf(d.id).st;
   const dlMenu = S.cardMenu === "dl:" + d.id;
   /* Essential holds one active deal; on a board with more, this is one of the
      ones that did not get the slot. Four controls change their face for it and
@@ -8083,10 +8436,15 @@ function renderDeal(d) {
              find out whether something is already under way. */""}
         ${memoSt || opsSt ? `<div class="head__st">
           ${memoSt ? `<button type="button" class="badge badge--outline tone-blue" data-memoview="${d.id}" title="What happens next, and how to cancel.">Memo on its way · <span class="tbd">2–3 business days</span></button>` : ""}
+          ${/* both badges became links on 17 Sep, when the request grew a page
+               to link to. A status chip that cannot be opened is a dead end,
+               and the thing a broker wants the moment they read "working on
+               it" is what is still outstanding. The memo badge beside them has
+               been a button since it was drawn, for the same reason. */""}
           ${opsSt === "in_progress"
-            ? `<span class="badge badge--outline tone-green" title="The Ops team is working this deal's lender outreach with you. They follow up off-platform.">✓ Ops working on it</span>`
+            ? `<a class="badge badge--outline tone-green" href="#/deal/${d.id}/support" title="The Ops team is working this deal with you. Open the request to see what is still outstanding.">✓ Ops working on it</a>`
           : opsSt === "requested"
-            ? `<span class="badge badge--outline tone-blue" title="Request received. One open request per deal. The Ops team follows up off-platform.">Execution support requested</span>` : ""}
+            ? `<a class="badge badge--outline tone-blue" href="#/deal/${d.id}/support" title="Request received. One open request per deal. Open it to see what they still need from you.">Execution support requested</a>` : ""}
         </div>` : ""}
       </div>
       <div class="head__acts">
@@ -8119,18 +8477,491 @@ function renderDeal(d) {
               ? `<button type="button" role="menuitem" data-memoreq="${d.id}" title="Team-prepared branded loan memo for this deal. Pro includes it.">${MEMOIC}Request branded memo</button>`
               : `<button type="button" role="menuitem" data-up="pro" data-upgate="Branded loan memos are prepared by the team on Pro and emailed to you when they are ready." title="Pro only — a team-prepared branded memo of this deal.">${MEMOIC}Request branded memo<span class="car2">Pro</span></button>`}
           <div class="cardmenu__sep"></div>
+          ${/* The open states stopped being disabled rows on 17 Sep. Disabled
+               was right while the request was a fire-and-forget toast and there
+               was nowhere to go — the row's only job was to explain why you
+               could not order it twice. Now there is a page holding the answers
+               and the outstanding items, so the row opens it and says so. The
+               one-open-request-per-deal rule is unchanged and is still what the
+               wording carries; it is enforced by the form refusing to draw over
+               an open request, not by a dead menu row. [~] */""}
           ${opsSt === "in_progress"
-            ? `<button type="button" role="menuitem" disabled title="The Ops team is working this deal's lender outreach with you.">${OPSIC}Execution support<span class="car2">Ops working on it</span></button>`
+            ? `<a role="menuitem" href="#/deal/${d.id}/support" title="Open the request: what you asked for, and what the team is still waiting on.">${OPSIC}Execution support<span class="car2">Ops working on it</span></a>`
           : opsSt === "requested"
-            ? `<button type="button" role="menuitem" disabled title="Request received. One open request per deal.">${OPSIC}Execution support<span class="car2">Requested</span></button>`
+            ? `<a role="menuitem" href="#/deal/${d.id}/support" title="Open the request. One open request per deal.">${OPSIC}Execution support<span class="car2">Requested</span></a>`
           : ro
             ? `<button type="button" role="menuitem" disabled title="This deal is read-only on Essential. Make it the active deal, or upgrade, to request work on it.">${OPSIC}Request execution support</button>`
-            : `<button type="button" role="menuitem" id="opsReq" title="Free on Pro: the Ops team works the deal with you on outreach, packaging and lender follow-up.">${OPSIC}Request execution support</button>`}
+            : `<a role="menuitem" href="#/deal/${d.id}/support" title="Free on Pro: the team works the deal with you on the model, the package, the memo and lender follow-up. Opens a short form first.">${OPSIC}Request execution support</a>`}
         </div>` : ""}
       </div>
     </div>
     ${summary}
     ${tabs}`;
+}
+
+/* ===========================================================
+   Execution support — #/deal/:id/support
+
+   Flow 07 · Support on the roadmap [sheet 3 Sep], owner Tetiana,
+   and the one row Tony rewrote himself. Page inventory row 26
+   asked what turnaround to print. His answer [T · 27 Aug]:
+
+     "Much longer. It's a process. Right now, I follow up via
+      email with a form/questionnaire they must complete, along
+      with a checklist of items they must supply. I also need to
+      know if they have an exclusive agreement in place with the
+      borrower. Perhaps we can embed all of this in a 'response'
+      page?"
+
+   That answer deleted the screen the row had scoped. There is no
+   turnaround, so a confirmation naming one would be inventing the
+   single fact he declined to give — and the request stops being an
+   event and becomes an intake. Two screens on one route: the form
+   while nothing is open, the response page once something is.
+
+   WHAT IS HIS AND WHAT IS OURS. The four things the desk does are
+   his, 26 Aug, verbatim — "creating Excel models, lender-ready
+   packages, credit memos, and then doing the lender matching" [T].
+   The exclusivity question is his, row 26 [T]. The hot-buttons
+   field is the intake template's own section 8, "state any hot
+   buttons the borrower may have" [T · deal-package-anatomy]. The
+   documents are the deal's own four slots plus three the desk's
+   real packages show it working from [T · same]. Everything else
+   — the order, the grouping, every word of help text, the whole
+   shape of the second screen — is ours [~], and the questionnaire
+   he actually emails has never been seen. Question 109 asks for
+   it. This is built to be replaced field for field when it
+   arrives, which is why the answers sit in one flat object rather
+   than in named state.
+
+   THE FORM ASKS ONLY WHAT THE DEAL CANNOT ANSWER, which is the
+   rule the profile already runs on — "prefills every deal, deal
+   creation reads these fields instead of asking for them again".
+   The record carries the loan request, the property, the sponsor,
+   sources and uses, and the strengths and weaknesses narrative.
+   Re-asking any of it would make this the fourth place in the
+   product to type one number. So the fourth card is not a question
+   at all: it shows what the desk already receives and what is
+   blank, which turns the form into the last honest moment to fix
+   a gap before somebody emails you about it. [💡 rec]
+
+   AND THE CHECKLIST IS THE DEAL'S OWN. d.docs already holds four
+   slots with a received boolean, d.docReq what has been asked of
+   the borrower and when, d.docBy who supplied it — and the
+   Documents tab already has upload and an "Ask the borrower"
+   door. Submitting ADDS the desk's extra slots to that same map
+   rather than opening a second list, so the response page needs no
+   upload of its own: it names what is outstanding and sends you to
+   the one place that has always held documents. Two lists of one
+   rent roll disagree the first time only one is filled, and this
+   file has met that shape twice already — the credits box
+   outliving the plan card, the three reset dates that could not
+   all be true. [💡 rec]
+
+   WHAT IS DELIBERATELY NOT DRAWN. No turnaround, no progress bar,
+   no percentage complete: the first is ruled out by his own words
+   and the other two would promise a precision nobody has. No admin
+   surface — somebody has to mark an item received and no tracker
+   row has ever scoped who, which is the second half of question
+   109. And the exclusivity answer does NOT gate submission,
+   because whether "no" stops the process or merely changes it is
+   exactly what has not been said. It is drawn as a required
+   question whose consequence is stated and whose answer is
+   recorded, which is the honest shape of a fact we collect and
+   cannot yet act on. [~]
+   =========================================================== */
+
+/* Tony's four, 26 Aug [T]. The keys are ours; the labels are his list. The
+   one-line descriptions are ours [~] except the memo's, which describes what
+   the Pineville package actually contains — an underwritten loan amount
+   $1.17M below the ask, with DSCR named as the binding constraint
+   [T · deal-package-anatomy]. That is the most valuable page the desk
+   produces, so it is the one whose description says what you get rather than
+   what it is called. */
+const EXSUP_SCOPE = [
+  { k: "model",    t: "Financial model",      d: "Sources and uses, operating projections and debt sizing, in Excel." },
+  { k: "package",  t: "Lender-ready package", d: "The executive summary and the submission package a lender receives." },
+  { k: "memo",     t: "Credit memo",          d: "The underwritten view — what the deal sizes to, and what the binding constraint is." },
+  { k: "outreach", t: "Lender outreach",      d: "The team works the matching and the lender follow-up with you." }
+];
+
+/* Three answers, not two. A yes/no would file "signing next week" under No and
+   lose the distinction the desk cares about, which is whether the work is
+   being done for a relationship that exists yet. [~] */
+/* {v, label} rather than {v, t}, because selCtl reads .label — these are the
+   options for a .fld__sel, not for a .seg. See the note at the control. */
+const EXSUP_EXCL = [
+  { v: "yes",  label: "Yes, signed" },
+  { v: "soon", label: "Not yet — in progress" },
+  { v: "no",   label: "No" }
+];
+
+/* The documents the desk works from that d.docs has no slot for. The SREO
+   travels with the PFS and the appraisals are what the Eric Chan package
+   underwrites against — both named in the source [T · deal-package-anatomy].
+   The transaction document is chosen off d.txType rather than listed three
+   times, because only one of the three can ever be the right ask; the
+   construction wording is ours [~]. */
+const exsupDocs = d => ["Sponsor SREO",
+  d.txType === "Acquisition" ? "Purchase contract"
+  : d.txType === "Construction" ? "Construction budget and schedule"
+  : "Current loan statement",
+  "Most recent appraisal"];
+
+const opsOf = id => S.ops[id] || {};
+/* one key order, read by both screens and by the count in the card header. It
+   was inlined in three places for one turn and the third copy is how a count
+   ends up disagreeing with the list it sits above. */
+const exsupKeys = d => Object.keys(d.docs).concat(exsupDocs(d).filter(k => !(k in d.docs)));
+const exsupScope = k => (EXSUP_SCOPE.find(s => s.k === k) || {}).t || k;
+const exsupExcl = v => (EXSUP_EXCL.find(e => e.v === v) || {}).label || "—";
+
+/* seeded empty rather than from the deal, deliberately: every field on this
+   form is a question the record cannot answer, and one that could be
+   prefilled would belong in the fourth card instead of being asked at all */
+function opsDraft() {
+  if (!S.opsD) S.opsD = { scope: [], excl: "", by: "", hot: "" };
+  return S.opsD;
+}
+
+/* The document list, at whichever moment it is being read. One function for
+   both screens: on the form it is a preview of what will be asked, on the
+   response page it is the outstanding list, and the only thing that changes
+   between them is that the second one has somewhere to send you. A list that
+   described the same rent roll in two vocabularies one screen apart would be
+   the defect this whole page is arranged to avoid. */
+function exsupRows(d, live, onlyLeft) {
+  const req = d.docReq || {}, lead = (d.sponsor && d.sponsor.lead) || "the borrower";
+  /* the deal's own four first, in the order the record declares them, then the
+     desk's three. Order is not alphabetical on purpose — the broker has seen
+     the first four on the Documents tab in exactly this sequence. */
+  const keys = exsupKeys(d).filter(k => !onlyLeft || !d.docs[k]);
+  return keys.map(k => {
+    const has = !!d.docs[k], asked = !has && !!req[k];
+    /* PFS and SREO are per principal, not per deal — the packages track a
+       statement date per person and they differ [T · deal-package-anatomy].
+       d.docs is one boolean per slot and cannot hold "two of three", and the
+       record has no principal list to iterate either: d.sponsor.principals is
+       a count and d.sponsor.guarantors is a sentence. So the row says how many
+       are expected and stops there rather than drawing a per-person state the
+       data cannot support. Worth fixing upstream before this ships. [~] */
+    const per = /PFS|SREO/.test(k) && (d.sponsor || {}).principals > 1
+      ? ` · ${d.sponsor.principals} principals` : "";
+    /* .docrow, the Documents tab's own row, rather than a row of this page's
+       own — same objects, same states. Its note is one nowrap line that
+       ellipsises, which is why the per-principal clause is two words here and a
+       sentence on the tab: this column is 746px inside the .frm main, not the
+       full shell.
+
+       .docrow--pend is reserved for what it means on the Documents tab: the
+       broker has asked the borrower and is waiting on them. It is NOT the
+       treatment for "absent". Both went through --pend for one turn and the
+       response page came out as five grey rows with a muted name and a button
+       sitting on top of the fill — which is the shape of a disabled control,
+       on the only rows that carry an action. [Tanya, 17 Sep] The reason it
+       reads correctly on the Documents tab and not here is that there it is one
+       row among white ones, an exception marked against a norm; a whole list of
+       exceptions has nothing left to be the exception to. */
+    if (has) return `<div class="docrow">
+      <span class="docrow__tick">✓</span>
+      <span class="docrow__nm">${esc(k)}</span>
+      <span class="docrow__note">On the deal${esc(per)}</span>
+    </div>`;
+    return `<div class="docrow ${asked ? "docrow--pend" : "docrow--none"}">
+      <span class="docrow__tick">${asked ? "⏳" : "·"}</span>
+      <span class="docrow__nm">${esc(k)}</span>
+      ${/* "Not on the deal yet", not "not requested yet": d.docReq records the
+           broker asking the borrower, which is a different axis from the desk
+           needing the file. On the response page the desk has requested every
+           row by definition — that is what the card means — so "not requested"
+           would be false there and only there, which is the worst kind of
+           copy to share between two screens. */""}
+      <span class="docrow__note">${asked
+        ? "Requested from " + esc(lead) + " · " + esc(req[k]) + " · not yet uploaded"
+        : "Not on the deal yet"}${esc(per)}</span>
+      ${live ? `<button class="btn btn--ghost btn--xs" type="button" data-opsdocs="${d.id}">${asked ? "Remind" : "Add it"}</button>` : ""}
+    </div>`;
+  }).join("");
+}
+
+/* What the desk already receives, read straight off the record. Five facts, and
+   the blanks are the point of them — a broker who sends a request with no
+   sources and uses and no strengths narrative is going to get an email asking
+   for both, and this is the screen that could have told them first. [💡 rec]
+
+   It reads as .fact pairs in the rail rather than as ticked rows in the body,
+   which is New deal's own arrangement for the same two jobs: what the deal
+   already holds on the right, the questions only the broker can answer on the
+   left. The blanks then get the component New deal built for them — .coach,
+   the gold "Make this deal stronger" box — instead of a tick column carrying
+   the argument on its own. Same shape, same reason, one screen apart. */
+function exsupHave(d) {
+  const sp = d.sponsor || {}, sw = d.sw || {};
+  const su = d.su && d.su.sources && d.su.sources.length;
+  return [
+    ["The loan request", !!d.amt, d.amt ? money(d.amt) + " · " + esc(d.txType || "—") : "Not set", null],
+    ["The property", !!d.property, [d.property, [d.city, d.state].filter(Boolean).join(", ")].filter(Boolean).join(" · ") || "Not set", null],
+    /* the tips are plain sentences, no bold lead, because .coach b is
+       display:block — it is the box's own title slot, and a <b> inside a
+       bullet inherits it and breaks every tip onto two lines. New deal's tips
+       have the same shape for the same reason: statement, em dash,
+       consequence. */
+    ["The sponsor", !!sp.name, sp.name ? esc(sp.name) + " · " + (sp.principals || 1) + (sp.principals > 1 ? " principals" : " principal") : "Not set",
+      "No sponsor on the deal — the first thing a lender asks is who is behind it."],
+    ["Sources and uses", !!su, su ? d.su.sources.length + " source" + (d.su.sources.length > 1 ? "s" : "") + ", " + d.su.uses.length + " uses" : "Not filled in",
+      "No sources and uses — the team sizes the debt from it, so it gets asked for either way."],
+    ["Strengths and weaknesses", !!(sw.strengths && sw.weaknesses), sw.strengths && sw.weaknesses ? "Both written" : sw.strengths || sw.weaknesses ? "Only one of the two" : "Not written",
+      "The narrative is thin — weaknesses named up front change how a package is written."]
+  ];
+}
+
+function renderSupport(d) {
+  const o = opsOf(d.id);
+  return `
+    <div class="crumb"><a href="#/deals">Deals</a><span class="sep">›</span><a href="#/deal/${d.id}">${esc(d.name)}</a></div>
+    ${o.st ? exsupOpen(d, o) : exsupForm(d)}`;
+}
+
+function exsupForm(d) {
+  const f = opsDraft(), tried = S.opsTried;
+  const missScope = tried && !f.scope.length, missExcl = tried && !f.excl;
+  const have = exsupHave(d), gaps = have.filter(h => !h[1] && h[3]);
+  /* .frm, the New deal form's own grid: 1100px capped, a 300px sticky rail.
+     The page ran the full shell width for one turn and every complaint about
+     it was the same complaint — an "Add it" button 1100px from the document it
+     belongs to, a hot-buttons sentence drawn as a single 1290px ribbon, body
+     prose past the 66ch measure .head p has carried since the file began. This
+     is a form; the file already has a width for forms. [Tanya, 17 Sep] */
+  return `
+    <div class="head">
+      <div>
+        <h1>Request execution support</h1>
+        ${/* .head p, not .sub. The two are a genre split the file already keeps
+             and this page had on the wrong side of it: .sub is the metadata
+             line under a detail page's title (the response page's "requested
+             12 Sep · needed by 3 Oct", the Prospector's), .head p is a form's
+             lede — 14px, capped at the file's 66ch measure. This is a form, and
+             at .sub it was 12.5px running the full 1290px shell. */""}
+        <p>The team works ${esc(d.name)} with you. Tell us what you need and where the borrower relationship stands; we will come back with anything still missing.</p>
+      </div>
+    </div>
+    <div class="frm">
+    <div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__hd"><h2>What do you need from us?</h2></div>
+      <div class="card__ct">
+        ${/* .billrow--pick, the send-request modal's lender picker: a tick, a
+             name and a description on one row. It is also the one row in the
+             file whose box is aligned to a two-line label properly — the .chk
+             takes the name's own 1.45em line box plus a 1px optical nudge —
+             which is the alignment this list needs and had approximated. */""}
+        ${EXSUP_SCOPE.map(s => `<label class="billrow billrow--pick" style="cursor:pointer">
+          <span class="chk"><input type="checkbox" data-opsscope="${s.k}"${f.scope.includes(s.k) ? " checked" : ""}><span class="bx">✓</span></span>
+          <div style="flex:1"><b>${esc(s.t)}</b> <span class="sub">${esc(s.d)}</span></div>
+        </label>`).join("")}
+        ${missScope ? `<div class="errmsg">Pick at least one — it decides who picks the request up.</div>` : ""}
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__hd"><h2>The borrower</h2></div>
+      <div class="card__ct">
+        <div class="fld${missExcl ? " err" : ""}">
+          <label>Is an exclusive agreement in place with the borrower?</label>
+          ${/* .fld__sel, not .seg, 17 Sep. Every other .seg in this file draws
+               with exactly one option on — the four tabs, the billing period,
+               the lender source, and New deal's Transaction, which seeds
+               Acquisition. This was the only one rendering with none, and it
+               read as three dead buttons rather than as a question waiting for
+               an answer (Tanya). The fix is not to preselect one: the first
+               option asserts a signed exclusive agreement with the borrower,
+               and this is the question that exists because the team goes to
+               lenders in the broker's name — a default nobody chose is the one
+               answer here that must never be assumed. So the control changes
+               instead. selCtl already handles exactly this: "an empty cur draws
+               a placeholder instead of silently claiming opts[0]". It is also
+               the same control "Under contract?" uses on the deal form, which
+               is the same shape of question — a fact about the deal the broker
+               may simply not have settled yet. */""}
+          <div class="fld__sel" style="max-width:300px">${selCtl("ops:excl", EXSUP_EXCL, f.excl, "Exclusive agreement")}</div>
+          ${/* the consequence is stated and the answer does not gate: see the
+               header comment, and question 109. Whichever way that lands, this
+               sentence is the one that changes — not the control. */""}
+          <div class="hint">${
+            f.excl === "no" || f.excl === "soon"
+              ? "We will still take the request. Tell your contact at Prism where the agreement stands before the team goes to lenders on your behalf."
+              : "We ask because the team goes to lenders in your name, and it matters whether the borrower has committed to you."}</div>
+          ${missExcl ? `<div class="errmsg">We need an answer to this one, including if it is no.</div>` : ""}
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__hd"><h2>Timing and anything we should know</h2></div>
+      <div class="card__ct">
+        <div class="fld">
+          <label for="ops_by">Do you need it by a particular date?</label>
+          <input class="inp" id="ops_by" data-opsf="by" autocomplete="off" value="${esc(f.by)}" placeholder="3 October, or leave blank">
+        </div>
+        ${/* the template's own section 8 wording, which is worth keeping
+             verbatim: "hot buttons" is the desk's phrase and the brokers who
+             fill this in already use it [T · deal-package-anatomy] */""}
+        <div class="fld" style="margin-bottom:0">
+          <label for="ops_hot">Any hot buttons the borrower may have</label>
+          <textarea class="inp" id="ops_hot" data-opsf="hot" rows="3" placeholder="Rate-sensitive, needs to close before a maturity, will not sign recourse — whatever would change how we take this out.">${esc(f.hot)}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__hd"><h2>What we will ask you to supply</h2></div>
+      <div class="card__ct">
+        <span class="sub" style="margin:0 0 8px">Nothing to do now — these appear on the request as outstanding items, and they live on the deal's Documents tab where you already upload.</span>
+        ${exsupRows(d, false)}
+      </div>
+    </div>
+
+    ${/* not wrapped in a card. .card__ft is 12.5px muted with 2px of top
+         padding — it is built for the sentence under a card's content, not for
+         a card whose only child is a pair of buttons, and a lone footer card
+         reads as a fifth section with nothing in it. .frmfoot rather than an
+         inline flex: it is the deal form's own footer and it right-aligns,
+         which is where this file puts a form's commit button. */""}
+    <div class="frmfoot" style="margin-bottom:16px">
+      <a class="btn btn--ghost" href="#/deal/${d.id}">Cancel</a>
+      <button class="btn" type="button" id="opsSend">Send request</button>
+    </div>
+
+    <div class="warnpanel">
+      <b>Drawn against Tony's own answer, not against a questionnaire we have seen.</b>
+      He runs this today by email with a form, a checklist and the exclusivity question
+      <i>[T · page inventory row 26]</i>; the four kinds of work are his words from 26 Aug and the
+      documents come from the three real packages the desk produced. The <i>wording</i> of his
+      questionnaire has never been shared — <b>question 109</b> asks for it, and this form is built
+      to be swapped field for field when it arrives. Two things it deliberately does not do:
+      print a turnaround, since his answer to that was <i>"much longer — it's a process"</i>, and
+      decide whether <i>no</i> to the exclusivity question stops the request. Nobody has said, so it
+      records the answer and does not gate. <b>Question 93</b> — Pro, over $5 million, or both —
+      still decides who reaches this page at all.
+    </div>
+
+    </div>
+    ${exsupRail(d, have, gaps)}
+    </div>`;
+}
+
+/* The form's rail. Two cards, New deal's own pair: what the record already
+   holds, then the gaps in it as .coach. Nothing here is an input — that is the
+   whole reason it is on the right, and it is why the fourth card came out of
+   the body. */
+function exsupRail(d, have, gaps) {
+  return `<div class="frm__rail">
+      <div class="card">
+        <div class="card__hd"><h2>What we already have</h2>
+          <span class="r"><a href="#/deal/${d.id}/edit">Edit</a></span></div>
+        <div class="card__ct">
+          <span class="sub" style="margin:0 0 10px">Taken from the deal — you do not need to send any of it again.</span>
+          ${have.map(([k, , v], i) => `<div class="fact"${i ? ` style="margin-top:10px"` : ""}>
+            <div class="k">${esc(k)}</div><div class="v">${v}</div></div>`).join("")}
+        </div>
+      </div>
+      ${gaps.length ? `<div class="card">
+        <div class="card__ct">
+          <div class="coach"><b>Worth filling in first</b><ul>${
+            gaps.map(g => `<li>${g[3]}</li>`).join("")}</ul></div>
+        </div>
+      </div>` : ""}
+    </div>`;
+}
+
+/* The response page. Same .frm grid as the form it replaces, and for the same
+   reason: it is the same page at a later moment, and a screen that halves its
+   measure the instant a request is sent reads as two products. Where it stands
+   and what is outstanding are what the broker opened the page for, so they are
+   the body; what you asked for is the read-back nobody comes here to see, so it
+   is the rail — the same left/right split the form makes between the questions
+   only the broker can answer and what the record already holds. */
+function exsupOpen(d, o) {
+  const working = o.st === "in_progress";
+  /* the card is called Outstanding items, so it lists outstanding items. It
+     showed the whole checklist for one turn and the header read "5 still
+     needed" over seven rows — a count and a list disagreeing in the same
+     eyeline. The satisfied ones are not hidden, they are summed in one line
+     underneath: a broker wants to know the rest is handled, not to re-read it.
+     [17 Sep] */
+  const keys = exsupKeys(d);
+  const done = keys.filter(k => d.docs[k]), left = keys.length - done.length;
+  const rows = exsupRows(d, true, true);
+  return `
+    <div class="head">
+      <div>
+        <h1>Execution support</h1>
+        <div class="head__st">
+          <span class="badge badge--outline ${working ? "tone-green" : "tone-blue"}">${working ? "✓ Ops working on it" : "Requested"}</span>
+        </div>
+        <span class="sub">${esc(d.name)} · requested ${esc(o.ask || "—")}${o.by ? " · needed by " + esc(o.by) : ""}</span>
+      </div>
+      <div class="head__acts">
+        <button class="btn btn--outline" type="button" id="opsCancel">Cancel request</button>
+      </div>
+    </div>
+
+    <div class="frm">
+    <div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__hd"><h2>Where it stands</h2></div>
+      <div class="card__ct">
+        ${/* no date, no window, no bar. Tony declined to give a turnaround and
+             the honest substitute is naming who has it and what moves it next,
+             which is a fact rather than a forecast. [T · row 26] */""}
+        <p style="margin:0;font-size:13.5px;line-height:1.55">${working
+          ? "Your request is with the team and they are working it with you. They will come to you directly as the work lands — there is no fixed turnaround on this, and the pace depends mostly on the items below."
+          : "Your request has been received. The team picks it up and comes to you directly — there is no fixed turnaround on this, and the pace depends mostly on the items below."}</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__hd"><h2>Outstanding items</h2>
+        <span class="r">${left ? left + " still needed" : "Nothing outstanding"}</span></div>
+      <div class="card__ct">
+        ${left ? `<span class="sub" style="margin:0 0 8px">These live on the deal's Documents tab. Add them there, or ask ${esc((d.sponsor || {}).lead || "the borrower")} to.</span>
+        ${rows}`
+        : `<div class="docrow"><span class="docrow__tick">✓</span>
+            <span class="docrow__nm">Everything they asked for is on the deal</span>
+            <span class="docrow__note">Nothing is waiting on you. The team comes to you directly from here.</span></div>`}
+        ${done.length ? `<span class="sub" style="margin-top:10px">Already on the deal: ${done.map(k => esc(k)).join(" · ")}.</span>` : ""}
+      </div>
+    </div>
+
+    <div class="warnpanel">
+      <b>Who ticks an item off is not designed.</b> Outstanding items only mean anything if they
+      shrink, and nothing on any tracker says whether the team marks one received or the broker
+      uploads against it — the second half of <b>question 109</b>. What is drawn here reads the
+      deal's own document record, so the moment a file lands on the Documents tab this list is
+      right without anybody maintaining a second one. <i>[~]</i>
+    </div>
+
+    </div>
+    <div class="frm__rail">
+      <div class="card">
+        <div class="card__hd"><h2>What you asked for</h2></div>
+        <div class="card__ct">
+          ${/* .fact, stacked — the rail's own key-value shape, the one the
+               Institution card on a lender account uses. Not .facts--rows:
+               its label column is a fixed 148px, which is half of a 300px
+               rail, and the media query that unstacks it fires on the
+               viewport rather than on the column. */""}
+          <div class="fact"><div class="k">The work</div><div class="v">${
+            (o.scope || []).length ? (o.scope || []).map(k => esc(exsupScope(k))).join(" · ") : "—"}</div></div>
+          <div class="fact" style="margin-top:10px"><div class="k">Exclusive agreement</div><div class="v">${esc(exsupExcl(o.excl))}</div></div>
+          <div class="fact" style="margin-top:10px"><div class="k">Needed by</div><div class="v">${o.by ? esc(o.by) : "No date given"}</div></div>
+          <div class="fact" style="margin-top:10px"><div class="k">Hot buttons</div><div class="v" style="font-weight:400;line-height:1.5">${o.hot ? esc(o.hot) : "None noted"}</div></div>
+        </div>
+      </div>
+    </div>
+    </div>`;
 }
 
 /* The directory page behind the saved-tab door. [T] Tony's Prospector asks,
@@ -10282,7 +11113,6 @@ function ldrawerAcct() {
              A sentence and two buttons floating under a heading is what this
              was until 14 Sep (Tanya, seeing it on screen) - no title, no edge,
              nothing saying the section is empty rather than merely short. */
-          if (S.addBk && S.addBk.acct === a.acct) return addBkForm();
           return mine.length
             ? `<div class="lpacts" style="margin-top:10px">${find}${add}</div>`
             : `<div class="empty empty--sm empty--slot">
@@ -10525,7 +11355,7 @@ function dirPickModal() {
    whose headline turns from No contact person on file to No lending criteria
    on file. Not on the form itself - a warning over the buttons of a form the
    broker has already chosen to fill in is the one place it changes nothing. */
-function addBkForm() {
+function addBkModal() {
   const ab = S.addBk;
   const rec = PROSPECTS.find(x => x.acct === ab.acct) || DIRECTORY.find(x => x.acct === ab.acct) || acctRec(ab.acct);
   const co = rec ? rec.co : ab.acct;
@@ -10541,15 +11371,20 @@ function addBkForm() {
     st:    tried && !f.st
   };
   const stOpts = US_STATES.map(([a, n]) => ({ v: a, label: n + " (" + a + ")" }));
-  /* it was a modal until 14 Sep and came inline the same day. Tony's reference
-     puts the form where the empty state was, under the section's own heading,
-     and it is the better shape twice over: this section opens inside a drawer,
-     so a modal was an overlay stacked on an overlay, and the form is the third
-     state of a region that already draws two - empty, and filled. Nothing in
-     the body changed; the shell did, and the heading came down a level because
-     the section heading above it already names the place. */
-  return `<div class="abform">
-      <h3>Add a banker at ${esc(co)}</h3>
+  /* inline from 14 Sep to 17 Sep, and a dialog on either side of that. The
+     shell is the only thing that has changed across the three moves - the
+     fields, their required set, their error copy and the invitation notice are
+     the same nine controls throughout - and the argument for this one is in
+     the .mdl--ab rules, where the shell is drawn. The heading goes back up to
+     h2: it is the dialog's own title now, not a sub-head under a section
+     heading that was naming the place for it. */
+  return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Add a banker at ${esc(co)}">
+    <div class="mdl mdl--ab">
+      <div class="mdl__hd">
+        <div><h2>Add a banker at ${esc(co)}</h2></div>
+        <button type="button" class="x" data-mclose aria-label="Close">${XCLOSE}</button>
+      </div>
+      <div class="mdl__bd">
         <div class="fldrow fldrow--2">
           <div class="fld ${miss.first ? "err" : ""}">
             <label for="ab_first">First name <span class="req">*</span></label>
@@ -10608,11 +11443,36 @@ function addBkForm() {
             them: a banner over the buttons of a form the broker has already
             decided to fill in, warning about an outcome they have not reached.
             The toast lands on the act and the profile block lands on the
-            record, which are the two moments it is worth saying. */""}
-      <div class="acts">
-        <button class="btn btn--outline btn--sm" type="button" data-abcancel>Cancel</button>
-        <button class="btn btn--sm" type="button" id="abSave">Add banker</button>
+            record, which are the two moments it is worth saying.
+
+            A note is back on 17 Sep, and it is not that note. What came off
+            restated the "no lending criteria" consequence a third time. What
+            goes on states one the product had never said anywhere: pressing
+            this button sends an email. [T · page inventory row 18, 27 Aug]
+            "the lender will be emailed and if lender creates a profile, then
+            it becomes public on the network." A broker who believes they are
+            filing a private contact and has in fact mailed a client's banker
+            has a grievance the form could have prevented with one line, and
+            unlike the criteria rule this one has to be read BEFORE the press,
+            not after it - which is exactly why it goes over the buttons.
+            The sentence is Tony's two clauses and nothing else; whether the
+            mail should fire on save at all, and how plainly we may say so, is
+            question 104. [~] */""}
+        <div class="ldrinfo">${I('<path d="M3 7.5 12 13l9-5.5"/><rect x="3" y="5" width="18" height="14" rx="2"/>', 14)}<span>Prism emails them an invitation. The contact stays private to you unless they create a profile, and then it joins the network.</span></div>
       </div>
+      ${/* the notice stays the last thing in the body rather than moving to
+            .mdl__ft .note, which is where this file usually parks a sentence
+            about a footer button. That slot is for a caveat the broker may
+            read; this one they have to read, because it names a side effect -
+            an email to a client's banker - that the button they are about to
+            press does not name. Body-last puts it directly over the buttons
+            and at body measure; the footer slot would set it at 11.5px in a
+            300px column beside the thing it is warning about. */""}
+      <div class="mdl__ft">
+        <button class="btn btn--outline" type="button" data-abcancel>Cancel</button>
+        <button class="btn" type="button" id="abSave">Add banker</button>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -10875,12 +11735,28 @@ function renderLenderAcct(acct, dealId) {
      roster is actually there to be told apart from. On a Prospector account
      this is the card's only table, every row in it is the broker's own, and
      the strip underneath already names what these records lack. */
+  /* the bankers the broker typed in, listed under the roster and never merged
+     into it. Five of the roster's seven columns are criteria and this record
+     has none of them, so it gets its own three - the ways to reach the person,
+     which is everything it holds. The badge is the provenance: srcBadge marks
+     a contact Prism sourced, this marks one nobody verified. [T \u00b7 9 Sep] */
+  /* the provenance is a column header, not a badge on every row (Tanya,
+     14 Sep). A badge that draws on all N rows of a table separates nothing
+     inside it; what it was really marking was the boundary between this table
+     and the roster above, and a boundary wants one label, not N. So it is said
+     once, in the heading over the names it applies to - and only when the
+     roster is actually there to be told apart from. On a Prospector account
+     this is the card's only table, every row in it is the broker's own, and
+     the strip underneath already names what these records lack. */
   const mineTable = mine.length ? `<div class="tscroll"><table class="t">
       <thead><tr><th${r.length ? ` title="People you added yourself. They are not registered on the platform, carry no lending criteria, and cannot be alerted about a deal.">Contact you added` : ">Contact"}</th><th>Email</th><th>Phone</th><th>Branch</th><th></th></tr></thead>
       <tbody>${mine.map(m => `<tr>
-        <td class="nm-cell" style="white-space:normal;max-width:250px">
+        ${/* 278 rather than the 250 it was: box-sizing is border-box, so the
+              39.5px lead above would have eaten the name's width instead of
+              moving it. 250 + 27.5 keeps the text column the size it was. */""}
+        <td class="nm-cell nm-cell--lead" style="white-space:normal;max-width:278px">
           <b>${esc(m.ct)}</b>
-          <span>${esc(m.role || "No title on file")}${m.city || m.st ? " · " + esc([m.city, m.st].filter(Boolean).join(", ")) : ""}</span>
+          <span>${esc(m.role || "No title on file")}${m.city || m.st ? " \u00b7 " + esc([m.city, m.st].filter(Boolean).join(", ")) : ""}</span>
         </td>
         <td data-l="Email" style="white-space:normal;max-width:220px">${esc(m.email)}</td>
         <td data-l="Phone" style="white-space:nowrap">${m.phone ? esc(m.phone) : `<span class="lbl">—</span>`}</td>
@@ -10911,10 +11787,13 @@ function renderLenderAcct(acct, dealId) {
      table with nothing to explain. Private notes already settles the pattern on
      this page: the add action lives in .card__hd's right slot while the list has
      rows, and drops into the empty state when it does not, because a button
-     belongs beside the sentence saying why you would press it. Hidden while the
-     form is open, for the same reason the tails are - the form is that region in
-     another state, not something to open twice. */
-  const hdAdd = (r.length || mine.length) && !(S.addBk && S.addBk.acct === acct)
+     belongs beside the sentence saying why you would press it. It hid itself
+     while the form was open, back when the form was this region in another
+     state; the form is a dialog again since 17 Sep, drawn over this card
+     rather than inside it, so there is nothing left to hide - and a control
+     that vanishes under its own dialog is a control the broker cannot find
+     again after cancelling. */
+  const hdAdd = (r.length || mine.length)
     ? `<span class="r"><button class="btn btn--outline btn--sm" type="button" data-addbk="${esc(acct)}">+ ${mine.length ? "Add another banker" : "Add a banker"}</button></span>`
     : "";
 
@@ -11006,18 +11885,15 @@ function renderLenderAcct(acct, dealId) {
             (the institution's own identity) in the rail. */""}
       <div class="card">
         <div class="card__hd"><h2>Contacts</h2>${hdAdd}</div>
-        ${/* the form takes the place of whichever tail this account draws -
-              the action bar on a roster account, the no-criteria block on a
-              Prospector one. Not appended below them: it is the same region in
-              a third state, and leaving the block that explains the empty case
-              on screen under a form filling it is the page talking over
-              itself. The top padding is the gap the tails were carrying: at 0
-              the form's edge landed flush on the last table row, which is the
-              second half of why it read as that row's detail rather than the
-              card's tail. [14 Sep] */""}
-        ${roster}${mineTable}${S.addBk && S.addBk.acct === acct
-          ? `<div style="padding:14px 18px 16px">${addBkForm()}</div>`
-          : noCrit}
+        ${/* the card draws its own tail and keeps it - the action bar on a
+              roster account, the no-criteria block on a Prospector one. From
+              14 to 17 Sep the form replaced whichever of the two this account
+              drew, because an inline form and the block explaining the empty
+              case could not both be on screen without the card talking over
+              itself. A dialog has no such quarrel: it covers the card while it
+              is open and hands it back intact, so the explanation is still
+              there to read when the broker cancels out of filling it in. */""}
+        ${roster}${mineTable}${noCrit}
       </div>
       <div class="lpgrid">
       <div class="lpmain">
@@ -12572,7 +13448,6 @@ function accPlan() {
      resets on the calendar month instead. Both were printing "1 Oct" against a
      renewal of "October 3", two boundaries on adjacent cards with nothing
      saying why. [~] Still a question for Chris, but a coherent one now. */
-  const RENEW_ON = "October 3, 2026";
   /* Short form in the sub lines - the long one is already on the Renews card
      an inch away, and a sub line repeating it twice reads as boilerplate.
      Empty on the trial: there is no period to turn over, since the trial ends
@@ -13220,8 +14095,16 @@ function accTerritory() {
 /* accCredits came off 13 Sep with the credits model [task doc, 9 Sep update]:
    the balance became the research allowance on Plan & billing, the packs
    became the one top-up, and /account/credits redirects there. The ledger ask
-   (Flow 07 · 2) transfers to the allowance line and stays undrawn for the
-   same reason it was before — no data behind it. */
+   (Flow 07 · 2 — "a history of what each credit bought with its outcome,
+   including returns") stood undrawn here for want of data behind it until
+   17 Sep, when it was built on Plan & billing as the Request history card —
+   see resLedger, which carries the argument for why it is necessary rather
+   than tidy, and why Essential deliberately gets none.
+
+   So three of the row's four clauses are drawn — balance, top-up, history —
+   and the fourth, "its own section", is the one deliberately not honoured:
+   the section it asks for dissolved with the unit it was named after, and
+   the Area column puts all four on Account either way. [~] */
 
 /* the confirmation moved to the toast on 3 Sep. Inline, it sat in the footer of
    the section just saved — the one place a broker has already left by the time
@@ -13686,6 +14569,345 @@ function renderAccount() {
     </div>`;
 }
 
+/* ---------- the monetization index (#/monetization) ----------
+
+   Fourteen flows, in the order the Figma page lists them, because that page
+   and this one are two indexes of one body of work and a reviewer walking
+   between them should not have to re-sort. Each entry carries the task-doc
+   screen it was built from, its Figma section, where the surface actually
+   lives, and the states that surface has - each state a button that puts the
+   prototype into it.
+
+   The state buttons are the point. Every monetization screen in this file was
+   reachable only by finding the tier switch on Plan & billing and then
+   reproducing the conditions by hand, which is why the walkthrough had to be
+   narrated rather than clicked. What the doc calls seventeen screens is really
+   fourteen surfaces with about forty states between them, and forty is past
+   the number anybody reconstructs from memory in a review.
+
+   mzReset() runs before every jump. Without it a state lands on top of
+   whatever the last one left - an upgrade prompt still open over the gate you
+   asked for, a reveal bought three jumps ago making a locked contact look
+   open. The reset is deliberately wide for that reason, and it includes
+   PLAN.revealed: a reveal is the one piece of monetization state that is
+   invisible until the exact screen you are trying to show.
+
+   Not a broker surface, and it must not become one: the only door is the grey
+   strip above the frame. [Tanya, 17 Sep] */
+const MZ_FIG = "https://www.figma.com/design/Z5x8rRoUmv85k6a3rYiCcD/Broker?node-id=";
+
+/* the hash may already be where the state wants to go - the gate, the plan
+   card and the cap notice all live on screens the reader may be standing on -
+   and assigning an unchanged hash fires no hashchange, so route() would never
+   run and the state would sit set and undrawn. Same trap the ghost slot's
+   data-gate8 handler documents. */
+function mzGo(h) { if (location.hash === h) render(); else location.hash = h; }
+function mzTier(t, u) { PLAN.tier = t; if (u) Object.assign(PLAN.u[t], u); }
+function mzSend(id) {
+  S.send = id;
+  S.sendSel = new Set([...savedIdsFor(id)].filter(x => typeof x === "number" && !S.sent[x]));
+  mzGo("#/deal/" + id + "/saved");
+}
+/* the seeded request states, kept so a jump can put them back. Three of
+   screen 17's four states are seeded rather than produced, and the fourth -
+   working - is produced by this page, so without the snapshot the first jump
+   to "working" permanently overwrites Comerica's "not requested" and every
+   later flow that walks past a saved list shows a request nobody placed. Found
+   exactly that way: the contact-reveal jump printed "an admin is calling the
+   branch" three jumps after the request-status one. */
+const MZ_FINDC0 = JSON.parse(JSON.stringify(S.findc));
+/* every overlay in render()'s single-modal chain, shut. Split out of mzReset
+   because arriving at the index has to shut them too and must NOT do the rest:
+   a reviewer who walks back here after pressing Upgrade has changed the plan,
+   and the index is not entitled to undo that. Found the hard way - the gate
+   dialog from a previous jump was still mounted over the index, because
+   render() mounts the chain on whatever route it is drawing. */
+function mzShut() {
+  S.up = null; S.upName = null; S.gate8 = false; S.expiry = false; S.res0 = null;
+  S.memoOk = null; S.funded = null; S.fundedOffer = false;
+  S.cancelSt = null; S.cancelWhy = ""; S.pswitch = null;
+  S.send = null; S.sendSel.clear();
+  S.cardMenu = null; S.cardSub = false;
+}
+function mzReset() {
+  mzShut();
+  S.sent = {}; S.memo = {};
+  S.trialNew = false; S.trialHide = true;
+  S.findc = JSON.parse(JSON.stringify(MZ_FINDC0));
+  PLAN.revealed = {}; PLAN.leaving = null; PLAN.billing = "monthly";
+  PLAN.packs = 0; PLAN.annualAsked = false;
+  S.undo = null;
+}
+
+const MZ_FLOWS = [
+  { k: "plan-card", nav: "Plan card", doc: "Screen 3", node: "1533-2",
+    title: "Plan card",
+    where: "the rail, under the menu — every page",
+    lede: `One card, four states. The doc names them trial / Essential / Accelerator / Pro, but the
+      last two are plan names rather than states: they return from one branch and differ only in a
+      name and a number. What is actually drawn is trial, Essential, paid-under-cap and
+      paid-at-cap — the threshold is the state, because it adds two rows.`,
+    states: [
+      { t: "Trial", d: "Days left, and the meter running down from fourteen.",
+        go() { mzTier("trial"); PLAN.trialLeft = 11; mzGo("#/deals"); } },
+      { t: "Essential", d: "Reveals left of three, and Upgrade.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/deals"); } },
+      { t: "Paid, under the cap", d: "Name and Manage plan, nothing else — a quiet paid plan is silent by design.",
+        go() { mzTier("accelerator", { rev: 150, res: 3 }); mzGo("#/deals"); } },
+      { t: "Paid, at the cap", d: "At 80% the meter appears, naming whichever allowance is nearest its ceiling.",
+        go() { mzTier("accelerator", { rev: 205, res: 7 }); mzGo("#/deals"); } }
+    ] },
+
+  { k: "trial-strip", nav: "Trial countdown", doc: "Screen 4", node: "1648-3630",
+    title: "Trial countdown",
+    where: "a full-width strip above the rail and the page",
+    lede: `The welcome and the countdown are one element. They were two until 15 Sep, sitting 116px
+      apart saying the same number in the same blue; the x now means <b>read it</b>, which reveals
+      the countdown rather than hiding the trial. There is no plan door in the welcome state — the
+      doc's row 2 forbids plan choice there — so it is a div and only the countdown is a link.`,
+    states: [
+      { t: "Welcome, day 1", d: "The doc's sentence, character for character, em dash included.",
+        go() { mzTier("trial"); PLAN.trialLeft = 14; S.trialNew = true; S.trialHide = false; mzGo("#/home"); } },
+      { t: "Countdown, calm", d: "Eleven days left. Blue, and a door to Plan & billing.",
+        go() { mzTier("trial"); PLAN.trialLeft = 11; mzGo("#/home"); } },
+      { t: "Countdown, amber", d: "Three days. The strip, the plan card and the mobile pill all turn together.",
+        go() { mzTier("trial"); PLAN.trialLeft = 3; mzGo("#/home"); } },
+      { t: "Countdown, last day", d: "One day, red.",
+        go() { mzTier("trial"); PLAN.trialLeft = 1; mzGo("#/home"); } }
+    ] },
+
+  { k: "upgrade-prompt", nav: "Upgrade prompt", doc: "Screen 6", node: "1673-262",
+    title: "Upgrade prompt",
+    where: "a dialog over whichever screen the gate fired on",
+    lede: `The one component every gate reuses, and the only one that carries an unfinished act
+      across the checkout: the reveal the gate interrupted, or the research request it was holding.
+      The doc promises both "returns to the same screen" and "lands back with the action completed",
+      and those are two different promises — clearing the overlays keeps the first and quietly
+      breaks the second.`,
+    states: [
+      { t: "To Accelerator", d: "The gate line the plan card's Upgrade sets.",
+        go() { mzTier("essential", { rev: 1 });
+               S.up = { to: "accelerator", gate: "More reveals, more sends, research included.", alt: "", rev: null };
+               mzGo("#/deals"); } },
+      { t: "To Pro", d: "The gate line the Opportunities teaser sets.",
+        go() { mzTier("accelerator");
+               S.up = { to: "pro", gate: "House-sourced borrower requests, routed to you first.", alt: "", rev: null };
+               mzGo("#/deals"); } }
+    ] },
+
+  { k: "contact-reveal", nav: "Contact reveal", doc: "Screen 7", node: "1736-492",
+    title: "Contact reveal",
+    where: "the contact block on a lender profile",
+    lede: `The contact block is the paid thing; the rest of the profile stays free, because the
+      never-gate list names lender profiles. Since 14 Sep <b>saving the lender to a deal is the
+      reveal</b> on a paid seat — Chris's organising step survives, the press Tony would not pay for
+      goes — so the button only remains on the free tier and the trial. Save-to-deal is the
+      precondition on every tier, which is why two of the five states below are about having no
+      deal rather than about having no money. [~] Not a written decision yet: the call ends with
+      Tony saying it is something to figure out after the wireframe.`,
+    states: [
+      { t: "Locked, budget left", d: "Essential, two of three. Unlock, with the month's balance beside it.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/lender/sandbox/c/1/for/riverside"); } },
+      { t: "Locked, budget spent", d: "Three of three. The block becomes the upgrade, inline rather than over it.",
+        go() { mzTier("essential", { rev: 3 }); mzGo("#/lender/sandbox/c/1/for/riverside"); } },
+      { t: "Open, paid seat", d: "Accelerator, and the banker is on the deal — so there is nothing to press.",
+        go() { mzTier("accelerator"); mzGo("#/lender/sandbox/c/1/for/riverside"); } },
+      { t: "Outside a deal, saved on two", d: "An Unlock per deal the banker is on. Past three the stack becomes a menu and stops.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/lender/sandbox/c/1"); } },
+      { t: "Outside a deal, saved on none", d: "The condition, stated and not offered — with no deal there is no unlock to offer yet.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/lender/harbor/c/3"); } }
+    ] },
+
+  { k: "deal-gate", nav: "Second-deal gate", doc: "Screen 8", node: "1769-4092",
+    title: "Deals list — the second-deal gate",
+    where: "the Deals list, and the New deal button on it",
+    lede: `Essential includes one active deal, so a second New deal meets the gate before the form.
+      One gate, three faces — the header meter, the ghost slot in the list, and the dialog — and
+      the third was added on 16 Sep after a sweep found that a limit stated only at the moment of
+      refusal reads as a surprise. Editing an existing deal is never gated.`,
+    states: [
+      { t: "The meter and the ghost slot", d: "Essential at one of one, before anything is pressed.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/deals"); } },
+      { t: "The gate itself", d: "What New deal opens: free the slot by archiving, or upgrade.",
+        go() { mzTier("essential", { rev: 1 }); S.gate8 = true; mzGo("#/deals"); } }
+    ] },
+
+  { k: "send-request", nav: "Send loan request", doc: "Screen 9", node: "1772-541",
+    title: "Send loan request",
+    where: "the saved list on a deal",
+    lede: `The cap is the gate. Essential sends to three, Accelerator to twelve, Pro to everything
+      saved. The dialog preselects the whole saved list on purpose — the broker meets the cap with
+      their real selection, not with an empty basket.`,
+    states: [
+      { t: "Essential — three", d: "", go() { mzTier("essential", { rev: 1 }); mzSend("riverside"); } },
+      { t: "Accelerator — twelve", d: "", go() { mzTier("accelerator"); mzSend("riverside"); } },
+      { t: "Pro — uncapped", d: "", go() { mzTier("pro"); mzSend("riverside"); } }
+    ] },
+
+  { k: "branded-memo", nav: "Branded memo", doc: "Screen 10", node: "1817-4567",
+    title: "Branded memo",
+    where: "the deal header's menu, and the badge it leaves behind",
+    lede: `Pro only — Tony made it so himself on 9 Sep — and prepared by a person, which is why the
+      confirmation is a dialog rather than the toast that stood here until 16 Sep. A toast saying
+      "memo requested" and vanishing promised a document that does not exist yet and gave no way
+      back to the promise.`,
+    states: [
+      { t: "The confirmation", d: "What Request a branded memo opens.",
+        go() { mzTier("pro"); S.memo["riverside"] = "requested"; S.memoOk = "riverside"; mzGo("#/deal/riverside"); } },
+      { t: "Requested — the badge on the deal", d: "One open memo per deal, so the deal is the reference and the badge reopens the note.",
+        go() { mzTier("pro"); S.memo["riverside"] = "requested"; mzGo("#/deal/riverside"); } },
+      /* the row lives in the deal header's kebab, so the state is the menu open -
+         it is the only one of the forty that is not visible on arrival */
+      { t: "The gate, on a paid-but-not-Pro seat", d: "Accelerator, with the deal header's menu open: the row is there, and it sells.",
+        go() { mzTier("accelerator"); S.cardMenu = "dl:riverside"; mzGo("#/deal/riverside"); } }
+    ] },
+
+  { k: "opps-teaser", nav: "Opportunities teaser", doc: "Screen 11", node: "1832-1134",
+    title: "Opportunities teaser",
+    where: "the Opportunities page, on Essential and Accelerator",
+    lede: `Real counts, blurred rows, one door — the count is the offer. Assignment rules are
+      Chris's, so the teaser is all that is designed here. The trial keeps the full surface so the
+      drawn flow stays demoable; whether a trial should preview a Pro-only surface at all is not in
+      the doc. [~]`,
+    states: [
+      { t: "Essential", d: "", go() { mzTier("essential", { rev: 1 }); mzGo("#/leads"); } },
+      { t: "Accelerator", d: "", go() { mzTier("accelerator"); mzGo("#/leads"); } },
+      { t: "Pro — the page behind it", d: "", go() { mzTier("pro"); mzGo("#/leads"); } }
+    ] },
+
+  { k: "cap-notice", nav: "Fair-use cap", doc: "Screen 12", node: "1862-1504",
+    title: "Fair-use cap notice",
+    where: "the Lenders page, above the table",
+    lede: `Nothing below 80%. At 80%, one quiet banner, stated once, on the surface where reveals
+      are spent — the gate at 100% lives on the reveal control itself, not here. Essential is
+      excluded: a hard limit is not fair use, and its meter already rides the plan card.`,
+    states: [
+      { t: "Under 80% — nothing", d: "150 of 250. The banner is absent, which is the state.",
+        go() { mzTier("accelerator", { rev: 150 }); mzGo("#/lenders"); } },
+      { t: "At 80% — the banner", d: "205 of 250, the doc's own example number.",
+        go() { mzTier("accelerator", { rev: 205 }); mzGo("#/lenders"); } },
+      { t: "At 100%", d: "250 of 250. The banner's last form, with the gate waiting on every reveal.",
+        go() { mzTier("accelerator", { rev: 250 }); mzGo("#/lenders"); } }
+    ] },
+
+  { k: "trial-expiry", nav: "Trial expiry", doc: "Screen 13", node: "1886-1504",
+    title: "Trial expiry",
+    where: "a dialog over any page, on day 15",
+    lede: `Marked Fixed in the doc, so the sentence is not ours to rewrite: the newest deal stays
+      active and the rest go read-only. A slot picker was built into the dialog and taken out again
+      — a frozen one-sentence row is not where a new control goes — so the choice is offered by a
+      banner on the read-only deal instead, where it is relevant and where the doc does not freeze
+      the surface.`,
+    states: [
+      { t: "The dialog", d: "Day 15. Choosing Essential from Change plan is the other way in.",
+        go() { mzTier("trial"); PLAN.trialLeft = 0; S.expiry = true; mzGo("#/deals"); } },
+      { t: "After it — the read-only half", d: "Essential with more deals than the cap: one editable, the rest banded.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/deals"); } }
+    ] },
+
+  { k: "cancel", nav: "Cancel flow", doc: "Screen 15", node: "1918-2753",
+    title: "Cancel flow",
+    where: "a dialog over Plan & billing, and the band it leaves behind",
+    lede: `Two steps — reason, then one retention offer — and the commit is on the second. A third
+      step stood here for an afternoon and came out. It is a dialog rather than an inline expansion
+      of the billing card: six web cancel flows on Mobbin, and not one expands inline. The dark
+      pattern is hiding the exit, not using a dialog, so the x, the scrim and Escape all mean
+      <b>keep my plan</b> and both doors sit on the same screen.`,
+    states: [
+      { t: "Step 1 — the reason", d: "What Cancel membership opens.",
+        go() { mzTier("accelerator"); S.cancelSt = "reason"; S.cancelWhy = ""; mzGo("#/account/plan"); } },
+      { t: "Step 2 — the offer", d: "Annual at 20% off, or a month's pause. Cancel membership commits from here.",
+        go() { mzTier("accelerator"); S.cancelWhy = "Too expensive"; S.cancelSt = "offer"; mzGo("#/account/plan"); } },
+      { t: "After — cancelled", d: "The band that carries the read-only count the dialog deliberately does not state, with Keep Accelerator beside it.",
+        go() { mzTier("accelerator"); PLAN.leaving = "cancel"; PLAN.ends = "Oct 3"; mzGo("#/account/plan"); } },
+      { t: "After — paused", d: "Paused from Oct 3 until Nov 3. Nothing billed, everything kept.",
+        go() { mzTier("accelerator"); PLAN.leaving = "pause"; PLAN.ends = "Nov 3"; mzGo("#/account/plan"); } }
+    ] },
+
+  { k: "closed-deal", nav: "Closed-deal moment", doc: "Screen 14", node: "1922-1738",
+    title: "Closed-deal moment",
+    where: "a dialog, the moment a deal is marked Funded",
+    lede: `The celebration fires on every close. The annual ask is made <b>once</b>, because
+      Overview v1.2 offers it on the first deal marked Closed — a broker funding four deals in a
+      quarter was otherwise handed the same discount modal four times, which turns the file's one
+      delight moment into a dunning letter.`,
+    states: [
+      { t: "With the annual offer", d: "First close, billed monthly, on a tier that has an annual price.",
+        go() { mzTier("accelerator"); PLAN.billing = "monthly"; PLAN.annualAsked = false;
+               S.funded = "riverside"; S.fundedOffer = true; mzGo("#/deals"); } },
+      { t: "The celebration alone", d: "Every close after the first — and every close on the trial.",
+        go() { mzTier("accelerator"); PLAN.annualAsked = true;
+               S.funded = "riverside"; S.fundedOffer = false; mzGo("#/deals"); } }
+    ] },
+
+  { k: "research-cap", nav: "Research allowance", doc: "Screen 16", node: "1973-1805",
+    title: "Research allowance reached",
+    where: "a dialog, on the request that has nothing left to spend",
+    lede: `Three doors: the top-up, Pro, or wait for the reset. The pack does not never-expire —
+      Overview v1.2 defines it as one that "does not renew and resets next month", and the plan
+      card, this modal and the purchase toast each had to be corrected to say so. The upgrade
+      button here places the held search on the way back from Stripe, the same as the top-up does.`,
+    states: [
+      { t: "The dialog", d: "Accelerator at ten of ten, no top-up in hand.",
+        go() { mzTier("accelerator", { res: 10 }); PLAN.packs = 0;
+               S.res0 = { acct: "comerica", key: "riverside:comerica", co: "Comerica Bank" };
+               mzGo("#/lender/comerica/for/riverside"); } },
+      { t: "Essential — a price, not a unit", d: "Comerica, saved with no banker on file. Essential holds no allowance and is quoted the one-time price instead, so it never reaches the dialog.",
+        go() { mzTier("essential", { rev: 1 }); mzGo("#/lender/comerica/for/riverside"); } }
+    ] },
+
+  { k: "request-status", nav: "Request status", doc: "Screen 17", node: "1985-5490",
+    title: "Research request status",
+    where: "the saved list, the account quick view and the lender profile",
+    lede: `Four states, and the two dates they turn on: the day the broker asked and the day it
+      resolved. No countdown — across twenty shipped request lists not one counts down, so Tony's
+      seven days is printed as the day it falls on rather than as "7 days left", which is what let
+      three surfaces disagree by four days about one record.`,
+    states: [
+      { t: "Three states at once", d: "Riverside is seeded for it: Comerica not requested, Amplify found, Texas Capital returned.",
+        go() { mzTier("accelerator"); mzGo("#/deal/riverside/saved"); } },
+      { t: "The fourth — working", d: "The one state a click produces, so it is the one not seeded.",
+        go() { mzTier("accelerator");
+               S.findc["riverside:comerica"] = { state: "working", ask: stamp(), due: stamp(7), from: "month" };
+               mzGo("#/deal/riverside/saved"); } },
+      { t: "The same record on the profile", d: "Third surface. This is where the two dates used to disagree.",
+        go() { mzTier("accelerator"); mzGo("#/lender/amplify/for/riverside"); } }
+    ] }
+];
+
+function renderMonetization() {
+  const f = MZ_FLOWS.find(x => x.k === S.mzFlow) || MZ_FLOWS[0];
+  return `
+    <div class="prof">
+      <nav class="profnav" aria-label="Monetization flows">
+        <div class="pn__ttl">Monetization</div>
+        ${MZ_FLOWS.map(x => `<a href="#/monetization/${x.k}" class="${x.k === f.k ? "on" : ""}">${esc(x.nav)}
+          <span class="st">${esc(x.doc.replace("Screen ", "S"))}</span></a>`).join("")}
+      </nav>
+      <div>
+        <div class="profhd">
+          <h1>${esc(f.title)}</h1>
+          <div class="mzx__row">
+            <span>${esc(f.doc)} &middot; task doc &middot; ${esc(f.where)}</span>
+            <a href="${MZ_FIG}${f.node}" target="_blank" rel="noreferrer">Figma section &nearr;</a>
+          </div>
+        </div>
+        <p class="mzx__lede">${f.lede}</p>
+        <div class="card">
+          <div class="card__hd"><h2>States</h2><span class="r">${f.states.length}</span></div>
+          <div class="card__ct">
+            ${f.states.map((st, i) => `<button class="dpick" type="button" data-mzgo="${f.k}:${i}">
+              <span class="t"><b>${esc(st.t)}</b>${st.d ? `<span>${esc(st.d)}</span>` : ""}</span>
+              <span class="r">Show it &rarr;</span></button>`).join("")}
+          </div>
+        </div>
+        <p class="mzx__note">Pressing a state changes the prototype's own state — tier, usage and
+          overlays — the way <b>Change plan</b> on Plan &amp; billing does, and clears whatever the
+          last one left behind. <b>Reset</b> in the strip above puts everything back.</p>
+      </div>
+    </div>`;
+}
+
 /* the undo toast times out after 5 seconds [Tanya, 14 Sep, on the add-a-banker
    one]. It cannot be a plain setTimeout over the node: render() rebuilds this
    toast from S.undo every pass, so removing the element alone puts it straight
@@ -13704,6 +14926,8 @@ function render() {
   document.getElementById("app").classList.toggle("app--auth", S.route === "auth");
   if (S.route === "auth") {
     view.innerHTML = renderAuth();
+  } else if (S.route === "mz") {
+    view.innerHTML = renderMonetization();
   } else if (S.route === "home") {
     view.innerHTML = renderHome();
   } else if (S.route === "opps") {
@@ -13734,6 +14958,9 @@ function render() {
   } else if (S.route === "dir") {
     const d = dealById(S.dealId);
     view.innerHTML = d ? renderDirectory(d) : renderDeals();
+  } else if (S.route === "support") {
+    const d = dealById(S.dealId);
+    view.innerHTML = d ? renderSupport(d) : renderDeals();
   } else if (S.route === "deal") {
     const d = dealById(S.dealId);
     view.innerHTML = d ? renderDeal(d) : renderDeals();
@@ -13772,15 +14999,30 @@ function render() {
   /* the monetization overlays join the same single-modal chain — the upgrade
      prompt wins so a gate that opened it is hidden beneath, and closing the
      prompt falls back to the gate that raised it */
-  const mv = S.up ? upModal()
+  /* the banker form joined this chain on 17 Sep and sits at the foot of it: a
+     monetization gate raised over a half-typed contact is about the account,
+     not about the contact, so it wins the layer and the form waits underneath
+     for it to close. abOpen is set inside the chain rather than re-derived
+     from S.addBk afterwards, because S.addBk being set does not mean the form
+     is the modal on screen. */
+  let abOpen = false;
+  /* and none of them on the index, which is not a product screen. mzShut()
+     above catches everything a jump can leave set; this catches the one thing
+     it cannot, which is trialOver() - a day-15 trial opens the expiry modal
+     from state rather than from a flag, so on the index it would reappear
+     every time the reader walked back from the trial-expiry flow. */
+  const mv = S.route === "mz" ? ""
+    : S.up ? upModal()
     : (S.expiry || trialOver()) ? expiryModal()
     : S.gate8 ? gate8Modal()
     : S.res0 ? res0Modal()
     : S.send != null ? sendModal()
     : S.funded != null ? fundedModal()
     : S.memoOk != null ? memoModal()
+    : S.pswitch ? pswitchModal()
     : S.cancelSt ? cancelModal()
-    : S.compose ? composeModal() : S.dealPick != null ? dealPickModal() : S.dirPick ? dirPickModal() : "";
+    : S.compose ? composeModal() : S.dealPick != null ? dealPickModal() : S.dirPick ? dirPickModal()
+    : S.addBk ? (abOpen = true, addBkModal()) : "";
   if (mv) {
     view.insertAdjacentHTML("beforeend", mv);
     /* three selectors in preference order, tried one at a time. A single
@@ -13790,21 +15032,24 @@ function render() {
        own close button. Found 8 Sep, testing the picker's filter. The filter
        box is deliberately not on this list: the broker opened a picker to pick,
        so the keyboard starts on a deal and reaches the box by tab. */
-    const f = [".mdl [data-mfocus]", ".mdl textarea", ".mdl .dpick:not([disabled])", ".mdl .x"]
-      .reduce((hit, sel) => hit || view.querySelector(sel), null);
-    if (f) f.focus();
+    /* and gated, 17 Sep, because the banker form is the first member of this
+       chain that can be re-rendered while it is open - its State select
+       rebuilds the panel on every pick. Every other modal here mounts once and
+       closes, so for them "on mount" and "on open" are the same event and the
+       distinction never had to be made. For this one it does: re-running the
+       chain on a state pick would take the caret out of whatever field the
+       broker was in and put it back on First name. The fresh flag is the
+       inline form's own rule, kept intact through the move. */
+    if (!abOpen || S.addBk.fresh) {
+      if (abOpen) S.addBk.fresh = false;
+      const f = [".mdl [data-mfocus]", ".mdl textarea", ".mdl .dpick:not([disabled])", ".mdl .x"]
+        .reduce((hit, sel) => hit || view.querySelector(sel), null);
+      if (f) f.focus();
+    }
   }
   /* the drawer mounts like the modals — state-owned, rebuilt every render —
      and sits under them: a composer opened from it must paint on top */
   if (S.ldr) view.insertAdjacentHTML("beforeend", ldrawer());
-  /* the inline form takes the caret when it opens and never again - it is not
-     a modal, so nothing else moves focus for it, and a re-render on a state
-     pick must not drag the caret back to the first field. */
-  if (S.addBk && S.addBk.fresh) {
-    S.addBk.fresh = false;
-    const ab = view.querySelector(".abform [data-mfocus]");
-    if (ab) ab.focus();
-  }
   /* Account is a rail destination [T · 27 Aug, Flow 01 row 5, the one row on
      the tracker marked Done], so it lights its own item. The profile is not —
      it is reached from the account menu at the foot — so on that route no item
@@ -13924,11 +15169,13 @@ function route() {
   /* navigation closes the quick view: the drawer belongs to the table it
      opened over, and View full profile is itself a navigation out of it */
   S.ldr = null; S.lnote = null;
-  /* and the half-typed banker with it. S.addBk is a form inside a surface \u2014
-     the drawer's contact section, or the profile card's \u2014 so it cannot outlive
-     the navigation that closed that surface. Left set, it reopened by itself the
-     next time the same institution was opened, still holding what had been typed
-     into it [Tanya, 14 Sep]. */
+  /* and the half-typed banker with it. S.addBk names an institution, so it
+     cannot outlive the navigation away from it - left set, the form reopened by
+     itself the next time that institution was opened, still holding what had
+     been typed into it [Tanya, 14 Sep]. The reason narrowed on 17 Sep and the
+     reset did not: it used to be that the form lived inside a surface this
+     line was already closing, and now the form is a dialog of its own that
+     would otherwise survive the page change underneath it. */
   S.addBk = null;
   const h = location.hash.replace(/^#/, "") || "/deals";
   /* /edit is tested first — the plain deal route's tab group is optional, so
@@ -13963,6 +15210,20 @@ function route() {
        sensible — its content's successor is the allowance block on Plan &
        billing. */
     S.route = "account"; S.dealId = null; S.accSec = mac[1] === "credits" ? "plan" : (mac[1] || "plan");
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set();
+    render(); return;
+  }
+  /* the prototype's own index of the monetization work. Scaffolding, so it
+     sits beside /auth rather than inside the product's navigation, and the
+     flow is in the hash for the same reason the profile's section is: a
+     reviewer can be sent to one flow rather than to the page. An unknown key
+     falls to the first flow instead of 404ing - the list is reordered whenever
+     Figma is, and a stale link should still land on the index. */
+  const mmz = h.match(/^\/monetization(?:\/([a-z0-9-]+))?\/?$/);
+  if (mmz) {
+    S.route = "mz"; S.dealId = null; mzShut();
+    S.mzFlow = mmz[1] && MZ_FLOWS.some(x => x.k === mmz[1]) ? mmz[1] : MZ_FLOWS[0].k;
     S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
     S.open = null; S.oq = ""; S.msExpand = new Set();
     render(); return;
@@ -14020,7 +15281,14 @@ function route() {
   }
   const me = h === "/deals/new" ? [null, null] : h.match(/^\/deal\/([a-z0-9-]+)\/edit$/);
   const md = me ? null : h.match(/^\/deal\/([a-z0-9-]+)\/directory$/);
-  const m = me || md ? null : h.match(/^\/deal\/([a-z0-9-]+)(?:\/(matches|saved|docs))?/);
+  /* Execution support is a page of the deal and not a tab of it, for the same
+     reason the directory above is: a tab is a view of the deal's own record,
+     and both of these are processes that happen to be scoped to one. The tab
+     strip also has a fixed membership the roadmap fixed [T · Flow 01], and a
+     fifth tab that only exists once a request is open would make the strip
+     change shape under the broker. [~] */
+  const msup = me || md ? null : h.match(/^\/deal\/([a-z0-9-]+)\/support\/?$/);
+  const m = me || md || msup ? null : h.match(/^\/deal\/([a-z0-9-]+)(?:\/(matches|saved|docs))?/);
   if (me) {
     /* Screen 8 [task doc]: Essential includes one active deal, so a second
        "New deal" meets the gate before the form. Editing an existing deal is
@@ -14033,6 +15301,9 @@ function route() {
     S.route = "form"; S.dealId = me[1];
   }
   else if (md) { S.route = "dir"; S.dealId = md[1]; S.zipEdit = false; }
+  /* the draft is cleared on the way in, not on the way out: a half-filled
+     request abandoned on one deal must not appear pre-answered on the next */
+  else if (msup) { S.route = "support"; S.dealId = msup[1]; S.opsD = null; S.opsTried = false; }
   else if (m) { S.route = "deal"; S.dealId = m[1]; if (m[2]) S.tab = m[2] === "docs" ? "matches" : m[2]; }
   else { S.route = "deals"; S.dealId = null; }
   S.secEdit = null;
@@ -14989,6 +16260,18 @@ document.addEventListener("click", e => {
      control means the control carries the attribute. Same test .oppmov already
      makes on the opportunity dialog. */
   /* ---------- monetization, 13 Sep [task doc] ---------- */
+  /* the monetization index's state buttons. The recipe lives on the flow, not
+     in a data attribute: a state is four or five assignments across PLAN and S
+     and serialising that into markup would be a second, lossier copy of what
+     the flow already says. The attribute carries only the address. */
+  const mzb = t.closest("[data-mzgo]");
+  if (mzb) {
+    const cut = mzb.dataset.mzgo.lastIndexOf(":");
+    const f = MZ_FLOWS.find(x => x.k === mzb.dataset.mzgo.slice(0, cut));
+    const st = f && f.states[Number(mzb.dataset.mzgo.slice(cut + 1))];
+    if (st) { mzReset(); st.go(); }
+    return;
+  }
   /* the welcome is read, so the strip flips to its countdown state. The
      countdown itself has no dismiss: it ends by itself in fourteen days. */
   if (t.closest("[data-trialx]")) { S.trialHide = true; render(); return; }
@@ -15008,6 +16291,18 @@ document.addEventListener("click", e => {
   }
   const ug = t.closest("[data-upgo]");
   if (ug) { planGo(ug.dataset.upgo); render(); return; }
+  if (t.closest("[data-upplans]")) {
+    /* The dialog has to be cleared before the hash moves. route() clears a lot
+       on arrival but never S.up, and render() mounts the modal chain on
+       whatever route it draws - so leaving it set carries the upgrade prompt
+       to Plan & billing and paints it over the comparison it just sent the
+       broker to read. The hash guard is the same one mzGo() needs: assigning
+       an unchanged hash fires no hashchange, so route() would never run. */
+    S.up = null; S.upName = null;
+    if (location.hash === "#/account/plan") render();
+    else location.hash = "#/account/plan";
+    return;
+  }
   if (t.closest("[data-upx]")) {
     /* closes whichever monetization overlay is on top — the same fall-through
        order render() mounts them in */
@@ -15219,6 +16514,26 @@ document.addEventListener("click", e => {
       (revPct() >= 80 ? "at the cap." : "under it.") + " The plan card and every 80% surface follow." };
     render(); return;
   }
+  const psw = t.closest("[data-psw]");
+  if (psw) {
+    const to = S.pswitch;
+    S.pswitch = null;
+    if (psw.dataset.psw === "go" && to) {
+      /* Not planGo(): that function exists to land a broker back from the
+         upgrade prompt, and its toast says so — "the way back from Stripe
+         lands here", plus whatever pending reveal or research request the
+         gate was holding. A downgrade has no Stripe leg and no pending
+         intent; what it has is a consequence, and the toast says that
+         instead, in the words the expiry modal uses for the same landing. */
+      PLAN.tier = to;
+      const n = activeDeals().length, cap = TIERS[to].deals;
+      S.undo = { msg: "You're on " + TIERS[to].name + "."
+        + (cap !== null && n > cap
+            ? " " + (n - cap) + " of your " + n + " deals are read-only until you upgrade — archive one to free the slot."
+            : " Nothing of yours is over the new limits.") };
+    }
+    render(); return;
+  }
   const pt = t.closest("[data-plango]");
   if (pt) {
     /* Change plan on the billing page — the demo's own tier switch. Trial is
@@ -15234,18 +16549,38 @@ document.addEventListener("click", e => {
        with it, leaving a handler nothing could fire. Real control, real
        consequence, no demo switch. [16 Sep] */
     else if (v === "essential" && PLAN.tier === "trial") { S.expiry = true; }
+    /* Upward, and out of the trial, the answer is the checkout rather than a
+       confirm — there is nothing to warn a broker about when the consequence
+       is a charge, and the upgrade prompt is where this file collects one.
+       The trial is on this branch whatever it picks above Essential: a trial
+       broker choosing Accelerator is buying the plan they are inside, which
+       is the first time money changes hands. */
+    else if (PLAN.tier === "trial" || TIER_RANK[v] > TIER_RANK[tierOf()]) {
+      S.up = { to: v, gate: "", alt: "", rev: null }; S.upName = null;
+    }
+    else if (v !== PLAN.tier) { S.pswitch = v; }
     else planGo(v);
     render(); return;
   }
 
   const mc = t.closest("[data-mclose]");
   if (mc && (mc.classList.contains("mov") ? t === mc : true)) {
+    /* the banker form joins the chain, 17 Sep, and it is the only member with
+       typing in it - so this branch discards work, which the others cannot.
+       It still belongs here: a dialog whose scrim and x do not close it is the
+       one kind of dialog a broker cannot get out of, and Cancel is right
+       beside them saying the same thing. The test above is what keeps Cancel
+       and Add banker out of this branch: both sit inside .mov, so closest()
+       finds it from either, and only a hit on the scrim itself has t === mc. */
+    S.addBk = null;
     S.compose = null; S.dealPick = null; S.dirPick = null; S.dirPickFind = false;
     S.up = null; S.gate8 = false; S.res0 = null; S.funded = null; S.fundedOffer = false; S.memoOk = null;
     /* a scrim click on the cancel dialog means keep the plan, the same as the x
        and Escape - all three of a cancel dialog's exits have to be the harmless
        one, which is the whole reason it is allowed to be a dialog */
     S.cancelSt = null;
+    /* and a scrim click on the switch confirm means keep the plan too */
+    S.pswitch = null;
     if (S.send != null) { S.send = null; S.sendSel.clear(); }
     render(); return;
   }
@@ -15294,15 +16629,27 @@ document.addEventListener("click", e => {
     const dg = f.phone.replace(/[^0-9]/g, "");
     const phone = dg.length === 10 ? "(" + dg.slice(0, 3) + ") " + dg.slice(3, 6) + "-" + dg.slice(6) : f.phone.trim();
     const acct = ab.acct, ct = f.first.trim() + " " + f.last.trim();
-    const co = (PROSPECTS.find(x => x.acct === acct) || DIRECTORY.find(x => x.acct === acct) || { co: acct }).co;
+    /* three lookups, not two - the same chain the dialog's own title uses.
+       With acctRec missing from the end of it, a network account fell through
+       to the bare slug and the toast read "Dana Reyes added at harbor" while
+       the dialog she was typed into was titled Harbor Point Advisors. Live
+       since the card-header action opened the form on roster accounts (14 Sep)
+       and found on 17 Sep, reading the toast after a save on Harbor Point -
+       the two lookups do cover every Prospector and directory record, which is
+       every account the form could be opened on before that. [~] */
+    const co = (PROSPECTS.find(x => x.acct === acct) || DIRECTORY.find(x => x.acct === acct)
+      || acctRec(acct) || { co: acct }).co;
     const row = { id: "b" + Date.now(), ct, role: f.role.trim(), email: f.email.trim(),
       phone, city: f.city.trim(), st: f.st, branch: f.branch.trim() };
     S.myb[acct] = (S.myb[acct] || []).concat([row]);
     S.addBk = null;
     /* the toast says the consequence, not the success. "Added" on its own would
        let the broker believe the institution just became matchable, which is
-       the one thing this action does not do. */
-    S.undo = { msg: ct + " added at " + co + ". No lending criteria, so it still cannot appear in match results.",
+       the one thing this action does not do. Two consequences since 17 Sep, in
+       the order they matter: the mail is the one the broker cannot see and did
+       not press a button called Invite to get. [T · row 18] The criteria clause
+       stays because it is still the thing "Added" invites them to assume. */
+    S.undo = { msg: ct + " added at " + co + ", and emailed an invitation to join Prism. No lending criteria, so they still cannot appear in match results.",
       fn: () => { S.myb[acct] = (S.myb[acct] || []).filter(x => x.id !== row.id); } };
     render(); return;
   }
@@ -15385,14 +16732,94 @@ document.addEventListener("click", e => {
     render(); return;
   }
 
-  if (t.id === "opsReq") {
-    /* POST /loan_requests/:id/ops_requests. The undo toast doubles as cancel,
-       which the shipped page does not offer. */
-    S.ops[S.dealId] = "requested";
-    S.cardMenu = null;
-    S.undo = { msg: "Execution support requested. The Ops team works the deal with you and follows up off-platform. Free on Pro; one open request per deal.",
-               fn: () => delete S.ops[S.dealId] };
+  /* ---- Execution support, #/deal/:id/support ----
+     opsReq fired the whole request from a menu row until 17 Sep and its toast
+     carried the only words the broker ever saw. It is gone: the row is a link
+     now, and everything below happens on the page. */
+  const osc = t.closest("[data-opsscope]");
+  if (osc) {
+    /* the attribute is on the input, so `osc` IS the checkbox and its own
+       `checked` is the answer — read it rather than flipping a boolean. The
+       label wrapping it forwards activation to the input, which fires a SECOND
+       click that bubbles; reading state makes that harmless, where a flip
+       would toggle twice and land back where it started. The label's own click
+       never reaches here — closest() walks ancestors, and the input is its
+       child. */
+    const k = osc.dataset.opsscope, f = opsDraft();
+    f.scope = osc.checked ? (f.scope.includes(k) ? f.scope : f.scope.concat([k]))
+                          : f.scope.filter(x => x !== k);
+    /* no render: the box paints itself and nothing else on the page reads the
+       answer until Send. Re-rendering here would also throw away whatever is
+       half-typed in the textarea below. */
+    return;
+  }
+  /* the exclusivity answer moved onto selCtl — see applySel's "ops" branch.
+     It still re-renders, because the sentence under the control is written from
+     the answer and a control that changes without it is the screen disagreeing
+     with itself; the select's own dispatch already renders. */
+  if (t.id === "opsSend") {
+    const d = dealById(S.dealId), f = opsDraft();
+    if (!d) return;
+    S.opsTried = true;
+    if (!f.scope.length || !f.excl) {
+      render();
+      /* .errmsg, and behaviour auto: the deal form's own scroll-to-first-error,
+         four lines of which this is a copy. Smooth was the odd one out — a
+         form that animates its way to an error the broker just caused reads
+         as slower than one that is simply there. */
+      const e1 = document.querySelector(".errmsg");
+      if (e1) e1.scrollIntoView({ behavior: "auto", block: "center" });
+      return;
+    }
+    /* POST /loan_requests/:id/ops_requests. The desk's own slots join the
+       deal's document map here rather than living beside it — see the header
+       comment. `in` rather than a truthiness test, so a slot the broker has
+       already filled is never reset to false by asking for help.
+
+       One visible consequence two screens away, and it is the right one: the
+       deal's own document counter reads docCounts(), so a Riverside that said
+       "3 of 4" says "3 of 7" the moment support is requested. The deal really
+       does need more now, and the counter that stayed at 4 would be the one
+       telling the lie. */
+    exsupDocs(d).forEach(k => { if (!(k in d.docs)) d.docs[k] = false; });
+    S.ops[d.id] = { st: "requested", ask: stamp(), scope: f.scope.slice(),
+                    excl: f.excl, by: f.by.trim(), hot: f.hot.trim() };
+    S.opsD = null; S.opsTried = false; S.cardMenu = null;
+    /* no toast. The page the broker lands on IS the confirmation, and it says
+       more than a toast could — what was asked for, and what is still needed.
+       A toast on top of it would be the same news twice. */
     render(); return;
+  }
+  if (t.id === "opsCancel") {
+    const id = S.dealId, was = S.ops[id];
+    delete S.ops[id];
+    /* the toast is the undo, which is the shape this file uses for anything a
+       click destroys. The added document slots STAY: a lender asks for a
+       sponsor SREO whether or not the desk is involved, and pulling rows off
+       the Documents tab because a request was withdrawn would be a second
+       surprise on top of the one the broker asked for. [~]
+
+       And it does NOT navigate, which is deliberate rather than lazy. route()
+       clears S.undo on every hash change — its own comment says so, and adds
+       "nothing sets S.undo and then navigates", which is true and is a rule
+       this would have been the first thing to break. Setting the toast and
+       then sending the broker to the deal would have destroyed the undo on the
+       way out, leaving cancel irreversible and silent. Staying put also lands
+       them on the one page that explains what was just cancelled, with the
+       form underneath if they change their mind for real. [17 Sep] */
+    S.undo = { msg: "Execution support request cancelled. The documents it added to this deal stay — lenders ask for them either way.",
+               fn: () => { S.ops[id] = was; } };
+    S.opsD = null; S.opsTried = false;
+    render(); return;
+  }
+  if (t.closest("[data-opsdocs]")) {
+    /* one door, and it goes to the Documents tab rather than opening an
+       uploader here. The tab already owns upload, "Ask the borrower", the
+       requested state and the who-provided-it column; a second uploader would
+       be a second answer to "where do documents live". */
+    S.sumTab = "docs";
+    location.hash = "#/deal/" + t.closest("[data-opsdocs]").dataset.opsdocs;
+    return;
   }
 
   if (t.closest("[data-zipedit]")) {
@@ -15669,6 +17096,12 @@ document.addEventListener("input", e => {
   if (t.id === "dpq") { S.dpq = t.value; render(); focusBack("dpq"); return; }
   if (t.id === "pzip") { S.pZip = t.value; render(); focusBack("pzip"); return; }
   if (t.id === "oq") { S.oq = t.value; render(); focusBack("oq"); return; }
+  /* the execution-support form's two free-text fields. Same rule as the deal
+     form below: write to state, never render, or the caret leaves the textarea
+     on the first keystroke. Nothing on the page reads either value until Send,
+     so there is nothing to patch in place either. */
+  const opsf = t.closest("[data-opsf]");
+  if (opsf) { opsDraft()[opsf.dataset.opsf] = t.value; return; }
   const df = t.closest("[data-df]");
   if (df) {
     /* no re-render on keystroke — focus would be lost. The two dependent
@@ -15912,6 +17345,14 @@ document.addEventListener("keydown", e => {
   if (S.compose || S.dealPick != null || S.dirPick) {
     if (e.key === "Escape") { S.compose = null; S.dealPick = null; S.dirPick = null; S.dirPickFind = false; render(); return; }
   }
+  /* the banker form moved up here on 17 Sep, from below the photo viewer. It
+     answered after the lightbox while it was an inline form inside a drawer,
+     which was right then - it was the deeper thing on screen. It is a dialog
+     at z-index 92 now, so it is the shallower one, and Escape has to close the
+     layer the broker is actually looking at. It still answers before the
+     drawer beneath it: one Escape cancels the form, a second closes the
+     drawer that raised it. */
+  if (e.key === "Escape" && S.addBk) { S.addBk = null; render(); return; }
   if (S.lb != null) {
     if (e.key === "Escape") { S.lb = null; render(); return; }
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -15920,9 +17361,6 @@ document.addEventListener("keydown", e => {
       return;
     }
   }
-  /* and the inline form closes before the drawer it sits inside, so one
-     Escape cancels the form rather than taking the whole drawer with it */
-  if (e.key === "Escape" && S.addBk) { S.addBk = null; render(); return; }
   /* the drawer sits under the modal band, so it closes after them */
   if (e.key === "Escape" && S.ldr) { S.ldr = null; S.lnote = null; render(); return; }
   if (e.key === "Escape" && S.settingsOpen) {
