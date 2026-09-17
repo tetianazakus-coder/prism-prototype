@@ -133,7 +133,23 @@
   .proto__row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   .proto b { color: #fff; letter-spacing: 0.06em; text-transform: uppercase; font-size: 10.5px; }
   .proto .dot { width: 6px; height: 6px; border-radius: 50%; background: #6ea8dc; flex: none; }
-  .proto span.note { color: #98a3b3; }
+  /* the note yields before the controls do. The row wraps, and the note is the
+     one item in it with no fixed content width, so without this it takes its
+     full intrinsic width and pushes whatever follows the auto-margin onto a
+     second line. That was survivable while two controls wrapped together and
+     read as a row; with the bar down to one button (17 Sep) it stranded Reset
+     alone under a full-width sentence, which reads as a break rather than a
+     layout.
+
+     The basis has to be 0, not auto, and that is the whole trick: a wrapping
+     flex container breaks lines using each item's HYPOTHETICAL size — its
+     basis before any flexing — so `flex: 1 1 auto` leaves the note declaring
+     its full intrinsic sentence width at line-breaking time and the break
+     happens anyway, shrinkage notwithstanding. At basis 0 it contributes
+     nothing to that decision, takes the leftover space afterwards, and wraps
+     inside itself. min-width:0 is the companion: without it a flex item
+     refuses to shrink below its longest unbreakable run. */
+  .proto span.note { color: #98a3b3; flex: 1 1 0; min-width: 0; }
   .proto button { background: transparent; border: 1px solid #3c4657; color: #d5dbe4; border-radius: var(--radius-sm); padding: 3px 9px; font-family: var(--font-mono); font-size: 11px; cursor: pointer; }
   .proto button:hover { background: #232c3a; }
   .proto code { color: #e3c98a; }
@@ -3965,7 +3981,6 @@
       Home · Deals · deal detail · create/edit deal · lenders on a deal. Built from the LenderPrism repo at <code>9f3427fc</code> — its tokens, its component metrics, its enums.
     </span>
     <a class="plink" href="#/auth" style="margin-left:auto">Sign up / log in</a>
-    <a class="plink" href="#/profile">Broker profile</a>
     <button type="button" id="reset">Reset</button>
   </div>
 </div>
