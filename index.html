@@ -2002,7 +2002,17 @@
   .tblwrap--opps { max-height: none; overflow-y: hidden; }
 
   /* ---------- Sign up / log in (#/auth) ---------- */
-  .app--auth { grid-template-columns: 1fr; }
+  /* qualified with .app on purpose. This was `.app--auth` alone, one class, and
+     it lost to `.app.rail-min` up at the sidebar rules — two classes beat one
+     and source order never gets a vote. The effect only showed once the rail
+     had been collapsed: the auth screen kept the two-column 48px/1fr template,
+     the rail itself was hidden by the rule below, and <main> auto-placed into
+     the empty 48px rail column. Everything inside then sized to min-content —
+     the headline broke one word per line and the two .auth halves, 24px each,
+     overflowed their cells and painted over one another. The !important on the
+     next line is the same collision caught once already and patched for
+     `display` only. (17 Sep) */
+  .app.app--auth { grid-template-columns: 1fr; }
   .app--auth .rail, .app--auth .mbar { display: none !important; }
   .app--auth .page { padding: 0; }
   .auth { min-height: calc(100vh - 80px); display: grid; grid-template-columns: 50% 50%; }
