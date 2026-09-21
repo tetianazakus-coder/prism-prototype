@@ -377,7 +377,11 @@
   .cgate__cap { padding: 0 0 10px; font-size: 12px; color: var(--muted-foreground); }
   .cgate__ico { flex: none; color: var(--muted-foreground); line-height: 0; }
   .cgate__tx { flex: 1; min-width: 0; font-size: 12.5px; color: var(--muted-foreground); }
-  .cgate__tx b { display: block; font-weight: 500; font-size: 13px; color: var(--foreground);
+  /* the deal name is the subject of the sentence, not an emphasis inside it -
+     the lock and the Unlock button already carry the weight, and a 500 run
+     beside them read as a third thing shouting. Regular, in the foreground
+     colour, against the muted line under it. [Tanya, 21 Sep] */
+  .cgate__tx .cgate__nm { display: block; font-weight: 400; font-size: 13px; color: var(--foreground);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .cgate .btn { flex: none; }
   /* Opportunities teaser — screen 11: real rows blurred as the backdrop, the
@@ -11591,11 +11595,11 @@ function contactRows(l, dealId) {
     ${row(IC.phone, "Phone", lk ? maskTel(c.office) : c.office,
         lk ? { lk: 1 } : { copy: c.office, what: "Phone number" })}
     ${row(IC.globe, "Website", `<button type="button" class="uselink" data-inert="${SITETIP}">${esc(c.site)}</button>`)}`;
-  /* one strip, in flow under the rows: lock, a bold line, a muted line, and the
-     control on the right where every row's own affordance sits */
-  const strip = (bold, sub, btn) => `<div class="cgate">
+  /* one strip, in flow under the rows: lock, the deal name, a muted line, and
+     the control on the right where every row's own affordance sits */
+  const strip = (nm, sub, btn) => `<div class="cgate">
       <span class="cgate__ico">${I(IC.lock, 14)}</span>
-      <span class="cgate__tx"><b>${bold}</b>${sub}</span>${btn}
+      <span class="cgate__tx"><span class="cgate__nm">${nm}</span>${sub}</span>${btn}
     </div>`;
   /* 14 Sep [T] [C] — the unlock STEP is a trial-and-free control, not a
      universal one, and this is where the two axes finally come apart.
