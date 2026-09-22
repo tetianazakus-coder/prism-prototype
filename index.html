@@ -235,6 +235,59 @@
   /* the Account link sits above the plan card and shares its spacing —
      the plan is itself an account fact, so the two read as one block */
   .rail__pre > a { margin: 0; }
+
+  /* ---- Borrower role mode, 21 Sep (Tanya) ----
+     One shell, two roles. The rail is static markup, so the borrower's items
+     sit in it permanently and CSS shows one set or the other off #app's
+     app--borrower class, which render() toggles from S.role. The Tools group,
+     the plan card and the mobile plan pill are broker chrome: a borrower has
+     no plan [T · 21 Sep, "free only"], and Education and Community were never
+     asked for on the borrower side. */
+  .rail a.b-only { display: none; }
+  .app--borrower .rail a.b-only { display: flex; }
+  .app--borrower .rail a[data-nav="deals"], .app--borrower .rail a[data-nav="lenders"],
+  .app--borrower .rail a[data-nav="leads"], .app--borrower .rail a[data-nav="messages"],
+  .app--borrower .rail a[data-nav="reminders"], .app--borrower #railTools,
+  .app--borrower #planSlot, .app--borrower #mbarPlan { display: none; }
+  .bgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .bcard { display: flex; flex-direction: column; gap: 12px; padding: 18px; text-decoration: none; color: inherit; }
+  .bcard:hover { border-color: var(--primary); }
+  .bav { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--muted); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; color: var(--foreground); }
+  .bav--lg { width: 64px; height: 64px; font-size: 20px; }
+  .bid { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  /* the text column only — the avatar and the Verified badge are spans too */
+  .bid > div > b { display: block; font-size: 15px; }
+  .bid > div > span { display: block; font-size: 13px; color: var(--muted-foreground); }
+  .bsec { font-size: 12px; font-weight: 600; color: var(--muted-foreground); margin: 0 0 6px; }
+  .bhint { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); }
+  .bnote { border-left: 3px solid var(--border); padding: 6px 12px; margin-top: 12px; color: var(--muted-foreground); font-size: 13.5px; line-height: 1.5; }
+  .qcount { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .qrel { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .bstat { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; }
+  .bstat .d { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .bcard .pills { display: flex; flex-wrap: wrap; }
+  /* Second borrower batch, 21 Sep: request form steps, connection status,
+     list and directory filters, help form. */
+  .lsteps { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--muted-foreground); margin: -6px 0 14px; }
+  .lsteps .bar { flex: 1; max-width: 220px; height: 4px; background: var(--border); border-radius: 9999px; overflow: hidden; }
+  .lsteps .bar i { display: block; height: 100%; background: var(--primary); }
+  .conn { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .conn .cd { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  .bflt { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .bflt select.inp { width: auto; min-width: 170px; }
+  .lslot { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
+  .lslot:first-child { border-top: 0; padding-top: 0; }
+  .lslot > div { flex: 1; min-width: 0; }
+  .lslot b { display: block; font-size: 13.5px; }
+  .lslot span { font-size: 12.5px; color: var(--muted-foreground); }
+  .lmpv .big { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .lmpv .sub { font-size: 12.5px; color: var(--muted-foreground); margin-top: 6px; line-height: 1.45; }
+  .bland__cta { display: flex; flex-direction: column; gap: 10px; }
+  /* .card__ft a is coloured as a link (line ~741); a filled button in a card
+     foot needs its own foreground back — the .plancard a.btn--outline trap
+     again, other way round */
+  .card__ft a.btn:not(.btn--outline) { color: var(--primary-foreground); }
+  .bland__alt { font-size: 12.5px; color: var(--muted-foreground); margin-top: 14px; line-height: 1.5; }
   /* CreditBalanceBadge sits in SidebarFooter in the shipped component. The 8px
      bottom margin came off when the bands split: it held the credit box clear of
      the identity block, and that gap is now the band's own padding plus the
@@ -4666,6 +4719,11 @@
     </span>
     <a class="plink" href="#/monetization" style="margin-left:auto">Monetization</a>
     <a class="plink" href="#/auth">Sign up / log in</a>
+    <!-- Role switch, 21 Sep. The borrower workspace is a role of this file,
+         not a second file: same shell, same fixtures shape, role branches in
+         the views. The link flips S.role and lands on home; its label names
+         the role you are NOT in. Reset returns to broker. -->
+    <a class="plink" href="#/home" data-setrole="borrower" id="plinkRole">Borrower</a>
     <!-- The Loading states and Error states switches came off this bar 21 Sep
          (Tanya). The bar is the first thing a reader looks at, and two demo
          toggles sitting beside Monetization and Sign up read as product
@@ -4702,9 +4760,27 @@
         <a href="#/deals" class="on" data-nav="deals" title="Deals">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
           <span class="nm">Deals</span></a>
+        <!-- Borrower rail, 21 Sep. Loan request is the borrower's noun — Tony
+             used "their loan requests" unprompted on the 21 Sep call [T] and the
+             tracker's 07.1 row asks for it; Deal stays the broker's. Shown only
+             under app--borrower, see the CSS. -->
+        <a href="#/loans" class="b-only" data-nav="loans" title="Loan requests">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+          <span class="nm">Loan requests</span></a>
         <a href="#/lenders" data-nav="lenders" title="Lenders">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg>
           <span class="nm">Lenders</span></a>
+        <!-- Brokers replaces Lenders for a borrower. [T · 21 Sep] "they should
+             not be able to see lenders, and they should not have this page
+             either" — the borrower's counterpart is the Pro broker directory. -->
+        <a href="#/brokers" class="b-only" data-nav="brokers" title="Brokers">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="nm">Brokers</span></a>
+        <!-- Help, the sheet's sixth borrower rail item (01.5). Opens the plain
+             support request (06.3), not the broker's execution-support process. -->
+        <a href="#/help" class="b-only" data-nav="help" title="Help">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.25"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>
+          <span class="nm">Help</span></a>
         <!-- Opportunities, not Leads [T · sheet comment, 28 Aug 01:02] — "Let's go
              with 'Opportunity'", answering "Lead and Opportunity are one object —
              pick one word". [~] Scope taken as the narrow reading: only the Lead
@@ -4770,7 +4846,7 @@
       </div>
     </div>
 
-    <div class="rail__grp">
+    <div class="rail__grp" id="railTools">
       <div class="rail__lbl">Tools</div>
       <div class="rail__menu">
         <a href="#/deals" data-nav="edu" title="Education — /education renders the public marketing shell, not an app page">
@@ -5017,10 +5093,13 @@ const PROFILE = {
    (roadmap sheet, Prefill row, 21 Aug) [T]; getters make that literal, so
    renaming yourself on #/profile renames you on the deal form. */
 const ME = {
-  get name()  { return (PROFILE.first + " " + PROFILE.last).trim(); },
-  get firm()  { return PROFILE.company; },
-  get email() { return PROFILE.email; },
-  get phone() { return PROFILE.mobile || PROFILE.office; }
+  /* prof(), not PROFILE, since 21 Sep: under the borrower role the same
+     getters read BPROF, so the rail button, the account menu and the Connect
+     modal's prefill all follow one record per role. */
+  get name()  { return (prof().first + " " + prof().last).trim(); },
+  get firm()  { return prof().company; },
+  get email() { return prof().email; },
+  get phone() { return prof().mobile || prof().office; }
 };
 /* Who else works a deal. Not free text: these are the words that route work,
    and a lender reading "transaction manager" knows who they have reached. [~] */
@@ -6077,6 +6156,17 @@ function savedIdsFor(id) { return new Set(savedFor(id).map(s => s.lender).concat
    =========================================================== */
 const S = {
   route: "deals", dealId: null, tab: "matches",
+  /* Borrower role mode, 21 Sep — see the BPROF block. role picks the rail,
+     the fixtures and the views; bFresh is the first-session state a borrower
+     signup lands in (no requests yet); qrel is the quote-release variant the
+     Quotes tab draws, the skeleton Tony asked for on 21 Sep [T]; bmsg is the
+     open Connect modal, bmsgDeal the deal it is about; btab the loan page tab. */
+  role: "broker", bFresh: false, qrel: "publish", bmsg: null, bmsgDeal: "", btab: "ov", bId: null,
+  /* second batch: the request draft and step, the file slot being filled, the
+     two confirm modals, the two filter bars, the help form */
+  ldraft: null, lstep: 1, ltried: false, lfSlot: null, bdel: null, bdelAcct: false, bconsent: false,
+  lflt: { property: "", state: "", amt: "" }, bflt: { loc: "", type: "", geo: "" },
+  help: { subject: "", msg: "", ref: null }, helpTried: false,
   /* the loading switch. Off by default and never persisted: it is a way to
      LOOK at a state the fixtures can never produce, not a mode the prototype
      has. See skPage(). */
@@ -7411,6 +7501,104 @@ const DEALS0 = JSON.parse(JSON.stringify(DEALS));
 const esc = s => String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 const money = m => "$" + (m >= 1 ? (Number.isInteger(m) ? m.toFixed(1) : String(m)) : m.toFixed(2)) + "M";
 const dealById = id => DEALS.find(d => d.id === id);
+
+/* ===========================================================
+   Borrower role — fixtures, 21 Sep (Tanya)
+
+   Built from the Borrower flows tracker (26 rows) and Tony's 21 Sep
+   scoping [T]: free only; same deal statuses as the broker; no lender
+   search and no lenders page; quotes visible but anonymous, released
+   by the broker; a profile that InvestorPrism will reuse, so capture
+   detail without requiring it; an own deal page recycled from the
+   broker's and simplified, editing the borrower's fields and never the
+   broker's. The rows drawn are 01.5 rail, 01.2 sign up, 01.3 profile,
+   01.4 home (first-session state), 03.1 list, 03.3 (now Quotes — the
+   saved-lenders row was cut by the no-lender rule), 04.2 broker
+   profile, 06.1 account. Every name here is sample [~].
+   =========================================================== */
+const BPROF = {
+  first: "Priya", last: "Natarajan", email: "priya@harborpointholdings.com",
+  company: "Harbor Point Holdings", title: "Principal",
+  office: "", mobile: "(512) 555-0188", city: "Austin", state: "TX",
+  /* InvestorPrism reuse [T · 21 Sep]: "capture as much detail on them as
+     possible without making too many fields required". Optional, all four. */
+  invYears: "9", invAssets: "4", invLiquidity: "", invWorth: "",
+  /* 06.2: channel per event, email only in Phase 2 [sheet]. Whether any
+     preference exists to control is question 131. */
+  notify: { replied: true, broker: true, expiring: true }
+};
+const BPROF0 = JSON.parse(JSON.stringify(BPROF));
+
+/* The Pro broker directory as a borrower sees it [T · 21 Sep]: only Pro
+   brokers; name, city and state, property types financed, geographies —
+   "not even the company, just the name, where they're located"; no banner,
+   so brokers read as working for Prism rather than as a directory. */
+const BROKERS = [
+  { id: "jordan-ellis", first: "Jordan", last: "Ellis", city: "Magnolia", state: "TX",
+    types: ["Multifamily", "Industrial"], geos: ["TX", "OK", "LA"], years: 12, verified: true, email: "jordan@elliscapital.com", phone: "(512) 555-0142",
+    about: "Twelve years placing agency and bridge debt on Texas multifamily. I work every request myself, from the first call to closing." },
+  { id: "maya-okafor", first: "Maya", last: "Okafor", city: "Dallas", state: "TX",
+    types: ["Multifamily", "Industrial", "Retail-multi tenant", "Hotel/motel"], geos: ["TX", "AZ", "NM"], years: 8, verified: true, email: "maya@okaforcapital.com", phone: "(214) 555-0177",
+    about: "Value-add multifamily and hospitality across the Southwest. Balance-sheet and CMBS executions, with life-company relationships for stabilised assets." },
+  { id: "luis-caraballo", first: "Luis", last: "Caraballo", city: "Tampa", state: "FL",
+    types: ["Multifamily", "Industrial", "Retail-multi tenant"], geos: ["FL", "GA"], years: 15, verified: false, email: "luis@caraballoadvisors.com", phone: "(813) 555-0119",
+    about: "Southeast industrial and multifamily. Former bank lender, so the package a credit committee wants is the package I build." }
+];
+const brokerById = id => BROKERS.find(b => b.id === id);
+const bName = b => b.first + " " + b.last;
+const bInits = b => (b.first[0] + b.last[0]).toUpperCase();
+
+/* Two loan requests: one with a broker and quotes, one with neither. The
+   second is the honest case question 128 turns on — by Tony's routing rule a
+   request reaches a broker only if it matches a Pro broker on geography and
+   property type, so a request can sit with nobody. Quotes carry no lender:
+   the borrower "should not be able to see the name of the lender because a
+   broker will control it" [T · 21 Sep]. pub is the broker-published flag the
+   first release variant reads. sent/replies are the counts the list shows;
+   replies waits on a lender-replied event Chris does not fire (03.2). */
+const BLOANS = [
+  { id: "lakeview", name: "Lakeview Flats refinance", amt: 3.2, property: "Multifamily", city: "Austin", state: "TX", zip: "78704", addr: "2201 S Lamar Blvd",
+    financing: "Agency (Fannie Mae)", txType: "Refinance", status: "Quoting", created: "9 Sep", updated: "19 Sep",
+    units: 36, built: 2011, occupancy: 95, ltv: 65, broker: "jordan-ellis", sent: 8, replies: 3,
+    /* 04.4: the borrower's side of the broker's Opportunity. Accepted reveals
+       the broker's contact, the mirror of the broker seeing the borrower's on
+       accept [T · page inventory row 79]. */
+    conn: { st: "accepted", broker: "jordan-ellis", on: "10 Sep" },
+    summary: "Rate-and-term refinance of a 36-unit garden-style asset, stabilised since 2019. Seeking ten-year fixed with three years interest-only.",
+    quotes: [
+      { rate: "6.10%", amt: 3.2, term: "10-Yr", io: "3-Year", ltv: 65, on: "18 Sep", pub: true },
+      { rate: "6.35%", amt: 3.3, term: "7-Yr",  io: "2-Year", ltv: 68, on: "19 Sep", pub: true },
+      { rate: "5.95%", amt: 3.0, term: "10-Yr", io: "No IO",  ltv: 62, on: "19 Sep", pub: false }
+    ],
+    note: "Two of the three are agency; the third wants lower leverage for a sharper rate. I would hold a few days for the agency quote to firm up.",
+    docs: { "Rent roll": "you", "T-12 operating statement": "you", "Sponsor PFS": null, "Executive summary": "broker" } },
+  { id: "pecan", name: "Pecan Street mixed-use acquisition", amt: 5.6, property: "Retail-multi tenant", city: "San Marcos", state: "TX", zip: "78666", addr: "118 E Pecan St",
+    financing: "", txType: "Acquisition", status: "Leads", created: "17 Sep", updated: "17 Sep",
+    units: 12, built: 1998, occupancy: 88, ltv: 70, broker: null, sent: 0, replies: 0,
+    /* pending: routed to the one Pro broker whose geography and property type
+       match, inside the 24-hour window the broker's Opportunities row shows */
+    conn: { st: "pending", broker: "maya-okafor", hoursLeft: 14, on: "17 Sep" },
+    summary: "Acquisition of a two-storey mixed-use building — ground-floor retail, twelve residential units above. Bridge or bank debt; open on execution.",
+    quotes: [], note: "",
+    docs: { "Rent roll": null, "T-12 operating statement": null, "Sponsor PFS": null, "Executive summary": null } },
+  /* declined: the sheet's third state, "offer the next broker". Jordan passed;
+     Maya also works industrial in Texas, so she is the next door. Status stays
+     Leads — the seven are the broker's and the borrower reads the same set
+     [T · 21 Sep, "same statuses"]; the label question is in the lexicon. */
+  { id: "cedar", name: "Cedar Park industrial refinance", amt: 2.4, property: "Industrial", city: "Cedar Park", state: "TX", zip: "78613", addr: "901 Toro Grande Dr",
+    financing: "", txType: "Refinance", status: "Leads", created: "12 Sep", updated: "15 Sep",
+    units: 0, sf: 42000, built: 2004, occupancy: 100, ltv: 60, broker: null, sent: 0, replies: 0,
+    summary: "Single-tenant flex industrial, 42,000 sf, leased through 2031. Refinancing a maturing bank loan; open on bank or life-company execution.",
+    quotes: [], note: "",
+    docs: { "Rent roll": "you", "T-12 operating statement": null, "Sponsor PFS": null, "Executive summary": null },
+    conn: { st: "declined", broker: "jordan-ellis", on: "15 Sep", next: "maya-okafor" } }
+];
+/* the fixtures Reset restores; the form and Delete mutate the live array */
+const BLOANS0 = JSON.parse(JSON.stringify(BLOANS));
+const isB = () => S.role === "borrower";
+const prof = () => isB() ? BPROF : PROFILE;
+const loansNow = () => S.bFresh ? [] : BLOANS;
+const loanById = id => BLOANS.find(d => d.id === id);
 
 /* ---------- Opportunities — the routed-lead records (#/leads) ------------
    Lead distribution is the Pro tier's headline benefit [T · 26 Aug call]
@@ -11283,13 +11471,18 @@ function lpCrumb(dealId, acct, co, leaf) {
 function lpActs(l, dealId) {
   const saved = dealId ? savedIdsFor(dealId).has(l.id) : false;
   const sh = isShort(l.id), sent = S.sent[l.id];
+  /* The shortlist leads the band and Contact follows it, from 21 Sep (Tanya).
+     The two are not a primary and its fallback - they are two different
+     moments, and the shortlist is the earlier one: a broker shortlists while
+     still reading the page and contacts after deciding. Reading order now
+     matches that sequence rather than putting the loudest control first. */
   return `<div class="lpacts">
-    ${sent
-      ? `<span class="badge badge--outline tone-green" data-tip="Sent through the platform this session. Live, the thread would carry the lender's reply.">✓ Contacted</span>`
-      : `<button class="btn" type="button" data-lpcontact="${l.id}" data-tip="Opens the platform compose. The lender replies in-platform.">${I(IC.mail, 14)}Contact</button>`}
     <button class="btn btn--outline" type="button" data-lpshort="${l.id}" aria-pressed="${sh}"
       data-tip="${sh ? "On your shortlist. The shortlist is yours, not the deal's." : "Your shortlist is per broker, not per deal. It follows you across every deal you run."}">
       <span class="lpstar">${sh ? BOOKMARKF : BOOKMARK}${sh ? "On your shortlist" : "Save to shortlist"}</span></button>
+    ${sent
+      ? `<span class="badge badge--outline tone-green" data-tip="Sent through the platform this session. Live, the thread would carry the lender's reply.">✓ Contacted</span>`
+      : `<button class="btn" type="button" data-lpcontact="${l.id}" data-tip="Opens the platform compose. The lender replies in-platform.">${I(IC.mail, 14)}Contact</button>`}
   </div>`;
 }
 
@@ -11853,7 +12046,7 @@ function ldrawer() {
             reading. Same position relative to the criteria, same order of
             voices. */""}
       ${mkt ? `<div class="ldrsec">
-        <div class="ldrh">Marketing materials <button type="button" class="infoq" aria-label="Who writes this and who can read it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg><span class="tt" role="tooltip">Written by the lender on their own profile. Brokers only \u2014 nothing here is shown to a borrower.</span></button></div>
+        <div class="ldrh">Marketing materials</div>
         ${mkt}
       </div>` : ""}
       <div class="ldrsec">
@@ -11985,7 +12178,7 @@ function ldrawerAcct() {
             with nobody on file goes down the other branch and would need them
             added there too, which is a known gap rather than a decision. [~] */""}
       ${a.pitch ? `<div class="ldrsec">
-        <div class="ldrh">Elevator pitch <button type="button" class="infoq" aria-label="Who writes this and who can read it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg><span class="tt" role="tooltip">Written by the lender on their own profile. Brokers only \u2014 nothing here is shown to a borrower.</span></button></div>
+        <div class="ldrh">Elevator pitch</div>
         ${mktSec(a)}
       </div>` : ""}
       ${a.adm ? `<div class="ldrsec">
@@ -12531,8 +12724,18 @@ function renderLenderContact(l, dealId) {
             "Criteria are the lender's own, edited on their side", and this is
             the rest of what they said. Sequencing the record by who is
             speaking: the lender, then the broker, then Prism. [~] */""}
+      ${/* no info icon on this heading, 21 Sep (Tanya). It carried the same
+            "who writes this and who can read it" tooltip the notes pair does,
+            and it earned neither half. Who writes it is already on screen —
+            mktSec closes the quote with a cite naming the lender — so the
+            tooltip repeated visible content. Who can read it ("brokers only,
+            nothing shown to a borrower") is true of every card on a lender
+            record, and a scope claim attached to one card reads as a contrast
+            with the others. Private notes and Admin notes keep theirs: their
+            non-obvious half (no admin reads yours; every broker reads theirs)
+            appears nowhere else on the page. [~] */""}
       ${mkt ? `<div class="card">
-        <div class="card__hd"><div class="hd__grp"><h2>Marketing materials</h2><button type="button" class="infoq" aria-label="Who writes this and who can read it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg><span class="tt" role="tooltip">Written by the lender on their own profile. Brokers only \u2014 nothing here is shown to a borrower.</span></button></div></div>
+        <div class="card__hd"><h2>Marketing materials</h2></div>
         <div class="card__ct">${mkt}</div>
       </div>` : ""}
       ${/* the same note log the drawer holds — one S.lnotes store, so a note
@@ -12892,8 +13095,11 @@ function renderLenderAcct(acct, dealId) {
             (here the firm rather than a person), then what Prism says, then the
             record of what happened. Coverage sits above it as the criteria card
             does there. */""}
+      ${/* no info icon, same call as Marketing materials on the banker grain,
+            21 Sep (Tanya): mktSec's cite names the institution, so the
+            attribution is rendered, and the reader clause is page-wide. */""}
       ${a.pitch ? `<div class="card">
-        <div class="card__hd"><div class="hd__grp"><h2>Elevator pitch</h2><button type="button" class="infoq" aria-label="Who writes this and who can read it"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="M12 11v5"/><path d="M12 7.5h.01"/></svg><span class="tt" role="tooltip">Written by the lender on their own profile. Brokers only \u2014 nothing here is shown to a borrower.</span></button></div></div>
+        <div class="card__hd"><h2>Elevator pitch</h2></div>
         <div class="card__ct">${mktSec(a)}</div>
       </div>` : ""}
       ${a.adm ? `<div class="card">
@@ -14336,8 +14542,8 @@ const AUTH_PANELS = {
       "<b>Expand your origination channel</b> \u2014 build relationships with active CRE brokers and borrowers without relying solely on your existing referral network."] },
 };
 
-function authShell(inner, foot) {
-  const p = AUTH_PANELS[S.authMode === "login" ? "generic" : (S.authRole || "generic")];
+function authShell(inner, foot, panel) {
+  const p = panel || AUTH_PANELS[S.authMode === "login" ? "generic" : (S.authRole || "generic")];
   return `<div class="auth">
     <div class="auth__brand">
       <div class="auth__mark">Lender<i>Prism</i></div>
@@ -14391,6 +14597,10 @@ function renderAuth() {
     <p class="auth__sub">${role.sub || role.d}</p>
     <div class="frm2col">${authFld("first", "First name", 1, "Jordan")}${authFld("last", "Last name", 1, "Ellis")}</div>
     ${authFld("email", "Email", 1, "you@company.com", "email")}
+    ${/* 01.2, 21 Sep: the borrower form gains the broker's two optional
+          fields, so the profile it prefills (01.3) starts with them. The
+          lender form is untouched. */
+      S.authRole === "borrower" ? `<div class="frm2col">${authFld("company", "Company", 0, "Harbor Point Holdings")}${authFld("phone", "Phone", 0, "(512) 555-0188", "tel")}</div>` : ""}
     <div class="frm2col">${authFld("pass", "Password", 1, "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022", "password")}${authFld("pass2", "Confirm password", 1, "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022", "password")}</div>
     <button type="button" class="btn btn--full" id="authSubmit">Create account</button>
     <div class="auth__note">No payment at any point. ${role.label} accounts are free.</div>`, foot);
@@ -14466,6 +14676,16 @@ function authSubmit() {
      see renderTrialStart. A non-broker still goes straight through; the trial
      is the broker path's alone. */
   if (S.authRole === "broker") { location.hash = "#/auth/trial"; return; }
+  /* Borrower, 21 Sep: no trial, no plan — "it is going to be free for them"
+     [T]. The account is the profile's first draft, and home opens in the
+     first-session state: no requests yet. */
+  if (S.authRole === "borrower") {
+    S.role = "borrower"; S.bFresh = true; S.bmsg = null; S.btab = "ov";
+    BPROF.first = a.first.trim(); BPROF.last = a.last.trim(); BPROF.email = a.email.trim();
+    BPROF.company = a.company.trim(); BPROF.mobile = a.phone.trim();
+    BPROF.title = ""; BPROF.city = ""; BPROF.state = "";
+    BPROF.invYears = ""; BPROF.invAssets = ""; BPROF.invLiquidity = ""; BPROF.invWorth = "";
+  }
   location.hash = "#/home";
 }
 
@@ -14596,7 +14816,7 @@ function profGaps() {
 }
 const usdFmt = v => (v ? Number(v).toLocaleString("en-US") : "");
 const profName = () => (PROFILE.first + " " + PROFILE.last).trim() || "Your name";
-const profInits = () => ((PROFILE.first[0] || "") + (PROFILE.last[0] || "")).toUpperCase();
+const profInits = () => ((prof().first[0] || "") + (prof().last[0] || "")).toUpperCase();
 const profWhere = () => [PROFILE.city, STATE_NAME[PROFILE.state] || PROFILE.state].filter(Boolean).join(", ");
 /* the same sentence the deal form prints. Drawn from one function so the two
    can never drift — a prefill claim is only believable if both lines agree. */
@@ -16384,6 +16604,684 @@ function renderSoon() {
    The Coming soon card left this column on 14 Sep — Messages and Reminders
    are rail destinations now, each with a page that states its own case. See
    the note over renderSoon. */
+/* ===========================================================
+   Borrower views, 21 Sep (Tanya). Each names its tracker row.
+   =========================================================== */
+const bStatus = d => { const m = statusMeta(d.status); return `<span class="bstat"><span class="d d-${m.tone}"></span>${esc(d.status)}</span>`; };
+const BCRUMB = (a, href, b) => `<div class="crumb"><a href="${href}">${a}</a><span class="sep">›</span><span>${esc(b)}</span></div>`;
+
+/* 01.4 Home. Only the first-session state is designed; the returning state
+   is a plain list of requests so signup lands somewhere honest [~]. */
+function renderBHome() {
+  const rows = loansNow();
+  const hd = `<div class="head"><div><h1>${greeting()}, ${esc(BPROF.first)}</h1>
+      <p>Your account is free. A broker takes your request to lenders; you see what comes back.</p></div></div>`;
+  if (!rows.length) return hd + `
+    <div class="card"><div class="card__ct"><div class="empty">
+      <b>Request your first loan</b>
+      <p>Describe the property and the financing you need, once. LenderPrism matches the request to a Pro broker who works your property type and market, and the broker takes it to lenders.</p>
+      <div class="acts"><a class="btn" href="#/loans/new">Request a loan</a><a class="btn btn--outline" href="#/brokers">Browse brokers</a></div>
+    </div></div></div>`;
+  /* returning: the sheet's 01.4 — requests with status, brokers connected,
+     one CTA — and Tony's "you have five new quotes" without lender names
+     [T · 21 Sep]. Needs-attention first, then the list. */
+  const connected = rows.filter(d => d.conn && d.conn.st === "accepted").length;
+  const quotes = rows.reduce((n, d) => n + d.quotes.length, 0);
+  const attn = [];
+  rows.forEach(d => {
+    const c = d.conn;
+    if (c && c.st === "pending") attn.push(`<a href="#/loan/${d.id}"><b>${esc(bName(brokerById(c.broker)))}</b> was offered <b>${esc(d.name)}</b> — ${c.hoursLeft}h left to accept</a>`);
+    if (c && c.st === "declined") attn.push(`<a href="#/loan/${d.id}"><b>${esc(bName(brokerById(c.broker)))}</b> passed on <b>${esc(d.name)}</b> — ${c.next ? "the next broker is offered on the request" : "no other broker matches yet"}</a>`);
+    if (d.quotes.length) attn.push(`<a href="#/loan/${d.id}/quotes"><b>${d.quotes.length} ${d.quotes.length === 1 ? "quote" : "quotes"}</b> on <b>${esc(d.name)}</b>, sent to ${d.sent} lenders</a>`);
+  });
+  const line = d => {
+    const b = d.conn && d.conn.st === "accepted" ? brokerById(d.conn.broker) : null;
+    const q = d.quotes.length;
+    const what = !b ? (d.conn && d.conn.st === "pending" ? "Offered to a broker, waiting on their answer" : d.conn && d.conn.st === "declined" ? "Broker passed; next one offered" : "Waiting for a broker to pick this up")
+      : q ? `${q} ${q === 1 ? "quote" : "quotes"} received · sent to ${d.sent} lenders`
+      : `${bName(b)} is working it · sent to ${d.sent} lenders`;
+    return `<tr><td class="nm-cell"><a href="#/loan/${d.id}"><b>${esc(d.name)}</b><span>${esc(d.property)} · ${esc(d.city)}, ${esc(d.state)}</span></a></td>
+      <td data-l="Status">${bStatus(d)}</td><td data-l="Broker">${connLine(d)}</td><td data-l="Update">${what}</td><td data-l="Updated">${esc(d.updated)}</td></tr>`;
+  };
+  return hd + `
+    <div class="facts" style="margin-bottom:16px">
+      <div class="fact"><div class="k">Open requests</div><div class="v">${rows.length}</div></div>
+      <div class="fact"><div class="k">Brokers connected</div><div class="v">${connected}</div></div>
+      <div class="fact"><div class="k">Quotes received</div><div class="v">${quotes}</div></div>
+      <div class="fact"><div class="k">Cost to you</div><div class="v">Free</div></div>
+    </div>
+    ${attn.length ? `<div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Needs your attention</h2><span class="r">${attn.length}</span></div>
+      <div class="card__ct"><ul class="bul" style="margin:0; padding-left:18px; line-height:1.7">${attn.map(x => `<li>${x}</li>`).join("")}</ul></div></div>` : ""}
+    <div class="card">
+      <div class="card__hd"><h2>Loan requests</h2><a class="r" href="#/loans/new">＋ New loan request</a></div>
+      <div class="card__ct"><div class="tblwrap"><table class="t"><thead><tr><th>Loan request</th><th>Status</th><th>Broker</th><th>Latest</th><th>Updated</th></tr></thead>
+        <tbody>${rows.map(line).join("")}</tbody></table></div></div>
+    </div>`;
+}
+
+/* 03.1 Loan requests list. The broker's Deals list minus the stage control,
+   the board toggle and Find lenders — a borrower changes nothing here and
+   reaches no lender. Replies is drawn and marked: it needs the lender
+   viewed / replied event Chris does not fire today [~ · 03.2]. */
+function renderLoans() {
+  const all = loansNow(), f = S.lflt;
+  /* the sheet's three filters [03.1]: property type, state, amount */
+  const rows = all.filter(d => (!f.property || d.property === f.property) && (!f.state || d.state === f.state) && (!f.amt || amtBand(d.amt) === f.amt));
+  const opt = (list, cur, blank) => `<option value=""${!cur ? " selected" : ""}>${blank}</option>` + list.map(([v, l]) => `<option value="${esc(v)}"${cur === v ? " selected" : ""}>${esc(l)}</option>`).join("");
+  const uniq = k => [...new Set(all.map(d => d[k]))].sort();
+  const bar = all.length ? `<div class="bflt">
+      <select class="inp" data-lflt="property" aria-label="Property type">${opt(uniq("property").map(v => [v, v]), f.property, "Any property type")}</select>
+      <select class="inp" data-lflt="state" aria-label="State">${opt(uniq("state").map(v => [v, STATE_NAME[v] || v]), f.state, "Any state")}</select>
+      <select class="inp" data-lflt="amt" aria-label="Amount">${opt(AMT_BANDS, f.amt, "Any amount")}</select>
+      ${f.property || f.state || f.amt ? `<button class="btn btn--outline btn--sm" type="button" data-lfltx>Clear</button>` : ""}
+    </div>` : "";
+  const body = !all.length ? `<div class="empty"><b>No loan requests yet</b>
+      <p>Tell us about the property once. A broker takes it to lenders and you see what comes back here.</p>
+      <div class="acts"><a class="btn" href="#/loans/new">Request a loan</a></div></div>`
+    : !rows.length ? `<div class="empty"><b>Nothing matches these filters</b><p>${all.length} ${all.length === 1 ? "request is" : "requests are"} hidden by them.</p>
+      <div class="acts"><button class="btn btn--outline" type="button" data-lfltx>Clear filters</button></div></div>`
+    : `<div class="tblwrap"><table class="t"><thead><tr>
+        <th>Loan request</th><th>Amount</th><th>State</th><th>Financing</th><th>Lenders sent</th><th>Replies</th><th>Broker</th><th>Status</th><th>Updated</th>
+      </tr></thead><tbody>${rows.map(d => {
+        const b = d.broker ? brokerById(d.broker) : null;
+        return `<tr data-row="${d.id}">
+          <td class="nm-cell"><a href="#/loan/${d.id}"><b>${esc(d.name)}</b><span>${esc(d.property)}</span></a></td>
+          <td class="num" data-l="Amount" style="font-weight:600">${money(d.amt)}</td>
+          <td data-l="State">${esc(STATE_NAME[d.state] || d.state)}</td>
+          <td data-l="Financing">${d.financing ? esc(d.financing) : `<span class="unset" title="Optional. Your broker can set it.">Open</span>`}</td>
+          <td class="num" data-l="Lenders sent">${d.sent || "—"}</td>
+          <td class="num" data-l="Replies">${d.sent ? `${d.replies} <span class="unset" title="Needs a lender viewed / replied event the platform does not fire today — tracker row 03.2">unverified</span>` : "—"}</td>
+          <td data-l="Broker">${connLine(d)}</td>
+          <td data-l="Status">${bStatus(d)}</td>
+          <td data-l="Updated">${esc(d.updated)}</td></tr>`; }).join("")}</tbody></table></div>`;
+  return `
+    <div class="head">
+      <div><h1>Your loan requests</h1><p>Every financing request you have made, who is working it, and what has come back.</p></div>
+      <div class="head__acts"><a class="btn" href="#/loans/new">＋ New loan request</a></div>
+    </div>
+    <div class="card"><div class="card__ct">${bar}${body}</div></div>`;
+}
+
+/* 02.1 + 02.2, the request form, two steps. Step 1 is the subset of the
+   broker's New deal form that matching reads — Tony, 21 Sep [T]: the borrower
+   fills in less than a broker and the broker completes the gaps. Name, amount,
+   property type, execution (optional, blank keeps matching broad), transaction,
+   state and zip; the contact block is read from the profile and never typed
+   again [sheet 02.1, "today contact fields are re-typed on every Request Loan
+   form"]. Step 2 is the story: a summary and three document slots, both
+   skippable [sheet 02.2]. The match panel is the broker form's own, counts
+   only — no lender is ever named to a borrower [T · 21 Sep]. Edit reuses step
+   1 on the record (03.2, "edit in place"). */
+const L_SLOTS = [["Financials", "T-12 operating statement, or the last two years"], ["Rent roll", "Current, with lease expirations"], ["Photos", "Exterior and a few interiors"]];
+function ldraft() {
+  if (!S.ldraft) S.ldraft = { id: null, name: "", amt: "", property: "", financing: "", txType: "Refinance", state: "", zip: "", city: "", addr: "", summary: "", files: {} };
+  return S.ldraft;
+}
+function loanDraftOf(d) {
+  return { id: d.id, name: d.name, amt: String(Math.round(d.amt * 1e6)), property: d.property, financing: d.financing, txType: d.txType,
+    state: d.state, zip: d.zip, city: d.city, addr: d.addr, summary: d.summary, files: {} };
+}
+const lMissing = d => [!d.name.trim() && "name", !(parseInt(d.amt, 10) > 0) && "amt", !d.property && "property", !d.state && "state", !d.zip.trim() && "zip"].filter(Boolean);
+const lAsDeal = d => ({ amt: (parseInt(d.amt, 10) || 0) / 1e6, property: d.property, state: d.state, financing: d.financing });
+/* the match preview, counts only. Same scorer as the broker's form, so the
+   number a borrower sees is the number the broker will see. */
+function lMatchHtml(d) {
+  if (!(parseInt(d.amt, 10) > 0 && d.property && d.state)) return `<div class="empty--inline"><p>Add the loan amount, property type and state — how many lenders fit shows here as you type.</p></div>`;
+  const n = matchCount(lAsDeal(d));
+  const b = lRoute(d);
+  return `<div class="big">${n}</div>
+    <div class="sub">${n ? `lenders in the network fit this request so far. Your broker takes it to them; you will not see who they are.` : `lenders fit yet. Loosening the execution type, or checking the amount, widens the match.`}</div>
+    <div class="sub">${b ? `A Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} is on LenderPrism and will be offered this request.` : `No Pro broker on LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet, so the request waits for one.`}</div>`;
+}
+/* Tony's routing rule [T · 21 Sep]: a request reaches a broker only if it
+   matches a Pro broker on geography and property type. First match wins here;
+   who gets it when several match is Chris's (the seat cap per state and
+   asset class, kickoff 6 Aug). */
+const lRoute = (d, skip) => BROKERS.find(b => b.id !== skip && b.types.includes(d.property) && b.geos.includes(d.state)) || null;
+function lCommit(d) {
+  const amt = (parseInt(d.amt, 10) || 0) / 1e6;
+  const ex = d.id ? loanById(d.id) : null;
+  if (ex) {
+    /* the borrower edits their own fields only — the ask, the property basics,
+       the story — never what the broker added [T · 21 Sep] */
+    Object.assign(ex, { name: d.name.trim(), amt, property: d.property, financing: d.financing, txType: d.txType, state: d.state, zip: d.zip.trim(), city: d.city.trim(), addr: d.addr.trim(), summary: d.summary.trim(), updated: "Today" });
+    Object.keys(d.files).forEach(k => { ex.docs[k] = "you"; });
+    return ex.id;
+  }
+  const id = (d.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "request") + "-" + (BLOANS.length + 1);
+  const b = lRoute(d);
+  const docs = { "Rent roll": d.files["Rent roll"] ? "you" : null, "T-12 operating statement": d.files["Financials"] ? "you" : null, "Sponsor PFS": null, "Executive summary": null };
+  if (d.files["Photos"]) docs["Photos"] = "you";
+  BLOANS.unshift({ id, name: d.name.trim(), amt, property: d.property, city: d.city.trim() || "—", state: d.state, zip: d.zip.trim(), addr: d.addr.trim(),
+    financing: d.financing, txType: d.txType, status: "Leads", created: "Today", updated: "Today",
+    units: 0, built: 0, occupancy: 0, ltv: 0, broker: null, sent: 0, replies: 0, summary: d.summary.trim(), quotes: [], note: "", docs,
+    conn: b ? { st: "pending", broker: b.id, hoursLeft: 24, on: "Today" } : null });
+  S.bFresh = false;
+  return id;
+}
+function renderLoanNew() {
+  const d = ldraft(), editing = !!d.id, ex = editing ? loanById(d.id) : null;
+  const miss = S.ltried ? lMissing(d) : [];
+  const m = k => miss.includes(k) ? " err" : "";
+  const crumb = editing ? `<div class="crumb"><a href="#/loans">Loan requests</a><span class="sep">›</span><a href="#/loan/${d.id}">${esc(ex.name)}</a><span class="sep">›</span><span>Edit</span></div>`
+    : BCRUMB("Loan requests", "#/loans", "New loan request");
+  const steps = editing ? "" : `<div class="lsteps"><span>Step ${S.lstep} of 2</span><span class="bar"><i style="width:${S.lstep === 1 ? 50 : 100}%"></i></span><span>${S.lstep === 1 ? "about three minutes" : "optional, skip it if you like"}</span></div>`;
+  const opt = (list, cur, blank) => (blank ? `<option value=""${!cur ? " selected" : ""}>${blank}</option>` : "") + list.map(v => `<option value="${esc(v)}"${cur === v ? " selected" : ""}>${esc(v)}</option>`).join("");
+  const usd = d.amt ? Number(d.amt).toLocaleString("en-US") : "";
+  if (S.lstep === 1) {
+    const P = BPROF;
+    return crumb + `
+    <div class="head"><div><h1>${editing ? "Edit request" : "Request a loan"}</h1><p>${editing ? "Your fields. What your broker has added stays theirs." : "The property and the ask — what matching reads. Two steps; the second is optional."}</p></div></div>
+    ${steps}
+    <div class="frm">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card__hd"><h2>The request</h2></div>
+          <div class="card__ct">
+            <div class="fld${m("name")}"><label for="lf_name">Name <span class="req">*</span></label>
+              <input class="inp" id="lf_name" data-lf="name" maxlength="80" autocomplete="off" value="${esc(d.name)}" placeholder="e.g. Lakeview Flats refinance">
+              ${miss.includes("name") ? `<div class="errmsg">Give the request a name — the property is the usual one.</div>` : ""}</div>
+            <div class="fldrow fldrow--2">
+              <div class="fld${m("amt")}"><label for="lf_amt">Loan amount <span class="req">*</span></label>
+                <div class="amtwrap"><span>$</span><input id="lf_amt" data-lf="amt" inputmode="numeric" autocomplete="off" value="${usd}" placeholder="3,200,000" aria-label="Loan amount in dollars"></div>
+                ${miss.includes("amt") ? `<div class="errmsg">Loan amount is required.</div>` : ""}</div>
+              <div class="fld${m("property")}"><label for="lf_property">Property type <span class="req">*</span></label>
+                <select class="inp" id="lf_property" data-lf="property">${opt(PROPERTY_TYPES, d.property, "—")}</select>
+                ${miss.includes("property") ? `<div class="errmsg">Pick a property type. Matching scores on it.</div>` : ""}</div>
+            </div>
+            <div class="fld"><label for="lf_fin">Type of financing <span class="opt">(optional)</span></label>
+              <select class="inp" id="lf_fin" data-lf="financing">${opt(FINANCING_TYPES, d.financing, "Not sure yet — keep matching broad")}</select>
+              <div class="hint">Left blank, matching stays broad. Your broker narrows it once quotes come in.</div></div>
+            <div class="fld"><label>Transaction</label>
+              <div class="seg" role="group" aria-label="Transaction type">${["Acquisition", "Refinance", "Construction"].map(v =>
+                `<button type="button" class="${d.txType === v ? "on" : ""}" data-lseg="${v}" aria-pressed="${d.txType === v}">${v}</button>`).join("")}</div></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card__hd"><h2>Where the property is</h2></div>
+          <div class="card__ct">
+            <div class="fld"><label for="lf_addr">Street address <span class="opt">(optional)</span></label>
+              <input class="inp" id="lf_addr" data-lf="addr" autocomplete="off" value="${esc(d.addr)}" placeholder="2201 S Lamar Blvd"></div>
+            <div class="fldrow fldrow--2">
+              <div class="fld"><label for="lf_city">City <span class="opt">(optional)</span></label>
+                <input class="inp" id="lf_city" data-lf="city" autocomplete="off" value="${esc(d.city)}" placeholder="Austin"></div>
+              <div class="fld${m("state")}"><label for="lf_state">State <span class="req">*</span></label>
+                <select class="inp" id="lf_state" data-lf="state"><option value=""${!d.state ? " selected" : ""}>—</option>${US_STATES.map(([a, n]) => `<option value="${a}"${d.state === a ? " selected" : ""}>${esc(n)} (${a})</option>`).join("")}</select>
+                ${miss.includes("state") ? `<div class="errmsg">Matching scores on state.</div>` : ""}</div>
+            </div>
+            <div class="fldrow fldrow--2">
+              <div class="fld${m("zip")}"><label for="lf_zip">Zip <span class="req">*</span></label>
+                <input class="inp" id="lf_zip" data-lf="zip" inputmode="numeric" autocomplete="off" value="${esc(d.zip)}" placeholder="78704">
+                ${miss.includes("zip") ? `<div class="errmsg">Zip is required.</div>` : ""}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card__hd"><h2>Lenders reach you through your broker</h2><a class="r" href="#/profile">Edit profile</a></div>
+          <div class="card__ct">
+            <div class="bid"><span class="bav">${profInits()}</span><div><b>${esc(P.first)} ${esc(P.last)}</b><span>${esc(P.email)}${P.mobile ? " · " + esc(P.mobile) : ""}${P.company ? " · " + esc(P.company) : ""}</span></div></div>
+            <div class="hint" style="margin-top:8px">From your profile, so the form never asks for it again. Your broker sees it; lenders do not.</div>
+          </div>
+        </div>
+        <div class="frmfoot">
+          <a class="btn btn--outline" href="${editing ? "#/loan/" + d.id : "#/loans"}">Cancel</a>
+          ${editing ? `<button class="btn" type="button" data-lsave>Save changes</button>` : `<button class="btn" type="button" data-lnext>Continue to the story</button>`}
+        </div>
+      </div>
+      <aside>
+        <div class="card"><div class="card__hd"><h2>Lenders that fit</h2></div><div class="card__ct lmpv" id="lmpv">${lMatchHtml(d)}</div></div>
+      </aside>
+    </div>`;
+  }
+  /* step 2, the story */
+  const left = 1200 - d.summary.length;
+  const tip = { Acquisition: "The plan, the price, the submarket — and for a value-add, what the work is and what it costs.",
+    Refinance: "When you bought it, what you have put in, and what the new loan is for.",
+    Construction: "Budget, timeline and how it leases up." }[d.txType];
+  return crumb + `
+    <div class="head"><div><h1>Tell the story</h1><p>Optional, and worth two minutes: a request with a summary and a rent roll gets quotes faster.</p></div></div>
+    ${steps}
+    <div class="frm">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card__hd"><h2>Summary</h2></div>
+          <div class="card__ct">
+            <div class="fld"><textarea class="inp" id="lf_sum" data-lf="summary" rows="6" maxlength="1200" aria-label="Summary" placeholder="Two or three sentences: the asset, the ask, the plan.">${esc(d.summary)}</textarea>
+              <div class="chleft" id="lsumleft">${left} characters left</div></div>
+            <div class="coach"><b>What a lender wants to read</b><ul><li>${tip}</li><li>Paste from anything you already have — an email to a bank, a one-pager. Your broker tidies it.</li></ul></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card__hd"><h2>Documents</h2><span class="r">${Object.keys(d.files).length} of ${L_SLOTS.length}</span></div>
+          <div class="card__ct">
+            ${L_SLOTS.map(([k, sub]) => `<div class="lslot"><div><b>${k}</b><span>${d.files[k] ? esc(d.files[k]) : sub}</span></div>
+              ${d.files[k] ? `<button class="btn btn--outline btn--sm" type="button" data-lfrm="${k}">Remove</button>` : `<button class="btn btn--outline btn--sm" type="button" data-lfile="${k}">Attach</button>`}</div>`).join("")}
+            <input type="file" id="lf_file" hidden>
+            <div class="hint" style="margin-top:10px">Shared with your broker only. Lenders see documents through the broker, and you can add these later from the request.</div>
+          </div>
+        </div>
+        <div class="frmfoot">
+          <a class="btn btn--outline" href="#/loans/new">Back</a>
+          <button class="btn" type="button" data-lsend>${d.summary.trim() || Object.keys(d.files).length ? "Send request" : "Skip and send request"}</button>
+        </div>
+      </div>
+      <aside>
+        <div class="card"><div class="card__hd"><h2>Lenders that fit</h2></div><div class="card__ct lmpv">${lMatchHtml(d)}</div></div>
+      </aside>
+    </div>`;
+}
+
+/* 02.5 Confirmation, the exit into Flow 04. Provisional on question 128: what
+   is drawn is the one part Tony did say — the request reaches a Pro broker
+   only if one matches, and nothing goes to lenders before that [T · 21 Sep].
+   The sheet's "sent to N lenders" line is not drawn, because under Tony's rule
+   the borrower does not send to lenders; the broker does. */
+function renderLoanSent(d) {
+  const b = d.conn && d.conn.broker ? brokerById(d.conn.broker) : null;
+  const n = matchCount({ amt: d.amt, property: d.property, state: d.state, financing: d.financing });
+  return `
+    <div class="head"><div><h1>Request sent</h1><p>${esc(d.name)} · ${money(d.amt)} · ${esc(d.property)} in ${esc(STATE_NAME[d.state] || d.state)}</p></div></div>
+    <div class="card"><div class="card__ct">
+      <div class="facts" style="margin-bottom:16px">
+        <div class="fact"><div class="k">Lenders that fit</div><div class="v">${n}</div></div>
+        <div class="fact"><div class="k">Broker</div><div class="v">${b ? esc(bName(b)) : "Waiting"}</div></div>
+        <div class="fact"><div class="k">Response window</div><div class="v">${b ? "24 hours" : "—"}</div></div>
+        <div class="fact"><div class="k">Cost to you</div><div class="v">Free</div></div>
+      </div>
+      ${b ? `
+      <p style="margin:0 0 10px; line-height:1.55"><b>What happens next.</b> ${esc(bName(b))}, a Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}, has 24 hours to accept. On accepting, they see your contact details and you see theirs; they package the request and take it to the lenders that fit. Quotes come back here, without lender names — your broker holds those.</p>
+      <p class="bhint">If they pass, the request is offered to the next matching broker. You are emailed at each step${BPROF.notify.broker ? "" : " (broker updates are switched off in Notifications)"}.</p>` : `
+      <p style="margin:0 0 10px; line-height:1.55"><b>What happens next.</b> No Pro broker on LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. The request is saved and is offered the moment one joins; nothing goes to lenders before a broker takes it on.</p>
+      <p class="bhint">You can also pick a broker yourself from the directory and send them this request.</p>`}
+      <div class="bhint" style="margin-top:12px">Provisional — what a borrower is told here depends on the quote-release logic Tony is thinking through (question 128).</div>
+    </div>
+    <div class="card__ft">
+      <a class="btn btn--outline" href="#/brokers">Browse brokers</a>
+      <a class="btn" href="#/loan/${d.id}">Open the request</a>
+    </div></div>`;
+}
+
+/* 04.4 Broker connection status — the borrower's view of the broker's
+   Opportunity. Pending carries the countdown the broker's row carries;
+   accepted reveals the broker's contact, as accept reveals the borrower's to
+   the broker [T · page inventory row 79]; declined offers the next broker
+   [sheet 04.4]. Drawn on the request page and on Home. */
+function connCard(d, b) {
+  const c = d.conn;
+  const who = x => `<div class="bid"><span class="bav">${bInits(x)}</span><div><b>${esc(bName(x))}</b><span>${esc(x.city)}, ${esc(x.state)} · ${x.years} years</span></div></div>`;
+  let hd = "Your broker", r = "", body;
+  if (c && c.st === "accepted" && b) {
+    r = `<span class="r">Sent to ${d.sent} lenders · ${d.replies} replied <span class="unset" title="Reply count needs a lender event the platform does not fire today (03.2)">unverified</span></span>`;
+    body = `<div class="conn">${who(b)}<span class="badge badge--outline tone-green">Accepted ${esc(c.on)}</span>
+        <a class="btn btn--outline btn--sm" href="#/brokers/${b.id}" style="margin-left:auto">View profile</a></div>
+      <div class="facts" style="margin-top:14px"><div class="fact"><div class="k">Email</div><div class="v"><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></div></div><div class="fact"><div class="k">Phone</div><div class="v">${esc(b.phone)}</div></div></div>
+      <div class="bhint" style="margin-top:10px">Contact details are shown once a broker accepts, and yours are shown to them at the same moment.</div>`;
+  } else if (c && c.st === "pending") {
+    const x = brokerById(c.broker); hd = "Broker offered";
+    body = `<div class="conn">${who(x)}<span class="badge badge--outline tone-gold">Pending</span><span class="cd" title="A broker has 24 hours to accept; after that the request is offered to the next match">${c.hoursLeft}h left of 24</span></div>
+      <div class="bhint" style="margin-top:10px">${esc(bName(x))} works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} and was offered this request on ${esc(c.on)}. Nothing goes to lenders until a broker accepts. Their contact details appear here when they do.</div>`;
+  } else if (c && c.st === "declined") {
+    const x = brokerById(c.broker), nx = c.next ? brokerById(c.next) : null; hd = "Broker declined";
+    body = `<div class="conn">${who(x)}<span class="badge badge--outline tone-red">Passed ${esc(c.on)}</span></div>
+      ${nx ? `<div class="bhint" style="margin:10px 0">The next Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}:</div>
+      <div class="conn">${who(nx)}<a class="btn btn--sm" href="#/brokers/${nx.id}" style="margin-left:auto">View and connect</a></div>`
+      : `<div class="bhint" style="margin-top:10px">No other Pro broker works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. The request is offered again when one joins.</div>`}`;
+  } else {
+    body = `<div class="bid"><span class="bav">?</span><div><b>No broker yet</b><span>A Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} will be offered this request. Nothing goes to lenders until then.</span></div></div>`;
+  }
+  return `<div class="card__hd"><h2>${hd}</h2>${r}</div><div class="card__ct">${body}</div>`;
+}
+/* one line of the same state, for the list and Home */
+function connLine(d) {
+  const c = d.conn;
+  if (c && c.st === "accepted") { const b = brokerById(c.broker); return `<a href="#/brokers/${b.id}">${esc(bName(b))}</a>`; }
+  if (c && c.st === "pending") { const b = brokerById(c.broker); return `<span class="unset" title="Offered to ${esc(bName(b))}, ${c.hoursLeft}h left to accept">Pending · ${c.hoursLeft}h</span>`; }
+  if (c && c.st === "declined") return `<span class="unset" title="${esc(bName(brokerById(c.broker)))} passed; the next matching broker is offered on the request">Declined · next offered</span>`;
+  return `<span class="unset" title="Routed only to a Pro broker whose geography and property type match">Not yet assigned</span>`;
+}
+const amtBand = a => a < 2 ? "under2" : a < 5 ? "2to5" : "over5";
+const AMT_BANDS = [["under2", "Under $2M"], ["2to5", "$2M – $5M"], ["over5", "Over $5M"]];
+
+/* 03.2 delete with confirm */
+function bDelModal() {
+  const d = loanById(S.bdel); if (!d) return "";
+  const b = d.conn && d.conn.st === "accepted" ? brokerById(d.conn.broker) : null;
+  return `
+    <div class="mov" role="dialog" aria-modal="true" aria-label="Delete loan request">
+      <div class="mdl">
+        <div class="mdl__hd"><div class="mdl__ttl"><h2>Delete this request?</h2><p>${esc(d.name)} · ${money(d.amt)}</p></div>
+          <button type="button" class="x" data-bdelx aria-label="Close">${XCLOSE}</button></div>
+        <div class="mdl__bd">
+          <p style="margin:0 0 8px; line-height:1.55">${b ? `${esc(bName(b))} is working it and has sent it to ${d.sent} lenders. Deleting tells them to stop; what they have already sent cannot be recalled.` : `Nobody has taken this request on yet. Deleting it removes it and its documents.`}</p>
+          <div class="bhint">This cannot be undone.</div>
+        </div>
+        <div class="mdl__ft">
+          <button class="btn btn--outline" type="button" data-bdelx>Keep it</button>
+          <button class="btn btn--destructive" type="button" data-bdelgo>Delete request</button>
+        </div>
+      </div>
+    </div>`;
+}
+/* 06.1 delete account with confirm; the final button is inert because the
+   action does not exist in the product [~] */
+function bDelAcctModal() {
+  const n = loansNow().length;
+  return `
+    <div class="mov" role="dialog" aria-modal="true" aria-label="Delete account">
+      <div class="mdl">
+        <div class="mdl__hd"><div class="mdl__ttl"><h2>Delete your account?</h2><p>${esc(BPROF.email)}</p></div>
+          <button type="button" class="x" data-bdelacctx aria-label="Close">${XCLOSE}</button></div>
+        <div class="mdl__bd">
+          <p style="margin:0 0 8px; line-height:1.55">Your profile and ${n ? `${n} open ${n === 1 ? "request are" : "requests are"}` : "any open requests are"} removed. A request a broker is already working stays with the broker, without your contact details.</p>
+          <div class="fld"><label for="bda_confirm">Type <b>delete</b> to confirm</label><input class="inp" id="bda_confirm" autocomplete="off" placeholder="delete"></div>
+        </div>
+        <div class="mdl__ft">
+          <button class="btn btn--outline" type="button" data-bdelacctx>Keep my account</button>
+          <button class="btn btn--destructive" type="button" data-inert="Account deletion does not exist in the product today; drawn for tracker row 06.1.">Delete account</button>
+        </div>
+      </div>
+    </div>`;
+}
+/* 06.2 Notifications, the broker's Email alerts pane with the borrower's
+   three events [sheet 06.2]: lender replied, broker accepted or declined,
+   request expiring. Email only in Phase 2. Whether any preference exists to
+   switch is question 131. */
+function bAccNotify() {
+  const nt = [
+    ["replied", "A lender replied", "A quote or a question came back on one of your requests. Lenders are not named."],
+    ["broker", "Broker accepted or declined", "The broker offered your request took it on, or passed and the next one was offered."],
+    ["expiring", "Request expiring", "A request has had no broker for a while and is about to be closed."]
+  ];
+  return `
+    <div class="card">
+      <div class="card__hd"><h2>Email alerts</h2></div>
+      <div class="card__ct">
+        ${nt.map(([k, t, s]) => `<div class="tgl">
+          <span><span class="tgl__t">${t}</span><span class="tgl__s">${s}</span></span>
+          <button type="button" class="tgl__sw" data-bnotify="${k}" aria-pressed="${BPROF.notify[k]}" aria-label="${t}"><i></i></button>
+        </div>`).join("")}
+      </div>
+    </div>`;
+}
+/* 06.3 Support request. A plain form with a confirmation and a reference
+   [sheet 06.3] — not the broker's execution-support process. There is no help
+   centre to point at (question 126), so the page does not pretend one. */
+const HELP_SUBJECTS = ["My loan request", "A broker", "My account", "Something is wrong", "Something else"];
+function renderHelp() {
+  const h = S.help, tried = S.helpTried;
+  if (h.ref) return `
+    <div class="head"><div><h1>Help</h1></div></div>
+    <div class="card"><div class="card__ct"><div class="empty">
+      <b>Sent — reference ${esc(h.ref)}</b>
+      <p>We reply by email to ${esc(BPROF.email)}, usually within one business day. Quote the reference if you write again.</p>
+      <div class="acts"><button class="btn btn--outline" type="button" data-helpnew>Send another</button><a class="btn" href="#/home">Back to Home</a></div>
+    </div></div></div>`;
+  return `
+    <div class="head"><div><h1>Help</h1><p>Ask the LenderPrism team. Questions about a request go to your broker first, if you have one.</p></div></div>
+    <div class="frm"><div>
+      <div class="card"><div class="card__ct">
+        <div class="fld${tried && !h.subject ? " err" : ""}"><label for="hf_subject">About <span class="req">*</span></label>
+          <select class="inp" id="hf_subject" data-hf="subject"><option value=""${!h.subject ? " selected" : ""}>—</option>${HELP_SUBJECTS.map(v => `<option value="${esc(v)}"${h.subject === v ? " selected" : ""}>${esc(v)}</option>`).join("")}</select>
+          ${tried && !h.subject ? `<div class="errmsg">Pick what it is about.</div>` : ""}</div>
+        <div class="fld${tried && !h.msg.trim() ? " err" : ""}"><label for="hf_msg">Message <span class="req">*</span></label>
+          <textarea class="inp" id="hf_msg" data-hf="msg" rows="6" placeholder="What happened, and what you expected.">${esc(h.msg)}</textarea>
+          ${tried && !h.msg.trim() ? `<div class="errmsg">Say what you need.</div>` : ""}</div>
+        <div class="hint">We reply to ${esc(BPROF.email)}. Change it in your <a href="#/profile">profile</a>.</div>
+      </div><div class="card__ft"><button class="btn" type="button" data-helpsend>Send</button></div></div>
+    </div></div>`;
+}
+/* 01.1 The landing page's borrower branch: the role question already
+   answered, one promise, one door [sheet 01.1 — "signup is the gate, not a
+   form on the page"]. Everything borrower-side sits behind free signup and the
+   messaging must say it is free [T · 21 Sep]. No landing exists in any
+   prototype, so this is the branch alone, at the marketing site's own
+   /borrower address, on the auth shell's brand panel. */
+function renderBLanding() {
+  return authShell(`
+    <h1>Financing for your property, without chasing lenders</h1>
+    <p class="auth__sub">Describe the deal once. A commercial mortgage broker who works your property type and market takes it to the lenders that fit, and quotes come back to you here.</p>
+    <div class="bland__cta">
+      <a class="btn btn--full" href="#/auth/signup/borrower">Request a loan — it’s free</a>
+      <a class="btn btn--outline btn--full" href="#/auth/login">Log in</a>
+    </div>
+    <div class="bland__alt">No fee to you at any point — brokers are paid at closing. Your request is seen only by the broker who takes it on, never listed anywhere.</div>
+    <div class="bland__alt">Not a borrower? <a href="#/auth/signup/broker">I’m a broker</a> · <a href="#/auth/signup/lender">I’m a lender</a></div>`,
+    ``, AUTH_PANELS.borrower);
+}
+
+/* Loan request page. Recycled from the broker's deal summary and simplified
+   [T · 21 Sep]. Three tabs: Overview, Quotes, Documents. No Matches, no
+   Saved lenders, no Notes — every one of those is a lender surface. */
+function renderLoan(d) {
+  const b = d.broker ? brokerById(d.broker) : null;
+  const tabs = [["ov", "Overview"], ["quotes", `Quotes <span class="ct">${d.quotes.length}</span>`], ["docs", "Documents"]];
+  const body = S.btab === "quotes" ? loanQuotes(d, b) : S.btab === "docs" ? loanDocs(d) : loanOverview(d, b);
+  return BCRUMB("Loan requests", "#/loans", d.name) + `
+    <div class="head">
+      <div><h1>${esc(d.name)}</h1><p>${esc(d.addr)}, ${esc(d.city)}, ${esc(d.state)} ${esc(d.zip)} · ${bStatus(d)}</p></div>
+      <div class="head__acts">
+        <button class="btn btn--outline" type="button" data-bdel="${d.id}">Delete</button>
+        <a class="btn btn--outline" href="#/loan/${d.id}/edit">Edit request</a>
+        <button class="btn" type="button" data-inert="Upload shares the file with your broker. Picker not wired in the prototype.">Upload documents</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__ct">
+        <div class="seg" role="group" aria-label="Loan request view">${tabs.map(([k, l]) =>
+          `<button type="button" class="${S.btab === k ? "on" : ""}" data-btab="${k}" aria-pressed="${S.btab === k}">${l}</button>`).join("")}</div>
+      </div>
+      ${body}
+    </div>`;
+}
+
+function loanOverview(d, b) {
+  const facts = [["Loan amount", money(d.amt)], ["Transaction", d.txType], ["Property type", d.property], ["Financing", d.financing || "Open"],
+    [d.units ? "Units" : "Square feet", d.units || (d.sf ? d.sf.toLocaleString("en-US") : "—")], ["Built", d.built || "—"], ["Occupancy", d.occupancy ? d.occupancy + "%" : "—"], ["Leverage", d.ltv ? d.ltv + "% LTV" : "—"]];
+  return `
+    <div class="card__ct">
+      <div class="facts">${facts.map(([k, v]) => `<div class="fact"><div class="k">${esc(k)}</div><div class="v">${esc(String(v))}</div></div>`).join("")}</div>
+      <p style="margin:16px 0 0; line-height:1.55">${esc(d.summary)}</p>
+    </div>
+    ${connCard(d, b)}`;
+}
+
+/* 03.3 became Quotes when the saved-lenders row was cut. This tab is the
+   skeleton Tony asked for on 21 Sep [T] — "create just the skeleton, the
+   framework for it, and then I'll think about it" — drawn as three release
+   variants a reviewer clicks between, so question 128 is answered by
+   choosing rather than by specifying. Lenders are never named. */
+function loanQuotes(d, b) {
+  const opts = [["publish", "Broker publishes"], ["assign", "Released on assignment"], ["counts", "Counts only"]];
+  const why = {
+    publish: "Nothing reaches you until your broker marks a quote released. Most control for the broker; a request without one shows nothing.",
+    assign:  "Quotes appear, anonymised, the moment a broker is assigned. The broker can hide one. You see progress without anyone acting.",
+    counts:  "You see how many quotes exist and your broker’s read of them. Terms arrive when the broker shares them."
+  };
+  const seg = `<div class="qrel">
+      <div class="seg" role="group" aria-label="Quote release variant">${opts.map(([k, l]) =>
+        `<button type="button" class="${S.qrel === k ? "on" : ""}" data-qrel="${k}" aria-pressed="${S.qrel === k}">${l}</button>`).join("")}</div>
+      <span class="bhint">Question 128 — three ways to release quotes, for Tony to choose between. ${why[S.qrel]}</span>
+    </div>`;
+  const row = (q, i) => `<tr><td class="nm-cell"><b>Lender ${i + 1}</b><span>Name held by your broker</span></td>
+      <td class="num" data-l="Rate">${q.rate}</td><td class="num" data-l="Proceeds">${money(q.amt)}</td><td data-l="Term">${q.term}</td>
+      <td data-l="Interest-only">${q.io}</td><td class="num" data-l="LTV">${q.ltv}%</td><td data-l="Received">${q.on}</td></tr>`;
+  const table = rows => `<div class="tblwrap"><table class="t"><thead><tr><th>Quote</th><th>Rate</th><th>Proceeds</th><th>Term</th><th>Interest-only</th><th>LTV</th><th>Received</th></tr></thead>
+      <tbody>${rows.map(row).join("")}</tbody></table></div>`;
+  let body;
+  if (!b) {
+    body = `<div class="empty"><b>No quotes yet</b><p>Quotes are released by your broker, and none is assigned to this request yet.</p></div>`;
+  } else if (S.qrel === "publish") {
+    const pub = d.quotes.filter(q => q.pub), held = d.quotes.length - pub.length;
+    body = (pub.length ? table(pub) : `<div class="empty"><b>Nothing released yet</b><p>${d.quotes.length} ${d.quotes.length === 1 ? "quote is" : "quotes are"} with ${esc(bName(b))}.</p></div>`)
+      + (held && pub.length ? `<div class="bhint" style="margin-top:12px">${held} more ${held === 1 ? "quote is" : "quotes are"} with ${esc(bName(b))}, not yet released.</div>` : "");
+  } else if (S.qrel === "assign") {
+    body = d.quotes.length ? table(d.quotes) : `<div class="empty"><b>No quotes yet</b><p>${esc(bName(b))} has sent this to ${d.sent} lenders. Quotes show here as they arrive.</p></div>`;
+  } else {
+    body = `<div class="qcount">${d.quotes.length}</div><div class="bhint" style="margin-top:6px">${d.quotes.length === 1 ? "quote" : "quotes"} received · sent to ${d.sent} lenders</div>
+      ${d.note ? `<div class="bnote">${esc(d.note)}<br><span class="bhint">— ${esc(bName(b))}, ${esc(d.updated)}</span></div>` : ""}`;
+  }
+  return `<div class="card__ct">${seg}${body}</div>`;
+}
+
+/* Documents. Borrower uploads share with the broker; broker-added files are
+   readable, not editable [T · 21 Sep, "upload and share documents"]. */
+function loanDocs(d) {
+  const rows = Object.entries(d.docs).map(([k, by]) => `<tr>
+      <td class="nm-cell"><b>${esc(k)}</b></td>
+      <td data-l="Status">${by === "you" ? "Uploaded by you" : by === "broker" ? "Added by your broker" : `<span class="unset">Not on file</span>`}</td>
+      <td class="actions-cell"><div class="rowacts">${by
+        ? `<button class="btn btn--outline btn--sm" type="button" data-inert="Opens the file. Not wired in the prototype.">Open</button>`
+        : `<button class="btn btn--outline btn--sm" type="button" data-inert="Upload shares the file with your broker. Picker not wired in the prototype.">Upload</button>`}</div></td></tr>`).join("");
+  return `<div class="card__ct"><div class="tblwrap"><table class="t"><thead><tr><th>Document</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="bhint" style="margin-top:12px">Everything you upload is shared with your broker. Lenders see documents only through the broker.</div></div>`;
+}
+
+/* 04.1 is not designed; this listing exists so 04.2 profiles are reachable.
+   Card fields are Tony's [T · 21 Sep]: name, city and state, property types,
+   geographies. No company, no banner. */
+function renderBrokers() {
+  const f = S.bflt;
+  /* the sheet's three filters [04.1]: located in, property types, operates in */
+  const rows = BROKERS.filter(b => (!f.loc || b.state === f.loc) && (!f.type || b.types.includes(f.type)) && (!f.geo || b.geos.includes(f.geo)));
+  const opt = (list, cur, blank) => `<option value=""${!cur ? " selected" : ""}>${blank}</option>` + list.map(([v, l]) => `<option value="${esc(v)}"${cur === v ? " selected" : ""}>${esc(l)}</option>`).join("");
+  const st = a => a.map(v => [v, STATE_NAME[v] || v]);
+  const locs = [...new Set(BROKERS.map(b => b.state))].sort(), types = [...new Set(BROKERS.flatMap(b => b.types))].sort(), geos = [...new Set(BROKERS.flatMap(b => b.geos))].sort();
+  const bar = `<div class="bflt">
+      <select class="inp" data-bflt="loc" aria-label="Located in">${opt(st(locs), f.loc, "Located anywhere")}</select>
+      <select class="inp" data-bflt="type" aria-label="Property types">${opt(types.map(v => [v, v]), f.type, "Any property type")}</select>
+      <select class="inp" data-bflt="geo" aria-label="Operates in">${opt(st(geos), f.geo, "Operates anywhere")}</select>
+      ${f.loc || f.type || f.geo ? `<button class="btn btn--outline btn--sm" type="button" data-bfltx>Clear</button>` : ""}
+    </div>`;
+  const card = b => `<a class="card bcard" href="#/brokers/${b.id}">
+      <div class="bid"><span class="bav">${bInits(b)}</span><div><b>${esc(bName(b))}</b><span>${esc(b.city)}, ${esc(b.state)}${b.verified ? " · Verified" : ""}</span></div></div>
+      <div><div class="bsec">Property types</div><div class="pills">${b.types.map(x => `<span class="pill">${esc(x)}</span>`).join("")}</div></div>
+      <div><div class="bsec">Markets</div><div class="pills">${b.geos.map(x => `<span class="pill">${esc(STATE_NAME[x] || x)}</span>`).join("")}</div></div>
+    </a>`;
+  return `
+    <div class="head"><div><h1>Brokers</h1><p>Pro brokers on LenderPrism who work your property type and market. Free to contact.</p></div></div>
+    ${bar}
+    ${rows.length ? `<div class="bgrid">${rows.map(card).join("")}</div>` : `<div class="card"><div class="card__ct"><div class="empty"><b>No Pro broker matches</b><p>Only Pro brokers are listed, so the directory is short. Widen a filter, or send your request and it is offered to the first broker who fits.</p>
+      <div class="acts"><button class="btn btn--outline" type="button" data-bfltx>Clear filters</button><a class="btn" href="#/loans/new">Request a loan</a></div></div></div></div>`}
+    <div class="bhint" style="margin-top:14px">${BROKERS.length} Pro brokers listed. Brokers on other plans do not appear here [T · 21 Sep].</div>`;
+}
+
+/* 04.2 Broker profile, public. The broker's own listing read-only plus one
+   Connect action. What the card shows, the profile shows; nothing more is
+   promised than the broker filled in. */
+function renderBroker(b) {
+  return BCRUMB("Brokers", "#/brokers", bName(b)) + `
+    <div class="head">
+      <div class="bid"><span class="bav bav--lg">${bInits(b)}</span><div><h1 style="margin:0">${esc(bName(b))}</h1>
+        <span>${esc(b.city)}, ${esc(STATE_NAME[b.state] || b.state)} · ${b.years} years${b.verified ? ` · <span class="badge badge--outline tone-blue">Verified</span>` : ""}</span></div></div>
+      <div class="head__acts"><button class="btn" type="button" data-bconnect="${b.id}">Connect via LenderPrism</button></div>
+    </div>
+    <div class="card">
+      <div class="card__hd"><h2>About</h2></div>
+      <div class="card__ct"><p style="margin:0; line-height:1.55">${esc(b.about)}</p></div>
+      <div class="card__hd"><h2>Property types financed</h2></div>
+      <div class="card__ct"><div class="pills">${b.types.map(x => `<span class="pill">${esc(x)}</span>`).join("")}</div></div>
+      <div class="card__hd"><h2>Markets</h2></div>
+      <div class="card__ct"><div class="pills">${b.geos.map(x => `<span class="pill">${esc(STATE_NAME[x] || x)}</span>`).join("")}</div></div>
+      <div class="card__hd"><h2>Links</h2></div>
+      <div class="card__ct" style="display:flex; gap:8px">
+        <button class="btn btn--outline btn--sm" type="button" data-inert="LinkedIn — opens the broker’s profile off-platform. Not wired.">LinkedIn</button>
+        <button class="btn btn--outline btn--sm" type="button" data-inert="Website — opens off-platform. Not wired.">Website</button>
+      </div>
+    </div>`;
+}
+
+/* 04.3 Connect via LenderPrism, drawn as the thing Tony asked for on 21 Sep
+   [T]: an internal message, recorded as a house-sourced lead, with a
+   dropdown for the live deal it is about or "no deal associated". Name and
+   email prefill from the profile — Olesia's point on the call, a signed-in
+   borrower should not retype them. Today the button sends an email to the
+   broker and records nothing [C · 21 Sep]; question 130. */
+function bMsgModal() {
+  const b = brokerById(S.bmsg); if (!b) return "";
+  const opts = [`<option value=""${S.bmsgDeal === "" ? " selected" : ""}>No deal associated — a general conversation</option>`]
+    .concat(loansNow().map(d => `<option value="${d.id}"${S.bmsgDeal === d.id ? " selected" : ""}>${esc(d.name)} · ${money(d.amt)}</option>`)).join("");
+  return `
+    <div class="mov" role="dialog" aria-modal="true" aria-label="Connect via LenderPrism">
+      <div class="mdl">
+        <div class="mdl__hd"><div class="mdl__ttl"><h2>Connect via LenderPrism</h2><p>Message ${esc(bName(b))}. Your name and email go with it.</p></div>
+          <button type="button" class="x" data-bmsgx aria-label="Close">${XCLOSE}</button></div>
+        <div class="mdl__bd">
+          <div class="fldrow fldrow--2">
+            <div class="fld"><label for="bm_name">Your name</label><input class="inp" id="bm_name" value="${esc(ME.name)}" readonly></div>
+            <div class="fld"><label for="bm_email">Your email</label><input class="inp" id="bm_email" value="${esc(ME.email)}" readonly></div>
+          </div>
+          <div class="fld"><label for="bm_deal">About</label><select class="inp" id="bm_deal" data-bdeal>${opts}</select>
+            <div class="hint">Not listed? <a href="#/loans/new" data-bmsgx>Request a loan</a> first, then connect.</div></div>
+          <div class="fld"><label for="bm_msg">Message</label><textarea class="inp" id="bm_msg" rows="4" placeholder="What you are financing, roughly when, and what you want to ask."></textarea></div>
+          ${/* consent to share the request [sheet 04.3]: the broker sees the request's
+                details on accept, the same reveal the Opportunity gives them */""}
+          <label class="hint" for="bm_consent" style="display:flex; gap:8px; align-items:flex-start; cursor:pointer"><input type="checkbox" id="bm_consent"${S.bconsent ? " checked" : ""} style="margin-top:2px">
+            <span>Share the selected request's details with ${esc(bName(b))} if they take it on. They see your contact details only when they accept.</span></label>
+          <div class="bhint">Free to send. Nothing here goes to a lender.</div>
+        </div>
+        <div class="mdl__ft">
+          <span class="note">Recorded as a LenderPrism-sourced introduction.</span>
+          <button class="btn btn--outline" type="button" data-bmsgx>Cancel</button>
+          <button class="btn" type="button" data-inert="Today this sends an email to the broker and records nothing — question 130. Drawn as the tracked internal message Tony asked for on 21 Sep.">Send</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* 01.3 Borrower profile. Identity and contact, same field markup and the
+   same write-through as the broker's; company optional, no areas of focus,
+   no public listing — a borrower's page "should not be visible to anybody"
+   [T · 21 Sep]. The sponsor block is the InvestorPrism reuse Tony wants
+   captured without being required. */
+function renderBProfile() {
+  const P = BPROF;
+  const fld = (k, lbl, ph, req) => `<div class="fld"><label for="bp_${k}">${lbl}${req ? ` <span class="req">*</span>` : ` <span class="opt">(optional)</span>`}</label>
+      <input class="inp" id="bp_${k}" data-pf="${k}" autocomplete="off" value="${esc(P[k])}" placeholder="${ph}"></div>`;
+  const stSel = `<div class="fld"><label for="bp_state">State you are based in <span class="opt">(optional)</span></label>
+      <select class="inp" id="bp_state" data-pf="state"><option value="">—</option>${US_STATES.map(([a, n]) => `<option value="${a}"${P.state === a ? " selected" : ""}>${esc(n)} (${a})</option>`).join("")}</select></div>`;
+  return `
+    <div class="prof">
+      <nav class="profnav" aria-label="Profile sections"><div class="pn__ttl">Your profile</div><a href="#/profile" class="on">Profile</a></nav>
+      <div>
+        <div class="profhd"><h1>Identity and contact</h1></div>
+        <div class="card"><div class="card__ct">
+          <div class="fldrow fldrow--2">${fld("first", "First name", "Priya", 1)}${fld("last", "Last name", "Natarajan", 1)}</div>
+          <div class="fldrow fldrow--2">${fld("email", "Email", "you@company.com", 1)}${fld("mobile", "Phone", "(512) 555-0188")}</div>
+          <div class="fldrow fldrow--2">${fld("company", "Company", "Harbor Point Holdings")}${fld("title", "Your role", "Principal")}</div>
+          <div class="fldrow fldrow--2">${stSel}${fld("city", "City", "Austin")}</div>
+        </div><div class="card__ft">${profSaveBtns("bcontact")}</div></div>
+        <div class="profhd" style="margin-top:22px"><h1>You as a sponsor</h1></div>
+        <div class="bhint" style="margin:-6px 0 12px">Optional. Brokers see it with your request, and it carries over to InvestorPrism.</div>
+        <div class="card"><div class="card__ct">
+          <div class="fldrow fldrow--2">${fld("invYears", "Years investing", "9")}${fld("invAssets", "Assets owned", "4")}</div>
+          <div class="fldrow fldrow--2">${fld("invLiquidity", "Liquidity", "$2,000,000")}${fld("invWorth", "Net worth", "$8,000,000")}</div>
+        </div><div class="card__ft">${profSaveBtns("bsponsor")}</div></div>
+      </div>
+    </div>`;
+}
+
+/* 06.1 Account. Password (the broker's section, reused as is) and Delete
+   account. No plan, territory or notifications: the first two are the
+   broker's commercial relationship and a borrower has none [T · 21 Sep];
+   notifications is 06.2, which waits on whether any exist (question 131). */
+const BACC_SECS = [{ k: "password", nav: "Password", title: "Password" }, { k: "notify", nav: "Notifications", title: "Notifications" }, { k: "delete", nav: "Delete account", title: "Delete account" }];
+function renderBAccount() {
+  const sec = BACC_SECS.find(s => s.k === S.accSec) || BACC_SECS[0];
+  const body = sec.k === "delete" ? `
+    <div class="card"><div class="card__ct">
+      <p style="margin:0 0 10px; line-height:1.55">Deleting your account removes your profile and closes every open loan request. A request a broker is already working stays with the broker, without your contact details.</p>
+      <div class="bhint">No such action exists in the product today; drawn for tracker row 06.1 [~].</div>
+    </div><div class="card__ft"><button class="btn btn--destructive" type="button" data-bdelacct>Delete account</button></div></div>`
+    : sec.k === "notify" ? bAccNotify()
+    : accPassword();
+  return `
+    <div class="prof">
+      <nav class="profnav" aria-label="Account sections"><div class="pn__ttl">Account</div>
+        ${BACC_SECS.map(s => `<a href="#/account/${s.k}" class="${s.k === sec.k ? "on" : ""}">${esc(s.nav)}</a>`).join("")}</nav>
+      <div><div class="profhd"><h1>${esc(sec.title)}</h1></div>${body}</div>
+    </div>`;
+}
+
 function renderHome() {
   const greet = greeting();
   const stamp = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
@@ -17065,9 +17963,11 @@ let undoTimer = null, undoTimerFor = null;
 
 function render() {
   const view = document.getElementById("view");
-  document.getElementById("app").classList.toggle("app--auth", S.route === "auth");
+  document.getElementById("app").classList.toggle("app--auth", S.route === "auth" || S.route === "bland");
   /* the lender preview drops the shell too — see the note on .app.app--lpv */
   document.getElementById("app").classList.toggle("app--lpv", S.route === "lpv");
+  /* the borrower rail — see the app--borrower CSS block */
+  document.getElementById("app").classList.toggle("app--borrower", isB());
   /* The switch is in the prototype bar, not in the product: nothing here is
      ever genuinely pending, so the only honest way to show a loading state is
      to ask for one. It draws per ROUTE rather than per component because that
@@ -17083,6 +17983,32 @@ function render() {
     view.innerHTML = renderAuth();
   } else if (S.route === "mz") {
     view.innerHTML = renderMonetization();
+  /* Borrower routes and the borrower branches of shared routes, 21 Sep */
+  } else if (S.route === "loan") {
+    const d = loanById(S.dealId);
+    view.innerHTML = d ? renderLoan(d) : renderNotFound(S.nf);
+  } else if (S.route === "loannew") {
+    view.innerHTML = renderLoanNew();
+  } else if (S.route === "lsent") {
+    const d = loanById(S.dealId);
+    view.innerHTML = d ? renderLoanSent(d) : renderNotFound(S.nf);
+  } else if (S.route === "help") {
+    view.innerHTML = renderHelp();
+  } else if (S.route === "bland") {
+    view.innerHTML = renderBLanding();
+  } else if (S.route === "brokers") {
+    view.innerHTML = renderBrokers();
+  } else if (S.route === "broker") {
+    const b = brokerById(S.bId);
+    view.innerHTML = b ? renderBroker(b) : renderNotFound(S.nf);
+  } else if (S.route === "home" && isB()) {
+    view.innerHTML = renderBHome();
+  } else if (S.route === "profile" && isB()) {
+    view.innerHTML = renderBProfile();
+  } else if (S.route === "account" && isB()) {
+    view.innerHTML = renderBAccount();
+  } else if (S.route === "deals" && isB()) {
+    view.innerHTML = renderLoans();
   } else if (S.route === "home") {
     view.innerHTML = renderHome();
   } else if (S.route === "opps") {
@@ -17210,12 +18136,18 @@ function render() {
   /* the drawer mounts like the modals — state-owned, rebuilt every render —
      and sits under them: a composer opened from it must paint on top */
   if (S.ldr) view.insertAdjacentHTML("beforeend", ldrawer());
+  if (S.bmsg) view.insertAdjacentHTML("beforeend", bMsgModal());
+  if (S.bdel) view.insertAdjacentHTML("beforeend", bDelModal());
+  if (S.bdelAcct) view.insertAdjacentHTML("beforeend", bDelAcctModal());
   /* Account is a rail destination [T · 27 Aug, Flow 01 row 5, the one row on
      the tracker marked Done], so it lights its own item. The profile is not —
      it is reached from the account menu at the foot — so on that route no item
      is lit, rather than leaving Deals lit on a page that is not Deals. */
   document.querySelectorAll(".rail a[data-nav]").forEach(a =>
-    a.classList.toggle("on", S.route === "account" ? a.dataset.nav === "account"
+    a.classList.toggle("on", (S.route === "brokers" || S.route === "broker") ? a.dataset.nav === "brokers"
+      : (S.route === "loan" || S.route === "loannew" || S.route === "lsent" || (S.route === "deals" && isB())) ? a.dataset.nav === "loans"
+      : S.route === "help" ? a.dataset.nav === "help"
+      : S.route === "account" ? a.dataset.nav === "account"
       : S.route === "home" ? a.dataset.nav === "home"
       : S.route === "lenders" ? a.dataset.nav === "lenders"
       : S.route === "opps" ? a.dataset.nav === "leads"
@@ -17262,7 +18194,7 @@ function render() {
   if (raw) raw.innerHTML = `<b>${esc(ME.name)}</b><span>${esc(ME.firm)}</span>`;
   if (rav) rav.textContent = profInits() || "—";
   const mw = document.getElementById("accmenuWho");
-  if (mw) mw.innerHTML = `<b>${esc(ME.name)}</b><span>${esc(PROFILE.email)}</span>`;
+  if (mw) mw.innerHTML = `<b>${esc(ME.name)}</b><span>${esc(prof().email)}</span>`;
   /* the plan card and the trial pill live outside #view, same as the balance
      they replaced — render() pushes state into both */
   const ps = document.getElementById("planSlot");
@@ -17278,7 +18210,13 @@ function render() {
      it links into their billing. On a page whose whole claim is "this is what
      a lender sees", a band of the broker's own account chrome above it makes
      the claim false in the first 34 pixels. [Tanya, 21 Sep] */
-  if (S.route !== "auth" && S.route !== "lpv" && PLAN.tier === "trial") document.getElementById("app").insertAdjacentHTML("afterbegin", trialStrip());
+  if (S.route !== "auth" && S.route !== "lpv" && S.route !== "bland" && PLAN.tier === "trial" && !isB()) document.getElementById("app").insertAdjacentHTML("afterbegin", trialStrip());
+  /* role chrome outside #view: the switch link names the role you are not
+     in, and the Account item's title says what a borrower's Account holds */
+  const pr = document.getElementById("plinkRole");
+  if (pr) { pr.textContent = isB() ? "Broker" : "Borrower"; pr.dataset.setrole = isB() ? "broker" : "borrower"; }
+  const ra = document.querySelector('.rail a[data-nav="account"]');
+  if (ra) ra.title = isB() ? "Password and account" : "Plan, billing, territory and notifications";
   /* last, because it measures: every cell above it has to be laid out first */
   fitChips();
   fitStates();
@@ -17362,6 +18300,21 @@ function route() {
     S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
     render(); return;
   }
+  /* ---- Borrower role, 21 Sep ----
+     07.4 role visibility, the part this batch can enforce: under the borrower
+     role the lender surfaces, opportunities, the coming-soon pages and the
+     broker's deal pages do not resolve. A borrower "should not be able to see
+     lenders, and they should not have this page either" [T · 21 Sep]. Not a
+     redirect — an address that must not exist for this role is a 404 for it.
+     Tested before every other route so that nothing earlier in this function
+     can claim the address first. /monetization is left reachable: it is the
+     prototype's own index, behind the grey strip, not a product surface. */
+  if (isB() && /^\/(lenders|lender|leads|messages|reminders|deals\/new|deal)(\/|$)/.test(h)) {
+    S.route = "notfound"; S.dealId = null; S.nf = { kind: "route", at: h };
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
+    render(); return;
+  }
   /* the profile's section lives in the hash so a nav item is a link, not a
      handler — and so the banner's "Claim your spot" can address the listing */
   const mp = h.match(/^\/profile(?:\/(contact|focus|listing|account))?\/?$/);
@@ -17378,7 +18331,7 @@ function route() {
     S.open = null; S.oq = ""; S.msExpand = new Set();
     render(); return;
   }
-  const mac = h.match(/^\/account(?:\/(plan|credits|territory|notify|password))?\/?$/);
+  const mac = h.match(/^\/account(?:\/(plan|credits|territory|notify|password|delete))?\/?$/);
   if (mac) {
     /* /account/credits was a section until 13 Sep; the credits model is
        retired [task doc] and a hash that used to work should land somewhere
@@ -17408,6 +18361,38 @@ function route() {
     S.route = "soon"; S.soon = msoon[1]; S.dealId = null;
     S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
     S.open = null; S.oq = ""; S.msExpand = new Set();
+    render(); return;
+  }
+  const mln = h.match(/^\/loans\/new(?:\/(story))?\/?$/);
+  const mle = h.match(/^\/loan\/([a-z0-9-]+)\/edit\/?$/);
+  const mlsent = h.match(/^\/loans\/sent\/([a-z0-9-]+)\/?$/);
+  const mlo = (mln || mle || mlsent) ? null : h.match(/^\/loan\/([a-z0-9-]+)(?:\/(quotes|docs))?\/?$/);
+  const mlb = h.match(/^\/brokers(?:\/([a-z0-9-]+))?\/?$/);
+  const mlh = /^\/help\/?$/.test(h), mll = /^\/borrower\/?$/.test(h);
+  if (mln || mle || mlsent || mlo || mlb || mlh || mll || /^\/loans\/?$/.test(h)) {
+    S.dealId = null; S.bId = null;
+    if (mln) {
+      /* the draft survives the step change; an edit draft does not survive a
+         fresh New — leaving the edit address means leaving the record */
+      if (S.ldraft && S.ldraft.id) { S.ldraft = null; S.ltried = false; }
+      if (mln[1] === "story" && !S.ldraft) { location.hash = "#/loans/new"; return; }
+      S.route = "loannew"; S.lstep = mln[1] === "story" ? 2 : 1;
+    }
+    else if (mle) {
+      const d = loanById(mle[1]);
+      if (!d) { S.nf = { kind: "route", at: h }; S.route = "notfound"; }
+      else { if (!S.ldraft || S.ldraft.id !== d.id) { S.ldraft = loanDraftOf(d); S.ltried = false; } S.route = "loannew"; S.lstep = 1; }
+    }
+    else if (mlsent) { S.route = "lsent"; S.dealId = mlsent[1]; }
+    else if (mlh) S.route = "help";
+    else if (mll) S.route = "bland";
+    else if (mlo) { S.route = "loan"; S.dealId = mlo[1]; S.btab = mlo[2] === "quotes" ? "quotes" : mlo[2] === "docs" ? "docs" : "ov"; }
+    else if (mlb) { S.route = mlb[1] ? "broker" : "brokers"; S.bId = mlb[1] || null; }
+    else S.route = "deals";
+    if ((S.route === "loan" || S.route === "lsent") && !loanById(S.dealId)) { S.nf = { kind: "route", at: h }; S.route = "notfound"; S.dealId = null; }
+    if (S.route === "broker" && !brokerById(S.bId)) { S.nf = { kind: "route", at: h }; S.route = "notfound"; S.bId = null; }
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
     render(); return;
   }
   if (/^\/home\/?$/.test(h)) {
@@ -18153,6 +19138,55 @@ document.addEventListener("click", e => {
     return;
   }
 
+  /* ---- Borrower role, 21 Sep ---- */
+  const sr = t.closest("[data-setrole]");
+  if (sr) {
+    e.preventDefault();
+    S.role = sr.dataset.setrole; S.bFresh = false; S.bmsg = null; S.btab = "ov"; S.tab = "matches"; S.cardMenu = null;
+    /* an unchanged hash fires no hashchange, so route() is called by hand */
+    if (location.hash === "#/home") route(); else location.hash = "#/home";
+    return;
+  }
+  const qr = t.closest("[data-qrel]");
+  if (qr) { S.qrel = qr.dataset.qrel; render(); return; }
+  const bt = t.closest("[data-btab]");
+  if (bt) { S.btab = bt.dataset.btab; render(); return; }
+  const bc = t.closest("[data-bconnect]");
+  if (bc) { S.bmsg = bc.dataset.bconnect; S.bmsgDeal = ""; render(); return; }
+  if (t.closest("[data-bmsgx]")) { S.bmsg = null; S.bconsent = false; if (!t.closest("a[href]")) render(); return; }
+  /* ---- second batch: request form, connection, filters, confirms, help ---- */
+  const ls = t.closest("[data-lseg]");
+  if (ls) { ldraft().txType = ls.dataset.lseg; render(); return; }
+  if (t.closest("[data-lnext]")) { S.ltried = true; if (lMissing(ldraft()).length) { render(); return; } S.ltried = false; location.hash = "#/loans/new/story"; return; }
+  if (t.closest("[data-lsend]")) { const id = lCommit(ldraft()); S.ldraft = null; S.ltried = false; location.hash = "#/loans/sent/" + id; return; }
+  if (t.closest("[data-lsave]")) { S.ltried = true; if (lMissing(ldraft()).length) { render(); return; } const id = lCommit(ldraft()); S.ldraft = null; S.ltried = false; location.hash = "#/loan/" + id; return; }
+  const lfb = t.closest("[data-lfile]");
+  if (lfb) { S.lfSlot = lfb.dataset.lfile; const fi = document.getElementById("lf_file"); if (fi) fi.click(); return; }
+  const lfr = t.closest("[data-lfrm]");
+  if (lfr) { delete ldraft().files[lfr.dataset.lfrm]; render(); return; }
+  if (t.closest("[data-lfltx]")) { S.lflt = { property: "", state: "", amt: "" }; render(); return; }
+  if (t.closest("[data-bfltx]")) { S.bflt = { loc: "", type: "", geo: "" }; render(); return; }
+  const bdl = t.closest("[data-bdel]");
+  if (bdl) { S.bdel = bdl.dataset.bdel; render(); return; }
+  if (t.closest("[data-bdelx]")) { S.bdel = null; render(); return; }
+  if (t.closest("[data-bdelgo]")) {
+    const i = BLOANS.findIndex(d => d.id === S.bdel); if (i >= 0) BLOANS.splice(i, 1);
+    S.bdel = null;
+    if (location.hash === "#/loans") render(); else location.hash = "#/loans";
+    return;
+  }
+  if (t.closest("[data-bdelacct]")) { S.bdelAcct = true; render(); return; }
+  if (t.closest("[data-bdelacctx]")) { S.bdelAcct = false; render(); return; }
+  const bn = t.closest("[data-bnotify]");
+  if (bn) { const k = bn.dataset.bnotify; BPROF.notify[k] = !BPROF.notify[k]; render(); return; }
+  if (t.closest("[data-helpsend]")) {
+    S.helpTried = true;
+    if (!S.help.subject || !S.help.msg.trim()) { render(); return; }
+    /* a reference the confirmation can quote; sample, stable per message */
+    S.help.ref = "LP-" + (24100 + (S.help.msg.length * 7 + S.help.subject.length) % 800);
+    S.helpTried = false; render(); return;
+  }
+  if (t.closest("[data-helpnew]")) { S.help = { subject: "", msg: "", ref: null }; S.helpTried = false; render(); return; }
   const inert = t.closest("[data-inert]");
   if (inert) {
     e.preventDefault();
@@ -19299,6 +20333,12 @@ function hardReset() {
   S.settingsOpen = false; S.setDrill = null; S.hideLanes.clear(); S.sumClosed = new Set(); S.secEdit = null;
   S.authMode = "signup"; S.authRole = null; S.authErr = null;
   S.auth = { first: "", last: "", email: "", pass: "", pass2: "", company: "", phone: "" };
+  /* back to the broker, with the borrower's record restored */
+  S.role = "broker"; S.bFresh = false; S.qrel = "publish"; S.bmsg = null; S.bmsgDeal = ""; S.btab = "ov"; S.bId = null;
+  Object.keys(BPROF).forEach(k => delete BPROF[k]); Object.assign(BPROF, JSON.parse(JSON.stringify(BPROF0)));
+  BLOANS.splice(0, BLOANS.length, ...JSON.parse(JSON.stringify(BLOANS0)));
+  S.ldraft = null; S.lstep = 1; S.ltried = false; S.lfSlot = null; S.bdel = null; S.bdelAcct = false; S.bconsent = false;
+  S.lflt = { property: "", state: "", amt: "" }; S.bflt = { loc: "", type: "", geo: "" }; S.help = { subject: "", msg: "", ref: null }; S.helpTried = false;
   S.cardFields = { amt: true, meta: true, fin: true, counts: true, when: true };
   S.cols = { amt: true, loc: true, fin: true, matches: true, status: true, upd: true };
   S.lShut = new Set(["lfin", "lsrc"]); S.lAll = new Set(); S.lFq = {}; S.lRailOpen = true;
@@ -19326,6 +20366,36 @@ document.addEventListener("input", e => {
      and the record, which is what lets the deal form's contact line change as
      you type here. Same no-re-render rule as the deal form: the two dependent
      readouts (the bio counter, the read-back line) are patched in place. */
+  const bd = t.closest("[data-bdeal]");
+  if (bd) { S.bmsgDeal = bd.value; return; }
+  if (t.id === "bm_consent") { S.bconsent = t.checked; return; }
+  /* the request draft writes through like the profile; the match panel and
+     the counter are patched in place rather than re-rendered, so the field
+     keeps focus */
+  const lfi = t.closest("[data-lf]");
+  if (lfi) {
+    const k = lfi.dataset.lf, d = ldraft();
+    if (k === "amt") {
+      const digits = t.value.replace(/[^0-9]/g, ""); d.amt = digits;
+      const fromEnd = t.value.length - t.selectionStart;
+      t.value = digits ? Number(digits).toLocaleString("en-US") : "";
+      const pos = Math.max(0, t.value.length - fromEnd); t.setSelectionRange(pos, pos);
+    } else d[k] = t.value;
+    if (k === "summary") { const c = document.getElementById("lsumleft"); if (c) c.textContent = (1200 - d.summary.length) + " characters left"; }
+    else { const el = document.getElementById("lmpv"); if (el) el.innerHTML = lMatchHtml(d); }
+    return;
+  }
+  if (t.id === "lf_file") {
+    const f = t.files && t.files[0];
+    if (f && S.lfSlot) ldraft().files[S.lfSlot] = f.name;
+    t.value = ""; S.lfSlot = null; render(); return;
+  }
+  const lfl = t.closest("[data-lflt]");
+  if (lfl) { S.lflt[lfl.dataset.lflt] = t.value; render(); return; }
+  const bfl = t.closest("[data-bflt]");
+  if (bfl) { S.bflt[bfl.dataset.bflt] = t.value; render(); return; }
+  const hf = t.closest("[data-hf]");
+  if (hf) { S.help[hf.dataset.hf] = t.value; return; }
   const pf = t.closest("[data-pf]");
   if (pf) {
     const k = pf.dataset.pf;
@@ -19342,7 +20412,8 @@ document.addEventListener("input", e => {
       if (re) re.hidden = !(PROFILE.minLoan && PROFILE.maxLoan &&
         Number(PROFILE.minLoan) > Number(PROFILE.maxLoan));
     } else {
-      PROFILE[k] = t.value;
+      /* prof(): the borrower's fields write to BPROF, the broker's to PROFILE */
+      prof()[k] = t.value;
     }
     /* the two readouts that depend on a keystroke, patched rather than
        re-rendered — a re-render here would take the caret with it */
