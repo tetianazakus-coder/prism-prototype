@@ -208,8 +208,20 @@
   /* SidebarTrigger — size-7 ghost */
   .rail__cut { flex: none; width: 28px; height: 28px; display: grid; place-items: center; background: none; border: 0; color: #8fa3c0; cursor: pointer; border-radius: var(--radius-md); padding: 0; }
   .rail__cut:hover { background: var(--sidebar-accent); color: var(--sidebar-accent-foreground); }
-  .app.rail-min .rail__mark { display: none; }
-  .app.rail-min .rail__top { justify-content: center; padding-left: 0; padding-right: 0; }
+  /* Collapsed, the mark stays and the control sits on top of it, unseen until
+     the band is hovered or the control takes focus. It used to hide the whole
+     lockup — a rule from when the lockup was text only — and the rail
+     collapses itself at 1550 and below, where most brokers work, so most of
+     them saw no logo at all. Swapping in place keeps the band at 57 and every
+     nav row at the height it has expanded; the ChatGPT and Claude pattern.
+     Figma: Shell/Rail Collapsed=true, Brand/Wordmark Show name off.
+     [agreed · Tanya, 30 Sep] */
+  .app.rail-min .rail__top { position: relative; justify-content: center; padding-left: 0; padding-right: 0; }
+  .app.rail-min .rail__mark { flex: none; }
+  .app.rail-min .rail__mark span { display: none; }
+  .app.rail-min .rail__cut { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; opacity: 0; }
+  .app.rail-min .rail__top:hover .rail__cut, .app.rail-min .rail__cut:focus-visible { opacity: 1; background: var(--sidebar-accent); color: var(--sidebar-accent-foreground); }
+  .app.rail-min .rail__top:hover .rail__mark, .app.rail-min .rail__top:has(.rail__cut:focus-visible) .rail__mark { opacity: 0; }
 
   /* SidebarGroup — p-2 ; SidebarGroupLabel — h-8 px-2 text-xs font-medium, 70% */
   .rail__grp { padding: 8px; }
@@ -2389,10 +2401,24 @@
   .toast {
     position: fixed; left: 50%; top: 126px; transform: translateX(-50%);
     background: var(--color-action); color: #fff; border-radius: var(--radius-lg);
-    padding: 10px 14px; font-size: 13px; box-shadow: var(--shadow-lg);
+    padding: 10px 14px; box-shadow: var(--shadow-lg);
     display: flex; align-items: center; gap: 14px; z-index: 80;
+    /* 356 is sonner's own --width, and the Prism component is built to it.
+       It never mattered while the toast was one short line; a two-slot toast
+       with a real description runs to the full viewport without it. */
+    max-width: 356px;
   }
-  .toast button { background: none; border: 0; color: #9fc4f5; font-weight: 600; cursor: pointer; }
+  /* Two slots, not one line. shadcn's toaster.tsx wraps ToastTitle and
+     ToastDescription in a `grid gap-1`, which is the 4px below; the Prism
+     Toast component was rebuilt to match on 29 Sep. Sizes are shadcn's —
+     title text-sm, description text-xs via the title's own [&+div] rule,
+     at opacity-90. The WEIGHT is not: shadcn sets font-semibold, this is
+     Medium, which is what sonner gives [data-title]. [Tanya, 29 Sep]
+     The 13px this replaced was never in any code — it was ours alone. */
+  .toast__text { display: flex; flex-direction: column; gap: 4px; }
+  .toast__t { font-size: 14px; line-height: 20px; font-weight: 500; }
+  .toast__d { font-size: 12px; line-height: 16px; font-weight: 400; opacity: 0.9; }
+  .toast button { background: none; border: 0; color: #9fc4f5; font-size: 14px; font-weight: 500; cursor: pointer; }
 
   /* Our own annotation — styled so it cannot be mistaken for a control. */
   .note-ass {
@@ -2785,7 +2811,10 @@
     .selbar { flex-wrap: wrap; gap: 8px; }
     .selbar .r { margin-left: 0; width: 100%; }
     .foot { flex-direction: column; align-items: flex-start; gap: 4px; }
-    .toast { left: 10px; right: 10px; top: 116px; transform: none; }
+    /* max-width: none — the 356 cap is a desktop measurement; at phone width
+       the toast has always spanned the viewport inset, and capping it would
+       strand it against the left edge. */
+    .toast { left: 10px; right: 10px; top: 116px; transform: none; max-width: none; }
   }
 
   @media (max-width: 480px) {
@@ -16165,7 +16194,7 @@ function renderBVerify() {
       <button type="button" class="btn btn--full" data-bverify="verified">Open the link (prototype)</button>
       <button type="button" class="btn btn--outline btn--full" data-bverify="resend">Resend the link</button>
     </div>
-    <div class="bland__alt">Wrong address? <a href="#/auth/signup/borrower">Go back and change it</a> · <button type="button" class="btn btn--link" data-bverify="error">See the expired-link state</button></div>`;
+    <div class="bland__alt">Wrong address? <a href="#/auth/signup/borrower">Go back and change it</a></div>`;
   return authShell(`<div class="bverify__ic">${IC}</div>${body}`, "", AUTH_PANELS.borrower);
 }
 
@@ -18049,16 +18078,24 @@ const SKEL = {
     /* the count rides in the toolbar with the search, and the grid holds one
        card per listed broker - skCard(3) in a 4-up row reserved 129px against a
        934px grid, so the page grew by three rows as it loaded. The card shape is
-       the directory card's own: an avatar row, the name with the company and
-       the location under it, a two-line bio, two facet rows and the go-link.
-       [~] 24 Sep */
+       the directory card's own: an avatar row, the name with ONE line under it,
+       a two-line bio, two facet rows and the go-link.
+       [~] 24 Sep
+
+       That under-line was two until 29 Sep, reserving a company line the card
+       lost on 28 Sep and a location line that lost its "· N years" the day
+       after. A skeleton that outlives the shape it traces reserves height the
+       live card no longer uses, which is the same defect as reserving too
+       little, pointed the other way - the grid shrinks on load instead of
+       growing. Second facet row went 3 pills to 2 for the same reason: the
+       chip budget is 22 now, so no States row draws three. */
     `<div class="bgrid">${Array.from({ length: BROKERS.length }, () => `<div class="card bcard">
-      <div class="bid bid--stack"><span class="bav"></span><div style="flex:1"><b>${skLine(0)}</b><span>${skLine(1)}</span><span>${skLine(2)}</span></div></div>
+      <div class="bid bid--stack"><span class="bav"></span><div style="flex:1"><b>${skLine(0)}</b><span>${skLine(1)}</span></div></div>
       <p class="bcard__about">${skLine(2)}${skLine(3)}</p>
       <div class="bfacet"><div class="bsec">${skLine(4)}</div><div class="pills">${
         [78, 62].map(w => `<span class="sk sk--pill" style="width:${w}px"></span>`).join("")}</div></div>
       <div class="bfacet"><div class="bsec">${skLine(6)}</div><div class="pills">${
-        [54, 66, 48].map(w => `<span class="sk sk--pill" style="width:${w}px"></span>`).join("")}</div></div>
+        [54, 66].map(w => `<span class="sk sk--pill" style="width:${w}px"></span>`).join("")}</div></div>
       <span class="bcard__go">${skLine(8)}</span>
     </div>`).join("")}</div></div></div>`,
   /* renderBroker was ONE .card with four stacked sections until 24 Sep. It is
@@ -19808,9 +19845,23 @@ function renderBrokers() {
            (04.1) now says it outright - "no banner, no company name (call
            21 Sep)" - with the company kept on the profile behind the card
            (04.2). The sheet is the later instruction, so the card follows it. -->
+      <!-- Years came off the same line 29 Sep. The sheet's field is "city/
+           state" and this printed a third thing on it; experience is already a
+           Details row on the profile behind the card (04.2), so the fact is
+           not lost, it is one tap further in. The bio one line down STAYS, and
+           the distinction is what Tony was cutting on 21 Sep: banner and
+           company are broker-supplied BRANDING ("standardised so brokers look
+           like they work for Prism"), and prose the borrower reads to choose
+           is not that. Eleven of twelve cards open on Multifamily and nine
+           share a state with a neighbour - without the bio the grid is twelve
+           near-identical tiles. Note that borrower-conformance-2026-09-24:76
+           reads the 21 Sep list as closed ("Verified only") and so appears to
+           rule the bio out: it does not. That line was written at 10:15 on 24
+           Sep and f997bd1 put the bio on the card at 12:19 the same day, so it
+           describes the stub. [Tanya, 29 Sep] -->
       <div class="bid bid--stack"><span class="bav">${bAvatar(b)}</span><div><b>${esc(bName(b))}${
         b.verified ? `<span class="vtick" role="img" aria-label="Verified" title="Verified by LenderPrism">${VTICK}</span>` : ""}</b><span>${
-        esc(b.city)}, ${esc(b.state)} · ${b.years} years</span></div></div>
+        esc(b.city)}, ${esc(b.state)}</span></div></div>
       <p class="bcard__about">${esc(b.about)}</p>
       ${pills(b.types, "Property type")}
       ${pills(b.geos.map(x => STATE_NAME[x] || x), "States")}
@@ -21040,7 +21091,22 @@ function render() {
     t.className = "toast tundo";
     /* a toast with nothing to undo is still worth showing — refusing an action
        has to say so somewhere, and the button would be a dead control. */
-    t.innerHTML = `<span>${esc(S.undo.msg)}</span>${S.undo.fn ? `<button type="button" id="undo">Undo</button>` : ""}`;
+    /* One msg string, two slots. Every S.undo in this file is already written
+       as a short first sentence plus a clarification — "Zip updated to 78704."
+       then "The deal is updated too, not just this search." — so the split
+       happens here rather than in ~60 call sites, and no copy changes. A
+       single-sentence message keeps the title and renders no description.
+       [~] The split rule is ours: the first . ! or ? followed by whitespace and
+       a non-lowercase character. It leaves "$1,234.56." intact (no space after
+       the inner dot) and it does break on a bracketed "[~]" aside, which is
+       the behaviour we want. */
+    const uMsg = String(S.undo.msg).trim();
+    const uCut = uMsg.match(/^(.{3,}?[.!?])\s+(?=[^a-z\s])/);
+    const uTitle = uCut ? uCut[1] : uMsg;
+    const uDesc = uCut ? uMsg.slice(uCut[0].length) : "";
+    t.innerHTML = `<div class="toast__text"><span class="toast__t">${esc(uTitle)}</span>`
+      + (uDesc ? `<span class="toast__d">${esc(uDesc)}</span>` : "")
+      + `</div>${S.undo.fn ? `<button type="button" id="undo">Undo</button>` : ""}`;
     document.body.appendChild(t);
     if (S.undo !== undoTimerFor) {
       clearTimeout(undoTimer);
@@ -21185,11 +21251,22 @@ function route() {
      have to repeat the state resets below. It carries no role segment, so the
      role is forced to broker - the panel is picked from S.authRole and the
      trial is the broker path's alone. */
-  const ma = h.match(/^\/auth(?:\/(signup|login|trial|verify))?(?:\/(borrower|broker|lender))?\/?$/);
+  /* verify carries a third segment, 29 Sep. Its three states used to be
+     reachable only by pressing buttons on the card, one of which existed for
+     no other reason - and a demo door sitting on the surface reads as product,
+     which is the same finding that took the Loading and Error toggles off the
+     prototype bar on 21 Sep. The note there said what to do instead: "it
+     should be an address rather than a button - the states are worth linking
+     to, and a link can be sent to Chris without living on every screen." So
+     #/auth/verify/borrower/verified and .../expired, and the button that only
+     jumped states is gone. The address says "expired" because that is what the
+     screen says; S.bverify keeps "error", its name in the other two states. */
+  const ma = h.match(/^\/auth(?:\/(signup|login|trial|verify))?(?:\/(borrower|broker|lender))?(?:\/(verified|expired))?\/?$/);
   if (ma) {
     S.route = "auth"; S.dealId = null;
     S.authMode = ma[1] || "signup";
     S.authRole = S.authMode === "trial" ? "broker" : (ma[2] || null);
+    if (S.authMode === "verify") S.bverify = ma[3] === "expired" ? "error" : (ma[3] || "sent");
     S.authErr = null;
     S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
     render(); return;
@@ -22111,8 +22188,15 @@ document.addEventListener("click", e => {
   if (bvf) {
     const v = bvf.dataset.bverify;
     if (v === "go") { S.bverify = null; location.hash = "#/home"; return; }
-    if (v === "resend") { S.bverify = "sent"; S.undo = { msg: "A new link is on its way to " + (BPROF.email || "your email") + "." }; render(); return; }
-    S.bverify = v; render(); return;
+    if (v === "resend") {
+      S.undo = { msg: "A new link is on its way to " + (BPROF.email || "your email") + "." };
+      /* resending from the expired state walks back to sent, which is a
+         different address; from sent it is the address we are already on, and
+         assigning the same hash fires no hashchange, so that case renders. */
+      if (S.bverify === "sent") { render(); } else { location.hash = "#/auth/verify/borrower"; }
+      return;
+    }
+    location.hash = "#/auth/verify/borrower/" + (v === "error" ? "expired" : v); return;
   }
   /* ---- the wizard, 28 Sep ---- */
   /* jumping the track drops the tried flag, so step 1's red does not greet
