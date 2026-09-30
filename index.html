@@ -395,6 +395,14 @@
      .feed. What follows is only the spacing and wrapping those parts need in
      their new places, on the file's own tokens. */
   .rail a.b-only.b-off { display: none !important; }
+  /* Your profile leaves the account menu for a borrower only [Tanya, 30 Sep].
+     The borrower carries Profile as a rail item (28 Sep, sheet 01.5), so the
+     menu row was a second link to the same route sitting eight pixels from the
+     first — the duplication the 3 Sep sweep removed three of, arriving back by
+     a different door. The broker has no rail item, so the row stays their only
+     way in and cannot simply be deleted. Its separator goes with it: what is
+     left is identity, one rule, Sign out. */
+  .app--borrower .rail .acc-prof { display: none; }
   .bstagecard { margin-bottom: 14px; }
   .bstage { color: var(--primary); flex-wrap: wrap; row-gap: 8px; }
   .bstage .lbar { min-width: 10px; max-width: 28px; }
@@ -2889,6 +2897,20 @@
   .fldrow .amtwrap { max-width: none; }
   .amtwrap span { color: var(--muted-foreground); font-size: 14px; }
   .amtwrap input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 14px; }
+  /* A native date input draws its own mask and picker glyph, both in the
+     VIEWER's locale and the browser's ink: dd.mm.yyyy and a filled Chrome
+     calendar on a European machine, and neither is in any stylesheet. The Figma
+     field is the US mask in placeholder grey with Lucide "calendar" at 16/1.333,
+     so the prototype draws the same [Tanya, 30 Sep]. The input stays native -
+     the picker, keyboard entry and ISO value all still come from the browser -
+     and only the empty, unfocused state is painted over. Once focused or filled
+     the browser's own segments show, in the viewer's locale. */
+  .datewrap { position: relative; }
+  .datewrap .inp::-webkit-calendar-picker-indicator { width: 16px; height: 16px; padding: 0; margin: 0; opacity: 1; cursor: pointer;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230F172A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 2v4'/%3E%3Cpath d='M16 2v4'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 10h18'/%3E%3C/svg%3E") center / 16px no-repeat; }
+  .datewrap .inp.is-empty:not(:focus)::-webkit-datetime-edit { color: transparent; }
+  .datewrap__ph { display: none; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--brand-text-400); pointer-events: none; }
+  .datewrap:has(.inp.is-empty:not(:focus)) .datewrap__ph { display: block; }
   .fld.err .inp, .fld.err .fld__sel, .fld.err .amtwrap { border-color: var(--destructive); }
   /* Unscoped from `.fld .errmsg` on 17 Sep. Thirteen of the fourteen call sites
      are inside a .fld and render identically either way; the fourteenth is the
@@ -5736,11 +5758,12 @@
           <div class="rail__accwho" id="accmenuWho">
             <b>Bruno Broker</b><span>bruno@sandboxcapital.com</span>
           </div>
-          <div class="rail__accsep" role="separator"></div>
+          <div class="rail__accsep acc-prof" role="separator"></div>
           <!-- One destination, not three. The three items this replaced were three
                anchors on the same page, and the page's own left nav already does
-               that job — with a gap count on it the menu could not show. -->
-          <a href="#/profile" role="menuitem">
+               that job — with a gap count on it the menu could not show. Broker
+               only since 30 Sep: see the .acc-prof rule in the CSS. -->
+          <a href="#/profile" role="menuitem" class="acc-prof">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.2 18.6a6 6 0 0 1 11.6 0"/></svg>
             Your profile</a>
           <div class="rail__accsep" role="separator"></div>
@@ -12492,9 +12515,10 @@ function prospectorTab() {
    says which way it goes - Hide filters while the rail is open, Show filters
    once it is shut - with the applied count riding it. Three things were copied
    deliberately. The label is a verb rather than a noun, so the button states
-   its effect and not its subject. The count shows in both states, which is
-   what makes hiding the rail safe - a broker who shuts it can still see that
-   three filters are narrowing the list. And the rail goes to zero rather than
+   its effect and not its subject. The count shows once the rail is shut, which
+   is what makes hiding the rail safe - a broker who shuts it can still see that
+   three filters are narrowing the list. (It showed in both states until 30 Sep;
+   with the rail open its "Filters N" header already says it.) And the rail goes to zero rather than
    to an icon stub: a 34px strip of nothing is width spent on a hinge.
    [comp 14 Sep - Apollo]
 
@@ -14266,11 +14290,20 @@ function renderLenderAcct(acct, dealId) {
               a card rather than five at shell width: the pair measured 256px of
               a row whose name, chips and territory were all wrapping to make
               room for it, and the kebab is 32px. The divergence tracks the
-              column count, not a preference. The Saved badge stays on the row
-              because it is a status, not an action, and a status in a menu is
-              a fact nobody can see. */""}
+              column count, not a preference.
+              No Saved badge on this row, 30 Sep (Tanya). It sat beside the
+              kebab until today on the argument that saved-ness is a status
+              rather than an action, and a status folded into a menu is a fact
+              nobody can see. That still holds on the matches and directory
+              tables, where the badge IS the Save button's other state and
+              removing it would leave an empty cell. It does not hold here,
+              because this is the one page that already prints the fact
+              underneath: saving writes S.savedNow, histFor folds that straight
+              into Deal history, and the deal appears in that card as "just now"
+              before the broker looks away. The badge was restating a line two
+              cards down. The kebab still drops Save to deal once the lender is
+              saved - that is the behaviour, and it was never the badge's job. */""}
         <td class="actions-cell"><div class="rowacts">
-          ${dealId && savedIds.has(l.id) ? `<span class="badge badge--outline tone-green">✓ Saved</span>` : ""}
           <button type="button" class="rowkebab" data-tip="Actions" data-kebab="ra:${l.id}" aria-haspopup="menu" aria-expanded="${S.cardMenu === "ra:" + l.id}" aria-label="Actions for ${esc(l.ct)}">${KEBAB}</button>
           ${S.cardMenu === "ra:" + l.id ? `<div class="cardmenu" role="menu" aria-label="Actions for ${esc(l.ct)}" draggable="false">
             ${dealId && savedIds.has(l.id) ? "" : `<button type="button" role="menuitem" ${dealId ? `data-save="${l.id}"` : `data-lpadd="${l.id}"`}>
@@ -18941,7 +18974,7 @@ function renderLoans() {
         ${C.loan ? loanCell(d) : ""}
         ${C.broker ? `<td data-l="Broker">${connLine(d)}</td>` : ""}
         ${C.status ? `<td data-l="Status">${bStatus(d)}</td>` : ""}
-        ${C.quotes ? `<td data-l="Quotes">${q ? `<a class="bkname qlink" href="#/loan/${d.id}/quotes">${q}</a>${bNewQ(d) ? ` <span class="badge badge--outline tone-blue">${bNewQ(d)} new</span>` : ""}` : `<span class="unset">—</span>`}</td>` : ""}
+        ${C.quotes ? `<td data-l="Quotes">${q ? `<a class="bkname qlink" href="#/loan/${d.id}/quotes">${q}</a>` : `<span class="unset">—</span>`}</td>` : ""}
         ${C.out ? `<td data-l="Outstanding">${o ? `<a class="bkname" href="#/loan/${d.id}">${o} ${o === 1 ? "item" : "items"}</a>` : `<span class="unset">None</span>`}</td>` : ""}
         ${C.upd ? `<td data-l="Last activity"><span class="bsub bsub--1">${last ? esc(last.tx) : ""}</span><span class="bsub">${esc(d.updated)}</span></td>` : ""}
         ${menu(d)}</tr>`;
@@ -19113,6 +19146,7 @@ function renderLoanNew() {
      carrying no star anywhere already reads as all-optional. */
   const inp = (k, label, o = {}) => `<div class="fld${m(k)}"><label for="lf_${k}">${label}${o.req ? ` <span class="req">*</span>` : o.allOpt ? "" : ` <span class="opt">(optional)</span>`}</label>
       ${o.money ? `<div class="amtwrap"><span>$</span><input id="lf_${k}" data-lf="${k}" inputmode="numeric" autocomplete="off" value="${d[k] ? Number(d[k]).toLocaleString("en-US") : ""}" placeholder="${o.ph || ""}"></div>`
+        : o.type === "date" ? `<div class="datewrap"><input class="inp${d[k] ? "" : " is-empty"}" id="lf_${k}" data-lf="${k}" type="date" autocomplete="off" value="${esc(d[k])}"><span class="datewrap__ph" aria-hidden="true">mm/dd/yyyy</span></div>`
         : `<input class="inp" id="lf_${k}" data-lf="${k}" ${o.type ? `type="${o.type}"` : ""} ${o.num ? `inputmode="numeric"` : ""} autocomplete="off" value="${esc(d[k])}" placeholder="${o.ph || ""}">`}
       ${o.hint ? `<div class="hint">${o.hint}</div>` : ""}${err(k, o.err || "Required.")}</div>`;
   /* .lslot was this wizard's own document row - a rule-separated line with a
@@ -19143,19 +19177,28 @@ function renderLoanNew() {
   let body = "";
   if (step === 1) body = `
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>The property</h2></div><div class="card__ct">
+      ${/* Paired down to four full rows across the two cards [Tanya, 30 Sep].
+            Property type and Street address each held a row alone while Year
+            renovated and Zip each trailed a half-empty one, so the step drew
+            two gaps it did not need. Nothing about either field wanted the
+            full width - the select is the same 36px control as an input and
+            the address line is shorter than the property name above it. Same
+            fill-the-grid rule step 2 settled on the same day: cells flow, an
+            empty cell only ever trails. Now nothing trails. */""}
       ${inp("name", "Property name", { req: 1, ph: "e.g. Lakeview Flats", err: "Name the property. It is what the deal is called." })}
-      <div class="fld${m("property")}"><label>Property type <span class="req">*</span></label>
-        <div class="fld__sel">${selCtl("lf:property", PROPERTY_TYPES.map(v => ({ v, label: v })), d.property, "Property type", "Pick a type")}</div>${err("property", "Pick a property type.")}</div>
-      <div class="fldrow fldrow--2">${inp("units", "Units", { num: 1, ph: "36" })}${inp("sf", "Square feet", { num: 1, ph: "42,000" })}</div>
-      <div class="fldrow fldrow--2">${inp("occ", "Occupancy %", { num: 1, ph: "95" })}${inp("built", "Year built", { num: 1, ph: "2011" })}</div>
-      <div class="fldrow fldrow--2">${inp("reno", "Year renovated", { num: 1, ph: "2021" })}<div></div></div>
+      <div class="fldrow fldrow--2">
+        <div class="fld${m("property")}"><label>Property type <span class="req">*</span></label>
+          <div class="fld__sel">${selCtl("lf:property", PROPERTY_TYPES.map(v => ({ v, label: v })), d.property, "Property type", "Pick a type")}</div>${err("property", "Pick a property type.")}</div>
+        ${inp("units", "Units", { num: 1, ph: "36" })}</div>
+      <div class="fldrow fldrow--2">${inp("sf", "Square feet", { num: 1, ph: "42,000" })}${inp("occ", "Occupancy %", { num: 1, ph: "95" })}</div>
+      <div class="fldrow fldrow--2">${inp("built", "Year built", { num: 1, ph: "2011" })}${inp("reno", "Year renovated", { num: 1, ph: "2021" })}</div>
     </div></div>
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Where it is</h2></div><div class="card__ct">
-      ${inp("addr", "Street address", { req: 1, ph: "2201 S Lamar Blvd" })}
-      <div class="fldrow fldrow--2">${inp("city", "City", { req: 1, ph: "Austin" })}
+      <div class="fldrow fldrow--2">${inp("addr", "Street address", { req: 1, ph: "2201 S Lamar Blvd" })}${inp("city", "City", { req: 1, ph: "Austin" })}</div>
+      <div class="fldrow fldrow--2">
         <div class="fld${m("state")}"><label>State <span class="req">*</span></label>
-          <div class="fld__sel">${selCtl("lf:state", US_STATES.map(([a, n]) => ({ v: a, label: `${n} (${a})` })), d.state, "State", "Pick a state")}</div>${err("state", "Pick a state.")}</div></div>
-      <div class="fldrow fldrow--2">${inp("zip", "Zip", { req: 1, num: 1, ph: "78704", err: "Five digits. The zip decides which brokers can take it." })}<div></div></div>
+          <div class="fld__sel">${selCtl("lf:state", US_STATES.map(([a, n]) => ({ v: a, label: `${n} (${a})` })), d.state, "State", "Pick a state")}</div>${err("state", "Pick a state.")}</div>
+        ${inp("zip", "Zip", { req: 1, num: 1, ph: "78704", err: "Five digits. The zip decides which brokers can take it." })}</div>
     </div></div>`;
   if (step === 2) {
     const refi = d.purpose === "Refinance";
@@ -19164,12 +19207,27 @@ function renderLoanNew() {
       <div class="fld${m("purpose")}"><label>Loan purpose <span class="req">*</span></label>
         <div class="seg" role="group" aria-label="Loan purpose">${["Purchase", "Refinance", "Construction", "Other"].map(v =>
           `<button type="button" class="${d.purpose === v ? "on" : ""}" data-lseg="${v}" aria-pressed="${d.purpose === v}">${v}</button>`).join("")}</div></div>
-      <div class="fldrow fldrow--2">${inp("amt", "Loan amount requested", { req: 1, money: 1, ph: "3,200,000", err: "Loan amount is required." })}
-        ${inp("value", d.purpose === "Purchase" ? "Purchase price" : "Estimated value", { money: 1, ph: "4,900,000" })}</div>
-      <div class="fldrow fldrow--2">${refi ? inp("balance", "Existing loan balance", { money: 1, ph: "2,600,000" }) : "<div></div>"}
-        ${inp("closeBy", "Desired closing date", { type: "date" })}</div>
-      <div class="fld"><label>Preferred loan structure <span class="opt">(optional)</span></label>
-        <div class="fld__sel">${selCtl("lf:financing", (d.financing ? [{ v: "", label: "\u2014" }] : []).concat(FINANCING_TYPES.map(v => ({ v, label: v }))), d.financing, "Preferred loan structure", "Not sure yet — your broker will advise")}</div></div>
+      ${/* The fields FLOW into the two-column grid; they do not sit in fixed
+            cells. Only a refinance carries an existing balance, so the other three
+            purposes have four fields, not five - and holding the balance's cell
+            open left a hole mid-card, with the closing date alone on one row and
+            the structure alone on the next. Paired up they make two full rows and
+            the card loses a row of nothing. [Tanya, 30 Sep] An odd count still
+            ends on a half row: the empty cell trails, it never leads. */""}
+      ${(() => {
+        const cells = [
+          inp("amt", "Loan amount requested", { req: 1, money: 1, ph: "3,200,000", err: "Loan amount is required." }),
+          inp("value", d.purpose === "Purchase" ? "Purchase price" : "Estimated value", { money: 1, ph: "4,900,000" }),
+          refi ? inp("balance", "Existing loan balance", { money: 1, ph: "2,600,000" }) : "",
+          inp("closeBy", "Desired closing date", { type: "date" }),
+          `<div class="fld"><label>Preferred loan structure <span class="opt">(optional)</span></label>
+            <div class="fld__sel">${selCtl("lf:financing", (d.financing ? [{ v: "", label: "\u2014" }] : []).concat(FINANCING_TYPES.map(v => ({ v, label: v }))), d.financing, "Preferred loan structure", "Not sure yet — your broker will advise")}</div></div>`,
+        ].filter(Boolean);
+        let rows = "";
+        for (let i = 0; i < cells.length; i += 2)
+          rows += `<div class="fldrow fldrow--2">${cells[i]}${cells[i + 1] || "<div></div>"}</div>`;
+        return rows;
+      })()}
     </div></div>`;
   }
   if (step === 3) body = `
@@ -19189,8 +19247,18 @@ function renderLoanNew() {
          they are being told they may skip - a caveat attached to the one
          permission the step grants. Skip for now carries both. -->
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Operating numbers</h2></div><div class="card__ct">
-      <div class="fldrow fldrow--2">${inp("noi", "Net operating income (annual)", { money: 1, allOpt: 1, ph: "318,000" })}${inp("rev", "Revenue (annual)", { money: 1, allOpt: 1, ph: "612,000" })}</div>
-      <div class="fldrow fldrow--2">${inp("exp", "Expenses (annual)", { money: 1, allOpt: 1, ph: "294,000" })}<div></div></div>
+      <!-- Revenue and Expenses paired, NOI alone below [Tanya, 30 Sep]. Three
+           fields in a two-column grid always leave one empty cell; the only
+           choice is which field sits beside it. It was Expenses, which is half
+           of a subtraction and reads as an orphan with its other half on the
+           row above. NOI is the figure the other two produce, so alone on the
+           last row it reads as the total under its inputs rather than as a
+           field the grid ran out of room for. Order also now matches how the
+           borrower has the numbers to hand - revenue and expenses off the
+           operating statement, NOI derived from them. The empty cell still
+           trails, never leads, per step 2's rule. -->
+      <div class="fldrow fldrow--2">${inp("rev", "Revenue (annual)", { money: 1, allOpt: 1, ph: "612,000" })}${inp("exp", "Expenses (annual)", { money: 1, allOpt: 1, ph: "294,000" })}</div>
+      <div class="fldrow fldrow--2">${inp("noi", "Net operating income (annual)", { money: 1, allOpt: 1, ph: "318,000" })}<div></div></div>
     </div></div>
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Statements</h2></div><div class="card__ct doclist">
       ${/* These two read "Current, with lease expirations" and "Trailing twelve
@@ -19232,15 +19300,27 @@ function renderLoanNew() {
     </div></div>
     <!-- Sponsor lost its "Optional" chip and its "From your profile. Changes
          here update it, so the next request starts filled in." line the same
-         day as step 3's [Tanya, 28 Sep]. Same reasoning: no star sits on this
-         card, and every label here already dropped its "(optional)" suffix on
-         28 Sep, so the chip was the fourth statement of one fact. The hint
-         described a mechanism rather than asking for anything - the write-back
-         happens whether or not the borrower is told, and the profile page is
-         one click away in the header above. -->
+         day as step 3's [Tanya, 28 Sep]. The chip was the fourth statement of
+         one fact, and the hint described a mechanism rather than asking for
+         anything - the write-back happens whether or not the borrower is told,
+         and the profile page is one click away in the header above. Both stay
+         gone.
+
+         The suffixes came BACK on 30 Sep. The 28 Sep call also dropped them,
+         on the reading that "no star sits on this card" - true of the card and
+         false of the screen. Entity that will borrow carries a star two cards
+         above, and with Use my profile off so does First/Last/Email, next to a
+         Phone that still says (optional). So the borrower meets all three
+         states at once and four bare labels among them, which is the exact
+         condition Baymard measured: under required-only marking users mistake
+         unmarked fields for REQUIRED ones and answer or go hunting. The tag is
+         a contrast label, as 28 Sep said - the correction is only that its
+         unit is the screen, not the card. Steps 1, 2 and 3 and the profile's
+         Company and Sponsor sections were already right under that reading and
+         do not move. [Tanya, 30 Sep] [[optional-required-marking-research]] -->
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Sponsor</h2></div><div class="card__ct">
-      <div class="fldrow fldrow--2">${pfld("invYears", "Years of experience", 0, 1)}${pfld("invDeals", "Deals completed", 0, 1)}</div>
-      <div class="fldrow fldrow--2">${pfld("invLiquidity", "Estimated liquidity", 0, 1)}${pfld("invWorth", "Net worth", 0, 1)}</div>
+      <div class="fldrow fldrow--2">${pfld("invYears", "Years of experience")}${pfld("invDeals", "Deals completed")}</div>
+      <div class="fldrow fldrow--2">${pfld("invLiquidity", "Estimated liquidity")}${pfld("invWorth", "Net worth")}</div>
     </div></div>`;
   }
   if (step === 5) {
@@ -19282,15 +19362,25 @@ function renderLoanNew() {
        ${step < 5 ? `<button class="btn" type="button" data-lnext>Next</button>` : `<button class="btn" type="button" data-lsend>Submit request</button>`}`;
 
   return crumb + `
-    <!-- The new-request subtitle - "Get the request in; your broker asks for
-         the rest afterwards. Save a draft at any step." - came out 28 Sep
-         [Tanya]. Both halves are controls on the same screen: Save draft sits
-         in the footer of every step, and "your broker asks for the rest" is
-         the whole of the After you submit panel to the right. The Edit line
-         stays: it is not a preamble but a rule about whose fields are whose,
-         and nothing else on that screen says it. -->
-    <div class="head"><div><h1>${editing ? "Edit request" : deal ? esc(deal.name) : "New financing request"}</h1>${editing
-      ? `<p>Your own fields. Anything your broker has added to the deal stays theirs.</p>` : ""}</div></div>
+    <!-- This head carries no subtitle on either route now. The new-request
+         one - "Get the request in; your broker asks for the rest afterwards.
+         Save a draft at any step." - came out 28 Sep [Tanya]: both halves are
+         controls on the same screen, Save draft in the footer of every step
+         and "your broker asks for the rest" the whole of the After you submit
+         panel to the right.
+
+         The Edit line - "Your own fields. Anything your broker has added to
+         the deal stays theirs." - was kept that day on the argument that it
+         is not a preamble but a rule about whose fields are whose, and is out
+         30 Sep [Tanya]. The rule it stated is real and still holds; what it
+         could not do was state it usefully here. A borrower opening the edit
+         wizard sees only their own fields - the broker's additions are not on
+         these five steps to be confused for theirs - so the line warned about
+         a collision the screen cannot produce, and it did it above the step
+         track, before the borrower had reached anything. Where the two sets
+         of fields DO sit together is the deal page, and that is where the
+         distinction has to be drawn. -->
+    <div class="head"><div><h1>${editing ? "Edit request" : deal ? esc(deal.name) : "New financing request"}</h1></div></div>
     ${track}
     <div class="frm">
       <div>${body}<div class="frmfoot">${foot}</div></div>
@@ -19302,7 +19392,10 @@ function renderLoanNew() {
             <li><b>You compare quotes here,</b> side by side, and pick one.</li>
             <li><b>You track it to closing</b> on the deal page.</li>
           </ol>
-          <div class="bhint" style="margin-top:10px">Free for borrowers, at every step.</div>
+          <!-- "Free for borrowers, at every step." sat under the list and is out
+               30 Sep [Tanya]. The borrower has already been told it at sign-up and
+               on the landing page; by step one of the request it answers nothing
+               the card is about, which is what happens after submit. -->
         </div></div>
       </aside>
     </div>`;
@@ -21139,6 +21232,11 @@ function render() {
   if (rav) rav.innerHTML = profAv() || "—";
   const mw = document.getElementById("accmenuWho");
   if (mw) mw.innerHTML = `<b>${esc(ME.name)}</b><span>${esc(prof().email)}</span>`;
+  /* the trigger names what is behind it, so it has to lose Your profile on the
+     same role the menu does — a tooltip promising a link that is not there is
+     worse than the duplication it replaced. [Tanya, 30 Sep] */
+  const ab = document.getElementById("accbtn");
+  if (ab) ab.title = isB() ? "Sign out" : "Your profile and Sign out";
   /* the plan card and the trial pill live outside #view, same as the balance
      they replaced — render() pushes state into both */
   const ps = document.getElementById("planSlot");
@@ -23627,6 +23725,7 @@ document.addEventListener("input", e => {
       t.value = digits ? Number(digits).toLocaleString("en-US") : "";
       const pos = Math.max(0, t.value.length - fromEnd); t.setSelectionRange(pos, pos);
     } else d[k] = t.value;
+    if (t.type === "date") t.classList.toggle("is-empty", !t.value);
     if (k === "summary") { const c = document.getElementById("lsumleft"); if (c) c.textContent = (1200 - d.summary.length) + " characters left"; }
     /* the entity select opens its own name fields on "Add a new entity" */
     if (k === "entity") render();
