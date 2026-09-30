@@ -1048,6 +1048,13 @@
   /* divider-free like the card header (Anna, 7 Sep) — padding separates */
   .card__ft { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 2px 18px 12px; font-size: 12.5px; color: var(--muted-foreground); }
   .card__ft a { color: var(--primary); }
+  /* a card__ft--exit modifier lived here for an hour on 1 Oct, to hold a pair
+     of buttons in this strip. It is gone with the buttons: the base rule's
+     2px top is a NOTE-line number - one 12.5px muted sentence under a form,
+     where 2px reads as part of the block above - and a 36px button sitting
+     2px off the footer's own boundary reads as clipped. Padding was the wrong
+     lever. The exits belong outside the card, in a .frmfoot, which is what
+     the deal form's footer already argued at ~line 11155. */
 
   /* ---- Input / Select. ui/input.tsx: h-9 rounded-md border-input px-3 shadow-xs ---- */
   .inp { height: 36px; width: 100%; border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card); padding: 4px 12px; font-size: 14px; box-shadow: var(--shadow-xs); }
@@ -2838,6 +2845,12 @@
      No contact fields (platform has them, [agreed]), no MSA [T], financing
      optional [T], zip required [T]. */
   .frm { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; max-width: 1100px; }
+  /* .frm without an aside [Tanya, 1 Oct]. Help was the only screen using this
+     grid with nothing in the second track, so 300 plus the gap sat reserved and
+     empty and read as a centring choice. 784 is what the first track already
+     measures inside the 1100 (1100 - 300 - 16), so the form does not move a
+     pixel; what goes away is the hole beside it. */
+  .frm--solo { grid-template-columns: minmax(0, 1fr); max-width: 784px; }
   @media (max-width: 900px) { .frm { grid-template-columns: 1fr; } }
   .frm__rail { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 16px; }
   .fld { margin-bottom: 16px; }
@@ -3388,7 +3401,16 @@
   .alert { display: grid; grid-template-columns: 0 1fr; align-items: start; gap: 2px 12px;
     width: 100%; margin-bottom: 14px; padding: 12px 16px;
     border: 1px solid var(--border); border-radius: var(--radius-lg);
-    background: var(--card); color: var(--foreground); font-size: 13px; line-height: 1.45; }
+    background: var(--card); color: var(--foreground); font-size: 14px; line-height: 1.45; }
+  /* 13px until 1 Oct, and 14 is the product's own number [Tanya]. alert.tsx's
+     base is `text-sm` and neither AlertTitle nor AlertDescription overrides it,
+     so both rows render at 14 and the size lives in ONE place - which is why
+     the .alert__desc override below is gone too. 13 and 12.5 are on the list of
+     sizes this prototype invented (see the Prism ramp note): the product runs
+     Tailwind's defaults, so a value off that scale is our drift, not theirs.
+     Cost of the correction is real and accepted: a title that fit one line at
+     13 wraps to two at 14, so the confirmation's band grows ~21px. Measured
+     before and after on every alert reachable in the prototype. */
   .alert:has(> svg) { grid-template-columns: auto 1fr; }
   .alert:has(> .x) { grid-template-columns: 0 1fr auto; }
   .alert:has(> svg):has(> .x) { grid-template-columns: auto 1fr auto; }
@@ -3410,7 +3432,7 @@
      everywhere — the kind of drift that survives because 4 looks deliberate.
      Removed 16 Sep (Tanya: "change to 2px"), leaving the row-gap as the single
      place the number lives. */
-  .alert__desc { color: var(--muted-foreground); font-size: 12.5px; }
+  .alert__desc { color: var(--muted-foreground); }
   /* A run-on one-line layout lived here for part of 16 Sep — the description
      nested inside the title, the whole line at one weight, the row centred
      because a single row has no first line to align to. Put back to two rows
@@ -4133,6 +4155,18 @@
 
   /* ---------- Home — screen 01.4, the post-login landing ---------- */
   .home { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+  /* the confirmation is the one borrower route carrying BOTH a .head and a
+     .home, and until today the head sat outside the wrapper: it ran the full
+     1290 of .page while the cards were capped at 1120 and centred, so the h1
+     started 85px left of the card it introduces [Tanya, 1 Oct]. Every other
+     borrower page is aligned by accident - /loans, /loan and /brokers have a
+     head and no .home, so the two share the page's own width; /home has a
+     .home and no head. Moving the head inside the wrapper is what makes them
+     agree here. Its own 18px bottom margin would then stack on the wrapper's
+     16px gap, so it is dropped and the gap owns the distance, which is what
+     sets every other gap on this page. */
+  .home > .head { margin-bottom: 0; }
   .home__hd { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
   .home__hd h1 { font-size: 22px; font-weight: 600; }
   .home__hd .when { font-size: 13px; color: var(--muted-foreground); margin-top: 3px; }
@@ -5603,11 +5637,7 @@
         <a href="#/brokers" class="b-only" data-nav="brokers" title="Find a broker">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <span class="nm">Find a broker</span></a>
-        <!-- Help, the sheet's sixth borrower rail item (01.5). Opens the plain
-             support request (06.3), not the broker's execution-support process. -->
-        <a href="#/help" class="b-only" data-nav="help" title="Help">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.25"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>
-          <span class="nm">Help</span></a>
+        <!-- Help moved to the rail foot, 1 Oct - see .rail__pre below. -->
         <!-- Opportunities, not Leads [T · sheet comment, 28 Aug 01:02] — "Let's go
              with 'Opportunity'", answering "Lead and Opportunity are one object —
              pick one word". [~] Scope taken as the narrow reading: only the Lead
@@ -5709,6 +5739,25 @@
     </div>
 
     <div class="rail__pre">
+      <!-- Help, the sheet's sixth borrower rail item (01.5), in the FOOT rather
+           than among Home / My deals / Profile / Find a broker [Tanya, 1 Oct].
+           It sat fifth in the work group until today, directly under Find a
+           broker, where it read as a fifth thing to work on. The argument was
+           already written three inches below this line on 3 Sep, about Account:
+           Tony's Flow 01 row 5 "names six rail items including Account, and in
+           the same breath says 'profile actions at the foot of the rail' - Help
+           is in that six too, and Help is not a work destination either". That
+           note ends "Messages and Help are the two still missing"; this closes
+           the Help half. A Mobbin sweep of 28 support screens agrees: every one
+           of the seven products giving support its own rail item pins it in the
+           foot band beside settings and the account switcher - Teachable,
+           Copilot, Monarch, StackAI, Midjourney, DoorDash, Melio - and none
+           puts it beside the working surfaces. The main group answers "what am
+           I working on"; the foot answers "this app, and me".
+           [💡 rec · support sweep, 1 Oct] [[support-request-placement-research]] -->
+      <a href="#/help" class="b-only" data-nav="help" title="Help">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.25"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>
+        <span class="nm">Help</span></a>
       <!-- Account sits in the foot, not among Deals / Lenders / Opportunities.
            It was a peer of those three until a Mobbin sweep of 36 web products
            on 3 Sep: settings is entered as a mode, not visited as a destination
@@ -7032,7 +7081,7 @@ const S = {
      msCtl is a multi-select and "located in Texas or Florida" is a question
      the bare selects could not ask. [~] */
   bkLoc: new Set(), bkType: new Set(), bkGeo: new Set(),
-  help: { subject: "", msg: "", ref: null, deal: "" }, helpTried: false,
+  help: { subject: "", msg: "", sent: false, deal: "" }, helpTried: false,
   /* the loading switch. Off by default and never persisted: it is a way to
      LOOK at a state the fixtures can never produce, not a mode the prototype
      has. See skPage(). */
@@ -16171,7 +16220,7 @@ function renderTrialStart() {
     <button type="button" class="btn btn--full" data-trialgo="#/deals/new">Post your first deal</button>
     <p class="ts__fine">Pressing this starts your 14 days on Accelerator. No card is stored and
       nothing is charged.</p>
-    <div class="ts__alt"><a href="#/home" data-trialgo="#/home">Go to dashboard</a></div>`, "");
+    <div class="ts__alt"><a href="#/home" data-trialgo="#/home">Go to home</a></div>`, "");
 }
 
 function authSubmit() {
@@ -16222,7 +16271,7 @@ function renderBVerify() {
   const body = st === "verified" ? `
     <h1>Email verified</h1>
     <p class="auth__sub">${em} is confirmed. Your broker and LenderPrism will reach you there.</p>
-    <button type="button" class="btn btn--full" data-bverify="go">Go to your dashboard</button>`
+    <button type="button" class="btn btn--full" data-bverify="go">Go to home</button>`
     : st === "error" ? `
     <h1>That link has expired</h1>
     <p class="auth__sub">Verification links last 24 hours and work once. Send a new one to ${em}.</p>
@@ -18093,12 +18142,24 @@ const SKEL = {
     (S.lstep === 1
       ? `<div class="frm"><div>${skCard(4)}${skCard(3)}${skCard(2)}</div><aside>${skCard(3)}</aside></div>`
       : `<div class="frm"><div>${skCard(6)}${skCard(3)}</div><aside>${skCard(3)}</aside></div>`),
-  /* renderLoanSent's .card carries a card__ft (Browse brokers / Open the
-     request) below card__ct, which skCard does not draw — reserved 149px
-     against a live 240px. [~] */
-  lsent:   () => skHead({ title: "Submitted — a broker will review" }) + `<div class="card">
-    <div class="card__ct">${Array.from({ length: 8 }, (_, i) => skLine(i)).join("")}</div>
-    <div class="card__ft"><span class="sk sk--btn"></span><span class="sk sk--btn"></span></div>
+  /* two cards inside .home since 1 Oct, matching the route's rebuild: a
+     headed summary card, then the task card, then the .frmfoot the exits
+     moved out to (Go to home / Open the deal) - outside both cards, so
+     both are plain skCards and the footer is its own row. The 1120 cap comes
+     from .home, which is also what the old single full-width card was
+     missing. [~] */
+  /* the title lost its literal on 1 Oct and the head moved inside .home with
+     it. Both follow the render: the h1 now names the broker the route
+     RESOLVES, so by this file's own rule - a title is real only when the
+     route produces it, and a record we are still waiting for keeps the bar -
+     it cannot be printed ahead of the answer. And the real page puts .head
+     inside the 1120 wrapper, so a skeleton head outside it would draw the
+     grey bar 85px left of the cards it introduces and jump on load. */
+  lsent:   () => `<div class="home">
+    ${skHead()}
+    ${skCard(3)}
+    ${skCard(2)}
+    <div class="frmfoot"><span class="sk sk--btn"></span><span class="sk sk--btn"></span></div>
   </div>`,
   /* the directory's three bare <select>s became three msCtl controls on a
      .msbar, same swap the request list [03.1] made on 22 Sep. .msbar is a
@@ -19408,27 +19469,112 @@ const pfld = (k, label, req, allOpt) => `<div class="fld"><label for="bp_${k}">$
 /* 02.5 Confirmation [sheet]: "Submitted - a broker will review", status
    Submitted; with no broker, the door is Find a broker; anything skipped is
    listed as the tasks it became. No countdown: the 24-hour window is the
-   broker's [04.4]. */
+   broker's [04.4].
+
+   Rebuilt to the file's own card anatomy 1 Oct [Tanya]. Three things were
+   this route's alone and nothing else's: it was the only borrower page with
+   no .home, so a one-sentence paragraph ran the full 1306px of .page rather
+   than the 1120 every other borrower page reads at; its card was the only
+   one of its size with no card__hd; and the task rows sat under a .bsec,
+   which elsewhere labels a filter facet, not a list of things to do. The
+   same rows on Home and on the deal page live in `card card--att` under a
+   card__hd h2 with the count in the header's .r - so that is where they
+   live here. The count came out of .facts with them: it was the .r chip and
+   the "Still to add" fact saying the same 2 twice. */
 function renderLoanSent(d) {
   const c = d.conn || {}, b = c.st === "pending" ? brokerById(c.broker) : null;
-  const todo = bOpenTasks(d);
+  /* the requested DOCUMENTS, not the tasks made from them [Tanya, 1 Oct]. At
+     submit lCommit writes one doc and one task per skipped slot, so the two
+     lists hold the same things and bNeeded is the one the deal's own
+     Documents tab reads - the borrower meets these rows again there, and on
+     the wizard's step 5 they just left. Uploading is a .docrow everywhere in
+     this file: file glyph, name in the 288px column, note, and the 32px
+     rowkebab carrying ULIC. The att__row this list used until today is the
+     TASK row, right on Home where uploads sit beside signatures and quote
+     choices, and wrong here where every row is a document. */
+  const need = bNeeded(d);
+  /* NOT in a card [Tanya, 1 Oct] - the same call the deal form's own footer
+     records at ~line 11155, and for the same reason: card__ft is built for the
+     muted sentence under a card's content, not for a pair of buttons, and the
+     exits are not part of either card's subject. They leave the page. The
+     wizard the borrower just came off ends the identical way - a .frmfoot on
+     the page background under the last card - so the two consecutive screens
+     put their commit row in the same place. .home is a 16px flex column, so
+     the gap above comes from the stack rather than a margin here. */
+  const foot = `<div class="frmfoot">
+        ${b ? `<a class="btn btn--outline" href="#/home">Go to home</a>` : `<a class="btn btn--outline" href="#/brokers">Find a broker</a>`}
+        <a class="btn" href="#/loan/${d.id}">Open the deal</a>
+      </div>`;
   return `
-    <div class="head"><div><h1>Submitted — a broker will review</h1><p>${esc(d.name)} · ${money(d.amt)} · ${esc(d.purpose)} · ${esc(d.city)}, ${esc(d.state)}</p></div></div>
-    <div class="card"><div class="card__ct">
-      <div class="facts" style="margin-bottom:16px">
-        <div class="fact"><div class="k">Status</div><div class="v">${bStatus(d)}</div></div>
-        <div class="fact"><div class="k">Broker</div><div class="v">${b ? esc(bName(b)) : "None yet"}</div></div>
-        <div class="fact"><div class="k">Still to add</div><div class="v">${todo.length || "Nothing"}</div></div>
-        <div class="fact"><div class="k">Cost to you</div><div class="v">Free</div></div>
+    <div class="home">
+      ${/* the h1 follows b [Tanya, 1 Oct]. "Submitted - a broker will review"
+            stood on both variants and was a promise the no-broker body then
+            withdrew one line below it: no Pro broker covers this property type
+            in this state, so nobody reviews anything until the borrower goes
+            and picks one. The headline and the paragraph argued. It was not
+            right on the matched variant either - conn.st "pending" means the
+            request was OFFERED to that broker, not taken on, and "will review"
+            states as settled the one thing this screen is waiting for. Both
+            now say what has actually happened: a named person holds it, or
+            nobody does and that is the borrower's next move. */""}
+      <div class="head"><div><h1>${b ? `Submitted — ${esc(bName(b))} has your request` : "Submitted — pick a broker to take it on"}</h1><p>${esc(d.name)} · ${money(d.amt)} · ${esc(d.purpose)} · ${esc(d.city)}, ${esc(d.state)}</p></div></div>
+      <div class="card">
+        <div class="card__hd"><h2>What happens next</h2></div>
+        <div class="card__ct">
+          <div class="facts">
+            <div class="fact"><div class="k">Status</div><div class="v">${bStatus(d)}</div></div>
+            <div class="fact"><div class="k">Broker</div><div class="v">${b ? esc(bName(b)) : "None yet"}</div></div>
+            <div class="fact"><div class="k">Cost to you</div><div class="v">Free</div></div>
+          </div>
+          ${/* the sentence is an INFO alert, not bare body copy [Tanya, 1 Oct].
+                Both branches say the same kind of thing - what is happening to
+                the request now and what the borrower does not have to do - which
+                is the file's own definition of info: a state the reader should
+                know, with nothing asked of them. The facts above are data; this
+                is the page talking, and the band is what separates the two.
+                Title-only, no .alert__desc: one sentence, same build as the
+                trial notice. The inline margin replaces the p's own 16px top
+                and cancels .alert's 14px bottom, since this is the last thing
+                in the card. */""}
+          <div class="alert alert--info" role="status" style="margin:16px 0 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <div class="alert__title">${b
+              ? `${esc(bName(b))}, a Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}, has your request. When they take it on you will see them on the deal, and they take it to lenders from there.`
+              : `No Pro broker on LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. Pick one from the directory and send them the deal; nothing goes to lenders before a broker takes it on.`}</div>
+          </div>
+        </div>
       </div>
-      ${b ? `<p style="margin:0 0 10px; line-height:1.55"><b>What happens next.</b> ${esc(bName(b))}, a Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}, has your request. When they take it on you will see them on the deal, and they take it to lenders from there.</p>`
-        : `<p style="margin:0 0 10px; line-height:1.55"><b>What happens next.</b> No Pro broker on LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. Pick one from the directory and send them the deal; nothing goes to lenders before a broker takes it on.</p>`}
-      ${todo.length ? `<div class="bsec" style="margin-top:14px">Still to add</div>${todo.map(t => bTaskRow(d, t, false)).join("")}` : ""}
-    </div>
-    <div class="card__ft">
-      ${b ? `<a class="btn btn--outline" href="#/home">Go to dashboard</a>` : `<a class="btn btn--outline" href="#/brokers">Find a broker</a>`}
-      <a class="btn" href="#/loan/${d.id}">Open the deal</a>
-    </div></div>`;
+      ${/* a PLAIN card, not card--att [Tanya, 1 Oct]. The gold wash is the
+            attention signal Home's Action required and the deal tab's
+            "N documents needed" wear, and both mean the same thing: someone
+            has asked you for this and is waiting. Nobody has asked for these.
+            The borrower chose to skip them ninety seconds ago and the page
+            they are on says the request is in. Gold here argues with the h1.
+            It is the same distinction the rows below make between --pend and
+            --none, one level up - and step 5's Documents card, which holds
+            the identical --none rows, is a plain card too. */""}
+      ${need.length ? `<div class="card">
+        ${/* no count in the header [Tanya, 1 Oct] - the rows are right there
+              and short, so the number restates what the list already shows.
+              Same call as the lenders card header. */""}
+        <div class="card__hd"><h2>Still to add</h2></div>
+        ${/* --none, not --pend [Tanya, 17 Sep, recorded at the response list].
+              --pend means the broker has asked and is waiting on the borrower;
+              it is not the treatment for ABSENT. These rows are absent - the
+              borrower skipped them at submit and nobody has asked yet - and a
+              whole list of --pend renders as grey fills with muted names and an
+              upload glyph sitting on top, which is the shape of a disabled
+              control on the only rows that carry an action. --none is what the
+              wizard's step 5 slots wear, which is where the borrower last saw
+              these two rows. */""}
+        <div class="card__ct doclist">${need.map(x => `<div class="docrow docrow--none">
+          <span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(x.cat)}</span>
+          <span class="docrow__note">Left to add after you submitted</span>
+          <div class="docrow__acts"><a class="rowkebab" data-tip="Upload" aria-label="Upload ${esc(x.cat)}" href="#/loan/${d.id}/upload/${x.id}">${ULIC}</a></div>
+        </div>`).join("")}</div>
+      </div>` : ""}
+      ${foot}
+    </div>`;
 }
 
 /* 03.2 Deal workspace, rebuilt 28 Sep [sheet 03.2-03.8]. Five tabs, the
@@ -19831,29 +19977,102 @@ function bAccNotify() {
 const HELP_SUBJECTS = ["A deal", "A broker", "My account", "Something is wrong", "Something else"];
 function renderHelp() {
   const h = S.help, tried = S.helpTried;
-  if (h.ref) return `
+  /* No reference number, and no reply-time promise [Tanya, 1 Oct]. The sheet
+     row asks for "confirmation with reference" and we built one - LP-24xxx off
+     a client-side hash - but eight comparable confirmations were read on Mobbin
+     and NONE of them returns a reference: Teachable, Supabase, Zapier, Monarch
+     and Hashnode name the reply address and stop; Whop sends you to a
+     resolution centre, Wrike hands you a link to the request, Cofounder and
+     DoorDash list your tickets beside the form. The one exception proves it -
+     Aboard issues an access code precisely BECAUSE the case is tracked without
+     an account. A signed-in product gives you a route back to the thread, not
+     a string to keep. Ours had no surface that accepted it, and the copy still
+     told the borrower to "quote the reference if you write again" - an
+     instruction to use it in a channel we have not said exists. "Usually within
+     one business day" went the same day and for the same reason: no source
+     document sets a support SLA. Both come back the moment question 138 says
+     what receives these. [[support-request-placement-research]] */
+  if (h.sent) return `
     <div class="head"><div><h1>Help</h1></div></div>
     <div class="card"><div class="card__ct"><div class="empty">
-      <b>Sent — reference ${esc(h.ref)}</b>
-      <p>We reply by email to ${esc(BPROF.email)}, usually within one business day. Quote the reference if you write again.</p>
-      <div class="acts"><button class="btn btn--outline" type="button" data-helpnew>Send another</button><a class="btn" href="#/home">Back to dashboard</a></div>
+      <b>Sent</b>
+      <p>We reply by email to ${esc(BPROF.email)}.</p>
+      <div class="acts"><button class="btn btn--outline" type="button" data-helpnew>Send another</button><a class="btn" href="#/home">Back to home</a></div>
     </div></div></div>`;
   const deals = loansNow().filter(d => d.stage !== "Draft");
   return `
-    <div class="head"><div><h1>Help</h1><p>Ask the LenderPrism team. Questions about a deal go to your broker first, if you have one.</p></div></div>
-    <div class="frm"><div>
+    ${/* The subhead carries the routing rule, and it is the only place that
+          states it [Tanya, 1 Oct]. It went out earlier today into a "Before you
+          write" aside that named the assigned brokers, and both halves of that
+          came back out the same evening.
+
+          The aside's second item - "Something wrong on screen? Say what you did
+          and what you expected." - restated the message placeholder verbatim,
+          which is the fault the subhead had just been trimmed for. Removing it
+          left one statement, and one statement is not a card: a single-item
+          <ol> claims a sequence, and a 300px panel holding one sentence beside
+          a three-field form reads as something that failed to load. The wizard
+          asides it was copying carry four items, or a whole cost table.
+
+          The honest reading is that the card was built to fill the empty grid
+          track, and the empty track was the defect. It is fixed where it lives,
+          in the CSS (.frm--solo above), so the copy no longer has to justify a
+          column. Naming the brokers went with it - a nice-to-have that only
+          worked at card width, and "your broker" then three names is a number
+          disagreement the subhead cannot carry gracefully. The deal select
+          beneath already scopes the message to one deal. */""}
+    ${/* "Questions about a deal" -> "Deal questions", 1 Oct [Tanya], to hold
+          the subhead on one line. .head p is capped at 66ch, which resolves to
+          577.5px at 14px, and the old wording measured 578 - over by half a
+          pixel, so it broke to a second line carrying the word "one". The cap
+          is the file's own reading measure and is not the thing to change; the
+          sentence is. At 527px this clears it with room, and nothing is lost:
+          the routing rule and its hedge both survive. */""}
+    <div class="head"><div><h1>Help</h1><p>Ask the LenderPrism team. Deal questions go to your broker first, if you have one.</p></div></div>
+    <div class="frm frm--solo"><div>
       <div class="card"><div class="card__ct">
-        <div class="fld${tried && !h.subject ? " err" : ""}"><label>About <span class="req">*</span></label>
-          <div class="fld__sel">${selCtl("hf:subject", HELP_SUBJECTS.map(v => ({ v, label: v })), h.subject, "About", "Pick a topic")}</div>
-          ${tried && !h.subject ? `<div class="errmsg">Pick what it is about.</div>` : ""}</div>
-        <div class="fld"><label>Deal <span class="opt">(optional)</span></label>
-          <div class="fld__sel">${selCtl("hf:deal", (h.deal ? [{ v: "", label: "\u2014" }] : []).concat(deals.map(d => ({ v: d.id, label: d.name }))), h.deal, "Deal", "Not about a specific deal")}</div></div>
+        ${/* About and Deal pair into one row [Tanya, 1 Oct]. They ran full
+              width at 746 each - two selects holding five short topics and a
+              deal name, the widest control-to-content ratio in the borrower
+              flow, on the only borrower form with no paired fields at all.
+              At 367 they match the wizard's grid exactly and the card loses a
+              row. The message keeps the full width: it is the one control here
+              whose content can fill it. */""}
+        <div class="fldrow fldrow--2">
+          <div class="fld${tried && !h.subject ? " err" : ""}"><label>About <span class="req">*</span></label>
+            <div class="fld__sel">${selCtl("hf:subject", HELP_SUBJECTS.map(v => ({ v, label: v })), h.subject, "About", "Pick a topic")}</div>
+            ${tried && !h.subject ? `<div class="errmsg">Pick what it is about.</div>` : ""}</div>
+          <div class="fld"><label>Deal <span class="opt">(optional)</span></label>
+            <div class="fld__sel">${selCtl("hf:deal", (h.deal ? [{ v: "", label: "\u2014" }] : []).concat(deals.map(d => ({ v: d.id, label: d.name }))), h.deal, "Deal", "Not about a specific deal")}</div></div>
+        </div>
         <div class="fld${tried && !h.msg.trim() ? " err" : ""}"><label for="hf_msg">Message <span class="req">*</span></label>
           <textarea class="inp" id="hf_msg" data-hf="msg" rows="6" placeholder="What happened, and what you expected.">${esc(h.msg)}</textarea>
           ${tried && !h.msg.trim() ? `<div class="errmsg">Say what you need.</div>` : ""}</div>
-        <div class="hint">We reply to ${esc(BPROF.email)}. Change it in <a href="#/account/password">Account</a>.</div>
-      </div><div class="card__ft"><button class="btn" type="button" data-helpsend>Send</button></div></div>
-    </div></div>`;
+      </div>
+      ${/* The reply-address note moved INTO the footer and Send moved right
+            [Tanya, 1 Oct], so the two sit on one line - note left, button
+            right, baselines aligned. .card__ft was already built for exactly
+            this: flex, align-items center, justify-content space-between,
+            12.5px muted. With one child that declaration did nothing and the
+            button simply sat left under a note on its own row; with two it is
+            the whole layout, no new CSS. The note class is still .bhint rather
+            than a bare div - the footer's own 12.5/muted would cover it, but
+            .bhint says so explicitly and survives a restyle of the footer.
+            Below 900 the footer stacks (flex-direction column, align-items
+            flex-start), so the pair returns to two rows on a narrow screen,
+            which is the file's existing rule and the right one.
+
+            .bhint, not .hint, since 1 Oct: every .hint rule in this file is
+            scoped to an ancestor - .fld, .empty, .dz, .lside, .lp, .mdl__bd -
+            and this note had none of them, so it matched nothing. Measured
+            14px in full ink #0F172A, LARGER and darker than the 13px labels it
+            sits under: a supporting note outweighing the fields it supports.
+            [[prototype-classes-are-scoped]] */""}
+      <div class="card__ft">
+        <span class="bhint">We reply to ${esc(BPROF.email)}. Change it in <a href="#/account/password">Account</a>.</span>
+        <button class="btn" type="button" data-helpsend>Send</button></div></div>
+      </div>
+    </div>`;
 }
 /* 01.1 The landing page's borrower branch, rewritten 28 Sep [sheet 01.1]:
    the promise is a free client portal - "simple, free client portal, not a
@@ -21267,6 +21486,26 @@ function render() {
      error copy (ERR_WHAT_B.home) and in the go-to buttons, which is what the
      broker side already does under a Home-labelled rail, so the two are not in
      conflict: Home is the destination's name, a dashboard is what it is.
+
+     HALF REVERSED, 1 Oct [Tanya: "we use 'home' for this page"]. The clause
+     above held for the error PROSE and does not hold for the BUTTONS. A
+     sentence may call the page what it is; a control has to name where it
+     goes, and a borrower reading "Go to dashboard" under a rail whose only
+     matching item says Home is being sent somewhere the IA does not list.
+     EVERY go-to button now reads Home - the borrower's three (submitted
+     request, email verified, Help sent) and the broker's one (trial start),
+     which is the whole set, both roles, since the rail markup is shared.
+     BOTH error enums keep "your dashboard": ERR_WHAT is prose, not labels -
+     it already says "your deals" where the rail says Deals and My deals, and
+     "the lender network" where the rail says Lenders - and the sentence it
+     feeds, "LenderPrism could not load ___", turns "your home" into a
+     residence. The rule is controls name the destination, prose describes it.
+
+     STILL OPEN AGAINST THE PRODUCT [~]: the shipped rail labels this page
+     Dashboard at /dashboard for all three roles - app-nav-sidebar.tsx:74, 85
+     and 97, each already carrying the Home icon - and registration-success
+     says "Go to Dashboard Now". Home is a rename the product has not made:
+     route, label and every button. Handoff item, not a copy sweep.
      Find a broker shows only while no deal has a broker assigned [sheet
      01.5, 04.1] - a borrower with a broker reaches the directory from a deal
      that has none, which is where the need is. [~] The route itself stays
@@ -22499,11 +22738,10 @@ document.addEventListener("click", e => {
   if (t.closest("[data-helpsend]")) {
     S.helpTried = true;
     if (!S.help.subject || !S.help.msg.trim()) { render(); return; }
-    /* a reference the confirmation can quote; sample, stable per message */
-    S.help.ref = "LP-" + (24100 + (S.help.msg.length * 7 + S.help.subject.length) % 800);
+    S.help.sent = true;
     S.helpTried = false; render(); return;
   }
-  if (t.closest("[data-helpnew]")) { S.help = { subject: "", msg: "", ref: null, deal: "" }; S.helpTried = false; render(); return; }
+  if (t.closest("[data-helpnew]")) { S.help = { subject: "", msg: "", sent: false, deal: "" }; S.helpTried = false; render(); return; }
   const inert = t.closest("[data-inert]");
   if (inert) {
     e.preventDefault();
