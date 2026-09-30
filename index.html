@@ -4371,16 +4371,22 @@
   .lpid h1 { text-box: trim-both cap alphabetic; }
   .lpid .sub { text-box: trim-both cap alphabetic; }
   .lpid .hd__grp { display: block; }
-  /* the badge centres on the name's CAP height, not on its baseline: an
-     inline box aligns its own baseline to the line's, which drops the 23.4px
-     chip 4.9px below the middle of a 20px cap. The raise is a transform and
-     not vertical-align, because the chip is taller than the trimmed line box
-     and so drives the box's own top: shifting it by vertical-align moved the
-     cap it was being measured against, and each correction only closed half
-     the gap. A transform paints without touching layout, so the line box —
-     and the whole header's optical centring on the avatar — stays put. */
-  .lpid .hd__grp .badge { margin-left: 8px; vertical-align: baseline;
-    transform: translateY(-4.9px); }
+  /* the badge centres on the name's CAP height, and as of 30 Sep it does that
+     with no nudge at all. The chip is 18px tall (1 border + 2 pad + 12 line +
+     2 pad + 1) and its own baseline sits 9px down, so baseline-aligned its
+     centre lands on the line's baseline; the painted cap band runs 158.88 to
+     177.79 at the h1's 26px, whose middle is 177.79 - 18.91/2 = 168.34. The
+     chip's centre measures 168.29. Nothing to correct — 0.05px.
+
+     It carried translateY(-4.9px) until today, which was right when the chip
+     was 23.4px against a 20px cap. Both shrank, the raise did not, and the
+     badge rode high. **Do not re-derive this from the line box.** The h1 sets
+     text-box: trim-both cap alphabetic, so an inline strut reports a baseline
+     9.5px above where the glyphs are actually painted, and a cap band computed
+     from that strut puts the centre at 158.83 — which is the TOP of the
+     letters, not their middle. Draw a 1px rule at the candidate y over the
+     rendered name and look; the arithmetic lies here and the render does not. */
+  .lpid .hd__grp .badge { margin-left: 8px; vertical-align: baseline; }
   /* one title style across both grains: line-height sat on .hd__grp, which
      only the contact header wears, so an account title kept .head h1's 1.45
      and the two headers trimmed from different line boxes. It belongs on the
@@ -4529,7 +4535,8 @@
   .lnsplit--solo { grid-template-columns: minmax(0, 1fr); gap: 0; }
   /* the count rides the button the way the tab counts ride theirs, so applied
      filters stay legible with the rail shut - the one thing that makes hiding
-     it safe */
+     it safe. Shut only: with the rail open its "Filters N" header already
+     says it, and the button repeated it (Tanya, 30 Sep: "it's duplication") */
   .lrailtog { flex: 0 0 auto; gap: 7px; }
   /* outline, not filled, 14 Sep (Tanya: "change count style to outlined").
      It was a hand-rolled navy pill at 11px/700 - a fourth copy of Badge, and
@@ -12500,7 +12507,7 @@ function lRailToggle() {
   return `<button class="btn btn--outline btn--sm lrailtog" type="button" id="lrailtog"
     aria-expanded="${open}" aria-controls="lfr"
     title="${open ? "Hide the filter rail and give the table its width" : "Show the filter rail"}"
-    >${SLIDERS}<span class="btxt">${open ? "Hide filters" : "Show filters"}</span>${n ? `<span class="badge badge--outline ct">${n}</span>` : ""}</button>`;
+    >${SLIDERS}<span class="btxt">${open ? "Hide filters" : "Show filters"}</span>${n && !open ? `<span class="badge badge--outline ct">${n}</span>` : ""}</button>`;
 }
 
 function lsBar() {
