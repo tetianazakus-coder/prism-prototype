@@ -53,6 +53,8 @@
     --accent:                var(--brand-accent-light);
     --accent-foreground:     var(--brand-navy-900);
     --destructive:           rgb(220, 38, 38);
+    /* Tailwind red-700, overdue text on light surfaces [Tanya, 1 Oct: "darker shade"] */
+    --destructive-strong:    rgb(185, 28, 28);
     --border:                var(--brand-border-300);
     --input:                 var(--brand-border-200);
     --ring:                  var(--brand-navy-900);
@@ -72,28 +74,28 @@
     --color-success:          #479E28;
     --color-warning:          #c2410c;
     --color-congress-blue:    #023E8A;
-    /* The one tone the shipped system does not have. globals.css holds
-       --color-success and --color-warning (and --destructive); there is no
-       info token, which is why every blue strip in this file carried inline
-       hex. Bound to the brand ramp rather than to a new colour: navy-800 is
-       #023E8A, 10.4:1 on white, and saturated enough that a 6% tint still
-       reads blue — navy-600 was tried first and washed out to grey at the
-       same strength. Worth stating plainly rather than implying we dodged
-       it: navy-800 and --color-congress-blue are the same hex, and the
-       landing playbook spends that hue on the BORROWER audience accent. The
-       two uses do not meet (an audience pill is not a page notice), but if
-       Chris wants them separated, this is the token to move. Question 95.
-       [💡 rec] */
-    --color-info:             var(--brand-navy-800);
-    /* the info tone needs two hues, not one. The icon wants the navy - it is a
-       glyph, it should read as the brand and it has no lightness problem. The
-       FILL cannot use it: navy-800 is dark and low-chroma, so any mix light
-       enough to sit behind prose has drained the blue out of itself, which is
-       the trap 14 Sep fell into from the other side - /9 was light and grey,
-       /15 is blue and dark, and neither is a light blue. brand-blue-400 is
-       already in the palette and is vivid enough to stay blue at a tenth of
-       the strength. [Tanya, 20 Sep] */
-    --color-info-fill:        var(--brand-blue-400);
+    /* --color-info and --color-info-fill are RETIRED, 1 Oct [Tanya]. There is
+       no info tone. The pair existed for .alert--info and nothing else, and
+       that tone is gone: Prism's Alert ships four faces - default, success,
+       warning, destructive - and the component's own description rules that
+       DEFAULT IS THE INFO-SHAPED NEUTRAL, because it already carries
+       Icon/info and a second blue band beside it reads as two info banners.
+       That ruling is 24 Sep and it weighed this exact ground, blue/wash
+       #E8ECFD, before removing it; the prototype never followed, which is the
+       whole of the drift. See .alert below for what the base now draws.
+
+       Retired rather than left standing. An unbound token in the ramp is how
+       the next reader concludes the tone is still there - the trap the orange
+       family is already filed under. The history the two carried, since it is
+       the only place it is written down: navy-800 was picked on 14 Sep so a
+       tint would still read blue where navy-600 washed out to grey [T]; 20 Sep
+       split it into two hues because /9 came out light-and-grey and /15 came
+       out blue-and-dark, and navy-800 has no setting that is both, so the fill
+       moved to brand-blue-400 at /12 and the glyph stayed navy. Question 95 -
+       whether the info hue should be separated from the borrower audience
+       accent, which is the same #023E8A - closes with them. blue/wash stays in
+       Prism bound by nothing, as the documented ground of a tone neither side
+       now draws. */
 
     /* radius: --radius 0.5rem, sm = -4px, md = -2px, xl = +4px */
     --radius:    0.5rem;
@@ -112,6 +114,11 @@
     --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     --tracking-normal: -0.011em;
+    /* globals.css:70 computes the tight step off normal rather than stating
+       it, so the two move together if normal is ever retuned. Copied in that
+       form on purpose - a flat -0.036em would be right today and silently
+       wrong the day --tracking-normal changes. [Tanya, 1 Oct] */
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
 
     /* SIDEBAR_WIDTH_ICON is ui/sidebar.tsx's. SIDEBAR_WIDTH there is 16rem;
        this narrows it to 14rem — a proposal, not the shipped value. */
@@ -319,6 +326,19 @@
      squashing into it; the generated SVG is already square. */
   .bav__img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .bav--lg { width: 64px; height: 64px; font-size: 20px; }
+  /* 46 [Tanya, 2 Oct; 64 first, then 56, then 48, then this]. 46 is the third
+     stop on the Prism Avatar set's Size axis - read live off set 321:16, which
+     is 25 variants across Size 32/44/46/56/64, Type and Surface. 48 was tried
+     and left: it is not on that axis, however much it looks like it should be.
+     [~] The axis and the code do not meet. avatar.tsx is size-8 (32) and its
+     call sites override to size-7/9/10/12 - 28/32/36/40/48 on the Tailwind
+     scale - so 44, 46, 56 and 64 have no Tailwind equivalent and cannot be
+     built without arbitrary values. 32 is the only size in both. Worth a
+     question to whoever owns the ramp; the prototype follows the library here.
+     Font keeps the ramp's ~0.33, same 15 as .bav's 44 two pixels below. Only
+     the initials fallback reads it - bAvatar returns an <img> either way - so
+     it matters on .bpart rows, not here, where a mark or a photo always draws. */
+  .bav--md { width: 46px; height: 46px; font-size: 15px; }
   .bid { display: flex; align-items: center; gap: 12px; min-width: 0; }
   /* the text column only — the avatar and the Verified badge are spans too */
   .bid > div > b { display: block; font-size: 15px; }
@@ -355,6 +375,45 @@
   .bfact { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .bfact dt { font-size: 13px; color: var(--muted-foreground); }
   .bfact dd { margin: 0; font-size: 13px; font-weight: 500; text-align: right; }
+  /* the lender drawer's .crow in a 340px rail: its 108px label column is
+     sized for "Contact person", and here it left the email ~130px. Labels are
+     one word, so the column hugs them. */
+  .bbroker .crow .k { width: 44px; }
+  /* Participants card: the .bid person row at list size, divider inset like
+     the overview's other lists; the status chip is the invitation */
+  /* no dividers between people [Tanya, 2 Oct] - the same call as the broker
+     card's contact rows: avatars already mark where each person starts, so a
+     rule only repeated them. 8px a side leaves a 16px gap between rows. */
+  .bpart { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  .bpart:first-child { padding-top: 2px; }
+  /* library Avatar, Type=Initials/Image, Surface=Light, Size=32: 14 Regular on muted */
+  .bpart .bav { flex: none; width: 32px; height: 32px; font-size: 14px; font-weight: 400; }
+  .bpart__tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; font-size: 13px; color: var(--muted-foreground); }
+  .bpart__tx b { font-size: 14px; font-weight: 500; color: var(--foreground); }
+  .bpart__nm { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .bpart__nm b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* badge.tsx text-xs carries a 16px line: 16 + py-0.5 + 1px border = 22. The
+     inherited line-height made it 23 here. (Figma's Badge reads 20 because its
+     stroke sits inside the box; the code's border adds.) */
+  .bpart__nm .badge { flex: none; line-height: 16px; }
+  /* a fact never splits from its words: "2 of 3 / in" would read as a typo */
+  .bpart__sub span { white-space: nowrap; }
+  /* no rule between the two rows [Tanya, 1 Oct]: two lines under a bio read
+     as a pair, not a table */
+  .bbroker .crow { border-top: 0; }
+  /* 8, on Prism's 4-step scale [Tanya, 2 Oct; 10 tried and reverted]; the
+     drawer's .crow keeps its 11 */
+  .bbroker .crow { gap: 8px; }
+  /* 8, down from the drawer's 9 [Tanya, 2 Oct; 6 tried, then aligned]: 9 a
+     side put 18px between two one-line rows that carry no divider, so the pair
+     read as two separate facts. 8 matches .bpart above it, so both lists in
+     this rail leave 16px between rows - one rhythm down the whole card stack,
+     which beats tuning each list to its own content. */
+  .bbroker .crow { padding: 8px 0; }
+  .bbroker .crows { margin-top: 8px; }
+  /* full width, as .plancard .btn and .pack .btn already do for a card's one
+     action - a 36px button floating left in a 340px card reads as unfinished */
+  .bbroker__msg { width: 100%; margin-top: 14px; }
   .lside .blinks { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
   .bcta__trust { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 14px;
     border-top: 1px solid var(--border); font-size: 12.5px; color: var(--muted-foreground); }
@@ -403,14 +462,46 @@
      way in and cannot simply be deleted. Its separator goes with it: what is
      left is identity, one rule, Sign out. */
   .app--borrower .rail .acc-prof { display: none; }
-  .bstagecard { margin-bottom: 14px; }
+  /* .bstagecard, .bdates and .btlfoot all stood here and all are gone: the
+     full-width progress card above the tabs, its four-cell dates row, and the
+     two-cell footer that row shrank into under the timeline [Tanya, 2 Oct:
+     "can this be part of any other section?"]. The answer was in the tracker.
+     Its four cells were never one kind of fact:
+     · "In this stage since" and "Submitted" are stages, and are rows in the
+       timeline list now, dated off the same status events.
+     · "Desired closing" is a field of the request - tracker row 12 lists
+       "desired closing date" among the five the wizard collects - so it reads
+       back in the Financing request summary that row 20 asks for, beside the
+       other four. Existing loan balance went with it: same row, same wizard
+       card, and it had never been read back anywhere at all.
+     · "Next milestone" is a date on a stage. It spent 2 Oct as a tenth row
+       in the list, then as a one-cell footer under it, and both were wrong for
+       the same reason: read against the list, three of the four milestones in
+       the fixtures WERE the next stage under another name. Only the date was
+       new, so the date went onto the next stage's own row and the whole block
+       went away. See bTimeline.
+     Nothing is left to put in a footer, which is the point. Each of the four
+     had a section already; the box was what made them look like one kind of
+     thing. */
+  /* overdue: the only red on the page, so it is found first. Text only - the
+     row keeps the washed panel's gold tile; a red tile would turn the panel
+     into an error state for what is a reminder. */
+  .att__late { color: var(--destructive-strong); font-weight: 400; }
+  /* .att__tx span is display:block (the sub-line), which would also catch a
+     status span nested inside that sub-line and drop it to a third line */
+  .att__tx span .att__late, .att__tx span .att__hot { display: inline; margin: 0; }
+  .att__tx span .att__late { color: var(--destructive-strong); }
+  .att__tx span .att__hot { color: var(--color-brand-gold-text); }
+  /* borrower due-soon notes are regular like Overdue [Tanya, 1 Oct]; span only,
+     so the broker Home's <i class="att__hot"> keeps its 600 */
+  .att__tx span span.att__hot, .lwhen .att__hot { font-weight: 400; }
   .bstage { color: var(--primary); flex-wrap: wrap; row-gap: 8px; }
   .bstage .lbar { min-width: 10px; max-width: 28px; }
   .bstage .lstep.now .lt { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
   .bstage a.lstep { color: inherit; text-decoration: none; }
   .bstage a.lstep:hover .lt { text-decoration: underline; }
-  .bstage--off { font-size: 13px; }
-  /* Five steps can afford a real connector; bStageBar's nine cannot. Scoped to
+  /* Five steps can afford a real connector; the deal's nine could not, which
+     is part of why they are a column now (see bTimeline). Scoped to
      --wiz so lengthening one track does not overflow the other. The connector
      is the progress bar, so it has to read as a line rather than a tick.
      Three classes deliberately: .ltrack .lbar sets max-width 64 at line ~3570,
@@ -426,8 +517,9 @@
      tracks draw [Tanya, 28 Sep]. The split is deliberate and it is ONE
      component with a property, not two components: a wizard is a form you
      walk, so "which of the five am I on, and how many are left" is the
-     question and a numeral answers it; bStageBar and the listing banner are
-     status readouts where the stage NAME is the question and a numeral would
+     question and a numeral answers it; the Deal timeline and the listing
+     banner are status readouts where the stage NAME is the question and a
+     numeral would
      be answering one nobody asked. ReUI's StepperIndicator takes the same
      position - same part, numeral or not.
 
@@ -446,7 +538,28 @@
   .ltrack.bstage--wiz .lstep .ldot { width: 26px; height: 26px; border-radius: 999px;
     display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
   .ltrack.bstage--wiz .lstep { gap: 9px; }
-  .ltrack.bstage--wiz .lstep .ldot b { font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* the unwalked disc's ring matches its bar, 1 Oct [Tanya]. Both parts say
+     "not yet" and they were saying it at two different weights: .lstep.todo
+     carries opacity .5 and .lbar.todo carries .25, so the ring composited to
+     rgb(128,147,172) beside a bar at rgb(192,201,213) - the ring reading as
+     the stronger of the two when it is the one further from being reached.
+     Halving the ring's own alpha inside a step already at .5 lands it on the
+     bar's .25 exactly, rather than dropping the whole step to .25 and taking
+     the label down with it. currentColor, not a hex, so a tone swap still
+     carries - the same reason the fill rule is written the way it is above. */
+  .ltrack.bstage--wiz .lstep.todo .ldot { border-color: color-mix(in srgb, currentColor 50%, transparent); }
+  /* the numeral is nudged DOWN 0.67px, 1 Oct [Tanya]. Flex centring centres the
+     line box, and a line box is centred on the font's own ascent/descent, not on
+     the ink: Inter reserves descender room under every digit and digits have no
+     descender, so the figure lands high inside its own box. Measured on the
+     render rather than computed - three discs screenshotted at 12x and reduced
+     to the ink bounding box of 3, 4 and 5 put the numeral's centre 0.667, 0.708
+     and 0.625 px above the disc's. The font metrics predict a near-perfect
+     centre, which is the trap: the strut agrees with itself. Horizontal drift
+     is per-glyph sidebearing (-0.17, +0.21, -0.13) and is left alone - a single
+     nudge would fix one digit and break the others. */
+  .ltrack.bstage--wiz .lstep .ldot b { font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums;
+    translate: 0 .67px; }
   .ltrack.bstage--wiz .lstep.done .ldot b { color: var(--card); }
   .ltrack.bstage--wiz .lstep .ldot svg { display: block; }
   /* the bar meets the disc's middle, not the row's */
@@ -455,10 +568,27 @@
      here" when every dot was 8px and identical; now the step sits in a filled
      disc holding its own number while its neighbours ahead are outlined, so
      the underline is a third signal for something already said twice. Four
-     classes to beat .bstage .lstep.now .lt further up. bStageBar keeps it -
-     its dots are still all the same. */
+     classes to beat .bstage .lstep.now .lt further up. The listing banner
+     keeps the underline - its dots are still all the same. */
   .ltrack.bstage--wiz .lstep.now .lt { text-decoration: none; }
-  .ltrack.bstage--wiz .lt { font-size: 13.5px; }
+  /* MEDIUM, not semibold, 1 Oct [Tanya]. .ltrack sets 600 for its two other
+     tracks, where the label is the whole readout and carries the emphasis
+     alone. A wizard puts a filled disc beside every label, so the step is
+     already marked twice and 600 across a five- or nine-item row reads as a
+     line of headings. 500 is also what .lstep.todo already drops to, so the
+     walked and unwalked halves now differ by tone alone, which is the one
+     signal this track means to send. */
+  .ltrack.bstage--wiz .lt { font-size: 13.5px; font-weight: 500; }
+  /* and the unwalked label drops one step further, to 400 [Tanya, 1 Oct]. The
+     two halves had been separated by opacity alone since the weights levelled
+     above, and .5 on 500 is a lot of work for one signal to carry. 500/400 is
+     the same one-step gap .lstep.todo already used from 600, kept now that the
+     walked side has moved down. FOUR classes: .ltrack .lstep.todo further down
+     sets the weight on .lstep, which .lt only INHERITS, so it never reached the
+     label - the rule above matches .lt directly and a direct match beats
+     inheritance at any specificity. This one has to out-specify that rule, not
+     the .todo one. */
+  .ltrack.bstage--wiz .lstep.todo .lt { font-weight: 400; }
   /* The wizard drops its labels at 1080, not the 720 the other two tracks use,
      because its five names are the sheet's full ones and they need ~550px of
      track between them. Measured across widths with all five showing: the
@@ -468,9 +598,80 @@
      keeps its label and the rest go to numbered discs, which also puts the
      step's name back on screen at those widths now the caption above the
      track is gone. Five classes, to beat the 720 rule's four. */
+  /* :not(--vert), 1 Oct: the drop is a width fix, and the rail's column has
+     no width to run out of - unscoped it hid eight of the nine names in the
+     Deal timeline card the moment the viewport crossed 1080. */
   @media (max-width: 1080px) {
-    .ltrack.bstage--wiz .lstep:not(.now) .lt { display: none; }
+    .ltrack.bstage--wiz:not(.bstage--vert) .lstep:not(.now) .lt { display: none; }
   }
+  /* --deal stood here: the same stepper stretched across the deal page, with a
+     container query that hid eight of the nine labels under 1360px. The nine
+     stages stand UP now [Tanya, 1 Oct: "try b"]. Horizontally they never fit:
+     measured on Round Rock the discs and labels alone took ~1164px, so 24px
+     connectors needed a ~1360px track and the product has no such width with
+     the rail open. A column has no ceiling of that kind, so every stage keeps
+     its full name AND the date it was reached at every width, which is the
+     whole reason for the move. Mobbin, 1 Oct: Mercury puts an account
+     application's timeline in exactly this slot, Linear its milestones,
+     Upwork its contract phases; no product in the set draws a numbered
+     stepper beside a nine-stage process.
+
+     Still the same component [Tanya, 1 Oct: "why can't you just reuse this
+     component"] - .ltrack with the wizard's 26px disc, its tick, its numeral
+     and its todo ring - so a stage reads identically here and in the wizard.
+     Only the axis changes, which is why --vert sits beside --wiz instead of
+     replacing it: the financing wizard still runs horizontally. */
+  .ltrack.bstage--vert { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 0; }
+  .ltrack.bstage--wiz.bstage--vert .lstep { align-items: flex-start; gap: 10px; white-space: normal; }
+  /* the connector is a stub under the disc's centre. flex:none, or it would
+     take the column's leftover height the way it takes leftover width on the
+     other two tracks; min-width:0, or .bstage .lbar's min-width:10px wins over
+     a plain width and fattens it back. The margin-left that centres it is set
+     with the width, below - the two have to move together. */
+  .ltrack.bstage--wiz.bstage--vert .lbar { flex: none; width: 1px; min-width: 0; height: 12px; max-width: none; margin-left: 12px; align-self: flex-start; }
+  /* block, so the date below can be one: .lt is a span and .lstep is an
+     inline-flex row, so an inline .lt would leave .lwhen nowhere to go */
+  .ltrack.bstage--vert .lt { display: block; line-height: 1.4; }
+  /* the date under the name, and on the stage the deal is sitting in, who put
+     it there - the "Set by Jordan Ellis" the retired dates row carried */
+  .ltrack.bstage--vert .lwhen { display: block; font-size: 12px; font-weight: 400; color: var(--muted-foreground); }
+  /* 1 Oct [Tanya]: smaller discs, date on the label's line. The 26px disc is
+     the wizard's, sized for a horizontal track where it is the only mark; in a
+     nine-row column it outweighed the labels. 20px matches the 20px label line,
+     so every row is one line tall and the column reads as a list. The date
+     wraps under the label only when the rail is too narrow for both. */
+  .ltrack.bstage--wiz.bstage--vert .lstep { align-items: center; }
+  .ltrack.bstage--wiz.bstage--vert .lstep .ldot { width: 20px; height: 20px; }
+  /* No nudge at this size [Tanya, 2 Oct]. Measured in Tanya's Chrome at 2x,
+     not headless: ink bounding box of the 8 against the ring's centre was 0.0px
+     with no translate, 0.5px low with text-box trim, 0.5px low with +0.25.
+     Headless Chrome disagreed by a device pixel, so tune this in a real
+     browser. line-height normal, not the disc's 1: the two centre the line
+     box differently and only normal was measured. */
+  .ltrack.bstage--wiz.bstage--vert .lstep .ldot b { font-size: 10.5px; translate: none; line-height: normal; }
+  /* the unwalked ring drops to 1.5px [Tanya, 1 Oct]: at 2px on a 20px disc the
+     ring was a tenth of the diameter and read heavier than the 2px bar */
+  .ltrack.bstage--wiz.bstage--vert .lstep.todo .ldot { border-width: 1.5px; }
+  .ltrack.bstage--wiz.bstage--vert .lstep .ldot svg { width: 10px; height: 10px; }
+  /* 1px, not 2 [Tanya, 2 Oct]. Against a 20px filled disc a 2px rule read as a
+     second mark between the stages rather than as the thread through them; at
+     1px the discs carry the track and the line only joins them. Centring is
+     arithmetic, not a guess: half of a 20px disc is 10, half of a 1px bar is
+     0.5, so the margin is 9.5 - it was 9 while the bar was 2px wide. */
+  .ltrack.bstage--wiz.bstage--vert .lbar { margin-left: 9.5px; height: 10px; }
+  .ltrack.bstage--vert .lt { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
+  .ltrack.bstage--vert .lwhen { display: inline; }
+  /* on an unwalked stage the date takes the label's own colour [Tanya, 2 Oct].
+     The step already sits at .5, so muted-foreground at .5 went a second step
+     lighter and the forecast read fainter than the stage it forecasts. */
+  .ltrack.bstage--vert .lstep.todo .lwhen { color: inherit; }
+  /* a milestone row stood here for one build and came out [Tanya, 2 Oct:
+     "for stages use only from the list"]. The track draws the nine of tracker
+     row 20 and nothing else. Two things were wrong with it: the list is the
+     stage list, and the dashed ring it was drawn with contradicts this file's
+     own rule - dashed is a slot you could fill (.dghost, the upload zone,
+     .pill--more), and an appraisal is a dated event, not a slot. The milestone
+     needs no mark at all now: it is a date on the next stage's own row. */
   /* The track moved onto a card surface [Tanya, 28 Sep], same background,
      border, radius and shadow as every other block on this form, so the
      wizard reads as one object with a header rather than a caption floating
@@ -500,7 +701,6 @@
   .bwtabs { margin-bottom: 14px; overflow-x: auto; }
   .bviews { margin-bottom: 12px; }
   .alert.bnextstep { margin: 0; }
-  .qcmp tr.qacts td { padding-top: 12px; padding-bottom: 16px; }
   .bmsg .lpav { overflow: hidden; }
   .bmsg .lpav .bav__img { border-radius: 50%; }
   .bdgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
@@ -519,13 +719,53 @@
   .bsub { display: block; font-size: 12px; color: var(--muted-foreground); }
   .bsub--1 { color: var(--foreground); font-size: 13px; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .qbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+  /* Quote comparison, rebuilt against the 03.3 tracker row [Tanya, 1 Oct].
+     The first build was a flat 14-row matrix with the buttons on a 15th row
+     at the bottom. Three things about it did not survive a look at how
+     comparison pages are actually built (Mobbin, web: Squarespace, Synthesia,
+     Attio, Calendly plans; Zillow compare homes; Webflow plan matrix):
+       1. The headline number and the CTA live in the column HEADER, which is
+          the row that stays put. Every plan page puts the price and the
+          Select button under the plan name; none puts them 14 rows down.
+          .tblwrap already makes thead sticky, so the rate, the amount and the
+          three actions now scroll with the reader. The bottom row is gone.
+       2. Columns are bounded, not stretched. Two quotes on a 1288 table gave
+          each 525px with a 5-character value at the left edge of it. Zillow
+          and Attio hold the column at a fixed width and let the table carry
+          the rest as an empty trailing cell (.qfill) so the row rules still
+          run the full card. 320 is the width at which Select, View details
+          and Ask broker sit on one line in the header, which is the row that
+          sets it; the longest body value ("Full recourse, burning off at
+          1.50x") needs less.
+       3. Rows are grouped. 14 unbroken rows is a wall; Zillow, Webflow and
+          Synthesia all band them (Interior / SEO / Workspaces). Four bands
+          here, labelled in the matrix's own vocabulary, plus Conditions.
+     The selected quote's column is tinted the success tone the way a plan
+     page tints the recommended column - a column-wide state, not a badge-only
+     one, because the badge is in the header and the tint is what tells the
+     reader which column they are in at row 11. Rate takes the product's
+     tracking-tight token, not a hand value.
+     The header stacks name / badges / rate / sub / actions in fixed rows so
+     the rates of neighbouring columns share a baseline: the name is one
+     ellipsized line and the badge row keeps its height when a column has no
+     badge (Debt fund), otherwise a column with two badges and one with none
+     put their 6.10% and 8.25% 22px apart - measured on the first render. */
   .qcmp th.qk { font-size: 12.5px; font-weight: 500; color: var(--muted-foreground); text-align: left; white-space: nowrap; width: 150px; }
-  .qcmp th.qcol { vertical-align: bottom; text-align: left; min-width: 200px; }
-  .qcol__hd { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-  .qcol__hd b { font-size: 13.5px; color: var(--foreground); }
-  .qcol__sub { display: block; font-size: 12px; font-weight: 400; color: var(--muted-foreground); margin-top: 3px; }
+  .qcmp th.qcol { vertical-align: top; text-align: left; width: 320px; min-width: 240px; height: auto; padding: 14px 12px 12px; white-space: normal; }
+  .qcmp th.qfill, .qcmp td.qfill { width: auto; }
+  .qcol__hd b { display: block; font-size: 13.5px; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .qcol__badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 22px; margin-top: 4px; }
+  .qcol__key { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; color: var(--foreground); }
+  .qcol__rate { font-size: 22px; font-weight: 600; line-height: 1; letter-spacing: var(--tracking-tight); }
+  .qcol__amt { font-size: 14px; font-weight: 500; }
+  .qcol__sub { display: block; font-size: 12px; font-weight: 400; color: var(--muted-foreground); margin-top: 4px; }
+  .qcol__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; }
   .qcmp td { font-size: 13px; vertical-align: top; }
-  .qacts__in { display: flex; flex-wrap: wrap; gap: 6px; }
+  .qcmp td.qwrap { white-space: normal; line-height: 1.45; }
+  .qcmp th.qk.qwrap { vertical-align: top; padding-top: 11px; }
+  .qcmp tr.qgrp th { height: 30px; padding-top: 0; padding-bottom: 0; font-size: 12px; font-weight: 600; color: var(--muted-foreground); }
+  .qcmp .qsel { background: color-mix(in srgb, var(--color-success) 7%, #fff); }
+  .qcmp th.qcol.qsel { box-shadow: inset 0 2px 0 var(--color-success); }
   .bup { max-width: 560px; }
   .bdrop { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 16px; padding: 28px 16px;
     border: 1px dashed var(--border); border-radius: var(--radius-lg); background: var(--muted); color: var(--muted-foreground);
@@ -556,11 +796,13 @@
   .bnext { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 13px; line-height: 1.45; }
   .bnext b { font-weight: 600; }
   .docrow .swt { flex: none; font-size: 12.5px; }
-  /* phone width [07.2]: the nine-stage bar keeps its dots and names only the
-     current stage; the wizard does the same; lists of fields go single */
+  /* phone width [07.2]: the horizontal tracks keep their dots and name only
+     the current step; lists of fields go single. The deal's nine stages are a
+     vertical card in the rail since 1 Oct and are excluded by name - a column
+     keeps every label at every width, which is the reason it is a column. */
   @media (max-width: 720px) {
-    .bstage .lstep:not(.now) .lt { display: none; }
-    .bstage .lbar { min-width: 6px; }
+    .bstage:not(.bstage--vert) .lstep:not(.now) .lt { display: none; }
+    .bstage:not(.bstage--vert) .lbar { min-width: 6px; }
     .fldrow.fldrow--4 { grid-template-columns: 1fr; }
     .qcmp th.qk { width: 110px; }
     .bup { max-width: none; }
@@ -2543,6 +2785,25 @@
   .docrow--pend { border-style: dashed; background: var(--muted); }
   .docrow--pend .docrow__nm { font-weight: 400; color: var(--muted-foreground); }
   .docrow--pend .docrow__tick { color: var(--muted-foreground); }
+  /* A list where EVERY row is pending drops the dash and the grey fill, 1 Oct.
+     --pend is the right STATE for the borrower's "N documents needed" rows -
+     asked for, and waiting on them - but its paint was drawn for one
+     outstanding row among white ones on the broker's tab, an exception marked
+     against a norm. There is no norm here to be an exception to: a whole list
+     of grey fills under muted names, each carrying the only control on the
+     row, reads as a list of disabled controls. Same argument the submitted
+     page's "Still to add" card makes one level up, and the reason the wizard's
+     own slots are --none. The name goes back to full weight for the reason the
+     --none note gives - the document's name is equally real whether or not the
+     file has arrived.
+
+     On the list rather than on the card: this was scoped to .card--att for an
+     hour, when the card carried the gold attention wash and the argument was
+     that the wash already said "outstanding" so the rows need not. The wash
+     came off at Tanya's word on 1 Oct and the rule survived it unchanged,
+     which is the tell that it was never about the card. */
+  .doclist--ask .docrow--pend { border-style: solid; background: var(--card); }
+  .doclist--ask .docrow--pend .docrow__nm { font-weight: 500; color: var(--foreground); }
   /* A slot with nothing in it and nothing asked for, 17 Sep. An ordinary row —
      the only thing it does not have is the tick, because the only thing it is
      missing is the file. It deliberately does NOT borrow --pend's fill: that
@@ -3327,9 +3588,11 @@
      .hint, which are scoped to ancestors this surface does not have; this file
      has fallen into that trap three times. The chip is .bp__badge, the brand
      panel's own, shared by adding one selector rather than drawing a second
-     gold pill. The notice is .alert alert--info, the component that replaced
+     gold pill. The notice is a plain .alert, the component that replaced
      .pbanner, rather than a fourth hand-rolled tinted strip — which is the
-     exact mistake .alert exists to have stopped. [Tanya, 20 Sep] */
+     exact mistake .alert exists to have stopped. [Tanya, 20 Sep] It read
+     .alert alert--info until 1 Oct, when the info tone retired and the base
+     took its ground. */
   .auth__card .bp__badge { margin: 0 0 14px; }
   .ts__pts { margin: 15px 0 14px; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;
     font-size: 13.5px; line-height: 1.45; color: var(--muted-foreground); }
@@ -3365,8 +3628,10 @@
 
      TOKENS are Prism's, which is the half ReUI cannot supply: its own cssVars
      ship violet for info, emerald for success and yellow for warning, none of
-     them ours. Bound here to --color-info (new, see :root), --color-success
-     and --color-warning (both already in globals.css) and --destructive.
+     them ours. Bound to --color-success and --color-warning (both already in
+     globals.css) and --destructive. ReUI's fifth variant, info, is NOT carried:
+     it was, on a --color-info pair of our own, and both the tone and the tokens
+     were retired 1 Oct - see :root. The base took its job.
 
      TWO THINGS ARE OURS, and both are in the question: the dismiss column,
      which neither shadcn nor ReUI has and both of our banners need, and
@@ -3398,10 +3663,21 @@
      its own 52ch. Line length inside the band is still governed, by the width
      of the page's own content column, which is what every sibling obeys.
      [Tanya, 16 Sep] */
+  /* the base alert is TINTED, 1 Oct [Tanya]. It drew --card over --border -
+     white on the page's own hairline - which made it the one face in the
+     family with no ground at all, and left .alert--info carrying the whole
+     job of "this is the page talking". Prism's Alert has no info tone and
+     rules that default is the info-shaped neutral, so the ground it ships for
+     Tone=default moves here verbatim: navy/tint #F5F7FA over navy/border
+     #C0CFE2, which are congress-blue at 4% and 25% over white - the same 25%
+     edge .badge.tone-blue already draws. The glyph goes with it, navy/900.
+     Four tones, one of them the neutral, and no fifth. */
   .alert { display: grid; grid-template-columns: 0 1fr; align-items: start; gap: 2px 12px;
     width: 100%; margin-bottom: 14px; padding: 12px 16px;
-    border: 1px solid var(--border); border-radius: var(--radius-lg);
-    background: var(--card); color: var(--foreground); font-size: 14px; line-height: 1.45; }
+    border: 1px solid color-mix(in srgb, var(--color-congress-blue) 25%, #fff);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-congress-blue) 4%, #fff);
+    color: var(--foreground); font-size: 14px; line-height: 1.45; }
   /* 13px until 1 Oct, and 14 is the product's own number [Tanya]. alert.tsx's
      base is `text-sm` and neither AlertTitle nor AlertDescription overrides it,
      so both rows render at 14 and the size lives in ONE place - which is why
@@ -3414,7 +3690,8 @@
   .alert:has(> svg) { grid-template-columns: auto 1fr; }
   .alert:has(> .x) { grid-template-columns: 0 1fr auto; }
   .alert:has(> svg):has(> .x) { grid-template-columns: auto 1fr auto; }
-  .alert > svg { grid-column: 1; grid-row: 1; width: 16px; height: 16px; translate: 0 2px; }
+  .alert > svg { grid-column: 1; grid-row: 1; width: 16px; height: 16px; translate: 0 2px;
+    color: var(--primary); }
   /* shadcn's translate-y-0.5 assumes the first line box is the title's own
      line-height. A badge at the head of the title is 23.4px against the
      title's 18.9px, so it raises that line box and the 2px nudge lands the
@@ -3426,7 +3703,14 @@
   .alert:has(.alert__badge) > svg { translate: 0 4px; }
   .alert__badge { margin-right: 8px; vertical-align: baseline; }
   .alert__title, .alert__desc, .alert__act { grid-column: 2; min-width: 0; }
-  .alert__title { font-weight: 500; letter-spacing: -.006em; }
+  /* -.006em stood here and was a hand value, the same defect the modal header
+     records at ~line 5012 - except the conclusion is the opposite one. There,
+     dialog.tsx adds no tracking, so the hand value came out and the title
+     inherits. Here alert.tsx's AlertTitle DOES add `tracking-tight`, so the
+     prototype has to add it too, as the token. It also had the sign backwards:
+     -.006em is LOOSER than the -0.011em body tracking it overrides, where the
+     product's title is tighter than body, not slacker. [Tanya, 1 Oct] */
+  .alert__title { font-weight: 500; letter-spacing: var(--tracking-tight); }
   /* The grid's own row-gap is already 2px. This margin stacked a second 2 on
      top of it, so a gap declared once in one place resolved to twice that
      everywhere — the kind of drift that survives because 4 looks deliberate.
@@ -3482,17 +3766,29 @@
      Two locks on one product both meaning gated, one slate and one amber, is
      an inconsistency no reader can resolve - and the permanently-on argument
      above does not stop at the border. So --state is now the base alert
-     exactly: no tint anywhere, the lock carrying meaning by being a lock.
-     The ground stays --card and does NOT become the gate's muted fill, which
-     is the other half of the same question. .btn--outline paints
+     exactly: no tone of its own, the lock carrying meaning by being a lock.
+     The ground is whatever the base draws and does NOT become the gate's muted
+     fill, which is the other half of the same question. .btn--outline paints
      background: var(--background), rgb(239,243,248); the gate's ground
      computes to rgb(238,240,245). One and three and three apart - "Make this
      the active deal" would render as a border around nothing. Same token trap
-     as :12805 with the ground moved the other way. The gate can recede that
+     as :12805 with the ground moved the other way. (That sentence read "no
+     tint anywhere" and "the ground stays --card" until 1 Oct, when the base
+     alert took Prism's navy/tint. The rule survives the change - this band is
+     still the base face - and the collision it warns about does not return,
+     because .alert .btn--outline paints transparent inside any alert.) The gate can recede that
      far because it has no action and captions the masked rows directly above
      it; this band is the only statement of the fact on the page and carries
      the two controls that end it. [Tanya, 16 Sep] */
-  .alert--state > svg { color: inherit; }
+  /* the glyph rule went with the info tone, 1 Oct. It read `color: inherit`,
+     which existed to undo a TONE's coloured glyph and leave the lock on the
+     base's own ink - and the base had no glyph colour, so it undid nothing.
+     Now that the base glyph is navy/900 the same rule would start creating a
+     difference instead of cancelling one, on the one face documented above as
+     "the base alert exactly". So --state carries no rules at all; it is a
+     class that names a meaning, which is what the comment already argues for.
+     Prism says the same thing from its end: draw a read-only band as
+     Tone=default with a lock glyph. */
   /* span 2 only when the prose really is two rows — the direct-child test,
      because a description nested inside the title is one row and spanning
      into a row that does not exist makes grid invent an implicit one to hold
@@ -3565,26 +3861,18 @@
     background: none; cursor: pointer; color: var(--muted-foreground); }
   .alert > .x:hover { color: var(--foreground); }
   /* tones — ReUI's border-30 / bg-4 / icon-full formula, Prism's values */
-  /* info runs richer than ReUI's /4 and /30: its palette defaults are vivid
-     (violet-500 for info), Prism's blue is a dark navy, and the same mix on a
-     darker, less saturated hue reads grey rather than blue. Raised on 14 Sep
-     (Tanya, "use blue info banner") — /9 computed to rgb(232,238,244), twelve
-     points of blue over red, which is blue by measurement and grey to the eye.
-     /15 doubled that separation to twenty and the border went to /38 to hold
-     an edge against a fill that strong. [T]
-
-     20 Sep: /15 is too dark, and the reason is that the percentage was being
-     asked to fix a hue problem. Both moves were the same lever — one end grey,
-     the other end dark — because navy-800 has no setting that is light AND
-     blue. The fill now mixes brand-blue-400 instead, at /12: rgb(232,236,253),
-     twenty-one points of blue over red, so it keeps the whole of 14 Sep's
-     separation while landing fifteen points lighter than /15 navy did. The
-     border comes back to /28 on the navy, in line with the other three tones'
-     /30-/32, because a lighter fill no longer needs a /38 edge to survive.
-     The icon stays navy — it is a glyph, not a wash. [Tanya, 20 Sep] */
-  .alert--info      { border-color: color-mix(in srgb, var(--color-info) 28%, #fff);
-                      background:   color-mix(in srgb, var(--color-info-fill) 12%, #fff); }
-  .alert--info      > svg { color: var(--color-info); }
+  /* .alert--info is RETIRED, 1 Oct [Tanya]. It drew brand-blue-400 at /12,
+     rgb(232,236,253), over a /28 navy border, and it got there over two moves:
+     14 Sep raised the blue banner [T] at /9 navy, which measured blue and read
+     grey; 20 Sep found that the percentage was being asked to fix a hue
+     problem - /9 is light and grey, /15 is blue and dark, and navy-800 has no
+     setting that is both - and split the fill onto brand-blue-400. Good
+     reasoning, and Prism settled the question the other way four days later:
+     the Alert has no info tone, default already carries Icon/info, and a blue
+     band beside it reads as a second info banner. Its four sites are plain
+     .alert now and the base carries the tint. The only loss is a blue that was
+     bluer than the navy one; the gain is that the family has one neutral
+     instead of a neutral and a near-neutral. */
   .alert--success   { border-color: color-mix(in srgb, var(--color-success) 32%, #fff);
                       background:   color-mix(in srgb, var(--color-success) 7%, #fff); }
   .alert--success   > svg { color: #2f6b23; }
@@ -4338,8 +4626,19 @@
   /* the activity feed names the action (comp Designivation, 7 Sep): actor,
      verb, object in a sentence, the date on its own muted line. Avatars reuse
      the lender-profile circle at list scale; Prism's system events get the
-     squared muted tile so a person is never implied. */
-  .feed { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; margin: 0 -10px;
+     squared muted tile so a person is never implied.
+     ALIGNMENT RULE [Tanya, 2 Oct]: the disc centres on the text when the text
+     is up to two lines (the sentence and its date), and goes to the top when
+     it is three or more. Centred matches the Next step task rows, which are
+     always two lines; a centred disc beside a four-line block would float off
+     the sentence's first word, the actor it names. CSS cannot count lines, so
+     fitFeeds() measures each row after render and on resize and adds
+     .feed--top - the count is a property of the width, not the data, so the
+     same event is centred on the broker Home and top-aligned in the 340px
+     borrower rail. Messages (.bmsg) are exempt and always top: a chat thread
+     reads down from the sender, and a centred avatar would move as a message
+     grows. */
+  .feed { display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: 0 -10px;
     border-radius: var(--radius-md); text-decoration: none; color: inherit; }
   .feed:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
   /* compound selectors: .lpav alone declares 46px later in the sheet, and at
@@ -4347,6 +4646,17 @@
   .lpav.feed__av { width: 28px; height: 28px; font-size: 11px; }
   .lpav.feed__av--sys { background: var(--brand-surface-50);
     color: var(--brand-navy-600); border: 1px solid var(--brand-border-100); }
+  /* glyph at the task row's 14 [Tanya, 2 Oct: "same style as" Next step]. The
+     disc already matched .att__ic--muted (28, surface-50, border-100, navy-600);
+     only BIC.file and BIC.check were drawn at 12, so the feed read as a smaller
+     icon set under the tasks. Sized here, not in BIC, because those two glyphs
+     also sit inline in buttons and lists where 12 is right. */
+  .lpav.feed__av--sys svg { width: 14px; height: 14px; }
+  .feed.feed--top, .feed.bmsg { align-items: flex-start; }
+  /* on the deal page the feed sits directly under the Next step tasks, so the
+     gap takes .att__row's 11 and the text starts on the task titles' edge, not
+     1px left of it; both discs are 28 */
+  .bfeed .feed { gap: 11px; }
   .feed__tx { min-width: 0; }
   .feed__tx .s { display: block; font-size: 13.5px; line-height: 1.5; }
   .feed__tx .s b { font-weight: 600; }
@@ -4356,6 +4666,18 @@
      at equal specificity this later block is what makes the override stick */
   .att__row, .feed {
     margin: 0 -18px; padding-left: 18px; padding-right: 18px; border-radius: 0; }
+  /* every list of these rows insets its dividers 18px from the card edge
+     [Tanya, 1 Oct: "dividers not edge to edge but with the side paddings"].
+     Started on the deal overview's two lists and extended the same day to
+     both Homes - attention rows and activity feeds, borrower and broker - so
+     one row anatomy keeps one divider. The rows still bleed, so a hover wash
+     stays full width; only the line moves, drawn as a pseudo element held off
+     both sides by exactly the card's own 18px gutter, which is what makes it
+     land on the text edge rather than near it. */
+  .att__row, .feed { position: relative; }
+  .att__row + .att__row, .feed + .feed { border-top: 0; }
+  .att__row + .att__row::before, .feed + .feed::before { content: ""; position: absolute;
+    top: 0; left: 18px; right: 18px; border-top: 1px solid var(--brand-border-100); }
   /* Show all turns five rows into all of them, and on the borrower Home that
      was 34 - a 2,694px card in a 340px column beside a 925px one, so the page
      scrolled nineteen hundred pixels of one card past the end of everything
@@ -8662,7 +8984,7 @@ const BLOANS = [
     broker: "jordan-ellis", conn: { st: "assigned", broker: "jordan-ellis", on: "10 Sep" },
     summary: "Rate-and-term refinance of a 36-unit garden-style asset, stabilised since 2019. Seeking ten-year fixed with three years interest-only.",
     next: "Compare the two quotes your broker released and pick one, or ask about either.",
-    milestone: { t: "Choose a quote", on: "3 Oct" },
+    milestone: { t: "Lender selected", on: "3 Oct" },
     quotes: [
       bq("q1", { src: "Agency lender", co: "Hill Country Multifamily Finance", showCo: true, rank: 1, amt: 3.2, rate: "6.10%", index: "10-yr Treasury", spread: "+195 bps",
         term: "10 years", amort: "30 years", io: "3 years", recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$41,500",
@@ -8712,7 +9034,7 @@ const BLOANS = [
     broker: "jordan-ellis", conn: { st: "assigned", broker: "jordan-ellis", on: "13 Aug" },
     summary: "Acquisition of a 96-unit Class B community. Quote selected; appraisal and third-party reports under way.",
     next: "Sign the rate-lock authorization so your broker can lock when the appraisal lands.",
-    milestone: { t: "Appraisal in", on: "30 Sep" },
+    milestone: { t: "Closing", on: "24 Oct" },
     quotes: [
       bq("q1", { src: "Agency lender", st: "selected", rank: 1, amt: 7.8, rate: "5.85%", index: "10-yr Treasury", spread: "+170 bps", term: "10 years", amort: "30 years", io: "2 years",
         recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$96,000", ds: "$552,000 / yr", dscr: "1.27x", ltv: 70,
@@ -8729,10 +9051,10 @@ const BLOANS = [
       { id: "d5", cat: "Organizational documents", st: "requested", due: "1 Oct", note: "Operating agreement and certificate of good standing for the borrowing LLC." }
     ],
     tasks: [
-      { id: "t1", t: "Sign the rate-lock authorization", type: "sign", due: "30 Sep", by: "broker", st: "open" },
+      { id: "t1", t: "Sign the rate-lock authorization", type: "sign", due: "3 Oct", by: "broker", st: "open" },
       { id: "t2", t: "Upload the executed purchase agreement amendment", type: "upload", due: "29 Sep", by: "broker", st: "open", doc: "d3" },
       { id: "t3", t: "Upload organizational documents", type: "upload", due: "1 Oct", by: "broker", st: "open", doc: "d5" },
-      { id: "t4", t: "Answer your broker's question", type: "answer", due: "30 Sep", by: "broker", st: "open" }
+      { id: "t4", t: "Answer your broker's question", type: "answer", due: "6 Oct", by: "broker", st: "open" }
     ],
     msgs: [
       { from: "sys", tx: "Status changed to Lender selected.", on: "1 Sep" },
@@ -8756,7 +9078,7 @@ const BLOANS = [
     broker: "anjali-mehta", conn: { st: "assigned", broker: "anjali-mehta", on: "9 Sep" },
     summary: "Climate-controlled self storage, 540 units, stabilised. Refinancing construction debt into a five-year bank loan.",
     next: "Anjali is taking the deal to lenders. Nothing is needed from you until quotes come back.",
-    milestone: { t: "First quotes", on: "2 Oct" },
+    milestone: { t: "Quotes received", on: "2 Oct" },
     quotes: [], docs: [
       { id: "d1", name: "Mesa rent roll.xlsx", cat: "Rent roll", by: "you", on: "8 Sep", ver: 1, st: "accepted" },
       { id: "d2", name: "Mesa T-12.pdf", cat: "T-12 / operating statements", by: "you", on: "8 Sep", ver: 1, st: "accepted" },
@@ -8778,15 +9100,15 @@ const BLOANS = [
     broker: "anjali-mehta", conn: { st: "assigned", broker: "anjali-mehta", on: "15 Sep" },
     summary: "Value-add acquisition of a 64-unit garden community. Interior renovations planned on turnover; seeking bridge with a path to agency.",
     next: "Your broker needs the rent roll and the seller's T-12 before taking this to lenders.",
-    milestone: { t: "Package ready", on: "1 Oct" },
+    milestone: { t: "Marketing to lenders", on: "5 Oct" },
     quotes: [], docs: [
       { id: "d1", name: "Canyon Ridge OM.pdf", cat: "Other", by: "you", on: "14 Sep", ver: 1, st: "uploaded" },
-      { id: "d2", cat: "Rent roll", st: "requested", due: "30 Sep", note: "Current, with lease expirations and concessions." },
-      { id: "d3", cat: "T-12 / operating statements", st: "requested", due: "30 Sep", note: "The seller's trailing twelve months, monthly." }
+      { id: "d2", cat: "Rent roll", st: "requested", due: "2 Oct", note: "Current, with lease expirations and concessions." },
+      { id: "d3", cat: "T-12 / operating statements", st: "requested", due: "3 Oct", note: "The seller's trailing twelve months, monthly." }
     ],
     tasks: [
-      { id: "t1", t: "Upload the rent roll", type: "upload", due: "30 Sep", by: "broker", st: "open", doc: "d2" },
-      { id: "t2", t: "Upload the seller's T-12", type: "upload", due: "30 Sep", by: "broker", st: "open", doc: "d3" }
+      { id: "t1", t: "Upload the rent roll", type: "upload", due: "2 Oct", by: "broker", st: "open", doc: "d2" },
+      { id: "t2", t: "Upload the seller's T-12", type: "upload", due: "3 Oct", by: "broker", st: "open", doc: "d3" }
     ],
     msgs: [
       { from: "sys", tx: "Anjali Mehta took the deal on.", on: "15 Sep" },
@@ -12995,7 +13317,10 @@ const IC = {
   lock:   '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   clip:   '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/>',
   person: '<circle cx="12" cy="8" r="3.2"/><path d="M5 20a7 7 0 0 1 14 0"/>',
-  phone:  '<path d="M15.5 21A12.5 12.5 0 0 1 3 8.5 2.5 2.5 0 0 1 5.5 6h1.8a1 1 0 0 1 1 .82l.55 2.9a1 1 0 0 1-.52 1.06l-1.4.72a11 11 0 0 0 5.07 5.07l.72-1.4a1 1 0 0 1 1.06-.52l2.9.55a1 1 0 0 1 .82 1v1.8A2.5 2.5 0 0 1 15.5 21Z"/>',
+  /* lucide phone, the same path the saved-lender menu draws for Log a call.
+     The glyph here before spanned ~15 of 24 units in the lower left, so it
+     read a size smaller than the mail beside it [Tanya, 1 Oct]. */
+  phone:  '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
   copy:   '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
   file:   '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/>',
   pclip:  '<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
@@ -16212,7 +16537,7 @@ function renderTrialStart() {
     <div class="bp__badge">Accelerator</div>
     <h1>Your 14 days of Accelerator start now &mdash; no card needed.</h1>
     <ul class="ts__pts">${UP_PTS.accelerator.map(x => `<li>${x}</li>`).join("")}</ul>
-    <div class="alert alert--info" role="status">
+    <div class="alert" role="status">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
       <div class="alert__title">On day 15 you move to <b>Essential</b>. Everything you make during
         the trial is saved.</div>
@@ -17356,7 +17681,7 @@ function leaveBand() {
   if (!PLAN.leaving) return "";
   const over = Math.max(0, activeDeals().length - TIERS.essential.deals);
   const t = TCFG();
-  if (PLAN.leaving === "pause") return `<div class="alert alert--info" role="status">
+  if (PLAN.leaving === "pause") return `<div class="alert" role="status">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
     <div class="alert__title">${esc(t.name)} is paused until ${esc(PLAN.ends)}</div>
     <div class="alert__desc">Nothing is billed while it is paused and nothing is lost &mdash; every deal, lender and document stays
@@ -18627,15 +18952,98 @@ const BCRUMB = (a, href, mid) => `<div class="crumb">${
    the workspace drops the whole card for a withdrawn deal, because the header
    chip now carries the word and Recent activity carries the date. It stays
    for any second caller. */
-function bStageBar(d) {
-  if (d.stage === "Withdrawn") return `<div class="bstage bstage--off"><span class="bstat"><span class="d d-muted"></span>Withdrawn ${esc(d.updated)}</span></div>`;
-  const i = BSTAGES.indexOf(d.stage);
-  return `<div class="ltrack bstage" role="list" aria-label="Deal progress, stage ${i + 1} of ${BSTAGES.length}">${BSTAGES.map((s, k) =>
-    (k ? `<span class="lbar${k > i ? " todo" : ""}" aria-hidden="true"></span>` : "") +
-    `<span class="lstep ${k < i ? "done" : k === i ? "done now" : "todo"}" role="listitem"${k === i ? ` aria-current="step"` : ""}><span class="ldot"></span><span class="lt">${esc(s)}</span></span>`).join("")}</div>`;
-}
+/* The deal's progress, redrawn 1 Oct [Tanya: "try b"]. bStageBar stood here:
+   the wizard's stepper laid across the page above the tabs, nine discs, nine
+   connectors, nine labels. It went for the reason the labels were already
+   dropping under 1360px - nine stages do not fit on a horizontal axis at any
+   width this product has - and for a second one the width problem had been
+   hiding: the borrower walks none of these nine, so a path drawn in a wizard's
+   anatomy was answering a question nobody on this page asks. The stages are a
+   READOUT here, and a readout of nine things is a list.
 
-/* Tasks [sheet 03.9]: the five types the dashboard lists, each opening the
+   So: a Deal timeline card in the rail, every stage with the date it was
+   reached, the one the deal sits in named with who moved it, and the two key
+   dates that are not stages in a footer under the list. The stage bar's old
+   slot above the tabs is now empty, which puts Next step - the only card a
+   borrower can act on - at the top of the first screen.
+
+   Mobbin, 1 Oct: Mercury runs this exact card for an account application,
+   Linear for milestones, Upwork for contract phases. Of 28 web screens, none
+   drew a numbered stepper beside a process this long; the one that came close,
+   Employment Hero, paired a short track with a TABLE carrying the per-stage
+   date and owner, which is what the column does here.
+
+   Still reads d.stage alone, so [T1] stays a back-end question. [~] */
+const bStageOn = (d, s) => {
+  const e = (d.events || []).slice().reverse().find(x => x.type === "status" && x.tx === "Status changed to " + s);
+  return e ? e.on : s === "Submitted" ? d.submitted : s === d.stage ? d.updated : null;
+};
+function bTimeline(d) {
+  /* a withdrawn deal keeps no timeline: the header chip carries the word and
+     Recent activity carries the date, which is why the old bar's Withdrawn
+     branch had already been unreachable since 28 Sep */
+  if (d.stage === "Withdrawn") return "";
+  const i = BSTAGES.indexOf(d.stage), b = bBroker(d), closed = d.stage === "Closed";
+  /* the track draws the nine of tracker row 20 and nothing else [Tanya, 2 Oct:
+     "for stages use only from the list"]. The next milestone was a tenth row
+     for one build, then a footer; it is neither now. Read against the list it
+     turned out to BE the next stage on three of the four deals that carry one
+     - "First quotes" for Quotes received, "Choose a quote" for Lender
+     selected, "Package ready" for Marketing to lenders - so the card was
+     naming the same event twice in two vocabularies [Tanya, 2 Oct: "and next
+     milestone is not the step?"]. Only its date was new information, so only
+     its date survives, on the row it belongs to. The fourth, Round Rock's
+     appraisal, was not a stage and appeared nowhere else in the deal: no task,
+     no event. A lender orders an appraisal, so it was never the borrower's
+     next milestone; that deal now forecasts Closing. [~] */
+  const ms = !closed && d.milestone ? d.milestone : null, mn = ms ? bFromNow(ms.on) : null;
+  /* the desired closing date, on the stage it is a date FOR [Tanya, 2 Oct:
+     "can desired closing info be near Closing stage?"]. Closed, not Closing:
+     the lexicon [tracker row 42] makes Closing the process and Closed the end,
+     and what the borrower asked for is the day it is done. It stays in the
+     Financing request grid as well - that is where row 20 reads the request's
+     own fields back, and this is the same fact seen from the other end: the
+     grid says what was asked for, the track says where it lands. */
+  const tgt = !closed && d.closeBy ? d.closeBy : null, tn = tgt ? bFromNow(tgt) : null;
+  /* the wizard's own vocabulary, unchanged: passed = tick, current = filled
+     numeral, ahead = outlined numeral. Static spans - a borrower does not move
+     the deal, so no step is a link. */
+  const rows = BSTAGES.map((s, k) => {
+    /* the date comes from the status event the Activity tab already lists, so
+       the two can never disagree. A stage with no event prints no date rather
+       than guessing one; Submitted falls back to the submit date. Naming the
+       broker holds under either answer to [T1] on tracker row 2 - the nine
+       mirror the broker's statuses, or the assigned broker sets them - because
+       a person at the brokerage moved it either way. [~] */
+    const on = k <= i ? bStageOn(d, s) : null;
+    /* a walked stage prints the day it was reached; the one next in line
+       prints the day it is expected, which is the only forward-looking date
+       on the card. "expected" is what separates the two - every date above it
+       happened, this one has not. */
+    /* the countdown only prints when it changes what you would do [Tanya,
+       2 Oct: "can we skip this part and just show the date?"]. "in 23 days" is
+       arithmetic the reader can do from the date beside it, and it was on
+       every forecast row of every live deal; Overdue is not derivable at a
+       glance and neither is tomorrow, so those two stay. A target keeps only
+       Overdue - a closing date the borrower picked at submission is not due
+       tomorrow in any useful sense, it is just near. */
+    const rel = (n, hot) => n == null || (n >= 0 && !(hot && n <= 1)) ? ""
+      : ` · <span class="${n < 0 ? "att__late" : "att__hot"}">${n < 0 ? "Overdue" : bRel(n)}</span>`;
+    /* the broker's forecast wins the row if both land on it - a deal sitting
+       in Closing has Closed as its next stage, and an estimate made this week
+       beats a date set at submission. The target is still in the grid then. */
+    const w = on ? esc(on) + (k === i && !closed && b ? ` · ${esc(bName(b))}` : "")
+      : ms && k === i + 1 ? `expected ${esc(ms.on)}${rel(mn, 1)}`
+      : tgt && k === BSTAGES.length - 1 ? `target ${esc(tgt)}${rel(tn, 0)}` : "";
+    return (k ? `<span class="lbar${k > i ? " todo" : ""}" aria-hidden="true"></span>` : "") +
+      `<span class="lstep ${k < i ? "done" : k === i ? "done now" : "todo"}" role="listitem"${k === i ? ` aria-current="step"` : ""}>` +
+      `<span class="ldot">${k < i || closed ? BW_TICK : `<b>${k + 1}</b>`}</span>` +
+      `<span class="lt">${esc(s)}${w ? `<span class="lwhen">${w}</span>` : ""}</span></span>`;
+  }).join("");
+  return `<div class="card"><div class="card__hd"><h2>Deal timeline</h2></div><div class="card__ct">
+    <div class="ltrack bstage bstage--wiz bstage--vert" role="list" aria-label="Deal progress">${rows}</div>
+  </div></div>`;
+}/* Tasks [sheet 03.9]: the five types the dashboard lists, each opening the
    deal at the tab where the task is done. Sign authorization has no screen
    anywhere on the sheet, so it opens Documents, where a signed file would
    land. [~] */
@@ -18657,12 +19065,35 @@ const BIC = {
   users:  `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>`
 };
 /* one task row, the broker Home's .att__row anatomy unchanged */
-const bTaskRow = (d, t, withDeal) => {
+/* Dates against a pinned prototype "today", 1 Oct [Tanya, 1 Oct]. The fixtures
+   carry "30 Sep"-style day-month strings with no year, and until now nothing
+   compared them to anything, so three Round Rock tasks due 29-30 Sep read
+   exactly like one due next week. Pinned rather than new Date() so the
+   prototype tells the same story whenever it is opened. [~] */
+const BMON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+/* fixtures carry no year. A date that would sit more than ~4 months before
+   1 Oct is next year's: Elm Street's "1 Mar" closing read as Overdue */
+const bDay = s => { const m = /^(\d{1,2}) ([A-Z][a-z]{2})$/.exec(s || ""); if (!m) return null;
+  const mo = BMON.indexOf(m[2]); return Math.round(Date.UTC(mo < 5 ? 2027 : 2026, mo, +m[1]) / 864e5); };
+const BTODAY = bDay("1 Oct");
+const bFromNow = s => { const n = bDay(s); return n == null ? null : n - BTODAY; };
+const bRel = n => n === 0 ? "today" : n === 1 ? "tomorrow" : n === -1 ? "yesterday" : n > 0 ? `in ${n} days` : `${-n} days ago`;
+/* the due clause: overdue in destructive red, due today or tomorrow in the
+   attention gold the broker Home already uses (.att__hot), the rest plain */
+const bDue = t => { const n = bFromNow(t.due); if (!t.due) return "";
+  return n != null && n < 0 ? ` · <span class="att__late" title="Was due ${esc(t.due)}">Overdue</span>`
+    : n != null && n <= 1 ? ` · <span class="att__hot">Due ${bRel(n)}</span>` : ` · Due ${esc(t.due)}`; };
+const bByDue = (a, b) => (bDay(a.due) ?? 1e9) - (bDay(b.due) ?? 1e9);
+/* one tile tone for every task type [Tanya, 1 Oct: "one consistent colour for all icons"];
+   on the Home's washed .card--att every tile is overridden to gold anyway.
+   link: the deal page's Next step card draws its actions as the link variant
+   [Tanya, 1 Oct]; the Home's Action required keeps outline buttons */
+const bTaskRow = (d, t, withDeal, link) => {
   const b = bBroker(d), who = t.by === "broker" && b ? bName(b) : "LenderPrism";
   return `<div class="att__row">
-      <span class="att__ic att__ic--${t.type === "sign" || t.type === "answer" ? "gold" : "muted"}">${BIC[BTASK[t.type].ic]}</span>
-      <span class="att__tx"><b>${esc(t.t)}</b><span>${withDeal ? `${esc(d.name)} · ` : ""}${t.by === "broker" ? `Requested by ${esc(who)}` : "Left to add after you submitted"}${t.due ? ` · due ${esc(t.due)}` : ""}</span></span>
-      <a class="btn btn--outline" href="${bTaskHref(d, t)}">${BTASK[t.type].act}</a>
+      <span class="att__ic att__ic--muted">${BIC[BTASK[t.type].ic]}</span>
+      <span class="att__tx"><b>${esc(t.t)}</b><span>${withDeal ? `${esc(d.name)} · ` : ""}${t.by === "broker" ? `Requested by ${esc(who)}` : "Left to add after you submitted"}${bDue(t)}</span></span>
+      <a class="btn ${link ? "btn--link" : "btn--outline"}" href="${bTaskHref(d, t)}">${BTASK[t.type].act}</a>
     </div>`;
 };
 
@@ -18678,6 +19109,51 @@ const bTaskRow = (d, t, withDeal) => {
    brokers is the network pitch the sheet moved to the landing page. The
    network card comes back as the "Find a broker" door only while a live deal
    has no broker, the one moment it is an action. */
+
+/* Every event on every non-draft deal, newest first, uncapped [Tanya, 1 Oct].
+   Home slices five off the top and the Activity page takes the whole thing, so
+   the two never disagree about what happened or in what order - the bug that
+   two independent sorts of the same data eventually produce. Drafts are
+   excluded here rather than at either call site: a draft has no broker and no
+   counterparty, so nothing has happened TO it yet, only in it. */
+function bFeed() {
+  const out = [];
+  loansNow().filter(d => d.stage !== "Draft").forEach(d => (d.events || []).forEach(e => out.push({ d, e })));
+  return out.sort((a, b) => dayNum(b.e.on) - dayNum(a.e.on));
+}
+
+/* The borrower's whole activity log - #/loans/activity, 1 Oct [Tanya]. It
+   exists because Home's card head now says "All activity", and a link has to
+   land somewhere; the broker's own Home card solved the same gap the other
+   way, by renaming its heading to "Deal activity" so that "All deals" became
+   the honest whole (see the comment there, 28 Sep). That dodge is not
+   available here. Every row on the borrower's card is an event on one of
+   their deals and the deals are already the neighbouring card's link, so
+   pointing a second control at My deals would have put two links to one place
+   in one view and still not shown the thing the heading names.
+
+   No cap and no filter. The card is the sample; this is the log, which is
+   what makes the pair whole-and-part rather than two samples. Rows carry the
+   deal name and open that deal's own Activity tab, the same destination the
+   card's rows use - so the page adds a view, not a new place for a fact to
+   live. */
+function renderBActivity() {
+  const feed = bFeed();
+  return `
+    <div class="home">
+      <div class="head"><div><h1>Activity</h1><p>Everything that has happened on your deals, newest first.</p></div></div>
+      <div class="card">
+        ${feed.length ? `<div class="card__ct">${feed.map(({ d, e }) => `
+          <a class="feed" href="#/loan/${d.id}/activity"><span class="lpav feed__av feed__av--sys">${BIC[e.type === "quotes" ? "quote" : e.type === "docs" ? "file" : "check"]}</span>
+            <span class="feed__tx"><span class="s">${esc(e.tx)} <b>${esc(d.name)}</b></span><span class="when">${esc(e.on)}</span></span>
+          </a>`).join("")}</div>`
+        : `<div class="card__ct"><div class="empty"><b>Nothing has happened yet</b>
+            <p>Submit a financing request and everything your broker and your lenders do lands here.</p>
+            <div class="acts"><a class="btn" href="#/loans/new">New financing request</a></div></div></div>`}
+      </div>
+      <div class="frmfoot"><a class="btn btn--outline" href="#/home">Back to home</a></div>
+    </div>`;
+}
 function renderBHome() {
   const rows = loansNow();
   const stamp = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
@@ -18747,33 +19223,32 @@ function renderBHome() {
       </div>
     </article>`;
   };
-
   /* recent activity across deals, the broker Home's .feed rows. Events only:
      every line is something that happened to a deal, none names a lender the
-     broker has not shown. */
-  const feed = [];
-  rows.filter(d => d.stage !== "Draft").forEach(d => (d.events || []).forEach(e => feed.push({ d, e })));
-  feed.sort((a, b) => dayNum(b.e.on) - dayNum(a.e.on));
-  /* the pool itself is capped, not just what shows. Unbounded it was every
-     event on every non-draft deal - 34 rows running 28 Jul to 22 Sep, nine of
-     them more than a month older than the newest, which is a log and not
-     recent activity. 23 of the 34 were status changes, and the deal cards in
-     the column beside this one already carry current status. 20 reaches back
-     to 9 Sep, so the word in the heading stays true, and nothing is
-     lost: every row opens that deal's own Activity tab, which holds the whole
-     history. [Tanya, 28 Sep] */
-  const FEED_MAX = 20;
-  feed.length = Math.min(feed.length, FEED_MAX);
-  /* five, newest first (Tanya, 28 Sep - was seven), with the rest behind the
-     same Show all N the two attention cards carry. The column beside it is the
-     deal cards, and seven feed rows at this width wrap to two and three lines
-     each, so the card ran past them and pushed Find a broker off the fold.
-     Every row also opens that deal's own Activity tab, so the control is a
-     convenience rather than the only way through - which is why it reads
-     "Show all N" and not "All activity": it expands in place, it does not
-     navigate. [~] */
+     broker has not shown. Built by bFeed() so this card and the Activity page
+     read the same list from the same sort. */
+  const feed = bFeed();
+  /* five, newest first, and the rest behind the card head's own link rather
+     than an in-place expansion [Tanya, 1 Oct]. It had been "Show all N", a
+     button under the last row that grew the card to twenty, on the argument
+     that every row already opens its deal's Activity tab so the control was a
+     convenience and not a door. The deal page's identical card disagreed in
+     the same breath - "Recent activity" with "All activity" in the head - and
+     between two cards with the same name, the same rows and the same job, the
+     one that navigates is the better pattern: the whole lives somewhere, so
+     the part should point at it rather than swallow it. Building that
+     somewhere is what the change cost; see renderBActivity.
+
+     It also fixes a layout bug the cap was papering over. The column beside
+     this one is the deal cards, and twenty expanded rows at this width ran
+     the card far past them. A link in the head cannot do that.
+
+     FEED_MAX is gone with it. The pool was capped at 20 because an unbounded
+     expansion would have shown 34 rows reaching back to 28 Jul under a
+     heading that says "recent"; now nothing expands here, and the page that
+     does show everything is not called recent. */
   const FEED_N = 5;
-  const feedShown = S.bfeedAll ? feed : feed.slice(0, FEED_N);
+  const feedShown = feed.slice(0, FEED_N);
   /* A "Find a broker" card stood in the right-hand column until 28 Sep
      (Tanya). It was the last of the cut broker-network card, and row 4 of the
      tracker names three blocks - Action required, Active deals, Recent
@@ -18821,12 +19296,12 @@ function renderBHome() {
         </div>
         <div class="home__col">
           <div class="card">
-            <div class="card__hd"><h2>Recent activity</h2></div>
+            <div class="card__hd"><h2>Recent activity</h2>${feed.length > FEED_N ? `<a class="btn btn--link" href="#/loans/activity">All activity
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>` : ""}</div>
             <div class="card__ct"><div class="feedscroll">${feedShown.map(({ d, e }) => `
               <a class="feed" href="#/loan/${d.id}/activity"><span class="lpav feed__av feed__av--sys">${BIC[e.type === "quotes" ? "quote" : e.type === "docs" ? "file" : "check"]}</span>
                 <span class="feed__tx"><span class="s">${esc(e.tx)} <b>${esc(d.name)}</b></span><span class="when">${esc(e.on)}</span></span>
-              </a>`).join("")}</div>
-              ${feed.length > FEED_N ? `<button class="btn btn--link" type="button" data-bfeedall style="margin-top:6px">${S.bfeedAll ? "Show fewer" : `Show all ${feed.length}`}</button>` : ""}</div>
+              </a>`).join("")}</div></div>
           </div>
         </div>
       </div>
@@ -19074,7 +19549,8 @@ function renderLoans() {
    claims" [01.1]. The aside now says what happens after Submit instead,
    which is the question the count was standing in for. [~]
 
-   The stepper is .ltrack again (see bStageBar), clickable back to any step
+   The stepper is .ltrack again (see bTimeline for the deal page's own use of
+   the same component), clickable back to any step
    already reached - the broker's New deal form has no steps to borrow, and a
    second stepper style for one screen is how two tracks start to differ. */
 /* [key, label]. These are the tracker sheet's own step names, and the track
@@ -19480,7 +19956,11 @@ const pfld = (k, label, req, allOpt) => `<div class="fld"><label for="bp_${k}">$
    same rows on Home and on the deal page live in `card card--att` under a
    card__hd h2 with the count in the header's .r - so that is where they
    live here. The count came out of .facts with them: it was the .r chip and
-   the "Still to add" fact saying the same 2 twice. */
+   the "Still to add" fact saying the same 2 twice.
+
+   The summary card .facts sat in went later the same day - see the note over
+   the alert, which is what survived it. So the second of the three anomalies
+   above closed by deletion rather than by gaining a card__hd. */
 function renderLoanSent(d) {
   const c = d.conn || {}, b = c.st === "pending" ? brokerById(c.broker) : null;
   /* the requested DOCUMENTS, not the tasks made from them [Tanya, 1 Oct]. At
@@ -19518,31 +19998,29 @@ function renderLoanSent(d) {
             now say what has actually happened: a named person holds it, or
             nobody does and that is the borrower's next move. */""}
       <div class="head"><div><h1>${b ? `Submitted — ${esc(bName(b))} has your request` : "Submitted — pick a broker to take it on"}</h1><p>${esc(d.name)} · ${money(d.amt)} · ${esc(d.purpose)} · ${esc(d.city)}, ${esc(d.state)}</p></div></div>
-      <div class="card">
-        <div class="card__hd"><h2>What happens next</h2></div>
-        <div class="card__ct">
-          <div class="facts">
-            <div class="fact"><div class="k">Status</div><div class="v">${bStatus(d)}</div></div>
-            <div class="fact"><div class="k">Broker</div><div class="v">${b ? esc(bName(b)) : "None yet"}</div></div>
-            <div class="fact"><div class="k">Cost to you</div><div class="v">Free</div></div>
-          </div>
-          ${/* the sentence is an INFO alert, not bare body copy [Tanya, 1 Oct].
-                Both branches say the same kind of thing - what is happening to
-                the request now and what the borrower does not have to do - which
-                is the file's own definition of info: a state the reader should
-                know, with nothing asked of them. The facts above are data; this
-                is the page talking, and the band is what separates the two.
-                Title-only, no .alert__desc: one sentence, same build as the
-                trial notice. The inline margin replaces the p's own 16px top
-                and cancels .alert's 14px bottom, since this is the last thing
-                in the card. */""}
-          <div class="alert alert--info" role="status" style="margin:16px 0 0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-            <div class="alert__title">${b
-              ? `${esc(bName(b))}, a Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}, has your request. When they take it on you will see them on the deal, and they take it to lenders from there.`
-              : `No Pro broker on LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. Pick one from the directory and send them the deal; nothing goes to lenders before a broker takes it on.`}</div>
-          </div>
-        </div>
+      ${/* the sentence is an INFO alert, not bare body copy [Tanya, 1 Oct].
+            Both branches say the same kind of thing - what is happening to the
+            request now and what the borrower does not have to do - which is the
+            file's own definition of info: a state the reader should know, with
+            nothing asked of them. Title-only, no .alert__desc: one sentence,
+            same build as the trial notice.
+
+            It stands on .home rather than inside a summary card [Tanya, 1 Oct,
+            Figma 175:3842 / 15:1520 / 198:3980]. The card it sat in was headed
+            "What happens next" over a three-cell .facts strip, and not one of
+            the three answered that heading: Status restated the h1's first
+            word, Broker restated the name the h1 and this sentence both carry,
+            and Cost to you answered a question the page was not asking. The
+            sentence was the only thing on the card that did answer it, so the
+            card went and the sentence stayed. .alert carries a 14px
+            margin-bottom for stacked use and .home is a 16px flex column, so it
+            is zeroed here rather than added to the gap - the same call
+            .alert.bnextstep makes. */""}
+      <div class="alert" role="status" style="margin:0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <div class="alert__title">${b
+          ? `${esc(bName(b))}, a Pro broker who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}, has your request. When they take it on you will see them on the deal, and they take it to lenders from there.`
+          : `No Pro broker on LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. Pick one from the directory and send them the deal; nothing goes to lenders before a broker takes it on.`}</div>
       </div>
       ${/* a PLAIN card, not card--att [Tanya, 1 Oct]. The gold wash is the
             attention signal Home's Action required and the deal tab's
@@ -19607,13 +20085,34 @@ function renderLoan(d) {
       <div><h1>${esc(d.name)} <span class="badge badge--outline tone-${BSTAGE_TONE[d.stage] || "muted"}">${esc(d.stage)}</span></h1><p>${esc(d.addr)}, ${esc(d.city)}, ${esc(d.state)} ${esc(d.zip)} · ${money(d.amt)} ${esc(d.purpose.toLowerCase())}</p></div>
       <div class="head__acts">
         ${live ? `<a class="btn btn--outline" href="#/loan/${d.id}/edit">Edit request</a>` : ""}
-        ${b ? `<a class="btn" href="#/loan/${d.id}/messages">Message broker</a>` : live ? `<a class="btn" href="#/brokers">Find a broker</a>` : ""}
+        <!-- filled only when it unblocks the deal [Tanya, 1 Oct: "should the
+             Message broker be primary?"]. Find a broker is: nothing moves
+             until one takes the deal on.
+             Message broker left this slot on 2 Oct and is on the Your broker
+             card now, where tracker row 20 asks for it: "assigned broker card
+             (photo, name, company, phone, email, short profile, Message
+             broker)". Two things argued for the move. It pointed at
+             #/loan/<id>/messages, which is the Messages tab - a second door to
+             a door the tab strip already shows on every screen. And a header
+             toolbar is the CRM pattern (Zoho, Salesforce, Intercom, Zendesk,
+             Attio all put it there), which is how someone managing many
+             contacts works; a borrower has exactly one broker, and the
+             products built for that reading - Zillow's "Your team", Preply's
+             tutor rail, Hers - all put the action on the person's own card. -->
+        ${!b && live ? `<a class="btn" href="#/brokers">Find a broker</a>` : ""}
+        <!-- overflow last, as on the broker deal page [Tanya, 1 Oct: tried it
+             first, went back - every kebab in the file closes its row] -->
         ${live ? `<button type="button" class="rowkebab" data-tip="More actions" data-kebab="bw:${d.id}" aria-haspopup="menu" aria-expanded="${menuOpen}" aria-label="More actions for ${esc(d.name)}">${KEBAB}</button>
         ${menuOpen ? `<div class="cardmenu" role="menu" aria-label="Deal actions" draggable="false">
           <button type="button" role="menuitem" class="danger" data-bwd="${d.id}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Withdraw request</button></div>` : ""}` : ""}
       </div>
     </div>
-    ${d.stage === "Withdrawn" ? "" : `<div class="card bstagecard"><div class="card__ct">${bStageBar(d)}</div></div>`}
+    <!-- the progress card stood here, full width above the tabs [Tanya, 1 Oct:
+         "try b"]. The nine stages are a Deal timeline card in the Overview
+         rail now (bTimeline), so nothing separates the header from the tabs
+         and Next step opens at the top of the first screen. Cost, accepted:
+         the Quotes, Documents, Messages and Activity tabs no longer carry the
+         stage dates - the chip beside the h1 is what names the stage there. -->
     <div class="bwtabs"><div class="seg" role="group" aria-label="Deal workspace">${tabs.map(([k, l]) =>
       `<button type="button" class="${tab === k ? "on" : ""}" data-btab="${k}" data-bid="${d.id}" aria-pressed="${tab === k}">${l}</button>`).join("")}</div></div>
     ${body}`;
@@ -19633,15 +20132,124 @@ function renderLoanDraft(d) {
 /* the broker card [sheet 03.2]: photo, name, company, phone, email, short
    profile, Message broker. Pending [04.4]: name, sent date, waiting for
    response, message again or pick another. None: the directory. */
+/* Participants on the deal [tracker 03.2, updated 1 Oct: "Participants block:
+   name, role, invitation status, checklist completion (e.g. 'PFS received') -
+   status only, never the other sponsor's documents [S §3]. Invite
+   co-sponsor."]. The lead sponsor (the signed-in borrower) sees each person's
+   items as status WORDS - no file, no link - because a co-sponsor's PFS and
+   SREO are theirs and the broker's [S §3]. Full list, ownership and access
+   live on the Sponsors & Guarantors tab (03.3), not built yet. Sample people
+   [~]. */
+const BPARTS = {
+  "round-rock": [
+    { name: "Marcus Reyes", photo: "brokers/marcus-reyes.jpg" /* Unsplash photo-1507003211169-0a1dd7228f2d, 192px face crop; lives in brokers/ so it deploys with the rest */, email: "marcus@reyesholdings.com", role: "Co-sponsor", st: "Accepted",
+      items: [["PFS", "received"], ["SREO", "accepted"], ["Bio", "requested"]] },
+    { name: "Dana Whitfield", email: "dana.whitfield@gmail.com", role: "Guarantor", st: "Invited",
+      items: [["PFS", "requested"]] }],
+  "canyon-ridge": [
+    { name: "Owen Patel", email: "owen@patelcap.com", role: "Co-sponsor", st: "Declined", items: [] }]
+};
+const BME_ITEMS = { "round-rock": [["PFS", "accepted"], ["SREO", "accepted"], ["Bio", "received"]] };
+const bParts = d => d.parts || (d.parts = (BPARTS[d.id] || []).map(x => ({ ...x, items: x.items.slice() })));
+/* Library Badge variants gold and muted (.badge.tone-*). Accepted is the
+   normal state and carries none. */
+const BPART_TONE = { Invited: "gold", Declined: "muted" };
+/* Option A from the Mobbin pass (Contractbook signers, Remote "1/3", Tines
+   "Pending" only on the not-joined): two lines per person. The checklist is a
+   count plus the one item still out, so a 3-item and a 9-item list both fit
+   one line; the full list is the Sponsors & Guarantors tab's job. Accepted is
+   the normal state and carries no chip; only Invited and Declined do. */
+function bPartsCard(d) {
+  const ps = bParts(d), live = bLive(d);
+  const prog = it => { if (!it.length) return []; const out = it.filter(([, v]) => v === "requested");
+    return [`${it.length - out.length} of ${it.length} in`, ...(out.length ? [`${esc(out[0][0])} pending${out.length > 1 ? ` +${out.length - 1}` : ""}`] : [])]; };
+  const sub = parts => `<span class="bpart__sub">${parts.map(x => `<span>${x}</span>`).join(" · ")}</span>`;
+  /* Avatar from the library: 32px (avatar.tsx size-8), photo when the person
+     has one, else initials on muted. Only someone who has joined can have
+     uploaded a photo, so Invited and Declined rows always show initials.
+     The status chip sits beside the name (Contractbook, Tines), so a row is
+     two lines whatever it carries. */
+  const av = (photo, name) => `<span class="bav">${photo ? `<img class="bav__img" src="${esc(photo)}" alt="">`
+    : esc(name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase())}</span>`;
+  const row = (avatar, name, chip, bits) => `<div class="bpart">${avatar}<div class="bpart__tx">
+      <span class="bpart__nm"><b>${name}</b>${chip}</span>${sub(bits)}</div></div>`;
+  const myName = BPROF.first + " " + BPROF.last;
+  /* no "You" chip: the lead sponsor is always the first row, and the
+     signed-in borrower is always the lead sponsor here */
+  const me = row(av(BPROF.photo, myName), esc(myName), "",
+    ["Lead sponsor", ...prog(BME_ITEMS[d.id] || [])]);
+  return `<div class="card bparts">
+      <div class="card__hd"><h2>Participants</h2>${live ? `<button class="btn btn--link" type="button" data-binv="${d.id}">Invite co-sponsor</button>` : ""}</div>
+      <div class="card__ct">${me}${ps.map(x => row(av(x.st === "Accepted" && x.photo, x.name), esc(x.name),
+        BPART_TONE[x.st] ? `<span class="badge tone-${BPART_TONE[x.st]}">${esc(x.st)}</span>` : "",
+        [esc(x.role), ...(x.st === "Invited" ? ["Not joined yet"] : x.st === "Declined" ? [] : prog(x.items))])).join("")}</div></div>`;
+}
+
+/* Invite co-sponsor [tracker 03.4]: name*, email*, role*, ownership %
+   (optional), access* (assigned requests only by default / whole deal),
+   optional note. Send puts the row on the card as Invited; a repeat email is
+   refused as "already a participant". */
+function bInvModal() {
+  const d = loanById(S.binv); if (!d) return "";
+  const f = S.binvF, e = S.binvErr || {};
+  const fld = (k, lbl, req, ph, type) => `<div class="fld ${e[k] ? "err" : ""}"><label for="bi_${k}">${lbl}${req ? ` <span class="req">*</span>` : ` <span class="opt">(optional)</span>`}</label>
+      <input class="inp" id="bi_${k}" data-binvf="${k}" type="${type || "text"}" autocomplete="off" value="${esc(f[k])}" placeholder="${ph}">${e[k] ? `<div class="errmsg">${e[k]}</div>` : ""}</div>`;
+  const seg = (k, lbl, opts) => `<div class="fld"><label>${lbl} <span class="req">*</span></label><div class="seg" role="group" aria-label="${lbl}">${opts.map(([v, t]) =>
+      `<button type="button" class="${f[k] === v ? "on" : ""}" data-binvseg="${k}" data-v="${v}" aria-pressed="${f[k] === v}">${t}</button>`).join("")}</div></div>`;
+  return `<div class="mov" role="dialog" aria-modal="true" aria-label="Invite co-sponsor"><div class="mdl">
+    <div class="mdl__hd"><div class="mdl__ttl"><h2>Invite to this deal</h2><p>${esc(d.name)}</p></div>
+      <button type="button" class="x" data-binvx aria-label="Close">${XCLOSE}</button></div>
+    <div class="mdl__bd">
+      ${fld("name", "Name", true, "First and last name")}
+      ${fld("email", "Email", true, "name@company.com", "email")}
+      ${seg("role", "Role", [["Co-sponsor", "Co-sponsor"], ["Guarantor", "Guarantor"], ["Authorized representative", "Authorized rep."]])}
+      ${fld("own", "Ownership %", false, "e.g. 25", "text")}
+      ${seg("access", "Access", [["items", "Their requested items"], ["deal", "The whole deal"]])}
+      <div class="fld"><label for="bi_note">Note <span class="opt">(optional)</span></label>
+        <textarea class="inp" id="bi_note" data-binvf="note" rows="2" placeholder="Shown in the invitation email">${esc(f.note)}</textarea></div>
+      <p class="bhint" style="margin:0">They see only this deal. Their personal documents stay between them and your broker; you see status, not files.</p>
+    </div>
+    <div class="mdl__ft"><button class="btn btn--outline" type="button" data-binvx>Cancel</button><button class="btn" type="button" data-binvgo>Send invitation</button></div>
+  </div></div>`;
+}
+
 function bBrokerCard(d, b) {
   const c = d.conn || {};
-  if (b) return `<div class="card">
-      <div class="card__hd"><h2>Your broker</h2><a class="r" href="#/brokers/${b.id}">Profile</a></div>
+  if (b) return `<div class="card bbroker">
+      <div class="card__hd"><h2>Your broker</h2><a class="btn btn--link" href="#/brokers/${b.id}">Profile <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
       <div class="card__ct">
-        <div class="bid"><span class="bav bav--lg">${bAvatar(b, 48)}</span><div><b>${esc(bName(b))}</b><span>${esc(b.company)} · ${esc(b.city)}, ${esc(b.state)}</span></div></div>
+        <!-- 46, down from --lg's 64 [Tanya, 2 Oct: "isn't the avatar seems too
+             big?", then 56, then 48, then "use 46 variant"]. Both are stops on
+             the Prism Avatar set's Size axis, 32/44/46/56/64, read live off
+             set 321:16 - see the note on .bav--md for where that axis and the
+             product's own avatar sizes fail to meet. 64
+             stood 23px taller than
+             the 41px name-and-company block beside it, so it set the row height
+             alone and the text floated in a block it did not fill, with
+             Participants one card down in the same rail at 32.
+             --lg keeps the two places the person IS the page: the broker
+             profile and the borrower's own profile.
+             The size argument tracks the box. It only feeds the drawn mark,
+             whose every dimension is a ratio of it (rx = px/2, font = px*0.36),
+             so the mark scales identically at any value - matching it is
+             tidiness, not a fix. -->
+        <div class="bid"><span class="bav bav--md">${bAvatar(b, 46)}</span><div><b>${esc(bName(b))}</b><span>${esc(b.company)} · ${esc(b.city)}, ${esc(b.state)}</span></div></div>
         <p class="bhint" style="margin:12px 0">${esc(b.about)}</p>
-        <dl class="bfacts"><div class="bfact"><dt>Phone</dt><dd>${esc(b.phone)}</dd></div><div class="bfact"><dt>Email</dt><dd>${esc(b.email)}</dd></div></dl>
-        <a class="btn btn--outline btn--sm" href="#/loan/${d.id}/messages" style="margin-top:12px">Message broker</a>
+        <!-- the lender drawer's contact rows, copy button and all [Tanya, 1 Oct:
+             "should we add copy icon buttons as here?"]. The borrower reaches
+             the broker from their own phone and mail app, so copying is the
+             job these two rows do. -->
+        <div class="crows">${[[IC.mail, "Email", b.email], [IC.phone, "Phone", b.phone]].map(([ic, k, v]) => `<div class="crow">${I(ic, 15)}<span class="k">${k}</span><span class="v">${esc(v)}</span>
+          <button class="cp" type="button" data-copy="${esc(v)}" data-copyw="${k}" data-tip="Copy the ${k.toLowerCase()}" aria-label="Copy the ${k.toLowerCase()}">${I(IC.copy, 13)}</button></div>`).join("")}</div>
+        <!-- last, under the two rows it is an alternative to: email and phone
+             reach the broker outside the product, this reaches them inside it.
+             Labelled, not an icon [Tanya, 2 Oct: "or add some icon button?"] -
+             folk, HubSpot and X draw icon strips, but each is carrying five or
+             six actions and this card has one, and the file already has an
+             unlabelled affordance open in .rowkebab. Outline, keeping the
+             weight the header slot gave it: a channel, not the next step.
+             BIC.msg is the Messages tab's own glyph. -->
+        <a class="btn btn--outline bbroker__msg" href="#/loan/${d.id}/messages">${BIC.msg}Message broker</a>
       </div></div>`;
   if (c.st === "pending") { const x = brokerById(c.broker); return `<div class="card">
       <div class="card__hd"><h2>Broker</h2><span class="badge badge--outline tone-gold">Pending</span></div>
@@ -19653,51 +20261,114 @@ function bBrokerCard(d, b) {
       </div></div>`; }
   return `<div class="card">
       <div class="card__hd"><h2>Broker</h2></div>
-      <div class="card__ct">
-        <div class="bid"><span class="bav">?</span><div><b>No broker yet</b><span>Nothing goes to lenders until a broker takes the deal on.</span></div></div>
-        ${bLive(d) ? `<a class="btn btn--sm" href="#/brokers" style="margin-top:12px">Find a broker</a>` : ""}
-      </div></div>`;
+      <!-- the library's Empty/Page, Size=sm, Show actions off [Tanya, 1 Oct:
+           "is this empty state from the system?" - it was a .bid row with a
+           "?" avatar]. sm because a card body is the container. No button:
+           the header's primary Find a broker is the page's one way out. -->
+      <div class="empty empty--sm"><b>No broker yet</b><p>${esc(d.next || "Nothing goes to lenders until a broker takes the deal on.")}</p></div></div>`;
 }
 
+/* bKeyDates stood here and is gone [Tanya, 2 Oct]. Desired closing reads back
+   in the Financing request summary beside the other wizard fields the tracker
+   lists [rows 12, 20]; Next milestone is a date on the next stage's row in
+   bTimeline, because that is what it turned out to be.
+   Both of its special cases went with it. "Desired closing" is what the
+   borrower asked for, which stays true after a deal closes, so the label no
+   longer renames itself; and the day it actually closed is the last row of
+   the timeline, so nothing has to swap in for it. */
+
+/* Overview, reworked 1 Oct [Tanya: "I don't see any improvements"]. Three
+   changes on parts already in the file:
+   · Next step and Outstanding were two cards saying one thing - Round Rock's
+     next step was its first task, word for word. Now one .card--att: the
+     sentence leads, the tasks follow, sorted by due date, overdue first in
+     red. A deal with nothing to do keeps the plain next-step alert.
+   · Key dates went up into the progress card, that card went with the
+     horizontal stepper [Tanya, 1 Oct: "try b"], and the footer it shrank into
+     is gone too [Tanya, 2 Oct]. The four facts are now in the three sections
+     the tracker names: Submitted and the current stage are rows on the Deal
+     timeline, Next milestone is the expected date on the row below them, and
+     Desired closing reads back in the Financing request grid, the card the
+     request's own fields belong to.
+   · Recent activity moved to the right rail under the broker, the column
+     Mercury, Upwork and Asana all give the timeline. The left column is now
+     what you act on and what you asked for; the right is who and what
+     happened. The two columns end near each other instead of the left
+     running 600px past the right. */
 function loanOverview(d, b) {
-  const tasks = bOpenTasks(d);
+  const tasks = bOpenTasks(d).slice().sort(bByDue);
+  /* the grid reads back the request, so it carries what the request collected.
+     Two of the wizard's five step-2 fields were landing nowhere [tracker row
+     12: "...existing loan balance (refi), desired closing date..."]: the
+     borrower typed both and never saw either again. Existing loan balance had
+     been invisible since the field was built and stays here, next to the value
+     it is entered beside. [Tanya, 2 Oct]
+     Desired closing came here the same day and left again hours later [Tanya,
+     2 Oct: "we can remove this"]. It is still read back - as "target 31 Oct"
+     on the timeline's Closed row - so the only thing the cell added was a
+     second place to find one date, which is the duplication this page has been
+     losing all week. The row-20 read-back it answers is answered there.
+     Balance is refinance-only, exactly as the wizard has it, so a purchase
+     shows eight cells and a refinance nine. .facts is repeat(4, 1fr) and
+     flows, so an odd count trails an empty cell on the last row - the rule the
+     wizard's own step 2 settled on 30 Sep: it trails, it never leads. */
   const facts = [["Loan amount", money(d.amt)], ["Purpose", d.purpose], ["Property type", d.property],
     [d.units ? "Units" : "Square feet", d.units || (d.sf ? d.sf.toLocaleString("en-US") : "—")], ["Occupancy", d.occupancy ? d.occupancy + "%" : "—"],
-    ["Built", d.built || "—"], [d.purpose === "Purchase" ? "Purchase price" : "Estimated value", d.value ? money(d.value) : "—"], ["Structure", d.financing || "Open"]];
+    ["Built", d.built || "—"], [d.purpose === "Purchase" ? "Purchase price" : "Estimated value", d.value ? money(d.value) : "—"]]
+    .concat(d.purpose === "Refinance" ? [["Existing loan balance", d.balance ? money(d.balance) : "—"]] : [])
+    .concat([["Structure", d.financing || "Open"]]);
   const dates = [["Submitted", d.submitted || "—"], ["Desired closing", d.closeBy || "—"], ["Next milestone", d.milestone ? `${esc(d.milestone.t)} · ${esc(d.milestone.on)}` : "—"]];
   const ev = (d.events || []).slice(-5).reverse();
+  const over = d.stage === "Closed" || d.stage === "Withdrawn";
   return `
     <div class="home__grid">
       <div class="home__col">
-        ${d.stage === "Closed" || d.stage === "Withdrawn" ? "" : `<div class="alert alert--state bnextstep" role="status">
-          ${BIC.check}<div class="alert__title">Next step</div><div class="alert__desc">${esc(d.next || "")}</div>
-        </div>`}
-        ${tasks.length ? `<div class="card card--att"><div class="card__hd"><h2>Outstanding</h2><span class="r">${tasks.length}</span></div>
-          <div class="card__ct">${tasks.map(t => bTaskRow(d, t, false)).join("")}</div></div>` : ""}
+        <!-- the request leads the column [Tanya, 2 Oct]: it is the one card
+             present on every deal, so the page opens on what the deal IS and
+             the tasks follow it, rather than the column's top changing with
+             whether anything is due -->
         <div class="card">
-          <div class="card__hd"><h2>Financing request</h2>${b && bLive(d) ? `<a class="r" href="#/loan/${d.id}/messages" data-bchange="${d.id}">Request a change</a>` : ""}</div>
+          <div class="card__hd"><h2>Financing request</h2>${b && bLive(d) ? `<a class="btn btn--link" href="#/loan/${d.id}/messages" data-bchange="${d.id}">Request a change</a>` : ""}</div>
           <div class="card__ct">
             <div class="facts">${facts.map(([k, v]) => `<div class="fact"><div class="k">${esc(k)}</div><div class="v">${esc(String(v))}</div></div>`).join("")}</div>
-            ${d.summary ? `<p style="margin:16px 0 0; line-height:1.55">${esc(d.summary)}</p>` : ""}
-            <!-- the second clause is about changing it, so it only belongs on a
-                 deal that can still change [Tanya, 28 Sep]. Withdrawn and closed
-                 deals kept "Ask your broker for a change" under a header chip
-                 that says the deal is over, and beside a Request a change link
-                 that bLive had already correctly hidden. -->
-            <div class="bhint" style="margin-top:12px">Read-only since you submitted it.${bLive(d) ? ` ${b ? "Ask your broker for a change, or edit your own fields." : "You can still edit your own fields."}` : ""}</div>
+            <!-- the summary sentence is gone [Tanya, 1 Oct]: it restated the facts
+                 grid above it and the stage the stepper already shows -->
+            <!-- the "Read-only since you submitted it" hint is gone [Tanya, 1 Oct].
+                 The card says it without the sentence: nothing on it is a field,
+                 and the ways to change it are Request a change in the card header
+                 and Edit request in the page header. -->
           </div>
         </div>
-        <div class="card">
-          <div class="card__hd"><h2>Recent activity</h2><a class="r" href="#/loan/${d.id}/activity">All activity</a></div>
+        ${tasks.length ? `<div class="card bact">
+          <div class="card__hd"><h2>Next step</h2></div>
+          <div class="card__ct">${tasks.map(t => bTaskRow(d, t, false, true)).join("")}</div></div>`
+        : ""}
+        <!-- No tasks, no Next step card [Tanya, 1 Oct: "should we hide it when
+             it's empty?"]. Every empty case repeated a card beside it: no broker
+             is the Broker card's own state (and the header's Find a broker),
+             pending is its Pending badge, and an assigned broker at work is
+             what the stepper and Next milestone already say. d.next survives
+             where it is specific: it becomes the Broker card's line when there
+             is no broker. The lead sentence over the tasks went too [Tanya,
+             1 Oct]: it restated the task rows under it. -->
+        <!-- Recent activity follows the tasks in the wide column [Tanya, 2 Oct],
+             the place Deal activity holds on the broker Home: the log is read,
+             not glanced at, and a 340px rail wrapped every event onto two
+             lines. The rail keeps the reference cards - timeline, broker,
+             participants. -->
+        <div class="card bfeed">
+          <div class="card__hd"><h2>Recent activity</h2><a class="btn btn--link" href="#/loan/${d.id}/activity">All activity <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
           <div class="card__ct">${ev.map(e => `<div class="feed"><span class="lpav feed__av feed__av--sys">${BIC[e.type === "quotes" ? "quote" : e.type === "docs" ? "file" : "check"]}</span>
             <span class="feed__tx"><span class="s">${esc(e.tx)}</span><span class="when">${esc(e.on)}</span></span></div>`).join("")}</div>
         </div>
       </div>
       <div class="home__col">
+        ${bTimeline(d)}
         ${bBrokerCard(d, b)}
-        <div class="card"><div class="card__hd"><h2>Key dates</h2></div><div class="card__ct">
+        ${bPartsCard(d)}
+        ${d.stage === "Withdrawn" ? `<div class="card"><div class="card__hd"><h2>Key dates</h2></div><div class="card__ct">
           <dl class="bfacts">${dates.map(([k, v]) => `<div class="bfact"><dt>${k}</dt><dd>${v}</dd></div>`).join("")}</dl>
-        </div></div>
+        </div></div>` : ""}
       </div>
     </div>`;
 }
@@ -19714,6 +20385,11 @@ const BQ_ROWS = [["Loan amount", q => money(q.amt)], ["Interest rate", q => q.ra
   ["Amortization", q => q.amort], ["Interest-only", q => q.io], ["Recourse", q => q.recourse], ["Prepayment", q => q.prepay], ["Origination fee", q => q.fee],
   ["Est. closing costs", q => q.closing], ["Est. debt service", q => q.ds], ["DSCR", q => q.dscr], ["LTV", q => q.ltv + "%"], ["Key conditions", q => q.cond]];
 const bQBadge = q => q.st === "selected" ? `<span class="badge badge--outline tone-green">Selected</span>` : q.st === "updated" ? `<span class="badge badge--outline tone-blue">Updated</span>` : q.st === "new" ? `<span class="badge badge--outline tone-blue">New</span>` : "";
+/* the body rows in reading order, banded. Loan amount and Interest rate are
+   not here: they are the column's headline and would print twice. BQ_ROWS
+   keeps them for the detail sheet's .facts, which has no header to carry them. */
+const BQ_GROUPS = [["Terms", ["Index + spread", "Term", "Amortization", "Interest-only"]], ["Structure", ["Recourse", "Prepayment"]],
+  ["Costs", ["Origination fee", "Est. closing costs", "Est. debt service"]], ["Coverage", ["DSCR", "LTV"]], ["Conditions", ["Key conditions"]]];
 function loanQuotes(d, b) {
   const qs = bQuotes(d);
   if (!b) return `<div class="card"><div class="card__ct"><div class="empty"><b>No quotes yet</b><p>Quotes come through a broker, and none has this deal yet.</p>
@@ -19722,19 +20398,32 @@ function loanQuotes(d, b) {
   const rate = q => parseFloat(q.rate) || 99;
   const sorted = qs.slice().sort(S.bqsort === "amount" ? (x, y) => y.amt - x.amt : (x, y) => rate(x) - rate(y));
   const chosen = qs.some(q => q.st === "selected");
-  const col = q => `<th class="qcol"><div class="qcol__hd"><b>${esc(bLender(q))}</b>${q.rank ? `<span class="badge badge--secondary">#${q.rank} from your broker</span>` : ""}${bQBadge(q)}</div>
-    <span class="qcol__sub">${q.showCo ? esc(q.src) + " · " : ""}Released ${esc(q.on)}</span></th>`;
+  const sel = q => q.st === "selected" ? " qsel" : "";
+  /* the three actions the row names, in the header so they stay on screen.
+     Select is primary and disappears for every column once one is chosen.
+     The chosen column used to say "You chose this quote." in its place; the
+     Selected badge two lines up and the column tint already say it, and the
+     sentence pushed Ask broker onto a second line. */
+  const acts = q => `<div class="qcol__acts">
+        ${q.st !== "selected" && !chosen && bLive(d) ? `<button class="btn btn--sm" type="button" data-bsel="${q.id}">Select</button>` : ""}
+        <a class="btn btn--outline btn--sm" href="#/loan/${d.id}/quotes/${q.id}">View details</a>
+        ${bLive(d) ? `<button class="btn btn--ghost btn--sm" type="button" data-bask="${q.id}">Ask broker</button>` : ""}</div>`;
+  /* a masked quote used to read "Regional bank / Released 19 Sep", which
+     looks like a lender called Regional Bank. The sub line now says the name
+     is not shared, in the same slot where a shared one prints the type. */
+  const col = q => `<th class="qcol${sel(q)}" scope="col"><div class="qcol__hd"><b title="${esc(bLender(q))}">${esc(bLender(q))}</b><div class="qcol__badges">${q.rank ? `<span class="badge badge--secondary">#${q.rank} from your broker</span>` : ""}${bQBadge(q)}</div></div>
+    <div class="qcol__key"><span class="qcol__rate num">${esc(q.rate)}</span><span class="qcol__amt num">${money(q.amt)}</span></div>
+    <span class="qcol__sub">${q.showCo ? esc(q.src) : "Lender name not shared"} · Released ${esc(q.on)}</span>${acts(q)}</th>`;
+  const n = sorted.length;
+  const row = k => { const [lbl, f] = BQ_ROWS.find(r => r[0] === k), w = k === "Key conditions" ? " qwrap" : "";
+    return `<tr><th class="qk${w}" scope="row">${lbl}</th>${sorted.map(q => `<td class="${w.trim()}${sel(q)}">${esc(String(f(q)))}</td>`).join("")}<td class="qfill"></td></tr>`; };
+  const grp = ([g, keys]) => `<tr class="qgrp"><th scope="colgroup" colspan="${n + 2}">${g}</th></tr>${keys.map(row).join("")}`;
   return `<div class="card"><div class="card__ct">
     <div class="qbar"><div class="seg" role="group" aria-label="Sort quotes">${[["rate", "Lowest rate"], ["amount", "Highest amount"]].map(([k, l]) =>
       `<button type="button" class="${S.bqsort === k ? "on" : ""}" data-bqsort="${k}" aria-pressed="${S.bqsort === k}">${l}</button>`).join("")}</div>
       <span class="bhint">${qs.length} ${qs.length === 1 ? "quote" : "quotes"} released by ${esc(bName(b))}. Lender names show where your broker chose to share them; contacts are never shared.</span></div>
-    <div class="tblwrap"><table class="t qcmp"><thead><tr><th class="qk"></th>${sorted.map(col).join("")}</tr></thead>
-      <tbody>${BQ_ROWS.map(([k, f]) => `<tr><th class="qk" scope="row">${k}</th>${sorted.map(q => `<td>${esc(String(f(q)))}</td>`).join("")}</tr>`).join("")}
-      <tr class="qacts"><th class="qk"></th>${sorted.map(q => `<td><div class="qacts__in">
-        ${q.st === "selected" ? `<span class="bhint">You chose this quote.</span>` : !chosen && bLive(d) ? `<button class="btn btn--sm" type="button" data-bsel="${q.id}">Select</button>` : ""}
-        <a class="btn btn--outline btn--sm" href="#/loan/${d.id}/quotes/${q.id}">View details</a>
-        ${bLive(d) ? `<button class="btn btn--ghost btn--sm" type="button" data-bask="${q.id}">Ask broker</button>` : ""}</div></td>`).join("")}</tr>
-      </tbody></table></div>
+    <div class="tblwrap"><table class="t qcmp"><thead><tr><th class="qk"></th>${sorted.map(col).join("")}<th class="qfill"></th></tr></thead>
+      <tbody>${BQ_GROUPS.map(grp).join("")}</tbody></table></div>
   </div></div>`;
 }
 
@@ -19769,22 +20458,61 @@ function loanQuote(d, b) {
 }
 
 /* 03.5 Document center [sheet]. Requested versus uploaded is the point, so
-   the broker's .docrow list is used exactly as the broker's Documents tab
-   uses it: dashed .docrow--pend for what has been asked for, plain rows for
-   what is on file. The table the sheet lists (name, category, uploaded by,
-   date, version, status) is the on-file list's columns. */
+   the page is two objects: a CHECKLIST of what has been asked for, and an
+   INVENTORY of what is on file. The table the sheet lists (name, category,
+   uploaded by, date, version, status) is the inventory's columns; the sheet
+   also lists "requested" as a table status, but a requested document has no
+   name, uploader, date or version, so it lives in the checklist alone [~].
+   "Needs update" is the one item that is both a task and a file, and shows
+   in both.
+
+   THE ROW IS .docrow, the wizard's [Tanya, 1 Oct, against step 5 and the
+   submitted page]. It spent an hour as .att__row, Home's attention row,
+   on the argument that the sheet calls missing items tasks and this is the
+   borrower's task row. The argument is true and still loses: a borrower
+   meets these fifteen document slots in the request wizard, leaves some
+   behind on the submitted page, and finds the rest asked for here, and
+   those are three views of ONE list. A document slot is the object, and
+   .docrow is what this file draws it with everywhere else - wizard step 5,
+   "Still to add", the profile, both broker tabs, the desk response page.
+   A second row shape for the same object on the third screen in the
+   sequence is the inconsistency; matching Home was the smaller prize.
+
+   --pend rather than --none: these were ASKED for. --none is a slot with
+   nothing in it and nothing asked for, which is what the wizard rows are
+   and what makes their note italic - the row speaking about an absence
+   rather than reporting a value. "Requested by Jordan Ellis - due today"
+   is a record of something that happened, so it stays roman. --pend's dash
+   and grey fill come off, because every row here is pending; see the
+   .doclist--ask note in the CSS.
+
+   A PLAIN card, not card--att [Tanya, 1 Oct]. It wore the gold attention
+   wash for an hour on the reading that Home's Action required and this card
+   mean the same thing. On the tab they do not read the same: Home's gold is
+   one card among several on a page about everything, where the wash is what
+   picks it out. This is the first and largest thing on a tab that exists for
+   documents, with one white card under it, so the wash tinted the screen
+   rather than marking a region of it - and the rows inside already carry the
+   state in words and colour. The 16px below it is .home's own stack gap,
+   written here because the tab body is two bare cards with no flex column
+   around them; the card under it had been touching its bottom edge.
+
+   The broker's instruction ("the lender needs the executed first amendment,
+   not the draft") is NOT on the row. A .docrow is one line and the sentence
+   is the longest thing on it; it already has a home one click away, as
+   .bnote on the upload screen each row opens, where the borrower reads it
+   with the file picker in front of them rather than three rows above it. */
 const BDOC_ST = { uploaded: ["Uploaded", "tone-muted"], accepted: ["Accepted", "tone-green"], "needs update": ["Needs update", "tone-gold"], requested: ["Requested", "tone-gold"] };
 function loanDocs(d) {
   const b = bBroker(d), need = bNeeded(d), have = d.docs.filter(x => x.name);
   const who = x => x.by === "system" ? "LenderPrism" : b ? bName(b) : "your broker";
-  const needBlock = need.length ? `<div class="card card--att"><div class="card__hd"><h2>${need.length} ${need.length === 1 ? "document" : "documents"} needed</h2>
-      ${bLive(d) ? `<a class="btn btn--sm" href="#/loan/${d.id}/upload">Upload ${need.length === 1 ? "it" : "them"}</a>` : ""}</div>
-      <div class="card__ct doclist">${need.map(x => `<div class="docrow docrow--pend">
+  const needBlock = need.length ? `<div class="card" style="margin-bottom:16px" role="region" aria-label="Documents needed"><div class="card__hd"><h2>${need.length} ${need.length === 1 ? "document" : "documents"} needed</h2></div>
+      <div class="card__ct doclist doclist--ask">${need.map(x => { const upd = x.st === "needs update"; return `<div class="docrow docrow--pend">
         <span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(x.cat)}</span>
-        <span class="docrow__note">${x.st === "needs update" ? `Needs an update · ${esc(x.name)}` : `Requested by ${esc(who(x))}`}${x.due ? ` · due ${esc(x.due)}` : ""}${x.note ? ` · ${esc(x.note)}` : ""}</span>
-        ${bLive(d) ? `<div class="docrow__acts"><a class="rowkebab" data-tip="Upload" aria-label="Upload ${esc(x.cat)}" href="#/loan/${d.id}/upload/${x.id}">${ULIC}</a></div>` : ""}
-      </div>`).join("")}</div></div>`
-    : `<div class="card clear" role="status"><span class="clear__ic">${BIC.check}</span><span class="clear__tx">No documents requested right now.</span></div>`;
+        <span class="docrow__note">${upd ? `Needs an update · ${esc(x.name)}` : `Requested by ${esc(who(x))}`}${bDue(x)}</span>
+        ${bLive(d) ? `<div class="docrow__acts"><a class="rowkebab" data-tip="${upd ? "Replace" : "Upload"}" aria-label="${upd ? "Replace" : "Upload"} ${esc(x.cat)}" href="#/loan/${d.id}/upload/${x.id}">${ULIC}</a></div>` : ""}
+      </div>`; }).join("")}</div></div>`
+    : `<div class="card clear" style="margin-bottom:16px" role="status"><span class="clear__ic">${BIC.check}</span><span class="clear__tx">No documents requested right now.</span></div>`;
   const reusable = BPROF.pdocs.filter(x => x.file && x.reuse);
   const reuseCat = { pfs: "PFS", sreo: "SREO", org: "Organizational documents" };
   const canReuse = reusable.filter(x => !d.docs.some(y => y.name === x.file));
@@ -20793,7 +21521,7 @@ function renderProfile() {
              : sec.k === "listing" ? profListing()
              : profContact();
   const banner = S.profBanner && PROFILE.listing !== "live" ? `
-    <div class="alert alert--info">
+    <div class="alert">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <div class="alert__title">Complete your public profile for borrowers to find and connect with you - available only for Pro brokers.
         <a href="#/profile/listing">Claim your spot →</a></div>
@@ -21225,6 +21953,8 @@ function render() {
     view.innerHTML = d ? renderLoan(d) : renderNotFound(S.nf);
   } else if (S.route === "loannew") {
     view.innerHTML = renderLoanNew();
+  } else if (S.route === "bact") {
+    view.innerHTML = renderBActivity();
   } else if (S.route === "lsent") {
     const d = loanById(S.dealId);
     view.innerHTML = d ? renderLoanSent(d) : renderNotFound(S.nf);
@@ -21376,6 +22106,7 @@ function render() {
   if (S.bdel) view.insertAdjacentHTML("beforeend", bDelModal());
   if (S.bdelAcct) view.insertAdjacentHTML("beforeend", bDelAcctModal());
   if (S.bwd) view.insertAdjacentHTML("beforeend", bWdModal());
+  if (S.binv) view.insertAdjacentHTML("beforeend", bInvModal());
   if (S.bsel && S.route === "loan") view.insertAdjacentHTML("beforeend", bSelModal());
   /* Account is a rail destination [T · 27 Aug, Flow 01 row 5, the one row on
      the tracker marked Done], so it lights its own item. The profile is not —
@@ -21383,7 +22114,7 @@ function render() {
      is lit, rather than leaving Deals lit on a page that is not Deals. */
   document.querySelectorAll(".rail a[data-nav]").forEach(a =>
     a.classList.toggle("on", (S.route === "brokers" || S.route === "broker") ? a.dataset.nav === "brokers"
-      : (S.route === "loan" || S.route === "loannew" || S.route === "lsent" || (S.route === "deals" && isB())) ? a.dataset.nav === "loans"
+      : (S.route === "loan" || S.route === "loannew" || S.route === "lsent" || S.route === "bact" || (S.route === "deals" && isB())) ? a.dataset.nav === "loans"
       : S.route === "help" ? a.dataset.nav === "help"
       : S.route === "profile" && isB() ? a.dataset.nav === "bprofile"
       : S.route === "account" ? a.dataset.nav === "account"
@@ -21525,6 +22256,19 @@ function render() {
   fitChips();
   fitStates();
   cutFacetLists();
+  fitFeeds();
+}
+
+/* the feed's alignment rule - see .feed. Three or more lines of text means the
+   sentence wrapped: .when is always one line, so the test is whether .s is
+   taller than one line of itself. 1.5 lines, not 1, absorbs sub-pixel heights. */
+function fitFeeds() {
+  document.querySelectorAll(".feed:not(.bmsg)").forEach(r => {
+    const s = r.querySelector(".feed__tx .s");
+    if (!s) return;
+    const lh = parseFloat(getComputedStyle(s).lineHeight);
+    r.classList.toggle("feed--top", s.getBoundingClientRect().height > lh * 1.5);
+  });
 }
 
 /* The CSS cap is ten 25px rows plus LFCUT of one, which lands on the fraction
@@ -21567,7 +22311,7 @@ function cutFacetLists() {
 /* the columns are percentages of a card that is a percentage of the viewport,
    so what fits is not a property of the data - a resize re-runs the fit. No
    render: fitChips only ever toggles hidden and rewrites one number. */
-addEventListener("resize", () => { if (typeof S !== "undefined") { fitChips(); fitStates(); } });
+addEventListener("resize", () => { if (typeof S !== "undefined") { fitChips(); fitStates(); fitFeeds(); } });
 
 function route() {
   /* clearing S.undo, not just the node: render() rebuilds the toast from state,
@@ -21689,7 +22433,12 @@ function route() {
   const bwStep = k => k === "story" ? 5 : Math.max(1, BW_STEPS.findIndex(x => x[0] === k) + 1);
   const mlb = h.match(/^\/brokers(?:\/([a-z0-9-]+))?\/?$/);
   const mlh = /^\/help\/?$/.test(h), mll = /^\/borrower\/?$/.test(h);
-  if (mln || mle || mlsent || mlo || mlb || mlh || mll || /^\/loans\/?$/.test(h)) {
+  /* the activity log, 1 Oct. Under /loans because it reads every deal and
+     nothing else, so it belongs to the deals branch of the address space and
+     lights My deals in the rail. mln's regex is anchored on /loans/new and
+     mlo's on the singular /loan/, so neither claims it. */
+  const mlact = /^\/loans\/activity\/?$/.test(h);
+  if (mln || mle || mlsent || mlo || mlb || mlh || mll || mlact || /^\/loans\/?$/.test(h)) {
     S.dealId = null; S.bId = null;
     if (mln) {
       /* the draft survives the step change. A bare /loans/new is a fresh
@@ -21709,6 +22458,7 @@ function route() {
       else { if (!S.ldraft || S.ldraft.id !== d.id) { S.ldraft = loanDraftOf(d); S.ltried = false; } S.route = "loannew"; S.lstep = bwStep(mle[2]); S.lmax = 5; }
     }
     else if (mlsent) { S.route = "lsent"; S.dealId = mlsent[1]; }
+    else if (mlact) S.route = "bact";
     else if (mlh) S.route = "help";
     else if (mll) S.route = "bland";
     else if (mlo) {
@@ -21912,6 +22662,8 @@ document.addEventListener("click", e => {
   else if (e.target.closest("#authLogin")) location.hash = "#/home";
 });
 document.addEventListener("input", e => {
+  const bif = e.target.closest("[data-binvf]");
+  if (bif && S.binvF) { S.binvF[bif.dataset.binvf] = bif.value; return; }
   if (S.route !== "auth") return;
   const af = e.target.closest("[data-af]");
   if (af) S.auth[af.dataset.af] = af.value;
@@ -22585,6 +23337,23 @@ document.addEventListener("click", e => {
   /* ---- My deals and the workspace, 28 Sep ---- */
   const bvw = t.closest("[data-bview]");
   if (bvw) { S.bview = bvw.dataset.bview; S.bSt.clear(); S.open = null; render(); return; }
+  const binvb = t.closest("[data-binv]");
+  if (binvb) { S.binv = binvb.dataset.binv; S.binvF = { name: "", email: "", role: "Co-sponsor", own: "", access: "items", note: "" }; S.binvErr = null; render(); return; }
+  if (t.closest("[data-binvx]")) { S.binv = null; render(); return; }
+  const binvs = t.closest("[data-binvseg]");
+  if (binvs) { S.binvF[binvs.dataset.binvseg] = binvs.dataset.v; render(); return; }
+  if (t.closest("[data-binvgo]")) {
+    const d = loanById(S.binv), f = S.binvF, e = {};
+    const mail = f.email.trim().toLowerCase();
+    if (!f.name.trim()) e.name = "Enter their name.";
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) e.email = "Enter an email address.";
+    else if (mail === BPROF.email || bParts(d).some(x => x.email.toLowerCase() === mail)) e.email = "Already a participant on this deal.";
+    if (Object.keys(e).length) { S.binvErr = e; render(); return; }
+    bParts(d).push({ name: f.name.trim(), email: mail, role: f.role, st: "Invited", items: [] });
+    d.events.push({ on: "Today", type: "status", tx: `You invited ${f.name.trim()} as ${f.role.toLowerCase()}` });
+    S.undo = { msg: `Invitation sent to ${mail}.` };
+    S.binv = null; render(); return;
+  }
   const bwdb = t.closest("[data-bwd]");
   if (bwdb) { S.cardMenu = null; S.bwd = bwdb.dataset.bwd; render(); return; }
   if (t.closest("[data-bwdx]")) { S.bwd = null; render(); return; }
@@ -22695,7 +23464,6 @@ document.addEventListener("click", e => {
   if (t.closest("[data-btfa]")) { BPROF.tfa = !BPROF.tfa; render(); return; }
   if (t.closest("[data-battall]")) { S.battAll = !S.battAll; render(); return; }
   if (t.closest("[data-attall]")) { S.attAll = !S.attAll; render(); return; }
-  if (t.closest("[data-bfeedall]")) { S.bfeedAll = !S.bfeedAll; render(); return; }
   if (t.closest("[data-bdealall]")) { S.bdealAll = !S.bdealAll; render(); return; }
   if (t.id === "bkclrf" || t.id === "bkclrf2") { BROKFILTERS.forEach(f => f.set().clear()); S.open = null; render(); return; }
   /* the loan requests table, 22 Sep. Its own clear, sort key and columns —
@@ -23886,7 +24654,7 @@ function hardReset() {
   S.bkLoc.clear(); S.bkType.clear(); S.bkGeo.clear();
   S.bq = ""; S.bsort = "updated"; S.bLoc.clear(); S.bProp.clear(); S.bAmt.clear(); S.bSt.clear();
   S.bview = "active"; S.lmax = 1; S.bqsort = "rate"; S.bQ = null; S.bsel = null; S.bwd = null; S.bact = "all";
-  S.bupId = null; S.bupJust = null; S.bupCat = "Other"; S.bmTx = ""; S.bmRef = ""; S.bqTx = ""; S.bpadd = null; S.bpnew = {}; S.bcMsg = ""; S.bverify = null; S.battAll = false; S.attAll = false; S.bfeedAll = false; S.bdealAll = false;
+  S.bupId = null; S.bupJust = null; S.bupCat = "Other"; S.bmTx = ""; S.bmRef = ""; S.bqTx = ""; S.bpadd = null; S.bpnew = {}; S.bcMsg = ""; S.bverify = null; S.battAll = false; S.attAll = false; S.bdealAll = false;
   S.bcols = Object.assign({}, BCOLS0); S.help = { subject: "", msg: "", ref: null, deal: "" }; S.helpTried = false;
   S.cardFields = { amt: true, meta: true, fin: true, counts: true, when: true };
   S.cols = { amt: true, loc: true, fin: true, matches: true, status: true, upd: true };
