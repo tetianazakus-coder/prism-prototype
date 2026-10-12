@@ -4076,6 +4076,20 @@
      column steps moved with it: 1068 and 740 are the list at the old 1240
      and 900 breakpoints, so a default-width view lands where it did. */
   .card__ct.doclist { container-type: inline-size; }
+  /* A loose upload's name is its filename, any length, so it ran to the
+     column edge and left only the row's 10px before the date [Tanya: "they
+     don't match, visually this one is smaller", 12 Oct]. Cutting it at the
+     longest slot name was tried and refused the same night [Tanya: "don't
+     truncate"], so the two text columns are now table columns: fitDocCols()
+     measures the widest name and the widest filename in each list into
+     --nmmax and --notemax, and each column is that plus the gap, so the
+     space after the longest text in every column is --ctlgap, the same as
+     between the select and the uploader. A list of short filenames pulls
+     the selects left with it [Tanya: "decrease this gap"]. Caps: a name
+     past 240 or a filename past 320 still ellipsises (320 keeps the seeded
+     318 whole), and the padding keeps a cut one --ctlgap clear of the next
+     column rather than flush against it. */
+  .doclist .docrow--extra:has(> .docrow__ctl) > .docrow__nm { padding-right: calc(var(--ctlgap, 10px) - 10px); box-sizing: border-box; }
   .docrow:has(> .docrow__ctl) > .docrow__note,
   .docrow--extra:has(> .docrow__ctl) > .docrow__note { flex: 0 1 360px; }
   .docrow:has(> .docrow__ctl) > .docrow__acts { margin-left: auto; }
@@ -4102,6 +4116,14 @@
     --nmcol: max(170px, calc(150px + var(--ctlgap))); }
   .card__ct.doclist .docrow:not(.docrow--extra) > .docrow__nm,
   .card__ct.doclist .docrow--extra:has(> .docrow__ctl) > .docrow__nm { flex: 0 0 var(--nmcol); }
+  /* measured columns, see the .docrow--extra padding note above: the widest
+     text plus the gap. Without fitDocCols (another list, no JS) the
+     fallbacks are the old 200 and 360 at full width. */
+  .card__ct.doclist .docrow { --nmcol: calc(min(var(--nmmax, 160px), 240px) + var(--ctlgap) - 10px + var(--docx, 0px)); }
+  .card__ct.doclist .docrow:has(> .docrow__ctl) > .docrow__note { flex: 0 1 calc(min(var(--notemax, 320px), 320px) + var(--ctlgap) - 10px + var(--docx, 0px)); }
+  /* --docx: the spare width, a quarter per gap - see fitDocCols */
+  .card__ct.doclist .docrow__ctl { gap: calc(var(--ctlgap, 10px) + var(--docx, 0px));
+    width: calc(var(--ctlcol) + var(--bycol) + var(--ctlgap, 10px) + var(--docx, 0px)); }
   .docrow__ctl { --ctlcol: 248px; --bycol: min(var(--ctlcol), calc(var(--bymax, 9999px) + var(--ctlgap, 10px) - 10px));
     flex: none; width: calc(var(--ctlcol) + var(--bycol) + var(--ctlgap, 10px)); gap: var(--ctlgap, 10px); }
   /* a set column width per step, not flex-shrink: a slot row and a loose
@@ -27855,7 +27877,7 @@ function render() {
   fitChips();
   fitStates();
   cutFacetLists();
-  fitFeeds(); fitSpons(); fitDocBy();
+  fitFeeds(); fitSpons(); fitDocBy(); fitDocCols();
   /* the arrival scroll follows the scroller [5 Oct]: it drove .costhread while
      that capped itself, and drives the dialog body now that the cap is gone -
      see the note on .costhread for why it went. Same rule as the deal thread
@@ -27918,6 +27940,44 @@ function fitDocBy() {
     if (w) l.style.setProperty("--bymax", w + "px"); else l.style.removeProperty("--bymax");
   });
 }
+/* the name and filename columns on the Documents tab, the same idea as
+   fitDocBy: the widest text in each, which the stylesheet adds the gap to
+   and caps. Names from every row, so a slot that is missing or asked for
+   still holds its column; filenames only from rows that carry controls,
+   because elsewhere the note is a sentence ("Not on the deal yet") with the
+   row's slack to itself. */
+function fitDocCols() {
+  const widest = els => { let w = 0; els.forEach(e => { const r = document.createRange(); r.selectNodeContents(e); w = Math.max(w, Math.ceil(r.getBoundingClientRect().width)); }); return w; };
+  document.querySelectorAll(".card__ct.doclist").forEach(l => {
+    const nm = widest(l.querySelectorAll(":scope > .docrow > .docrow__nm, :scope > .docxtra > .docrow > .docrow__nm"));
+    const note = widest(l.querySelectorAll(":scope > .docrow:has(> .docrow__ctl) > .docrow__note, :scope > .docxtra > .docrow:has(> .docrow__ctl) > .docrow__note"));
+    if (nm) l.style.setProperty("--nmmax", nm + "px"); else l.style.removeProperty("--nmmax");
+    if (note) l.style.setProperty("--notemax", note + "px"); else l.style.removeProperty("--notemax");
+    /* the spare width, spread [Tanya picked it, 12 Oct]: with the columns at
+       their text, everything left over sat before the actions (417 at 1680).
+       Measured with no extra, then a quarter goes to each of the four gaps -
+       after the name, after the filename, select to uploader, uploader to
+       actions - so they stay equal. The fourth is measured from where the
+       last column's content ends on its widest row (a loose upload's select
+       fills the column; "Uploaded by You" does not), and the three ahead of
+       it push the content right by 3x, so x = (spare - gap) / 4. Zero once
+       the row is full, so a narrow list keeps the --ctlgap ramp. */
+    l.style.setProperty("--docx", "0px");
+    const rows = [...l.querySelectorAll(".docrow:has(> .docrow__ctl)")];
+    if (!rows.length) { l.style.removeProperty("--docx"); return; }
+    const acts = rows[0].querySelector(":scope > .docrow__acts");
+    const gap = parseFloat(getComputedStyle(rows[0].querySelector(":scope > .docrow__ctl")).columnGap) || 10;
+    const end = Math.max(...rows.map(r => {
+      const c = r.querySelector(":scope > .docrow__ctl").lastElementChild;
+      if (!c.classList.contains("docrow__by")) return c.getBoundingClientRect().right;
+      const rg = document.createRange(); rg.selectNodeContents(c);
+      return Math.min(rg.getBoundingClientRect().right, c.getBoundingClientRect().right);
+    }));
+    const spare = acts.getBoundingClientRect().left - end;
+    l.style.setProperty("--docx", Math.max(0, Math.floor((spare - gap) / 4)) + "px");
+  });
+}
+addEventListener("resize", () => { if (typeof S !== "undefined") fitDocCols(); });
 function fitFeeds() {
   document.querySelectorAll(".feed").forEach(r => {
     const s = r.querySelector(".feed__tx .s");
