@@ -295,7 +295,12 @@
   .bcard { display: flex; flex-direction: column; gap: 0; padding: 18px; text-decoration: none; color: inherit; }
   .bcard:hover { border-color: var(--primary); }
   .bcard:hover .bcard__go { text-decoration: underline; }
-  .vtick { display: inline-flex; vertical-align: -2px; margin-left: 5px; color: var(--brand-navy-600); }
+  /* gold, 12 Oct [Tanya: "maybe use golden badge?"]: the Borrower Figma file
+     draws every verified tick #b48b2b, directory cards and profile alike, and
+     the prototype alone was navy. The seal goes gold, not the Pro chip:
+     .badge.tone-gold already means waiting or needs-action across the file
+     (Pending, Requested, Needs update), and a gold chip would read as one. */
+  .vtick { display: inline-flex; vertical-align: -2px; margin-left: 5px; color: var(--brand-gold); }
   /* two lines, always: a one-line bio and a three-line bio would otherwise
      put two neighbouring cards' facet rows on different baselines, which is
      the same defect the pill cap fixes one row lower. */
@@ -1858,6 +1863,16 @@
      a long title takes the rest of the row. */
   .head h1:has(.badge) { display: flex; align-items: center; gap: 10px; }
   .head h1 .badge { flex: none; }
+  /* the profile heading's verified tick, 12 Oct [Tanya: "make right icon
+     bigger and move closer to the name"]: 14 is the card size, and on a 26
+     heading it read as a footnote 14px off the name (the h1's 9 gap plus
+     the base 5 margin). 20 sits at the name's cap height. The gap is the
+     h1's own 9, the same as tick to chip: 6 was tried first and read
+     cramped [Tanya: "make gap visually similar to this", a mock with ~11px
+     of ink between name and tick]; 9 leaves 9.5-10.5 of ink, since the
+     glyph sits 2px inside its box. */
+  .head h1 .vtick { margin-left: 0; vertical-align: 0; }
+  .head h1 .vtick svg { width: 20px; height: 20px; }
   .head p { margin: 0; font-size: 14px; color: var(--muted-foreground); max-width: 66ch; }
   .head__acts { display: flex; gap: 8px; flex: none; align-items: center; }
   /* Screen 8's header meter [task doc]. Essential only: deals is null on both
