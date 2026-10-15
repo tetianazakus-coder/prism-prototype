@@ -552,7 +552,9 @@
      free-to-contact note came off the same day [Tanya]. A strip of the facts said nowhere else on the page,
      drawn with the Home KPI strip's figure and caption type. Then About and
      the map side by side: two cards that end level, stretch keeps it so. */
-  .bstrip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 18px; }
+  /* columns follow the cells, not a fixed 3: since 15 Oct an unverified
+     advisor's strip has two cells [Tanya], and a fixed 3 left a blank third */
+  .bstrip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin-bottom: 18px; }
   .bstrip__c { padding: 15px 18px 14px; min-width: 0; }
   /* --muted, lighter than the card's own --border edge: the strip's inner
      rules match the About card's divider in Figma [Tanya, 12 Oct] */
@@ -568,9 +570,12 @@
     .bsplit { grid-template-columns: minmax(0, 1fr); }
     /* stacked, the map card is full width: chips beside the map, not under */
     .bsplit .bgeo { flex-direction: row; align-items: flex-start; gap: 24px; }
-    .bsplit .bgeo .pills { flex: 1 1 0; min-width: 0; }
+    .bsplit .bgeo .pills, .bsplit .bgeo .bchk { flex: 1 1 0; min-width: 0; }
   }
-  .bgeo { display: flex; flex-direction: column; gap: 14px; }
+  /* 12, was 16 [Tanya, 15 Oct]: the map card's content now pads 18 at the
+     bottom like the list cards (.blist), and the 4px it gained came off this
+     gap so the card still ends level with the left column */
+  .bgeo { display: flex; flex-direction: column; gap: 12px; }
   .usmap { width: 100%; max-width: 380px; height: auto; display: block; }
   .usmap path { fill: var(--muted); stroke: var(--card); stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
   .usmap path.is-on { fill: var(--primary); }
@@ -585,6 +590,19 @@
   .babout p { margin: 0; line-height: 1.55; max-width: 66ch; }
   .card__ct.bspecs { padding: 16px 18px 13px; }
   .bspecs .pills + .bsec { margin-top: 13px; }
+  /* Alt 2 layout, 15 Oct (Tanya picked option 1 of the four-layout deck):
+     About on its own, then one card per specialty list, side by side, the
+     map card spanning both rows on the right. Lists are checklists, not
+     pills - a heading over a list of things reads as a list. */
+  .bcolm { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .card__ct.babout--solo { padding-bottom: 18px; }
+  .blists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; flex: 1; }
+  .card__ct.blist { padding: 14px 18px 18px; }
+  /* 8 between rows, was 12 [Tanya, 15 Oct] */
+  .bchk { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .bchk--2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; row-gap: 8px; }
+  .bchk li { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; min-width: 0; }
+  .bchk svg { flex: none; color: var(--primary); }
   .bhint { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); }
   .qcount { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
   .bstat { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; }
@@ -2831,6 +2849,12 @@
      to sit under the grid moved to .ovblk — a trailing margin here would just
      stack on the column's own bottom padding. */
   .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 18px; }
+  /* 24 between the deal's fact columns [Tanya, Figma 15 Oct]: a request deal
+     prints "Refinance · $2.1M owed · $4.1M value" and "36-unit multifamily ·
+     91.2% occupied", and at 18 one column's value ran up against the next
+     column's label. Scoped to the grid dealFacts prints, on the Overview tab
+     and in the lender preview; the lender and roster cards keep 18. */
+  .sumgrid .facts, .lpvsec .facts { column-gap: 24px; }
   .fact .k { font-size: 12px; color: var(--muted-foreground); margin-bottom: 2px; }
   /* names and roles run long where the other facts are a word or a number —
      two columns keeps the last row from wrapping inside a quarter-width cell */
@@ -2838,6 +2862,12 @@
      emphasis nobody meant — the grid is eight peers, not four headlines. */
   .fact .v { font-size: 14px; font-weight: 500; }
   .prose { font-size: 13.5px; color: var(--foreground); max-width: 74ch; margin: 0 0 14px; }
+  /* The deal's own summary on Body/sm, 14/20 [Tanya, Figma 15 Oct], the same
+     move as the Details tab (.fin): 13.5 is off the ramp. Scoped to the two
+     places that print d.summary, the Overview tab and the lender preview's
+     Overview card; the opportunity summary and the dialog notes keep .prose
+     as it was. The measure stays 74ch, so it widens with the font. */
+  .ovblk .prose, .lpvsec .prose { font-size: 14px; line-height: 20px; }
   .su { margin: 0 0 14px; }
   .su__cap { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 8px; }
   .su__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; }
@@ -2963,6 +2993,29 @@
   .sw__k { font-size: 12.5px; font-weight: 600; color: var(--foreground); margin-bottom: 6px; }
   .sw__k .sec__edit { margin-left: 6px; }
   .sw__v { margin: 0; font-size: 13px; line-height: 1.55; max-width: 60ch; }
+  /* The Details tab on the Prism type ramp [Tanya, Figma 15 Oct]: every
+     caption is Body/sm-semibold and every row Body/sm, 14/20, where the tab
+     had been 12.5 and 13 — off-ramp sizes (see the note on the ramp). Spacing
+     follows her Terms requested frame: 12 from a caption to its rows, 8
+     between rows. The label track goes to 150 because at 14px Tenant
+     concentrations is 147 and wrapped at 132; the column gap drops to 12 so
+     the value edge stays where it was (150 + 12 against 132 + 28). Scoped to
+     .fin so the request review and the dialogs keep their own .fkv.
+     The lender preview (.lpvsec) takes the same rules [Tanya, 15 Oct]: it
+     draws these sections with the same functions, and a broker checking the
+     preview against the tab should see the same type. */
+  .fin .sec__cap, .fin .su__hd, .fin .sw__k,
+  .lpvsec .sec__cap, .lpvsec .su__hd, .lpvsec .sw__k { font-size: 14px; line-height: 20px; }
+  .fin .sec__hd, .lpvsec .sec__hd { padding-bottom: 12px; }
+  /* the Edit control is 2 + 17.4 + 2 at its 12px; held to the caption's 20 so
+     it cannot push the rows down, and Property details drops .duo's 4px top
+     pad, which sat on top of the 12 */
+  .fin .sec__edit, .lpvsec .sec__edit { line-height: 16px; }
+  .fin .sec > .duo, .lpvsec .sec > .duo { padding-top: 0; }
+  .fin .fkv, .lpvsec .fkv { grid-template-columns: 150px minmax(0, 1fr); gap: 8px 12px; font-size: 14px; line-height: 20px; }
+  .fin .su__row, .lpvsec .su__row { font-size: 14px; line-height: 20px; }
+  .fin .sw__k, .lpvsec .sw__k { margin-bottom: 12px; }
+  .fin .sw__v, .lpvsec .sw__v { font-size: 14px; line-height: 20px; }
   @media (max-width: 900px) { .sw { grid-template-columns: 1fr; gap: 14px; } }
   .chkgrid { display: grid; gap: 5px; }
   /* a field whose control is an input and the button that acts on it, 4 Oct.
@@ -7553,9 +7606,9 @@
         <!-- Brokers replaces Lenders for a borrower. [T · 21 Sep] "they should
              not be able to see lenders, and they should not have this page
              either" — the borrower's counterpart is the Pro broker directory. -->
-        <a href="#/brokers" class="b-only" data-nav="brokers" title="Find a broker">
+        <a href="#/brokers" class="b-only" data-nav="brokers" title="Advisors">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span class="nm">Find a broker</span></a>
+          <span class="nm">Advisors</span></a>
         <!-- Help moved to the rail foot, 1 Oct - see .rail__pre below. -->
         <!-- Opportunities, not Leads [T · sheet comment, 28 Aug 01:02] — "Let's go
              with 'Opportunity'", answering "Lead and Opportunity are one object —
@@ -8255,7 +8308,7 @@ const DEALS = [
    actually seen; the other twenty-six are sample data with criteria
    written so the scoring has something to discriminate on. */
 const NETWORK = [
-  { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", role:"Principal", acct:"sandbox", src:"network", inst:"Debt fund", observed:true, lo:1, hi:25, mo:0,
+  { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", ctPhoto:"brokers/lena-lender.jpg" /* Unsplash QGr6H7pri-Q */, role:"Principal", acct:"sandbox", src:"network", inst:"Debt fund", observed:true, lo:1, hi:25, mo:0,
     pitch:"We are quickest on stabilised multifamily and industrial across Texas and the Southeast \u2014 if the rent roll is clean we can usually come back with an indicative inside two days. We are not the right call for ground-up construction, hospitality, or a sponsor who has not closed a deal of this size before.",
     docs:[{ n:"Sandbox Debt Fund \u2014 bridge program overview", kb:412 },
           { n:"Multifamily term sheet, sample", kb:186 }],
@@ -8263,7 +8316,7 @@ const NETWORK = [
     fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | fixed-rate","Bridge / short-term debt (<3 yrs)","CMBS"],
     adm:{ by:"Tony Talamas", on:"12 Jun", mo:3,
       txt:"Lena is the fastest read in the network on anything already stabilised, usually back inside two days. She will not open a construction take-out until the certificate of occupancy is in hand, so send those with it attached or expect a bounce." } },
-  { id:2,  co:"Sunbelt Agency Group", ct:"Nadia Coleman", role:"Managing Director, Agency", acct:"sunbelt", src:"network", inst:"Agency lender", lo:3, hi:50, mo:0,
+  { id:2,  co:"Sunbelt Agency Group", ct:"Nadia Coleman", ctPhoto:"brokers/nadia-coleman.jpg" /* Unsplash kXmKqYOGA4Y */, role:"Managing Director, Agency", acct:"sunbelt", src:"network", inst:"Agency lender", lo:3, hi:50, mo:0,
     pitch:"Agency is all we do and we do it in volume \u2014 Fannie, Freddie and HUD across multifamily, senior and student housing in the Sunbelt. Bring us stabilised properties with two years of operating history. We cannot help on bridge, and we will not quote under $3M because the execution cost eats the borrower.",
     docs:[{ n:"Sunbelt agency execution guide 2026", kb:1180 }],
     prop:["Multifamily","Senior housing","Student housing"], st:["TX","OK","AZ","NM","GA"],
@@ -8288,7 +8341,7 @@ const NETWORK = [
     fin:["Permanent | fixed-rate","FHA/HUD"],
     adm:{ by:"Tony Talamas", on:"2 Mar", mo:6,
       txt:"Fielding sets its allocation once a year and they were close to fully committed when we last spoke. Worth a call before you package anything for them, because a full book is a decline that no criteria screen can predict." } },
-  { id:8,  co:"Piedmont Regional Bank", ct:"Grace Whitfield", role:"SVP, Commercial Real Estate", acct:"piedmont", src:"network", inst:"Bank", lo:1, hi:12, mo:1,
+  { id:8,  co:"Piedmont Regional Bank", ct:"Grace Whitfield", ctPhoto:"brokers/grace-whitfield.jpg" /* Unsplash OswNOXPNU1k */, role:"SVP, Commercial Real Estate", acct:"piedmont", src:"network", inst:"Bank", lo:1, hi:12, mo:1,
     pitch:"Balance-sheet lender, and we like owner-occupied industrial and office in the Carolinas and Georgia, particularly where there is a banking relationship already or the borrower will move deposits. We are rebuilding the CRE book this year, so bring us the deal you think we will pass on.",
     docs:[{ n:"Piedmont CRE credit box \u2014 one pager", kb:96 }],
     prop:["Industrial","Office-owner/user","Retail-single tenant"], st:["GA","NC","SC","TN"],
@@ -8300,7 +8353,7 @@ const NETWORK = [
     fin:["Balance sheet debt","Permanent | fixed-rate"],
     adm:{ by:"Tony Talamas", on:"19 May", mo:4,
       txt:"Member business lending here means the borrower has to join the credit union before anything can be underwritten, which adds about a week to the front of every file. Miles handles the membership side himself if you flag it to him early." } },
-  { id:10, co:"Gulf Bridge Credit", ct:"Ana Ferreira", role:"Director, Originations", acct:"gulfbridge", src:"network", inst:"Debt fund", lo:5, hi:40, mo:0,
+  { id:10, co:"Gulf Bridge Credit", ct:"Ana Ferreira", ctPhoto:"brokers/ana-ferreira.jpg" /* Unsplash 3paKXHWzsDw */, role:"Director, Originations", acct:"gulfbridge", src:"network", inst:"Debt fund", lo:5, hi:40, mo:0,
     prop:["Hotel/motel","Retail-multi tenant","Mixed-use"], st:["FL","AL","MS","LA","TX"],
     fin:["Bridge / short-term debt (<3 yrs)","Mezz debt"] },
   { id:11, co:"Bayfront Hospitality Finance", ct:"Owen Castellanos", role:"Managing Director", acct:"bayfront", src:"network", inst:"Non-bank / investment fund", lo:5, hi:60, mo:1,
@@ -9063,7 +9116,7 @@ const S = {
      single-value strings the old bare-select filter object held, because
      msCtl is a multi-select and "located in Texas or Florida" is a question
      the bare selects could not ask. [~] */
-  bkType: new Set(), bkGeo: new Set(), bkFin: new Set(),
+  bkLoc: new Set(), bkType: new Set(), bkGeo: new Set(), bkFin: new Set(),
   help: { subject: "", msg: "", sent: false, deal: "" }, helpTried: false,
   /* the loading switch. Off by default and never persisted: it is a way to
      LOOK at a state the fixtures can never produce, not a mode the prototype
@@ -10630,11 +10683,19 @@ const bInits = b => (b.first[0] + b.last[0]).toUpperCase();
    every avatar on the published URL is an empty grey disc - a 404 does not
    reach the drawn fallback, which only fires when a broker carries no photo
    at all. Unsplash source
-   slugs, in fixture order: pAtA8xe_iVM, mpDV4xaFP8c, tmwHp7-5LP4, SJvDxw0azqw, bbOOTiq-EPA,
+   slugs, in fixture order: pAtA8xe_iVM, mpDV4xaFP8c, tmwHp7-5LP4, jI4HREHtae4, bbOOTiq-EPA,
    0Zx1bDv5BNY, _kwpH8O-dNo, KmRM8RkL2ZI, 7YVZYZeITc8, ODrd-02Q6JI,
-   WMD64tMfc4k, J_9U-jTWGIw. The Unsplash License permits commercial use
+   WMD64tMfc4k, J_9U-jTWGIw. Anjali's was SJvDxw0azqw until 16 Oct [Tanya: "find
+   better image"]: cut so close that the hair and chin met the circle. The
+   Unsplash License permits commercial use
    without attribution; the slugs are recorded so any photo can be traced or
    replaced.
+
+   Four lender contacts joined on 16 Oct [Tanya: "place here photos from
+   unsplash as well", on broker Home's Deal activity]: lena-lender,
+   nadia-coleman, grace-whitfield and ana-ferreira, the four people that
+   feed can name. Read off LENDERS' ctPhoto; a contact without one keeps
+   the initials disc. Slugs sit beside each ctPhoto.
 
    Two more joined the folder on 28 Sep and are NOT directory brokers:
    bruno-broker.jpg (d7y0cuJP-G8) and priya-natarajan.jpg (QuDxxWypu9U), the
@@ -10805,7 +10866,7 @@ const BLOANS = [
     stage: "Lender outreach", created: "8 Sep", submitted: "9 Sep", updated: "19 Sep",
     broker: "jordan-ellis", conn: { st: "assigned", broker: "jordan-ellis", on: "10 Sep" },
     summary: "Rate-and-term refinance of a 36-unit garden-style asset, stabilised since 2019. Seeking ten-year fixed with three years interest-only.",
-    next: "Compare the two quotes your broker released and pick one, or ask about either.",
+    next: "Compare the two quotes your advisor released and pick one, or ask about either.",
     milestone: { t: "Processing", on: "3 Oct" },
     quotes: [
       bq("q1", { src: "Agency lender", co: "Hill Country Multifamily Finance", showCo: true, rank: 1, amt: 3.2, rate: "6.10%", index: "10-yr Treasury", spread: "+195 bps",
@@ -10838,7 +10899,7 @@ const BLOANS = [
       { from: "sys", tx: "Jordan Ellis took the deal on.", on: "10 Sep", at: "9:40 AM" },
       { from: "broker", tx: "Thanks Priya. I have what I need to go out. Expect first quotes inside two weeks.", on: "10 Sep", at: "9:58 AM" },
       { from: "sys", tx: "Stage changed to Lender outreach.", on: "12 Sep", at: "3:05 PM" },
-      { from: "sys", tx: "Your broker added two new financing options.", on: "19 Sep", at: "11:20 AM", refs: [{ k: "quote", id: "q1" }, { k: "quote", id: "q2" }] },
+      { from: "sys", tx: "Your advisor added two new financing options.", on: "19 Sep", at: "11:20 AM", refs: [{ k: "quote", id: "q1" }, { k: "quote", id: "q2" }] },
       { from: "you", tx: "Here is the updated rent roll with the three new leases on it.", on: "19 Sep", at: "2:14 PM", att: { name: "Lakeview rent roll Sep.xlsx", size: "86 kB" } },
       { from: "broker", tx: "Two are released. The first is the one I would take; the bank's is there for the shorter hold. A third is still firming up.", on: "19 Sep", at: "4:41 PM", unread: true }
     ],
@@ -10846,7 +10907,7 @@ const BLOANS = [
       { on: "8 Sep", type: "status", tx: "Financing request started" },
       { on: "9 Sep", type: "status", tx: "Request submitted" },
       { on: "9 Sep", type: "docs", tx: "Rent roll and T-12 uploaded" },
-      { on: "10 Sep", type: "status", tx: "Jordan Ellis assigned as your broker" },
+      { on: "10 Sep", type: "status", tx: "Jordan Ellis assigned as your advisor" },
       { on: "12 Sep", type: "status", tx: "Stage changed to Lender outreach" },
       { on: "18 Sep", type: "quotes", tx: "Quote added: Hill Country Multifamily Finance" },
       { on: "19 Sep", type: "quotes", tx: "Quote added: Regional bank" },
@@ -10859,7 +10920,7 @@ const BLOANS = [
     stage: "Processing", created: "11 Aug", submitted: "12 Aug", updated: "22 Sep",
     broker: "jordan-ellis", conn: { st: "assigned", broker: "jordan-ellis", on: "13 Aug" },
     summary: "Acquisition of a 96-unit Class B community. Quote selected; appraisal and third-party reports under way.",
-    next: "Sign the rate-lock authorization so your broker can lock when the appraisal lands.",
+    next: "Sign the rate-lock authorization so your advisor can lock when the appraisal lands.",
     milestone: { t: "Closed & funded", on: "24 Oct" },
     quotes: [
       bq("q1", { src: "Agency lender", st: "selected", rank: 1, amt: 7.8, rate: "5.85%", index: "10-yr Treasury", spread: "+170 bps", term: "10 years", amort: "30 years", io: "2 years",
@@ -10899,7 +10960,7 @@ const BLOANS = [
       { id: "t1", t: "Sign the rate-lock authorization", type: "sign", due: "3 Oct", by: "broker", st: "open" },
       { id: "t2", t: "Upload the executed purchase agreement amendment", type: "upload", due: "29 Sep", by: "broker", st: "open", doc: "d3" },
       { id: "t3", t: "Upload organizational documents", type: "upload", due: "1 Oct", by: "broker", st: "open", doc: "d5" },
-      { id: "t4", t: "Answer your broker's question", type: "answer", due: "6 Oct", by: "broker", st: "open" },
+      { id: "t4", t: "Answer your advisor's question", type: "answer", due: "6 Oct", by: "broker", st: "open" },
       /* DONE [tracker row 12: "status (open / done)"]. Two of the four files
          already on this deal were asked for; the other two were sent
          unprompted, which was never a task - so the done list is shorter than
@@ -10924,13 +10985,13 @@ const BLOANS = [
     ],
     msgs: [
       { from: "sys", tx: "Stage changed to Processing.", on: "8 Sep", at: "1:30 PM" },
-      { from: "sys", tx: "Your broker requested an updated purchase agreement.", on: "22 Sep", at: "10:05 AM", ref: { k: "doc", id: "d3" } },
+      { from: "sys", tx: "Your advisor requested an updated purchase agreement.", on: "22 Sep", at: "10:05 AM", ref: { k: "doc", id: "d3" } },
       { from: "broker", tx: "The lender's term sheet, marked up with the two points we discussed. Nothing to sign yet.", on: "22 Sep", at: "10:07 AM", att: { name: "Round Rock term sheet - redline.pdf", size: "412 kB" } },
       { from: "broker", tx: "One question from underwriting: is the pool resurfacing in the seller credit, or separate? It changes the reserve.", on: "22 Sep", at: "3:52 PM", unread: true }
     ],
     events: [
       { on: "12 Aug", type: "status", tx: "Request submitted" },
-      { on: "13 Aug", type: "status", tx: "Jordan Ellis assigned as your broker" },
+      { on: "13 Aug", type: "status", tx: "Jordan Ellis assigned as your advisor" },
       { on: "29 Aug", type: "quotes", tx: "Quote added: Agency lender" },
       { on: "1 Sep", type: "quotes", tx: "You selected the agency quote" },
       { on: "8 Sep", type: "status", tx: "Stage changed to Processing" },
@@ -10990,12 +11051,12 @@ const BLOANS = [
     ], msgs: [
       { from: "sys", tx: "Anjali Mehta took the deal on.", on: "9 Sep" },
       { from: "broker", tx: "Package is out to six lenders. I will send quotes as they firm up.", on: "18 Sep" },
-      { from: "sys", tx: "Your broker added three new financing options.", on: "2 Oct", at: "9:15 AM", refs: [{ k: "quote", id: "q1" }, { k: "quote", id: "q2" }, { k: "quote", id: "q3" }] },
+      { from: "sys", tx: "Your advisor added three new financing options.", on: "2 Oct", at: "9:15 AM", refs: [{ k: "quote", id: "q1" }, { k: "quote", id: "q2" }, { k: "quote", id: "q3" }] },
       { from: "broker", tx: "Three back out of six. I would take the bank: it is 30 bps over the life company but lends $200k more and you can get out of it after year three. Happy to walk through any of them.", on: "2 Oct", at: "9:22 AM", unread: true }
     ],
     events: [
       { on: "8 Sep", type: "status", tx: "Request submitted" },
-      { on: "9 Sep", type: "status", tx: "Anjali Mehta assigned as your broker" },
+      { on: "9 Sep", type: "status", tx: "Anjali Mehta assigned as your advisor" },
       { on: "18 Sep", type: "status", tx: "Stage changed to Lender outreach" },
       { on: "1 Oct", type: "quotes", tx: "Quote added: Sonoran State Bank" },
       { on: "1 Oct", type: "quotes", tx: "Quote added: Life company" },
@@ -11007,7 +11068,7 @@ const BLOANS = [
     stage: "Preparing lender memo", created: "14 Sep", submitted: "14 Sep", updated: "21 Sep",
     broker: "anjali-mehta", conn: { st: "assigned", broker: "anjali-mehta", on: "15 Sep" },
     summary: "Value-add acquisition of a 64-unit garden community. Interior renovations planned on turnover; seeking bridge with a path to agency.",
-    next: "Your broker needs the rent roll and the seller's T-12 before taking this to lenders.",
+    next: "Your advisor needs the rent roll and the seller's T-12 before taking this to lenders.",
     milestone: { t: "Lender outreach", on: "5 Oct" },
     quotes: [], docs: [
       { id: "d1", name: "Canyon Ridge OM.pdf", cat: "Other", by: "you", on: "14 Sep", ver: 1, st: "uploaded" },
@@ -11020,11 +11081,11 @@ const BLOANS = [
     ],
     msgs: [
       { from: "sys", tx: "Anjali Mehta took the deal on.", on: "15 Sep", at: "11:02 AM" },
-      { from: "sys", tx: "Your broker requested an updated rent roll.", on: "21 Sep", at: "9:30 AM", ref: { k: "doc", id: "d2" } }
+      { from: "sys", tx: "Your advisor requested an updated rent roll.", on: "21 Sep", at: "9:30 AM", ref: { k: "doc", id: "d2" } }
     ],
     events: [
       { on: "14 Sep", type: "status", tx: "Request submitted" },
-      { on: "15 Sep", type: "status", tx: "Anjali Mehta assigned as your broker" },
+      { on: "15 Sep", type: "status", tx: "Anjali Mehta assigned as your advisor" },
       { on: "21 Sep", type: "docs", tx: "Rent roll and T-12 requested" }
     ] },
   { id: "pecan", name: "Pecan Street mixed-use acquisition", amt: 5.6, property: "Retail-multi tenant", city: "San Marcos", state: "TX", zip: "78666", addr: "118 E Pecan St",
@@ -11037,7 +11098,7 @@ const BLOANS = [
     summary: "Acquisition of a two-storey mixed-use building: ground-floor retail, twelve residential units above. Bridge or bank debt; open on execution.",
     next: "Waiting for Maya Okafor to take the deal on.",
     milestone: null,
-    quotes: [], docs: [ { id: "d1", cat: "Rent roll", st: "requested", due: "", by: "system", note: "Skipped at submit. Add it when you have it; brokers price faster with one." } ],
+    quotes: [], docs: [ { id: "d1", cat: "Rent roll", st: "requested", due: "", by: "system", note: "Skipped at submit. Add it when you have it; advisors price faster with one." } ],
     tasks: [
       { id: "t1", t: "Add the rent roll", type: "upload", due: "", by: "system", st: "open", doc: "d1" }
     ],
@@ -11053,14 +11114,14 @@ const BLOANS = [
        simply back to no broker, and the event says why [~]. */
     broker: null, conn: null,
     summary: "Single-tenant flex industrial, 42,000 sf, leased through 2031. Refinancing a maturing bank loan; open on bank or life-company execution.",
-    next: "No broker has this deal. Pick one from the directory and send it to them.",
+    next: "No advisor has this deal. Pick one from the directory and send it to them.",
     milestone: null,
     quotes: [], docs: [ { id: "d1", name: "Cedar Park rent roll.pdf", cat: "Rent roll", by: "you", on: "12 Sep", ver: 1, st: "uploaded" },
       { id: "d2", name: "Natarajan_PFS_2026.pdf", cat: "PFS", by: "you", on: "12 Sep", ver: 2, st: "uploaded" } ],
     tasks: [], msgs: [], events: [
       { on: "12 Sep", type: "status", tx: "Request submitted" },
       { on: "12 Sep", type: "status", tx: "Sent to Jordan Ellis" },
-      { on: "15 Sep", type: "status", tx: "Jordan Ellis passed. The deal has no broker" }
+      { on: "15 Sep", type: "status", tx: "Jordan Ellis passed. The deal has no advisor" }
     ] },
   { id: "elm-office", name: "Elm Street office refinance", amt: 3.8, property: "Office-multi tenant", city: "Houston", state: "TX", zip: "77002", addr: "700 Elm St",
     sf: 38000, built: 2001, renovated: null, occupancy: 78, purpose: "Refinance", value: 5.6, balance: 3.5, closeBy: "1 Mar",
@@ -11068,7 +11129,7 @@ const BLOANS = [
     stage: "Submitted to LenderPrism", created: "20 Sep", submitted: "20 Sep", updated: "20 Sep",
     broker: null, conn: null,
     summary: "Three-storey multi-tenant office, 38,000 sf, twelve tenants. Refinancing a bank loan that matures in March.",
-    next: "No Pro broker works office in Texas yet. Pick one from the directory, or wait for one to join.",
+    next: "No advisor with LenderPrism works office in Texas yet. Pick one from the directory, or wait for one to join.",
     milestone: null,
     quotes: [], docs: [ { id: "d1", name: "Elm rent roll.xlsx", cat: "Rent roll", by: "you", on: "20 Sep", ver: 1, st: "uploaded" },
       { id: "d2", name: "Natarajan_PFS_2026.pdf", cat: "PFS", by: "you", on: "20 Sep", ver: 2, st: "uploaded" } ],
@@ -11140,7 +11201,7 @@ const BLOANS = [
        carries on an invited row for the same reason [~] */
     inv: { st: "pending", broker: "omar-haddad", email: BPROF.email, on: "2 Oct", exp: "16 Oct" },
     summary: "Acquisition of a 72-unit Class B community off Cobbs Drive. Agency or bank debt, ten-year fixed, around seventy per cent leverage.",
-    next: "Answer the invitation to see the request and what your broker needs.",
+    next: "Answer the invitation to see the request and what your advisor needs.",
     milestone: null,
     quotes: [],
     docs: [
@@ -11185,7 +11246,7 @@ const BLOANS = [
     broker: "claire-boone", conn: { st: "assigned", broker: "claire-boone", on: "3 Oct" },
     inv: { st: "pending", broker: "claire-boone", email: "p.natarajan@harborpointcap.com", on: "3 Oct", exp: "17 Oct" },
     summary: "Refinance of 28 townhomes off Gallatin Pike, held since 2018. Bank or credit union debt, seven- to ten-year fixed, cash out to the entity if the valuation supports it.",
-    next: "Answer the invitation to see the request and what your broker needs.",
+    next: "Answer the invitation to see the request and what your advisor needs.",
     milestone: null,
     quotes: [],
     docs: [
@@ -18150,7 +18211,7 @@ function suSect(d) {
    not meant to — .duocol is two independent stacks, so the shorter one simply
    ends. */
 function finBody(d) {
-  return `<div class="card__ct">
+  return `<div class="card__ct fin">
       <div class="duo">
         <div class="duocol">${termsSect(d)}${planSect(d)}${mgmtSect(d)}</div>
         <div class="duocol">${sponsorSect(d)}</div>
@@ -19253,6 +19314,17 @@ const AUTH_PANELS = {
       "<b>Expand your origination channel</b> \u2014 build relationships with active CRE brokers and borrowers without relying solely on your existing referral network."] },
 };
 AUTH_PANELS.bgeneric = { ...AUTH_PANELS.generic, noStats: true };
+/* picker, 15 Oct: the sign-up role selector is one page for every role
+   [Tanya: "standardize this text for all roles, because it same page for
+   all"]. It used to fall back to generic, Tony's Log in copy, which speaks to
+   a borrower ("alongside your advisor") before anyone has said they are one.
+   His pillars and the counts stay, being true for every role. Headline and
+   sub are ours [💡 rec], question 211. No value points: the role cards beside
+   it say what each role gets. "Brokers", not "advisors": the card on the same
+   page says Broker. "CRE", Tony's own shorthand: spelled out, the
+   headline took three lines in the 368 column. Log in keeps generic. */
+AUTH_PANELS.picker = { pillars: AUTH_PANELS.generic.pillars, h: "One platform for CRE financing.",
+  sub: "Borrowers, brokers and lenders work each deal in one place: the request, lender matches, quotes and documents.", vp: [] };
 /* bheld, 11 Oct - Tony's "inline with" Log in, on "That link has expired"
    (76:2730) as on 12:416 and 12:458 [T]: the text matched, but with no strip
    the message centred 56px below Log in's (340 against 284 at 922). The
@@ -19319,7 +19391,7 @@ function authShell(inner, foot, panel) {
 */
 function renderInviteAuth() {
   const d = loanById(S.authInv), b = d ? brokerById(d.inv.broker) : null;
-  if (!d || !b) return renderNotFound({ kind: "record", what: "broker invitation", id: S.authInv, at: location.hash.slice(1) });
+  if (!d || !b) return renderNotFound({ kind: "record", what: "advisor invitation", id: S.authInv, at: location.hash.slice(1) });
   const need = bNeeded(d);
   const who = `<p class="auth__sub"><b>${esc(bName(b))}</b> invited <b>${esc(d.inv.email)}</b> to ${esc(d.name)}${need.length ? ` and needs ${need.length === 1 ? "one document" : need.length + " documents"}` : ""}.</p>`;
 
@@ -19363,10 +19435,38 @@ function renderInviteAuth() {
     AUTH_PANELS.borrower);
 }
 
+/* The deal invitation's sign-up [tracker row 3, 15 Oct: "New user → create
+   account → verify email → accept"]. renderInviteAuth's form with the lead
+   sponsor in the broker's place: same field set, the invited address locked,
+   and verification landing on the invitation with the decision still open,
+   for the reason that function's note gives. The name is filled from what the
+   lead typed in the invite dialog and stays editable - it is the lead's
+   spelling of someone else's name. No "log in with another email" door: the
+   claim flow behind it (an address waiting on the inviter's approval) is the
+   advisor invitation's, and nothing on the lead's side can approve one. [~] */
+function renderJoinAuth() {
+  const pj = S.pj && pJoinOf(S.pj.id, S.pj.slug);
+  if (!pj) return renderNotFound(S.nf);
+  const { d, x } = pj, lead = BPROF.first + " " + BPROF.last;
+  return authShell(`
+    <h1>Create your free account</h1>
+    <p class="auth__sub"><b>${esc(lead)}</b> invited <b>${esc(x.email)}</b> to join ${esc(d.name)} as ${esc(pRoleA(x.role))}.</p>
+    <div class="frm2col">${authFld("first", "First name", 1, "Dana")}${authFld("last", "Last name", 1, "Whitfield")}</div>
+    <div class="fld"><label for="a_joinmail">Email</label>
+      <input class="inp" id="a_joinmail" value="${esc(x.email)}" readonly>
+      <div class="hint">${esc(lead)} invited this address, so it can&rsquo;t be changed here.</div></div>
+    ${authFld("company", "Company", 0, "e.g. Whitfield Capital")}${authFld("phone", "Phone", 0, "(555) 123-4567", "tel")}
+    <div class="frm2col">${authFld("pass", "Password", 1, "••••••••", "password")}${authFld("pass2", "Confirm password", 1, "••••••••", "password")}</div>
+    <button type="button" class="btn btn--full" id="authSubmit">Create account</button>`,
+    `<div class="auth__foot">Already have an account? <a href="#/auth/login">Log in</a></div>`,
+    AUTH_PANELS.borrower);
+}
+
 function renderAuth() {
   if (S.authMode === "trial") return renderTrialStart();
   if (S.authMode === "verify") return renderBVerify();
   if (S.authMode === "invite") return renderInviteAuth();
+  if (S.authMode === "join") return renderJoinAuth();
   const login = S.authMode === "login";
   const foot = login
     ? `<div class="auth__foot">New to LenderPrism? <a href="#/auth/signup">Sign up</a></div>`
@@ -19386,7 +19486,7 @@ function renderAuth() {
       <p class="auth__sub">Select your role, each one has its own workspace.</p>
       <div class="rolegrid">${AUTH_ROLES.map(r => `
         <button type="button" class="rolecard" data-authrole="${r.v}">${r.ic}<span class="rc__tx"><b>${r.label}</b><span>${r.d}</span></span><span class="go" aria-hidden="true">\u203a</span></button>`).join("")}
-      </div>`, foot);
+      </div>`, foot, AUTH_PANELS.picker);
   }
   if (S.authRole === "broker") return renderBrokerSignup(foot);
   const role = AUTH_ROLES.find(r => r.v === S.authRole);
@@ -19413,7 +19513,7 @@ function renderAuth() {
           "Get started" and the note under it is his line. The lender form
           keeps "Create account" and the old note. */""}
     <button type="button" class="btn btn--full" id="authSubmit">${S.authRole === "borrower" ? "Get started" : "Create account"}</button>
-    <div class="auth__note">${S.authRole === "borrower" ? "No cost to get started. No obligation to engage a broker." : `No payment at any point. ${role.label} accounts are free.`}</div>`, foot);
+    <div class="auth__note">${S.authRole === "borrower" ? "No cost to get started. No obligation to engage an advisor." : `No payment at any point. ${role.label} accounts are free.`}</div>`, foot);
 }
 
 /* Screen 2 — the trial start, #/auth/trial.
@@ -19486,6 +19586,16 @@ function authSubmit() {
      see renderTrialStart. A non-broker still goes straight through; the trial
      is the broker path's alone. */
   if (S.authRole === "broker") { location.hash = "#/auth/trial"; return; }
+  /* the deal invitation [tracker row 3]: the new account is the INVITEE, not
+     the lead, so it writes BCOS - the co-sponsor dashboard's person - and
+     leaves BPROF, who sent the invitation, alone. S.cosFresh keeps Rachel's
+     seeded deals off a dashboard made a minute ago. */
+  if (S.authMode === "join") {
+    S.role = "borrower";
+    BCOS.first = a.first.trim(); BCOS.last = a.last.trim(); BCOS.email = a.email.trim(); BCOS.company = a.company.trim();
+    S.cosFresh = true; S.pjSign = true;
+    S.bverify = "sent"; location.hash = "#/auth/verify/borrower"; return;
+  }
   /* Borrower, 21 Sep: no trial, no plan — "it is going to be free for them"
      [T]. The account is the profile's first draft, and home opens in the
      first-session state: no requests yet. */
@@ -19521,12 +19631,14 @@ function authSubmit() {
    state is the expired or already-used link. Verified lands on the first-
    session dashboard, exactly where signup used to land directly. [~] */
 function renderBVerify() {
-  const st = S.bverify || "sent", em = esc(BPROF.email || S.auth.email || "you@company.com");
+  /* S.pjSign: the account just made is a deal invitee's, whose address is in
+     BCOS - BPROF is the lead who invited them [tracker row 3] */
+  const st = S.bverify || "sent", em = esc((S.pjSign ? BCOS.email : BPROF.email) || S.auth.email || "you@company.com");
   const IC = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>`;
   const hd = t => `<div class="bverify__hd"><div class="bverify__ic">${IC}</div><h1>${t}</h1></div>`;
   const body = st === "verified" ? `
     ${hd("Email verified")}
-    <p class="auth__sub">${em} is confirmed. Your broker and LenderPrism will reach you there.</p>
+    <p class="auth__sub">${em} is confirmed. Your advisor and LenderPrism will reach you there.</p>
     <button type="button" class="btn btn--full" data-bverify="go">${S.bvNext ? "Open the invitation" : "Go to home"}</button>`
     : st === "error" ? `
     ${hd("That link has expired")}
@@ -19548,6 +19660,7 @@ function renderBVerify() {
           one a broker typed, and the way out of it is the other-email door,
           not a form that would let her edit the thing the link is made of. */""}
     ${S.authInv && S.bvNext ? `<div class="bland__alt">Not the address you use? <a href="#/auth/invite/${esc(S.authInv)}/login">Log in with another one</a></div>`
+      : S.pjSign ? `<div class="bland__alt">Wrong address? Ask whoever invited you to send it to the right one.</div>`
       : `<div class="bland__alt">Wrong address? <a href="#/auth/signup/borrower">Go back and change it</a></div>`}`;
   return authShell(body, "", AUTH_PANELS.bheld);
 }
@@ -21318,7 +21431,7 @@ const SKEL = {
         /* [~] 28 Sep: labels follow the rebuilt table; the widths are the
            22-24 Sep measurements and have not been re-taken since the
            columns changed */
-        { name: 0, ctrl: 7, labels: ["Property", "Loan request", "Broker", "Status", "Quotes", "Outstanding", "Last activity", ""] })
+        { name: 0, ctrl: 7, labels: ["Property", "Loan request", "Advisor", "Status", "Quotes", "Outstanding", "Last activity", ""] })
     : skHead({ lines: 2, title: "Your deals" }) +
       /* re-measured 24 Sep at 1360 with the greedy 99% off the first column:
          Deal drops 27.4 -> 24 and the seven columns after it each widen. */
@@ -21437,10 +21550,12 @@ const SKEL = {
      follows its own label and placeholder text rather than a shared
      <select> minimum. Leaving the retired bar's widths in place after the
      swap would have reserved the wrong shape and reintroduced the load-in
-     jump this skeleton exists to prevent. [~] */
-  brokers: () => skHead({ lines: 1, title: "Brokers" }) +
+     jump this skeleton exists to prevent. [~] Remeasured 15 Oct after Tony's
+     renames, at 1360 and 1600: 260 search, then Property type 172, Property
+     location 194, Advisor location 187, Execution type 179. */
+  brokers: () => skHead({ lines: 1, title: "Advisors" }) +
     `<div class="card"><div class="card__ct">` +
-    `<div class="msbar msbar--find">${[260, 172, 157, 179].map(w => `<span class="sk sk--ctrl" style="width:${w}px"></span>`).join("")}</div>` +
+    `<div class="msbar msbar--find">${[260, 172, 194, 187, 179].map(w => `<span class="sk sk--ctrl" style="width:${w}px"></span>`).join("")}</div>` +
     /* the count rides in the toolbar with the search, and the grid holds one
        card per listed broker - skCard(3) in a 4-up row reserved 129px against a
        934px grid, so the page grew by three rows as it loaded. The card shape is
@@ -21486,22 +21601,23 @@ const SKEL = {
     /* .pills is only a flex row inside .bcard - on the profile the pills are
        inline-flex elements in a plain block, and .sk is display:block, so a
        placeholder needs inline-block here or the row stacks vertically. */
-    const pills = n => `<div class="pills">${Array.from({ length: n },
-      (_, i) => `<span class="sk sk--pill" style="width:${[78, 62, 54, 96, 70, 110, 66][i % 7]}px; display:inline-block; vertical-align:middle; margin-right:6px"></span>`).join("")}</div>`;
+    /* checklist rows since 15 Oct: one 20px line per item, the list's 12 gap */
+    const rows = n => `<div class="bchk">${Array.from({ length: n },
+      (_, i) => `<span class="sk sk--line" style="width:${[78, 62, 54, 96, 70, 110, 66][i % 7] + 40}px; height:20px"></span>`).join("")}</div>`;
     /* 12 Oct: header, a three-cell strip, then About beside the map card -
        reserved at the map's own 380 x 238 so the stretch row is as tall. */
     return `<div class="crumb">${skLine(0)}</div>` + skHead({ lines: 2 }) + `
     <div class="card bstrip">${Array.from({ length: 3 }, (_, i) =>
       `<div class="bstrip__c"><span class="sk sk--line" style="width:96px; height:24px"></span>${skLine(i)}</div>`).join("")}</div>
     <div class="bsplit">
-      <div class="card">
-        <div class="card__hd">${skLine(0)}</div><div class="card__ct babout">${skLine(1)}</div>
-        <div class="card__ct bspecs"><div class="bsec">${skLine(2)}</div>${pills(b ? b.types.length : 6)}
-          <div class="bsec">${skLine(2)}</div>${pills(b ? b.fins.length : 3)}</div>
+      <div class="bcolm">
+        <div class="card"><div class="card__hd">${skLine(0)}</div><div class="card__ct babout babout--solo">${skLine(1)}${skLine(2)}</div></div>
+        <div class="blists">${[b ? b.types.length : 6, b ? b.fins.length : 3].map(n =>
+          `<div class="card"><div class="card__hd">${skLine(0)}</div><div class="card__ct blist">${rows(n)}</div></div>`).join("")}</div>
       </div>
       <div class="card">
         <div class="card__hd">${skLine(0)}</div>
-        <div class="card__ct"><span class="sk" style="display:block; width:100%; max-width:380px; aspect-ratio:975/610"></span>${pills(b ? b.geos.length : 5)}</div>
+        <div class="card__ct blist"><div class="bgeo"><span class="sk" style="display:block; width:100%; max-width:380px; aspect-ratio:975/610"></span>${rows(b ? b.geos.length : 5)}</div></div>
       </div>
     </div>`;
   },
@@ -21543,7 +21659,7 @@ const SK_SAY = {
      see who they are"); a skeleton caption may say the same, since it names
      no lender BY NAME, which is the actual constraint. [~] */
   loannew: "Counting the lenders that fit",
-  lsent:   "Finding a broker for this request"
+  lsent:   "Finding an advisor for this request"
 };
 
 function skPage(route) {
@@ -21591,7 +21707,7 @@ const NF_EXIT = {
      route because renderNotFound prints the key — "No loan request with the
      id …" — and the borrower's noun is two words, per tracker row 07.1 [~]. */
   "loan request": { hash: "#/loans", label: "Go to Loan requests" },
-  broker: { hash: "#/brokers", label: "Go to Brokers" }
+  broker: { hash: "#/brokers", label: "Go to Advisors" }
 };
 
 /* "record" covers two different relationships to the reader: a deal, a
@@ -21667,8 +21783,8 @@ const ERR_WHAT_B = {
   loannew: "the financing request",
   lsent:   "this confirmation",
   binvite: "this invitation",
-  brokers: "the broker directory",
-  broker:  "this broker",
+  brokers: "the advisor directory",
+  broker:  "this advisor",
   profile: "your profile",
   account: "your account",
   help:    "the help form",
@@ -21698,7 +21814,7 @@ const ERR_BACK_B = {
   loan:    { hash: "#/loans",   label: "Go to My deals" },
   lsent:   { hash: "#/loans",   label: "Go to My deals" },
   loannew: { hash: "#/loans",   label: "Go to My deals" },
-  broker:  { hash: "#/brokers", label: "Go to Find a broker" }
+  broker:  { hash: "#/brokers", label: "Go to Advisors" }
 };
 const ERR_BACK = {
   deal:   { hash: "#/deals",   label: "Go to Deals" },
@@ -22341,7 +22457,7 @@ function renderBActivity() {
             <span class="feed__tx"><span class="s">${esc(e.tx)}</span><span class="when">${esc(d.name)} · ${esc(e.on)}</span></span>
           </a>`).join("")}</div>`
         : `<div class="card__ct"><div class="empty"><b>Nothing has happened yet</b>
-            <p>Submit a financing request and everything your broker and your lenders do lands here.</p>
+            <p>Submit a financing request and everything your advisor and your lenders do lands here.</p>
             <div class="acts"><a class="btn" href="#/loans/new">New financing request</a></div></div></div>`}
       </div>
     </div>`;
@@ -22383,8 +22499,8 @@ function renderBHome() {
     </div>` : ""}
     <div class="card"><div class="card__ct"><div class="empty">
       <b>Start your first financing request</b>
-      <p>Describe the property and what you need, in five short steps. A broker reviews it, takes it to lenders, and you compare the quotes here. Nothing is required that you do not have yet.</p>
-      <div class="acts"><a class="btn" href="#/loans/new">Start your first financing request</a><a class="btn btn--outline" href="#/brokers">Find a broker</a></div>
+      <p>Describe the property and what you need, in five short steps. A financing advisor reviews it, takes it to lenders, and you compare the quotes here. Nothing is required that you do not have yet.</p>
+      <div class="acts"><a class="btn" href="#/loans/new">Start your first financing request</a><a class="btn btn--outline" href="#/brokers">Choose an advisor</a></div>
     </div></div></div></div>`;
 
   const tasks = [];
@@ -22440,7 +22556,7 @@ function renderBHome() {
       <div class="bdcard__st">${bStatus(d)}</div>
       <div class="bdcard__who">${b ? `<span class="bav bav--xs">${bAvatar(b, 24)}</span><span>${esc(bName(b))}</span>`
         : pend ? `<span class="bav bav--xs">${bAvatar(pend, 24)}</span><span>${esc(bName(pend))} <span class="unset">· waiting for response</span></span>`
-        : `<span class="unset">No broker yet</span> <a href="#/brokers">Find a broker</a>`}</div>
+        : `<span class="unset">No advisor yet</span> <a href="#/brokers">Choose an advisor</a>`}</div>
       ${last ? `<div class="bdcard__last">${esc(last.tx)} · ${esc(last.on)}</div>` : ""}
       <div class="dcard__ft">
         ${cnt(BIC.file, bOpenTasks(d).length, "outstanding tasks and documents", `#/loan/${d.id}`)}
@@ -22587,22 +22703,28 @@ BFILTERS.forEach(f => {
    ~7879-7892) are the precedent this follows; bkloc supplies its own pair
    too, for the same reason those state its match as `[...set].some(...)`
    rather than leaning on the fallback — reading alike beats reading short. */
-/* "Located in" (the broker's office state) came off on 12 Oct [💡 rec, Tanya
-   agreed]. It sat beside "Operates in" and both read as "where". A borrower
-   with a Texas deal who picked Located in › Texas got 3 brokers and lost the
-   Phoenix broker who works Texas; Operates in › Texas gives 4. The city
-   is still on every card. The 04.1 row of the tracker lists it, so it is a
-   question for Tony; restore this entry if he wants it back. */
+/* "Located in" (the broker's office state) came off on 12 Oct [💡 rec] because
+   it sat beside "Operates in" and both read as "where". Tony wants both
+   [T · Figma comment on 16:1056, 15 Oct, Q203]: "Property location" for the
+   states the broker serves and "Advisor location" for the office, so each
+   names WHOSE location it is. Order is his: Property type, Property location,
+   Advisor location, Execution type. The card and profile keep the heading
+   "Operates in" - a heading names what the broker offers, a filter names the
+   deal, as Property specialties / Property type already split. */
 const bkGeos = b => b.geos.map(g => STATE_NAME[g] || g);
 const BROKFILTERS = [
   { key:"bktype", title:"Property type", set:() => S.bkType, of:b => b.types,
     opts:() => [...new Set(BROKERS.flatMap(x => x.types))].sort(), searchable:true,
     hit:(b, v) => b.types.includes(v),
     pass:(b, set) => [...set].some(v => b.types.includes(v)) },
-  { key:"bkgeo",  title:"Operates in",   set:() => S.bkGeo,  of:bkGeos,
+  { key:"bkgeo",  title:"Property location", set:() => S.bkGeo,  of:bkGeos,
     opts:() => [...new Set(BROKERS.flatMap(bkGeos))].sort(), searchable:true, ph:"Search states…",
     hit:(b, v) => bkGeos(b).includes(v),
     pass:(b, set) => [...set].some(v => bkGeos(b).includes(v)) },
+  { key:"bkloc",  title:"Advisor location", set:() => S.bkLoc,  of:b => STATE_NAME[b.state] || b.state,
+    opts:() => [...new Set(BROKERS.map(x => STATE_NAME[x.state] || x.state))].sort(), searchable:true, ph:"Search states…",
+    hit:(b, v) => (STATE_NAME[b.state] || b.state) === v,
+    pass:(b, set) => set.has(STATE_NAME[b.state] || b.state) },
   /* Tony's "Execution specialties" [T · 12 Oct], titled as the broker's own
      field and the deals bar's filter are - beside "Property type" the pair
      reads as one grammar. The heading on the card and profile is his word. */
@@ -22625,8 +22747,8 @@ BROKFILTERS.forEach(f => {
    outstanding items and last activity */
 const BTCOLS = [
   { k:"loan",   label:"Loan request",  src:"amount + purpose" },
-  { k:"broker", label:"Broker",        src:"connection state" },
-  { k:"status", label:"Stage",         src:"set by your broker" },
+  { k:"broker", label:"Advisor",        src:"connection state" },
+  { k:"status", label:"Stage",         src:"set by your advisor" },
   { k:"quotes", label:"Quotes",        src:"quotes released to you" },
   { k:"out",    label:"Outstanding",   src:"open tasks and requested documents" },
   { k:"upd",    label:"Last activity", src:"latest event" }
@@ -22679,7 +22801,7 @@ function connLine(d) {
   const c = d.conn || {};
   if (d.broker) { const b = brokerById(d.broker); return `<a class="bkname" href="#/brokers/${b.id}">${esc(bName(b))}</a>`; }
   if (c.st === "pending") return `<span class="unset" title="Sent to ${esc(bName(brokerById(c.broker)))} on ${esc(c.on)}">Pending · ${esc(bName(brokerById(c.broker)))}</span>`;
-  return `<span class="unset">No broker yet</span>`;
+  return `<span class="unset">No advisor yet</span>`;
 }
 
 function renderLoans() {
@@ -22745,7 +22867,7 @@ function renderLoans() {
     head = `<tr>
       ${th("name", "Property")}
       ${C.loan ? th("amount", "Loan request") : ""}
-      ${C.broker ? `<th>Broker</th>` : ""}
+      ${C.broker ? `<th>Advisor</th>` : ""}
       ${C.status ? th("status", "Stage") : ""}
       ${C.quotes ? th("quotes", "Quotes") : ""}
       ${C.out ? th("out", "Outstanding") : ""}
@@ -22755,7 +22877,7 @@ function renderLoans() {
       const q = bQuotes(d).length, o = bOpenTasks(d).length, last = (d.events || []).slice(-1)[0];
       return `<tr data-row="${d.id}">${prop(d)}
         ${C.loan ? loanCell(d) : ""}
-        ${C.broker ? `<td data-l="Broker">${connLine(d)}</td>` : ""}
+        ${C.broker ? `<td data-l="Advisor">${connLine(d)}</td>` : ""}
         ${C.status ? `<td data-l="Stage">${bStatus(d)}</td>` : ""}
         ${C.quotes ? `<td data-l="Quotes">${q ? `<a class="bkname qlink" href="#/loan/${d.id}/quotes">${q}</a>` : NIL}</td>` : ""}
         ${C.out ? `<td data-l="Outstanding">${o ? `<a class="bkname" href="#/loan/${d.id}">${o} ${o === 1 ? "item" : "items"}</a>` : `<span class="unset">None</span>`}</td>` : ""}
@@ -22771,7 +22893,7 @@ function renderLoans() {
     drafts: ["No drafts", "A financing request you save before submitting waits here."] }[S.bview];
   const inner = !all.length ? `<div class="empty"><b>Start your first financing request</b>
       <p>Answer a few questions about your next deal.<br>We&rsquo;ll take it from there!</p>
-      <div class="acts"><a class="btn" href="#/loans/new">Start a new search</a><a class="btn btn--outline" href="#/brokers">Find a broker</a></div></div>`
+      <div class="acts"><a class="btn" href="#/loans/new">Start a new search</a><a class="btn btn--outline" href="#/brokers">Choose an advisor</a></div></div>`
     : `<div class="bviews">${views}</div>${bar}${rows.length ? table : n(S.bview) ? `<div class="empty"><b>No deals match these filters</b>
         <p>Clear them to see all ${n(S.bview)}.</p>
         <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="bclrf2">Clear filters</button></div></div>`
@@ -22789,7 +22911,7 @@ function renderLoans() {
      session card. */
   return `
     <div class="head">
-      <div><h1>My deals</h1><p>All your deals, broker, status and action items in one place.</p></div>
+      <div><h1>My deals</h1><p>All your deals, advisor, status and action items in one place.</p></div>
       <div class="head__acts"><a class="btn" href="#/loans/new">＋ Start a new search</a></div>
     </div>
     <div class="card"><div class="card__ct">${inner}</div></div>`;
@@ -23075,18 +23197,18 @@ function bwCard(d) {
       <span class="rad"><input type="radio" name="lf_bpick" data-lf="bpick" value="${b.id}"${on ? " checked" : ""} aria-label="${esc(bName(b))}"><span class="dot" aria-hidden="true"></span></span>
       <div class="bid bid--stack"><span class="bav">${bAvatar(b)}</span><div><b>${esc(bName(b))}${
         b.verified ? `<span class="vtick" role="img" aria-label="Verified" title="Verified by LenderPrism">${VTICK}</span>` : ""}</b><span>${esc(b.city)}, ${esc(b.state)}</span></div></div>
-      ${was ? `<span class="badge tone-blue">Your broker on ${esc(dealShort(was))}</span>` : ""}
+      ${was ? `<span class="badge tone-blue">Your advisor on ${esc(dealShort(was))}</span>` : ""}
       <p class="bcard__about">${esc(b.about)}</p>
       <a class="bcard__go" href="#/brokers/${b.id}">View profile <span aria-hidden="true">&rarr;</span></a>
     </label>`;
   };
-  return `<div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Your broker</h2></div><div class="card__ct">
-      <div role="radiogroup" aria-label="Your broker" style="display:flex;flex-direction:column;gap:10px">
-        ${mode("assign", "Let us assign a broker to your transaction", !choose)}
-        ${mode(list.length ? list[0].id : "", "Choose one of our brokers", choose, !list.length)}
+  return `<div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Your financing advisor</h2></div><div class="card__ct">
+      <div role="radiogroup" aria-label="Your financing advisor" style="display:flex;flex-direction:column;gap:10px">
+        ${mode("assign", "Let us assign an advisor to your transaction", !choose)}
+        ${mode(list.length ? list[0].id : "", "Choose one of our advisors", choose, !list.length)}
       </div>
-      ${!list.length ? `<div class="hint" style="margin-top:8px">No broker on LenderPrism works ${esc(STATE_NAME[d.state] || d.state || "this state")} and ${esc(d.property || "this property type")} yet.</div>`
-        : choose ? `<div class="bwpick" role="radiogroup" aria-label="Brokers">${shown.map(card).join("")}</div>
+      ${!list.length ? `<div class="hint" style="margin-top:8px">No advisor with LenderPrism works ${esc(STATE_NAME[d.state] || d.state || "this state")} and ${esc(d.property || "this property type")} yet.</div>`
+        : choose ? `<div class="bwpick" role="radiogroup" aria-label="Advisors">${shown.map(card).join("")}</div>
       ${list.length > 3 ? `<button class="btn btn--link bwmore" type="button" data-bwall>${S.bwAll ? "Show fewer" : `Show ${list.length - 3} more`}</button>` : ""}` : ""}
     </div></div>`;
 }
@@ -23154,7 +23276,7 @@ function lCommit(d, mode) {
     : [["Rent roll", "Add the rent roll"], ["T-12 / operating statements", "Add the T-12 operating statement"]]).forEach(([cat, t], i) => {
     if (d.files[cat] || ex.docs.some(x => x.cat === cat)) return;
     const id = "ds" + i;
-    ex.docs.push({ id, cat, st: "requested", due: "", by: "system", note: "Skipped at submit. Add it when you have it; brokers price faster with one." });
+    ex.docs.push({ id, cat, st: "requested", due: "", by: "system", note: "Skipped at submit. Add it when you have it; advisors price faster with one." });
     ex.tasks.push({ id: "ts" + i, t, type: "upload", due: "", by: "system", st: "open", doc: id });
   });
   /* the borrower's pick on step 5 wins; "assign" is the matching it always
@@ -23164,7 +23286,7 @@ function lCommit(d, mode) {
   const b = chosen || lRoute(f);
   ex.conn = b ? { st: "pending", broker: b.id, on: "Today", how: chosen ? "chosen" : "matched" } : null;
   if (b) ex.events.push({ on: "Today", type: "status", tx: "Sent to " + bName(b) });
-  ex.next = b ? `Waiting for ${bName(b)} to take the deal on.` : "No broker has this deal. Pick one from the directory and send it to them.";
+  ex.next = b ? `Waiting for ${bName(b)} to take the deal on.` : "No advisor has this deal. Pick one from the directory and send it to them.";
   S.bFresh = false;
   return ex.id;
 }
@@ -23302,7 +23424,7 @@ function renderLoanNew() {
       <div class="fldrow fldrow--2">
         <div class="fld${m("state")}"><label>State <span class="req">*</span></label>
           <div class="fld__sel">${selCtl("lf:state", US_STATES.map(([a, n]) => ({ v: a, label: `${n} (${a})` })), d.state, "State", "Pick a state")}</div>${err("state", "Pick a state.")}</div>
-        ${inp("zip", "Zip", { req: 1, num: 1, ph: "78704", err: "Five digits. The zip decides which brokers can take it." })}</div>
+        ${inp("zip", "Zip", { req: 1, num: 1, ph: "78704", err: "Five digits. The zip decides which advisors can take it." })}</div>
       ${/* Other addresses and the tax-parcel questions [T, Figma comment on
             15:396, 8 Oct: "Refer to this form ... All optional fields"]. They
             are his Zoho Location section's last four fields, labels shortened
@@ -23520,7 +23642,7 @@ function renderLoanNew() {
          are theirs and read back in the broker's own block, suBlock. -->
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Preliminary sources &amp; uses</h2></div><div class="card__ct">
       ${editing && deal.conn && deal.conn.st === "assigned"
-        ? `${deal.su ? suBlock(deal) : `<p class="lsu__note">Your broker has not added any yet.</p>`}`
+        ? `${deal.su ? suBlock(deal) : `<p class="lsu__note">Your advisor has not added any yet.</p>`}`
         : `<div class="su__grid">${lsuCol(d, "sources")}${lsuCol(d, "uses")}</div>`}
       <div class="fld lsu__fld"><label for="lf_suNote">Notes on sources and uses</label>
         <textarea class="inp" id="lf_suNote" data-lf="suNote" rows="2" placeholder="Where the equity comes from, or a figure you are not sure of yet">${esc(d.suNote)}</textarea></div>
@@ -23601,7 +23723,7 @@ function renderLoanNew() {
           <span class="lcs__em"><input class="inp" data-lcs="${i}:email" type="email" aria-label="Co-sponsor ${i + 1} email" autocomplete="off" value="${esc(c.email)}" placeholder="name@company.com">
           ${d.coSponsors.length > 1 ? `<button type="button" class="docrow__rm" data-tip="Remove" data-lcsrm="${i}" aria-label="Remove co-sponsor ${i + 1}">\u00d7</button>` : "<span></span>"}</span></div>`).join("")}</div>
         <button class="btn btn--link lcs__add" type="button" data-lcsadd>+ Add co-sponsor</button>
-        <div class="hint" id="lfh_cs">Your broker sees them on the request. You can invite them to the deal once it is submitted.</div></div>` : ""}
+        <div class="hint" id="lfh_cs">Your advisor sees them on the request. You can invite them to the deal once it is submitted.</div></div>` : ""}
       <div class="fldrow fldrow--2">${pfld("invYears", "Years of experience", 0, 1)}${pfld("invDeals", "Deals completed", 0, 1)}</div>
       <div class="fldrow fldrow--2">${pfld("invLiquidity", "Estimated liquidity", 0, 1, LIQ_HINT)}${pfld("invWorth", "Net worth", 0, 1)}</div>
       ${radios("credit", many ? "Are there any known credit issues among the sponsors?" : "Do you have any known credit issues?", ["Yes", "No"], "Bankruptcies, foreclosures or litigation.", 1)}
@@ -23620,7 +23742,7 @@ function renderLoanNew() {
       .filter(([c]) => !(c === "Purchase agreement" && d.contract === "No"))
       .map(([c, s]) => [c, c === "Purchase agreement" && d.contract === "Yes" ? "Fully executed" : s]);
     const listed = new Set([...BDOC_SPONSOR, ...propRows, ...(hotel ? BDOC_HOTEL : [])].map(x => x[0]));
-    propRows.push(...Object.keys(d.files).filter(c => !listed.has(c) && c !== "Other").map(c => [c, ""]), ["Other", "Anything else for your broker"]);
+    propRows.push(...Object.keys(d.files).filter(c => !listed.has(c) && c !== "Other").map(c => [c, ""]), ["Other", "Anything else for your advisor"]);
     body = `
     <!-- "0 of 13 · none required" is out [Tanya, 28 Sep]. The count restated
          thirteen rows the reader is looking at, and "none required" was the
@@ -23661,7 +23783,7 @@ function renderLoanNew() {
     ${editing ? "" : bwCard(d)}
     <!-- Heading is Tony's question, 12 Oct Figma comment on 15:1272 ("Change to read 'Would you like to add an more comments?'", typo fixed) [T]. Placeholder kept so a pasted one-pager still reads as welcome [💡 rec]. -->
     <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Would you like to add any more comments?</h2></div><div class="card__ct">
-      <div class="fld"><textarea class="inp" id="lf_sum" data-lf="summary" rows="6" maxlength="1200" aria-label="Would you like to add any more comments?" placeholder="Paste anything you already have: an email to a bank, a one-pager. Your broker tidies it.">${esc(d.summary)}</textarea>
+      <div class="fld"><textarea class="inp" id="lf_sum" data-lf="summary" rows="6" maxlength="1200" aria-label="Would you like to add any more comments?" placeholder="Paste anything you already have: an email to a bank, a one-pager. Your advisor tidies it.">${esc(d.summary)}</textarea>
         <div class="chleft" id="lsumleft">${left} characters left</div></div>
     </div></div>`;
     S.lreuseCats = reuse.map(x => [reuseCat[x.k], x.file]);
@@ -23710,7 +23832,7 @@ function renderLoanNew() {
                can focus on other business" [T]. His words, bolded up to the dash
                like the other three; the "we" voice matches "our advisors" above. -->
           <ol class="bnext">
-            <li><b>A broker reviews it.</b> Requests go to one of our advisors who works your property type and state.</li>
+            <li><b>A financing advisor reviews it.</b> Requests go to one of our advisors who works your property type and state.</li>
             <li><b>We present it to the best lenders for your objectives</b> — you can focus on other business.</li>
             <li><b>You compare quotes here,</b> side by side, and pick one.</li>
             <li><b>You track it to closing</b> on the deal page.</li>
@@ -23776,7 +23898,7 @@ function renderLoanSent(d) {
      put their commit row in the same place. .home is a 16px flex column, so
      the gap above comes from the stack rather than a margin here. */
   const foot = `<div class="frmfoot">
-        ${b ? `<a class="btn btn--outline" href="#/home">Go to home</a>` : `<a class="btn btn--outline" href="#/brokers">Find a broker</a>`}
+        ${b ? `<a class="btn btn--outline" href="#/home">Go to home</a>` : `<a class="btn btn--outline" href="#/brokers">Choose an advisor</a>`}
         <a class="btn" href="#/loan/${d.id}">Open the deal</a>
       </div>`;
   return `
@@ -23791,7 +23913,7 @@ function renderLoanSent(d) {
             states as settled the one thing this screen is waiting for. Both
             now say what has actually happened: a named person holds it, or
             nobody does and that is the borrower's next move. */""}
-      <div class="head"><div><h1>${b ? `Submitted — ${esc(bName(b))} has your request` : "Submitted — pick a broker to take it on"}</h1><p>${esc(d.name)} · ${money(d.amt)} · ${esc(d.purpose)} · ${esc(d.city)}, ${esc(d.state)}</p></div></div>
+      <div class="head"><div><h1>${b ? `Submitted — ${esc(bName(b))} has your request` : "Submitted — pick an advisor to take it on"}</h1><p>${esc(d.name)} · ${money(d.amt)} · ${esc(d.purpose)} · ${esc(d.city)}, ${esc(d.state)}</p></div></div>
       ${/* the sentence is an INFO alert, not bare body copy [Tanya, 1 Oct].
             Both branches say the same kind of thing - what is happening to the
             request now and what the borrower does not have to do - which is the
@@ -23831,7 +23953,7 @@ function renderLoanSent(d) {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         <div class="alert__title">${b
           ? `${esc(bName(b))}, an advisor with LenderPrism who works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)}, has your request. When they take it on you will see them on the deal, and they take it to lenders from there. Anything they ask you for will show on the deal's Documents tab.`
-          : `No advisor with LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. Pick one from the directory and send them the deal; nothing goes to lenders before a broker takes it on. Anything they ask you for will show on the deal's Documents tab.`}</div>
+          : `No advisor with LenderPrism works ${esc(d.property.toLowerCase())} in ${esc(STATE_NAME[d.state] || d.state)} yet. Pick one from the directory and send them the deal; nothing goes to lenders before an advisor takes it on. Anything they ask you for will show on the deal's Documents tab.`}</div>
       </div>
       ${/* a PLAIN card, not card--att [Tanya, 1 Oct]. The gold wash is the
             attention signal Home's Action required and the deal tab's
@@ -23981,13 +24103,13 @@ function renderBInvite(d) {
             <div class="card__hd"><h2>What they will need</h2></div>
             <div class="card__ct doclist">${need.map(x => `<div class="docrow docrow--none">
               <span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(bItemName(x))}</span>
-              <span class="docrow__note">${esc(x.note || "Requested by your broker")}${x.due ? ` · due ${esc(x.due)}` : ""}</span>
+              <span class="docrow__note">${esc(x.note || "Requested by your advisor")}${x.due ? ` · due ${esc(x.due)}` : ""}</span>
             </div>`).join("")}</div>
           </div>` : ""}
         </div>
         <div class="home__col">
           <div class="card">
-            <div class="card__hd"><h2>Who is asking</h2><a class="btn btn--link" href="#/brokers/${b.id}">Profile <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+            <div class="card__hd"><h2>Who is asking</h2><a class="btn btn--link" href="#/brokers/${b.id}">View profile <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
             <div class="card__ct">
               <div class="bid"><span class="bav bav--md">${bAvatar(b, 46)}</span><div><b>${esc(bName(b))}</b><span>${esc(b.company)} · ${esc(b.city)}, ${esc(b.state)}</span></div></div>
               ${/* their contact details are their own listing, public in
@@ -24014,6 +24136,117 @@ function renderBInvite(d) {
         <button class="btn btn--outline" type="button" data-binvno="${d.id}">Decline</button>
         ${hold ? `<a class="btn" href="#/account/password">See your email addresses</a>`
           : `<button class="btn" type="button" data-binvyes="${d.id}">Accept and open the request</button>`}
+      </div>
+    </div>`;
+}
+
+/* ---------- Accept deal invitation, tracker row 3 (15 Oct) ----------
+   The other end of the lead's "Invite to this deal" dialog: a co-sponsor,
+   guarantor or authorized representative asked into ONE deal, and only that
+   deal - the lead's other deals stay theirs [S §2]. The tracker: "Invitation
+   email: deal name (property), lead sponsor name, broker name, your role, what
+   is requested of you. Landing: same info + Accept / Decline."
+
+   renderBInvite's page, re-pointed. Same reasons it is a page and not a row
+   (a cold arrival lands here, and accepting discloses something), same alert
+   carrying the disclosure, same footer in the left column, Decline first.
+   What changes is who asks: the LEAD sponsor invites and the advisor is named
+   beside them, since the advisor is who assigns the items and who receives
+   them [S §3].
+
+   No loan amount and no request facts. The tracker's list is deal name,
+   property, people, role and items, and an invitee is not on the deal yet;
+   whether a guarantor should see the amount before saying yes is a fair
+   question nobody has asked. [~]
+
+   Accept goes to the co-sponsor dashboard for Assigned items. Whole deal
+   would open the deal workspace minus other sponsors' documents [S §3],
+   which is not drawn (see renderCosHome's note), so it goes there too and
+   says nothing different yet. [~] */
+function renderPJoin() {
+  const pj = S.pj && pJoinOf(S.pj.id, S.pj.slug);
+  if (!pj) return renderNotFound(S.nf);
+  const { d, x } = pj, b = bBroker(d), iv = x.inv || {}, lead = BPROF.first + " " + BPROF.last;
+  const whole = x.access === "deal";
+  const sub = `${esc(d.name)} · ${esc(d.addr)}, ${esc(d.city)}, ${esc(d.state)}`;
+  const INFO = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`;
+  const WARN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`;
+  /* the three answered states share one shape: heading, one alert, one way on */
+  const done = (h1, tone, title, desc, go) => `
+    <div class="home">
+      <div class="head"><div><h1>${h1}</h1><p>${sub}</p></div></div>
+      <div class="alert${tone ? " alert--" + tone : ""}" role="status" style="margin:0">${tone ? WARN : INFO}
+        <div class="alert__title">${title}</div>
+        <div class="alert__desc">${desc}</div>
+      </div>
+      <div class="frmfoot">${go}</div>
+    </div>`;
+  const home = `<a class="btn btn--outline" href="#/home/cosponsor">Go to home</a>`;
+  if (x.st === "Accepted") return done("You joined this deal", "",
+    `You accepted ${esc(lead)}&rsquo;s invitation${x.joined ? (x.joined === "Today" ? " today" : " on " + esc(x.joined)) : ""}.`,
+    `${esc(lead)}${b ? ` and ${esc(bName(b))}` : ""} can see your name and contact details. Your documents go to the advisor, not to other sponsors.`,
+    `<a class="btn" href="#/home/cosponsor">${whole ? "Open the deal" : "Go to your items"}</a>`);
+  if (x.st === "Declined") return done("You declined this invitation", "",
+    `${esc(lead)} sees that you declined. Nothing else of yours went to them${b ? ` or to ${esc(bName(b))}` : ""}.`,
+    `They can invite you again from the deal if plans change.`, home);
+  /* expiry: #/join/.../expired, the address-not-a-button rule the verify
+     screen's states follow. 14 days is the advisor invitation's own span
+     (2 Oct to 16 Oct on the broker side's sample) [~] */
+  if (S.pj.lapsed) return done("This invitation has expired", "warning",
+    `${esc(lead)}&rsquo;s invitation is no longer open`,
+    `Invitations last 14 days. Ask ${esc(lead)} to send it again. Nothing of yours was shared.`, home);
+  /* four facts, one row at 1600: the deal's name and address are the heading
+     line above, so they are not repeated here */
+  const facts = [["Property type", d.property], ["Your role", x.role], ["Ownership", x.own != null ? x.own + "%" : "—"], ["Access", whole ? "Whole deal" : "Assigned items"]];
+  return `
+    <div class="home">
+      <div class="head"><div><h1>${esc(lead)} wants to add you to a deal</h1><p>${sub}</p></div></div>
+      ${/* the advisor invitation's alert, re-addressed: the title is the
+            sentence Tony gave that one ("<<Broker>> has invited you to join
+            <<Name of Request>>"), the description the three facts a decision
+            turns on - what accepting shares and with whom, what you will see,
+            what declining shares - plus the expiry. */""}
+      <div class="alert" role="status" style="margin:0">${INFO}
+        <div class="alert__title">${esc(lead)} has invited you to join ${esc(d.name)} as ${esc(pRoleA(x.role))}.</div>
+        <div class="alert__desc">Accepting shares your name and contact details with ${esc(lead)}${b ? ` and ${esc(bName(b))}` : ""}. ${whole ? "You see the whole deal, except other sponsors&rsquo; documents." : "You see only what is asked of you."} Declining shares nothing.${iv.exp ? ` Expires <b>${esc(iv.exp)}</b>.` : ""}</div>
+      </div>
+      <div class="home__grid">
+        <div class="home__col">
+          <div class="card">
+            <div class="card__hd"><h2>The deal</h2></div>
+            <div class="card__ct"><div class="facts">${facts.map(([k, v]) => `<div class="fact"><div class="k">${esc(k)}</div><div class="v">${esc(String(v))}</div></div>`).join("")}</div></div>
+          </div>
+          ${/* --none rows, as on the advisor invitation: nothing is waiting on
+                her until she accepts, so no upload and no gold */""}
+          <div class="card">
+            <div class="card__hd"><h2>What you are asked for</h2></div>
+            ${x.items.length ? `<div class="card__ct doclist">${x.items.map(([k, , m = {}]) => `<div class="docrow docrow--none">
+              <span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(BCOS_NAME[k] || k)}</span>
+              <span class="docrow__note">Requested by ${esc(b ? bName(b) : "your advisor")}${m.due ? ` · due ${esc(m.due)}` : ""}</span>
+            </div>`).join("")}</div>`
+              : `<div class="clear"><span class="clear__ic">${BIC.check}</span><span class="clear__tx">Nothing yet. ${esc(b ? bName(b) : "The advisor")} assigns items once you join.</span></div>`}
+          </div>
+          <div class="frmfoot">
+            <button class="btn btn--outline" type="button" data-pjno>Decline</button>
+            <button class="btn" type="button" data-pjyes>Accept and ${whole ? "open the deal" : "see your items"}</button>
+          </div>
+        </div>
+        <div class="home__col">
+          <div class="card">
+            <div class="card__hd"><h2>Who is asking</h2></div>
+            <div class="card__ct">
+              <div class="bid">${bPartAv(BPROF.photo, lead)}<div><b>${esc(lead)}</b><span>Lead sponsor${BPROF.company ? ` · ${esc(BPROF.company)}` : ""}</span></div></div>
+              ${iv.note ? `<p class="bhint" style="margin:12px 0 0">&ldquo;${esc(iv.note)}&rdquo;</p>` : ""}
+              <p class="bhint" style="margin:12px 0 0">Invited you on ${esc(iv.on || "—")}, at ${esc(x.email)}.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__hd"><h2>Advisor on this deal</h2>${b ? `<a class="btn btn--link" href="#/brokers/${b.id}">View profile <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>` : ""}</div>
+            <div class="card__ct">${b
+              ? `<div class="bid"><span class="bav bav--md">${bAvatar(b, 46)}</span><div><b>${esc(bName(b))}</b><span>${esc(b.company)} · ${esc(b.city)}, ${esc(b.state)}</span></div></div>`
+              : `<p class="bhint" style="margin:0">No advisor yet. Items are assigned once one is.</p>`}</div>
+          </div>
+        </div>
       </div>
     </div>`;
 }
@@ -24075,7 +24308,7 @@ function renderLoan(d) {
              contacts works; a borrower has exactly one broker, and the
              products built for that reading - Zillow's "Your team", Preply's
              tutor rail, Hers - all put the action on the person's own card. -->
-        ${!b && live ? `<a class="btn" href="#/brokers">Find a broker</a>` : ""}
+        ${!b && live ? `<a class="btn" href="#/brokers">Choose an advisor</a>` : ""}
         <!-- overflow last, as on the broker deal page [Tanya, 1 Oct: tried it
              first, went back - every kebab in the file closes its row] -->
         ${live ? `<button type="button" class="rowkebab" data-tip="More actions" data-kebab="bw:${d.id}" aria-haspopup="menu" aria-expanded="${menuOpen}" aria-label="More actions for ${esc(d.name)}">${KEBAB}</button>
@@ -24139,8 +24372,11 @@ const BPARTS = {
   "round-rock": [
     { name: "Marcus Reyes", photo: "brokers/marcus-reyes.jpg" /* Unsplash photo-1507003211169-0a1dd7228f2d, 192px face crop; lives in brokers/ so it deploys with the rest */, email: "marcus@reyesholdings.com", role: "Co-sponsor", st: "Accepted",
       own: 30, access: "deal", items: [["PFS", "received"], ["SREO", "accepted"], ["Bio", "requested"]] },
+    /* inv is the invitation's own record [tracker row 3, 15 Oct]: when it went,
+       when it lapses, and whether the address already has an account. Dana's
+       has none, so her link opens the invitation sign-up (#/auth/join/...) */
     { name: "Dana Whitfield", email: "dana.whitfield@gmail.com", role: "Guarantor", st: "Invited",
-      own: null, access: "items", items: [["PFS", "requested"]] },
+      own: null, access: "items", items: [["PFS", "requested"]], inv: { on: "2 Oct", exp: "16 Oct" } },
     /* a declined row on the deal people open first, so all three invitation
        states show on one table [Tanya, 4 Oct]; also the only Authorized
        representative in the samples [~] */
@@ -24162,7 +24398,17 @@ const BPARTS = {
            is not what holds a package up [~]; it is also the second thing
            "Use an existing document" can offer her, since the Oakwood bio is
            Received and the Oakwood SREO - the only other repeat - is not. */
-        ["Bio", "requested", { due: "15 Oct" }]] }]
+        ["Bio", "requested", { due: "15 Oct" }]] }],
+  /* Accept deal invitation [tracker row 3, 15 Oct]: the existing-account half.
+     Rachel already uses LenderPrism (the co-sponsor dashboard is hers), so her
+     link opens the invitation itself and Accept adds Mesa to that dashboard.
+     Same advisor and the same three items as Canyon Ridge, which the lead's
+     note leans on [~]. */
+  "mesa-storage": [
+    { name: "Rachel Kim", email: "rachel@kimfamilyoffice.com", role: "Co-sponsor", st: "Invited", own: 25, access: "items",
+      items: [["PFS", "requested", { due: "24 Oct" }], ["SREO", "requested", { due: "24 Oct" }], ["Bio", "requested", { due: "31 Oct" }]],
+      inv: { on: "13 Oct", exp: "27 Oct", acct: true,
+        note: "Rachel, Anjali needs your PFS, SREO and bio for Mesa, as on Canyon Ridge. Happy to talk it through first." } }]
 };
 const BME_ITEMS = { "round-rock": [["PFS", "accepted"], ["SREO", "accepted"], ["Bio", "received"]] };
 const BME_OWN = { "round-rock": 70, "canyon-ridge": 75 };
@@ -24297,7 +24543,7 @@ function bPrmModal() {
   return `<div class="mov" role="dialog" aria-modal="true" aria-label="Remove participant"><div class="mdl">
     <div class="mdl__hd"><div class="mdl__ttl"><h2>Remove ${esc(x.name)}?</h2><p>${esc(x.role)} · ${esc(d.name)}</p></div>
       <button type="button" class="x" data-bprmx aria-label="Close">${XCLOSE}</button></div>
-    <div class="mdl__bd"><p style="margin:0 0 8px; line-height:1.55">They lose access to this deal straight away, and your broker is told. Documents they already sent stay with your broker.</p></div>
+    <div class="mdl__bd"><p style="margin:0 0 8px; line-height:1.55">They lose access to this deal straight away, and your advisor is told. Documents they already sent stay with your advisor.</p></div>
     <div class="mdl__ft"><button class="btn btn--outline" type="button" data-bprmx>Keep them</button><button class="btn btn--destructive" type="button" data-bprmgo>Remove participant</button></div>
   </div></div>`;
 }
@@ -24369,13 +24615,30 @@ const BCOS_OAK = { id: "oakwood", name: "Oakwood Apartments", lead: "Daniel Broo
    cosThread. The thread is deep-copied with items for the same reason items
    are: a shallow spread would leave S.cosOak sharing one array with the
    fixture, and a reply would survive a reset. */
+/* EVERY DEAL SHE HAS ACCEPTED, not Canyon Ridge by name [tracker row 3, 15
+   Oct]. Accepting an invitation flips her participant row to Accepted, and
+   that is the whole of joining: the card appears here because the row says
+   so, with no second list to keep in step. An Invited row is not a deal of
+   hers yet - it is cosInvites' row in Action required. Oakwood is Rachel's
+   seeded history, so an account made from an invitation a minute ago
+   (S.cosFresh) does not inherit it. */
 function cosDeals() {
-  const cr = loanById("canyon-ridge"), me = cr && bParts(cr).find(p => p.email === BCOS.email);
+  const mine = BLOANS.flatMap(ld => { const me = bParts(ld).find(p => p.email === BCOS.email && p.st === "Accepted");
+    return me ? [{ id: ld.id, name: ld.name, lead: BPROF.first + " " + BPROF.last, b: bBroker(ld), items: me.items, me }] : []; });
+  if (S.cosFresh) return mine;
   const oak = S.cosOak || (S.cosOak = { ...BCOS_OAK, items: BCOS_OAK.items.map(x => x.slice()),
     thread: BCOS_OAK.thread.map(m => ({ ...m })) });
-  return [...(me ? [{ id: cr.id, name: cr.name, lead: BPROF.first + " " + BPROF.last, b: bBroker(cr), items: me.items, me }] : []),
-    { ...oak, b: brokerById(oak.broker), me: oak }];
+  return [...mine, { ...oak, b: brokerById(oak.broker), me: oak }];
 }
+const cosInvites = () => BLOANS.flatMap(ld => bParts(ld).filter(p => p.email === BCOS.email && p.st === "Invited").map(x => ({ d: ld, x })));
+/* the participant invitation's address, #/join/<deal>/<name>: the record is a
+   row in bParts and has no id of its own, so the name stands in [~] */
+const pSlug = x => x.name.toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "");
+const pJoinOf = (id, slug) => { const d = loanById(id), x = d && bParts(d).find(p => pSlug(p) === slug); return x ? { d, x } : null; };
+const pRoleA = r => (/^[aeiou]/i.test(r) ? "an " : "a ") + r.toLowerCase();
+/* Rachel as seeded, so the existing-account link can put her back after an
+   invitation sign-up wrote another person into BCOS */
+const BCOS0 = { ...BCOS };
 const cosOwed = x => x[1] === "requested" || x[1] === "needs update";
 function renderCosHome() {
   const ds = cosDeals(), owed = S.cosEmpty ? 0 : ds.reduce((n, d) => n + d.items.filter(cosOwed).length, 0);
@@ -24396,14 +24659,31 @@ function renderCosHome() {
     </tr>`;
   const card = d => { const its = S.cosEmpty ? [] : d.items;
     return `<div class="card cosdeal">
-      <div class="card__hd"><div><h2>${esc(d.name)}</h2><p class="cosdeal__sub">Lead sponsor ${esc(d.lead)} · Broker ${esc(d.b ? bName(d.b) : "not assigned")}</p></div>
-        ${d.b ? `<button class="btn btn--outline btn--sm" type="button" data-cosmsg="${d.id}">Message broker${cosUnread(d) ? ` <span class="ct ct--on">${cosUnread(d)}</span>` : ""}</button>` : ""}</div>
+      <div class="card__hd"><div><h2>${esc(d.name)}</h2><p class="cosdeal__sub">Lead sponsor ${esc(d.lead)} · Advisor ${esc(d.b ? bName(d.b) : "not assigned")}</p></div>
+        ${d.b ? `<button class="btn btn--outline btn--sm" type="button" data-cosmsg="${d.id}">Message your advisor${cosUnread(d) ? ` <span class="ct ct--on">${cosUnread(d)}</span>` : ""}</button>` : ""}</div>
       ${its.length ? `<div class="card__ct"><div class="tblwrap"><table class="t">
           <thead><tr><th>Document</th><th>File</th><th>Due</th><th>Status</th><th></th></tr></thead>
           <tbody>${its.map((x, i) => row(d, x, i)).join("")}</tbody></table></div></div>`
         : `<div class="clear"><span class="clear__ic">${BIC.check}</span><span class="clear__tx">Nothing requested from you right now.</span></div>`}
     </div>`; };
-  return `<div class="home">${hd}${ds.map(card).join("")}</div>`;
+  /* an open invitation leads, in the lead's Home's own Action required card
+     and its .att__row: the email is one way in, and an account that already
+     exists should not depend on finding it [tracker row 3]. Review, the verb
+     the advisor invitation's row uses; the decision is on the next screen. */
+  const invs = cosInvites();
+  const att = invs.length ? `<div class="card card--att" role="region" aria-label="Action required">
+      <div class="card__hd"><h2>Action required</h2></div>
+      <div class="card__ct">${invs.map(({ d, x }) => `<div class="att__row">
+        <span class="att__ic att__ic--muted">${BIC.users}</span>
+        <span class="att__tx"><b>${esc(BPROF.first + " " + BPROF.last)} invited you to join a deal</b><span>${esc(d.name)} · ${esc(x.role)} · Invited ${esc(x.inv.on)}${x.inv.exp ? ` · expires ${esc(x.inv.exp)}` : ""}</span></span>
+        <a class="btn btn--outline" href="#/join/${d.id}/${pSlug(x)}">Review</a>
+      </div>`).join("")}</div>
+    </div>` : "";
+  /* an account made from an invitation that was then declined is on no deal
+     at all; without this the page was a greeting over nothing */
+  const none = !ds.length && !invs.length ? `<div class="card"><div class="card__ct"><div class="empty">
+      <b>No deals yet</b><p>When a sponsor invites you to a deal, it shows up here.</p></div></div></div>` : "";
+  return `<div class="home">${hd}${att}${ds.map(card).join("")}${none}</div>`;
 }
 /* Upload / Use an existing document [tracker], one dialog: the drop zone,
    then the same item already sent on another deal, if there is one. Only a
@@ -24421,14 +24701,14 @@ function cosUpModal() {
           telling, because it dates the instruction and the subtitle cannot.
           Where there is no note the clause is the only thing naming who is
           asking, so it stays. */""}
-    <div class="mdl__hd"><div class="mdl__ttl"><h2>${esc(BCOS_NAME[k] || k)}</h2><p>${esc(d.name)} · assigned to you${m.note ? "" : ` · requested by ${esc(d.b ? bName(d.b) : "your broker")}`}${m.due ? ` · due ${esc(m.due)}` : ""}</p></div>
+    <div class="mdl__hd"><div class="mdl__ttl"><h2>${esc(BCOS_NAME[k] || k)}</h2><p>${esc(d.name)} · assigned to you${m.note ? "" : ` · requested by ${esc(d.b ? bName(d.b) : "your advisor")}`}${m.due ? ` · due ${esc(m.due)}` : ""}</p></div>
       <button type="button" class="x" data-cosupx aria-label="Close">${XCLOSE}</button></div>
     <div class="mdl__bd">
       ${/* same .brknote the lead's upload dialog draws [Tanya, 5 Oct] - see
             the note on .admnote in the CSS for why an Alert was the wrong
             shell for a sentence a named person wrote. */""}
       ${m.note ? `<div class="brknote"><p>${esc(m.note)}</p>
-        <span class="on">Written by ${esc(d.b ? bName(d.b) : "your broker")}${m.noteOn ? `, ${esc(m.noteOn)}` : ""}</span></div>` : ""}
+        <span class="on">Written by ${esc(d.b ? bName(d.b) : "your advisor")}${m.noteOn ? `, ${esc(m.noteOn)}` : ""}</span></div>` : ""}
       ${/* the same .dz the lead's dialog and the broker's deal form draw
             [Tanya, 5 Oct]. It carried .bdrop until today, with the formats as
             a bare span under a bold word; they are the .hint now, one rank
@@ -24444,7 +24724,7 @@ function cosUpModal() {
             already sent to a DIFFERENT deal, so Use is the exact act the clause
             names - a document crossing to a new deal and, where the two deals
             have different brokers, to a new broker. */""}
-      ${S.cosFile && !S.cosBusy ? bConsent("this document", d.name, d.b ? bName(d.b) : "your broker") : ""}
+      ${S.cosFile && !S.cosBusy ? bConsent("this document", d.name, d.b ? bName(d.b) : "your advisor") : ""}
       ${/* hidden while a file is in the row - see the same rule on the lead's dialog */""}
       ${have.length && !S.cosFile ? `<div class="mdl__sec">Use an existing document</div>
         <div class="doclist">${have.map((h, j) => `<div class="docrow">
@@ -24452,7 +24732,7 @@ function cosUpModal() {
           <div class="docrow__acts"><button class="btn btn--ghost btn--sm" type="button" data-cosuse="${j}" data-from="${esc(h.deal)}">Use</button></div></div>`).join("")}</div>` : ""}
     </div>
     <div class="mdl__ft"><button class="btn btn--outline" type="button" data-cosupx>Cancel</button>
-      <button class="btn" type="button" data-cosgo${S.cosFile && !S.cosBusy ? "" : " disabled"}>Send to your broker</button></div>
+      <button class="btn" type="button" data-cosgo${S.cosFile && !S.cosBusy ? "" : " disabled"}>Send to your advisor</button></div>
   </div></div>`;
 }
 /* The co-sponsor's PRIVATE THREAD with the broker [S §5, tracker row 10]:
@@ -24632,7 +24912,7 @@ function cosSend(file) {
      specifically not given by [S 3]. Same act, two logs, because the two
      readers have no screen in common. */
   cosThread(d).push({ from: "sys", tx: `You sent your ${(BCOS_NAME[k] || k).toLowerCase()}.`, on: "Today", at: bNowAt() });
-  S.undo = { msg: `${BCOS_NAME[k] || k} sent to ${d.b ? bName(d.b) : "your broker"}.` };
+  S.undo = { msg: `${BCOS_NAME[k] || k} sent to ${d.b ? bName(d.b) : "your advisor"}.` };
   S.cosUp = null; render();
 }
 
@@ -24685,7 +24965,7 @@ function bInvModal() {
             yet nobody assigns anything, so the hint says when. Whether the
             lead or the broker should set Access at all is question 193. */""}
       ${radios("access", "Access", [["items", "Assigned items"], ["deal", "Whole deal"]],
-        `Assigned items: only what your broker asks them for${d.broker ? "" : ", once you have one"}. Whole deal: everything on this deal.`)}
+        `Assigned items: only what your advisor asks them for${d.broker ? "" : ", once you have one"}. Whole deal: everything on this deal.`)}
       <div class="fld"><label for="bi_note">Note <span class="opt">(optional)</span></label>
         <textarea class="inp" id="bi_note" data-binvf="note" rows="2" placeholder="Shown in the invitation email">${esc(f.note)}</textarea></div>
     </div>
@@ -24696,7 +24976,7 @@ function bInvModal() {
 function bBrokerCard(d, b) {
   const c = d.conn || {};
   if (b) return `<div class="card bbroker">
-      <div class="card__hd"><h2>Your broker</h2><a class="btn btn--link" href="#/brokers/${b.id}">Profile <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+      <div class="card__hd"><h2>Your financing advisor</h2><a class="btn btn--link" href="#/brokers/${b.id}">View profile <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
       <div class="card__ct">
         <!-- 46, down from --lg's 64 [Tanya, 2 Oct: "isn't the avatar seems too
              big?", then 56, then 48, then "use 46 variant"]. Both are stops on
@@ -24729,23 +25009,23 @@ function bBrokerCard(d, b) {
              unlabelled affordance open in .rowkebab. Outline, keeping the
              weight the header slot gave it: a channel, not the next step.
              BIC.msg is the Messages tab's own glyph. -->
-        <a class="btn btn--outline bbroker__msg" href="#/loan/${d.id}/messages">${BIC.msg}Message broker</a>
+        <a class="btn btn--outline bbroker__msg" href="#/loan/${d.id}/messages">${BIC.msg}Message your advisor</a>
       </div></div>`;
   if (c.st === "pending") { const x = brokerById(c.broker); return `<div class="card">
-      <div class="card__hd"><h2>Broker</h2><span class="badge tone-gold">Pending</span></div>
+      <div class="card__hd"><h2>Financing advisor</h2><span class="badge tone-gold">Pending</span></div>
       <div class="card__ct">
         <div class="bid"><span class="bav">${bAvatar(x)}</span><div><b>${esc(bName(x))}</b><span>Sent ${esc(c.on)} · waiting for response</span></div></div>
         <p class="bhint" style="margin:12px 0">Their contact details appear here when they take the deal on. Nothing goes to lenders before that.</p>
         <div class="acts" style="display:flex; gap:8px; flex-wrap:wrap"><button class="btn btn--outline btn--sm" type="button" data-bconnect="${x.id}" data-bconndeal="${d.id}">Message again</button>
-          <a class="btn btn--outline btn--sm" href="#/brokers">Pick another broker</a></div>
+          <a class="btn btn--outline btn--sm" href="#/brokers">Pick another advisor</a></div>
       </div></div>`; }
   return `<div class="card">
-      <div class="card__hd"><h2>Broker</h2></div>
+      <div class="card__hd"><h2>Financing advisor</h2></div>
       <!-- the library's Empty/Page, Size=sm, Show actions off [Tanya, 1 Oct:
            "is this empty state from the system?" - it was a .bid row with a
            "?" avatar]. sm because a card body is the container. No button:
            the header's primary Find a broker is the page's one way out. -->
-      <div class="empty empty--sm"><b>No broker yet</b><p>${esc(d.next || "Nothing goes to lenders until a broker takes the deal on.")}</p></div></div>`;
+      <div class="empty empty--sm"><b>No advisor yet</b><p>${esc(d.next || "Nothing goes to lenders until an advisor takes the deal on.")}</p></div></div>`;
 }
 
 /* bKeyDates stood here and is gone [Tanya, 2 Oct]. Desired closing reads back
@@ -24961,9 +25241,9 @@ const BQ_SORTS = [{ v: "rate", label: "Lowest rate" }, { v: "amount", label: "Hi
 const bqYrs = s => { const m = /([\d.]+)\s*(year|month)/i.exec(s || ""); return m ? parseFloat(m[1]) / (/month/i.test(m[2]) ? 12 : 1) : 0; };
 function loanQuotes(d, b) {
   const qs = bQuotes(d);
-  if (!b) return `<div class="card"><div class="card__ct"><div class="empty"><b>No quotes yet</b><p>Quotes come through a broker, and none has this deal yet.</p>
-    ${bLive(d) ? `<div class="acts"><a class="btn" href="#/brokers">Find a broker</a></div>` : ""}</div></div></div>`;
-  if (!qs.length) return `<div class="card"><div class="card__ct"><div class="empty"><b>Your broker hasn’t released any quotes yet</b><p>They appear here as ${esc(bName(b))} releases them, side by side.</p></div></div></div>`;
+  if (!b) return `<div class="card"><div class="card__ct"><div class="empty"><b>No quotes yet</b><p>Quotes come through an advisor, and none has this deal yet.</p>
+    ${bLive(d) ? `<div class="acts"><a class="btn" href="#/brokers">Choose an advisor</a></div>` : ""}</div></div></div>`;
+  if (!qs.length) return `<div class="card"><div class="card__ct"><div class="empty"><b>Your advisor hasn’t released any quotes yet</b><p>They appear here as ${esc(bName(b))} releases them, side by side.</p></div></div></div>`;
   const rate = q => parseFloat(q.rate) || 99;
   const bqKey = { amount: q => -q.amt, io: q => -bqYrs(q.io), amort: q => -bqYrs(q.amort) }[S.bqsort];
   const sorted = qs.slice().sort((x, y) => (bqKey ? bqKey(x) - bqKey(y) : 0) || rate(x) - rate(y));
@@ -25019,7 +25299,7 @@ function loanQuotes(d, b) {
   const acts = q => `<div class="qcol__acts">
         ${q.st !== "selected" && !chosen && bLive(d) ? `<button class="btn btn--sm" type="button" data-bsel="${q.id}">Select</button>` : ""}
         <a class="btn btn--outline btn--sm" href="#/loan/${d.id}/quotes/${q.id}">View details</a>
-        ${bLive(d) ? `<button class="btn btn--ghost btn--sm" type="button" data-bask="${q.id}">Ask broker</button>` : ""}</div>`;
+        ${bLive(d) ? `<button class="btn btn--ghost btn--sm" type="button" data-bask="${q.id}">Ask your advisor</button>` : ""}</div>`;
   /* a masked quote used to read "Regional bank / Released 19 Sep", which
      looks like a lender called Regional Bank. The sub line now says the name
      is not shared, in the same slot where a shared one prints the type. */
@@ -25077,7 +25357,7 @@ function loanQuotes(d, b) {
      already settled and sits above it without shouting over it. On a deal where
      the chosen quote IS the #1 the two stack, which is the only place their
      relative weight is visible, and it is the right way round. */
-  const col = q => `<th class="qcol${tone(q)}" scope="col">${chosen ? `<div class="qcol__tab${q.st === "selected" ? " qcol__tab--on" : ""}">${q.st === "selected" ? `${BIC.check}Selected` : ""}</div>` : ""}<div class="qcol__hd"><b title="${esc(bLender(q))}">${esc(bLender(q))}</b><div class="qcol__badges">${q.rank ? `<span class="badge ${q.rank === 1 ? "tone-gold" : "badge--outline"}">#${q.rank} from your broker</span>` : ""}${q.st === "selected" ? "" : bQBadge(q)}</div></div>
+  const col = q => `<th class="qcol${tone(q)}" scope="col">${chosen ? `<div class="qcol__tab${q.st === "selected" ? " qcol__tab--on" : ""}">${q.st === "selected" ? `${BIC.check}Selected` : ""}</div>` : ""}<div class="qcol__hd"><b title="${esc(bLender(q))}">${esc(bLender(q))}</b><div class="qcol__badges">${q.rank ? `<span class="badge ${q.rank === 1 ? "tone-gold" : "badge--outline"}">#${q.rank} from your advisor</span>` : ""}${q.st === "selected" ? "" : bQBadge(q)}</div></div>
     <div class="qcol__key"><span class="qcol__rate num">${esc(q.rate)}</span><span class="qcol__amt num">${money(q.amt)}</span></div>
     <span class="qcol__sub">${bQMetaCol(q)}</span>${acts(q)}</th>`;
   const row = k => { const [lbl, f] = BQ_ROWS.find(r => r[0] === k), w = k === "Key conditions" ? " qwrap" : "";
@@ -25178,7 +25458,7 @@ function loanQuote(d, b) {
     </div>
     <div class="home__col">
       <div class="card"><div class="card__hd"><h2>Questions on this quote</h2></div><div class="card__ct">
-        ${q.thread.length ? q.thread.map(m => bMsgRow(d, b, m)).join("") : `<div class="empty--inline"><p>Ask ${b ? esc(bName(b)) : "your broker"} anything about this quote. They see which quote you mean.</p></div>`}
+        ${q.thread.length ? q.thread.map(m => bMsgRow(d, b, m)).join("") : `<div class="empty--inline"><p>Ask ${b ? esc(bName(b)) : "your advisor"} anything about this quote. They see which quote you mean.</p></div>`}
         ${bLive(d) ? `<div class="fld" style="margin-top:12px"><textarea class="inp" rows="3" id="bq_tx" data-bqtx placeholder="Ask about this quote">${esc(S.bqTx)}</textarea></div>
         <div style="display:flex; justify-content:flex-end"><button class="btn btn--sm" type="button" data-bqpost="${q.id}">Send question</button></div>` : ""}
       </div></div>
@@ -25265,10 +25545,10 @@ const bDocRule = x => { const [as_, vs] = BDOC_RULE[x.cat] || ["property", "all"
    makes the cell wider. The closed state names the owner rather than saying
    "Me + broker" - on a row the lead did not upload, "Me" would be the wrong
    person, and the whole point of the column is telling those two rows apart. */
-const bDocVis = (own, vis) => vis === "all" ? "All participants" : (own === "You" ? "You" : own.split(" ")[0]) + " + broker";
+const bDocVis = (own, vis) => vis === "all" ? "All participants" : (own === "You" ? "You" : own.split(" ")[0]) + " + advisor";
 function loanDocs(d) {
   const b = bBroker(d), need = bNeeded(d), have = d.docs.filter(x => x.name);
-  const who = x => x.by === "system" ? "LenderPrism" : b ? bName(b) : "your broker";
+  const who = x => x.by === "system" ? "LenderPrism" : b ? bName(b) : "your advisor";
   const needBlock = need.length ? `<div class="card" style="margin-bottom:16px" role="region" aria-label="Documents needed"><div class="card__hd"><h2>${need.length} ${need.length === 1 ? "document" : "documents"} needed</h2></div>
       <div class="card__ct doclist doclist--ask">${need.map(x => { const upd = x.st === "needs update"; return `<div class="docrow docrow--pend">
         <span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(bItemName(x))}</span>
@@ -25352,7 +25632,7 @@ function loanDocs(d) {
       <div class="card__hd"><h2>On file</h2></div>
       <div class="card__ct">${rows ? `<div class="tblwrap"><table class="t"><thead><tr><th>Document</th><th>Category</th><th>Uploaded by</th><th>Date</th><th>Version</th><th>Visibility</th><th>Status</th><th></th></tr></thead>
         <tbody>${rows}</tbody></table></div>`
-        : `<div class="empty empty--sm"><b>No documents yet</b><p>What you upload is shared with your broker only. Lenders see documents through the broker.</p></div>`}
+        : `<div class="empty empty--sm"><b>No documents yet</b><p>What you upload is shared with your advisor only. Lenders see documents through your advisor.</p></div>`}
       </div>
     </div>
     ${/* the action belongs to the page, not to the inventory [Tanya, 4 Oct].
@@ -25467,13 +25747,13 @@ function bUpModal() {
      a checklist row, not one the borrower reads anywhere else. */
   if (S.bupJust && (!cur || (cur.st !== "requested" && cur.st !== "needs update" && cur.id !== "new"))) {
     const nx = need[0];
-    return shell(nx ? "Uploaded" : "Sent to your broker", esc(d.name),
-      `<p style="margin:0 0 8px; line-height:1.55">${esc(S.bupJust)} is on the deal${nx ? `. ${need.length} more ${need.length === 1 ? "document is" : "documents are"} requested.` : ", and your broker has been told."}</p>`,
+    return shell(nx ? "Uploaded" : "Sent to your advisor", esc(d.name),
+      `<p style="margin:0 0 8px; line-height:1.55">${esc(S.bupJust)} is on the deal${nx ? `. ${need.length} more ${need.length === 1 ? "document is" : "documents are"} requested.` : ", and your advisor has been told."}</p>`,
       nx ? `<button class="btn btn--outline" type="button" data-bupx="${d.id}">Done</button><a class="btn" href="#/loan/${d.id}/upload/${nx.id}">Next document</a>`
         : `<button class="btn" type="button" data-bupx="${d.id}">Done</button>`, true);
   }
   if (!cur) return shell("Nothing requested", esc(d.name),
-    `<p style="margin:0 0 8px; line-height:1.55">Your broker has not asked for any documents.</p>`,
+    `<p style="margin:0 0 8px; line-height:1.55">Your advisor has not asked for any documents.</p>`,
     `<button class="btn btn--outline" type="button" data-bupx="${d.id}">Close</button><a class="btn" href="#/loan/${d.id}/upload/new">Upload a document anyway</a>`);
   const b = bBroker(d);
   /* NOT every note is a broker's. The rent roll skipped at submit carries one
@@ -25536,7 +25816,7 @@ function bUpModal() {
      clause is the dialog saying the item is the reader's own rather than one
      they are seeing on someone else's behalf. */
   const bupMeta = c => [esc(d.name), c.nm ? esc(c.cat) : null, "assigned to you",
-    c.note && !sysNote ? null : "requested by " + (sysNote ? "LenderPrism" : b ? esc(bName(b)) : "your broker"),
+    c.note && !sysNote ? null : "requested by " + (sysNote ? "LenderPrism" : b ? esc(bName(b)) : "your advisor"),
     c.due ? "due " + esc(c.due) : null].filter(Boolean).join(" \u00b7 ");
   /* THE FACTS ARE A SUBTITLE NOW, not a list [Tanya, 5 Oct: "for this use same
      format as here"] - and "here" is the co-sponsor's upload dialog, which has
@@ -25596,7 +25876,7 @@ function bUpModal() {
           : sysNote ? `<div class="alert" role="status">${INFOIC}
             <div class="alert__title">${esc(cur.note)}</div></div>`
           : `<div class="brknote"><p>${esc(cur.note)}</p>
-            <span class="on">Written by ${b ? esc(bName(b)) : "your broker"}${cur.noteOn ? `, ${esc(cur.noteOn)}` : ""}</span></div>`}`}
+            <span class="on">Written by ${b ? esc(bName(b)) : "your advisor"}${cur.noteOn ? `, ${esc(cur.noteOn)}` : ""}</span></div>`}`}
     ${/* the broker flow's dropzone, not a second one [Tanya, 5 Oct: "use
           components and patterns from prism library and brokers flows"]. The
           anatomy is .dz's, unchanged: a 24px glyph in .dz__ic, a real
@@ -25655,7 +25935,7 @@ function bUpModal() {
           row rather than in the footer, because the footer button is the act
           and these are its two conditions - see bConsent for why the sweep
           puts a consequence beside the control instead of in front of it. */""}
-    ${S.bupFile && !S.bupBusy ? bConsent(bupWhat(cur), d.name, b ? bName(b) : "your broker") : ""}
+    ${S.bupFile && !S.bupBusy ? bConsent(bupWhat(cur), d.name, b ? bName(b) : "your advisor") : ""}
     ${S.bupFile && !S.bupBusy && !S.bupFrom && bupKind(cur) ? `<label class="chkrow bupsave"><span class="chk"><input type="checkbox" data-bupsave${S.bupSave ? " checked" : ""}><span class="bx">${CHKTICK}</span></span>Also save to my profile as ${esc(BPDOC_CAT[bupKind(cur)])} v${((BPROF.pdocs.find(x => x.k === bupKind(cur)) || {}).ver || 0) + 1}</label>` : ""}`;
   return shell(cur.id === "new" ? "Upload a document" : bItemName(cur),
     /* AND IS GONE AGAIN [Tanya, 5 Oct: "remove this text"]. It had moved here
@@ -25684,7 +25964,7 @@ function bUpModal() {
        Cancel stays live: it is the only way out of an upload, and its handler
        clears the flag so the finishing timer is dropped. */
     `<button class="btn btn--outline" type="button" data-bupx="${d.id}">Cancel</button>
-     <button class="btn" type="button" data-bupgo="${cur.id}"${S.bupFile && !S.bupBusy ? "" : " disabled"}>Send to your broker</button>`);
+     <button class="btn" type="button" data-bupgo="${cur.id}"${S.bupFile && !S.bupBusy ? "" : " disabled"}>Send to your advisor</button>`);
 }
 
 /* 03.7 Messages [sheet]: one thread per deal with the broker, not an inbox.
@@ -25765,7 +26045,7 @@ function bMsgRefs(d, m) {
 function bMsgRow(d, b, m, cont) {
   const refs = bMsgRefs(d, m);
   if (m.from === "sys") return bSysRow(m, bEvIcon(m, refs.list.map(o => o.r)), refs.html);
-  return bBubble(m, cont, b ? bAvatar(b, 28) : "B", b ? esc(bName(b)) : "Broker", refs.html, b ? `#/brokers/${b.id}` : "");
+  return bBubble(m, cont, b ? bAvatar(b, 28) : "B", b ? esc(bName(b)) : "Advisor", refs.html, b ? `#/brokers/${b.id}` : "");
 }
 /* no message ends on one word alone [5 Oct]. The 66ch measure left "yet."
    on a line of its own under Round Rock's term sheet ("... Nothing to sign /
@@ -25883,8 +26163,8 @@ function bMsgsLeave() {
   S.bmOpen = null;
 }
 function loanMsgs(d, b) {
-  if (!b) return `<div class="card"><div class="card__ct"><div class="empty"><b>No broker yet</b><p>Messages open when a broker takes the deal on. Until then, you can message a broker from their profile.</p>
-    ${bLive(d) ? `<div class="acts"><a class="btn" href="#/brokers">Find a broker</a></div>` : ""}</div></div></div>`;
+  if (!b) return `<div class="card"><div class="card__ct"><div class="empty"><b>No advisor yet</b><p>Messages open when an advisor takes the deal on. Until then, you can message an advisor from their profile.</p>
+    ${bLive(d) ? `<div class="acts"><a class="btn" href="#/brokers">Choose an advisor</a></div>` : ""}</div></div></div>`;
   /* "No reference" is gone as an option: the trigger always reads Reference
      and the pick lands in the box as a chip with a remove, beside a staged
      file - the slot Langdock, Dropbox Dash and Dribbble stage things in
@@ -25929,7 +26209,7 @@ function loanMsgs(d, b) {
      header: the name it carried now heads the rail with the face beside it. */
   return `<div class="lsplit bmsplit"><div class="card bthread">
     <div class="card__ct bthread__list">
-      ${bThreadMsgs(d).length ? bMsgList(d, b, bThreadMsgs(d)) : `<div class="empty empty--sm"><b>Send your broker a message</b><p>Questions about the deal, the quotes or a document all go here.</p></div>`}
+      ${bThreadMsgs(d).length ? bMsgList(d, b, bThreadMsgs(d)) : `<div class="empty empty--sm"><b>Send your advisor a message</b><p>Questions about the deal, the quotes or a document all go here.</p></div>`}
     </div>
     ${bLive(d) ? `<div class="card__ct bcompose">
       ${/* one bordered box holding the text, what is staged and the tools
@@ -25984,7 +26264,7 @@ function loanMsgs(d, b) {
 function bMsgAside(d, b) {
   return `<div class="lside bmside">
     <div class="card"><div class="card__ct">
-      <div class="bid"><span class="bav bav--md">${bAvatar(b, 46)}</span><div><b>${esc(bName(b))}</b><span>Your broker · ${esc(b.company)}</span></div></div>
+      <div class="bid"><span class="bav bav--md">${bAvatar(b, 46)}</span><div><b>${esc(bName(b))}</b><span>Your advisor · ${esc(b.company)}</span></div></div>
       <a class="btn btn--outline btn--sm bmside__pf" href="#/brokers/${b.id}">View profile</a>
     </div></div>
   </div>`;
@@ -26088,7 +26368,7 @@ function bSelModal() {
   return `<div class="mov" role="dialog" aria-modal="true" aria-label="Select quote"><div class="mdl">
     <div class="mdl__hd"><div class="mdl__ttl"><h2>Proceed with this quote?</h2><p>${esc(bLender(q))} · ${esc(q.rate)} · ${money(q.amt)} · ${esc(q.term)}</p></div>
       <button type="button" class="x" data-bselx aria-label="Close">${XCLOSE}</button></div>
-    <div class="mdl__bd"><p style="margin:0 0 8px; line-height:1.55">${b ? esc(bName(b)) : "Your broker"} is told at once and moves the deal to Processing. The other quotes stay here for reference.</p></div>
+    <div class="mdl__bd"><p style="margin:0 0 8px; line-height:1.55">${b ? esc(bName(b)) : "Your advisor"} is told at once and moves the deal to Processing. The other quotes stay here for reference.</p></div>
     <div class="mdl__ft"><button class="btn btn--outline" type="button" data-bselx>Not yet</button><button class="btn" type="button" data-bselgo>Proceed with this quote</button></div>
   </div></div>`;
 }
@@ -26098,9 +26378,9 @@ function bSelModal() {
    exists; whether any preference is stored is question 131. */
 function bAccNotify() {
   const nt = [
-    ["msg", "New message from your broker", "Your broker wrote on one of your deals."],
-    ["docreq", "Document requested", "Your broker asked for a document, or asked for an update to one."],
-    ["qadd", "Quote added", "Your broker released a new quote to you."],
+    ["msg", "New message from your advisor", "Your advisor wrote on one of your deals."],
+    ["docreq", "Document requested", "Your advisor asked for a document, or asked for an update to one."],
+    ["qadd", "Quote added", "Your advisor released a new quote to you."],
     ["qupd", "Quote updated", "The terms of a released quote changed."],
     ["status", "Status changed", "A deal moved to its next stage."],
     ["action", "Action required", "Something on a deal is waiting on you."],
@@ -26119,7 +26399,7 @@ function bAccNotify() {
 }
 /* 06.3 Support request [sheet]: subject, message, deal (optional). Not the
    broker's execution-support process. */
-const HELP_SUBJECTS = ["A deal", "A broker", "My account", "Something is wrong", "Something else"];
+const HELP_SUBJECTS = ["A deal", "An advisor", "My account", "Something is wrong", "Something else"];
 function renderHelp() {
   const h = S.help, tried = S.helpTried;
   /* No reference number, and no reply-time promise [Tanya, 1 Oct]. The sheet
@@ -26173,7 +26453,7 @@ function renderHelp() {
           is the file's own reading measure and is not the thing to change; the
           sentence is. At 527px this clears it with room, and nothing is lost:
           the routing rule and its hedge both survive. */""}
-    <div class="head"><div><h1>Help</h1><p>Ask the LenderPrism team. Deal questions go to your broker first, if you have one.</p></div></div>
+    <div class="head"><div><h1>Help</h1><p>Ask the LenderPrism team. Deal questions go to your advisor first, if you have one.</p></div></div>
     <div class="frm frm--solo"><div>
       <div class="card"><div class="card__ct">
         ${/* About and Deal pair into one row [Tanya, 1 Oct]. They ran full
@@ -26262,15 +26542,14 @@ function renderBrokers() {
   const anyF = BROKFILTERS.some(f => f.set().size);
   /* search, the three filters and the count are ONE row. Two rows put the
      search on a line of its own with two thirds of it empty, and read as two
-     groups of controls when they narrow the same list. The count sits at the
-     end of the row it answers. [~] 24 Sep */
+     groups of controls when they narrow the same list. [~] 24 Sep
+     The "12 brokers" count that ended the row is gone [Tanya, 15 Oct]: with
+     Tony's fourth filter back it pushed the row onto two lines at 1280, and
+     the grid itself shows how many cards a filter leaves. */
   const bar = `<div class="msbar msbar--find">
-    ${srchBox("bkq", S.bkq, "Search brokers", "Search brokers", "max-width:260px")}
+    ${srchBox("bkq", S.bkq, "Search advisors", "Search advisors", "max-width:260px")}
     ${BROKFILTERS.map(msCtl).join("")}
     ${anyF || q ? `<button class="clrall" type="button" id="bkclrf">Clear all</button>` : ""}
-    <span class="bcount">${rows.length === BROKERS.length
-      ? `${BROKERS.length} brokers`
-      : `${rows.length} of ${BROKERS.length} brokers`}</span>
   </div>`;
   /* the pill rows cap at three with a +N chip rather than wrapping. Wrapping
      was what made the cards different heights - a broker with four property
@@ -26340,7 +26619,7 @@ function renderBrokers() {
       <span class="bcard__go">View profile <span aria-hidden="true">&rarr;</span></span>
     </a>`;
   return `
-    <div class="head"><div><h1>Find a broker</h1><p>Pro brokers on LenderPrism who work your property type and market. Free to contact.</p></div></div>
+    <div class="head"><div><h1>Choose your financing advisor</h1><p>Your financing advisor structures your request, finds lenders and guides it to closing.</p></div></div>
     <!-- one bordered panel holding the search, the filters and the results, the
          same .card > .card__ct renderDeals and renderLoans use. The grid was
          the only list surface in the app sitting loose on the page background,
@@ -26349,7 +26628,7 @@ function renderBrokers() {
     <div class="card">
       <div class="card__ct">
         ${bar}
-        ${rows.length ? `<div class="bgrid">${rows.map(card).join("")}</div>` : `<div class="empty"><b>No Pro broker matches</b><p>Only Pro brokers are listed, so the directory is short. Widen a filter, or send your request and it is offered to the first broker who fits.</p>
+        ${rows.length ? `<div class="bgrid">${rows.map(card).join("")}</div>` : `<div class="empty"><b>No advisor matches</b><p>Only LenderPrism's own advisors are listed, so the directory is short. Widen a filter, or send your request and it is offered to the first advisor who fits.</p>
           <div class="acts"><button class="btn btn--outline" type="button" id="bkclrf2">Clear filters</button><a class="btn" href="#/loans/new">Request a loan</a></div></div>`}
       </div>
     </div>
@@ -26451,19 +26730,25 @@ function usMap(on) {
    off that line into a strip under the header. The strip holds no chip
    counts, so the counts left the headings too. About and the map sit side
    by side and end level, which is what fills the right half. */
+const BCHK = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>`;
 function renderBroker(b) {
   const geoNames = b.geos.map(x => STATE_NAME[x] || x);
-  const pills = xs => `<div class="pills">${xs.map(x => `<span class="pill">${esc(x)}</span>`).join("")}</div>`;
-  return BCRUMB("Brokers", "#/brokers") + `
+  const chk = (xs, two) => `<ul class="bchk${two ? " bchk--2" : ""}">${xs.map(x => `<li>${BCHK}${esc(x)}</li>`).join("")}</ul>`;
+  return BCRUMB("Advisors", "#/brokers") + `
     <div class="head">
       <div class="bid"><span class="bav bav--lg">${bAvatar(b, 64)}</span><div>
         <h1 style="margin:0; display:flex; align-items:center; gap:9px; flex-wrap:wrap">${esc(bName(b))}${
           b.verified ? `<span class="vtick" role="img" aria-label="Verified" title="Verified by LenderPrism">${VTICK}</span>` : ""}
-          <span class="badge badge--primary">Pro broker</span></h1>
+        </h1>
+        ${/* no role badge since 15 Oct [Tanya]: it read "Pro broker" until
+               the advisor rename, and everyone here is Pro [T · 21 Sep], so it
+               never told one advisor from another. As "Financing advisor" it
+               only repeated the crumb. The verified tick is the mark that
+               varies. */""}
         ${/* company joined the meta line 12 Oct [Tanya]: one line under the
                name, company · location, then the two links */""}
         <div class="bmeta"><span>${esc(b.company)}<span class="bdot" aria-hidden="true">·</span><span class="vh">, </span>${IPIN}${esc(b.city)}, ${esc(STATE_NAME[b.state] || b.state)}</span>
-          <button type="button" class="blink" data-inert="LinkedIn — opens the broker’s profile off-platform. Not wired.">${ILINKEDIN}LinkedIn</button>
+          <button type="button" class="blink" data-inert="LinkedIn — opens the advisor’s profile off-platform. Not wired.">${ILINKEDIN}LinkedIn</button>
           <button type="button" class="blink" data-inert="Website — opens off-platform. Not wired.">${ILINK}Website</button></div>
       </div></div>
       <div class="head__acts">
@@ -26472,30 +26757,36 @@ function renderBroker(b) {
     </div>
     ${/* only facts said nowhere else: the chip counts are not here, since the
           chips are on the page. Everyone in this directory is Pro [T · 21 Sep]
-          and `verified` is its own field with three brokers false, so an
-          unverified broker gets a plain Pro cell, never the green dot. When
+          and `verified` is its own field with three brokers false. An
+          unverified advisor's strip has two cells: the "Advisor · With
+          LenderPrism" cell said nothing the page doesn't [Tanya, 15 Oct]. When
           LenderPrism has per-broker numbers (deals closed, reply time) they
           take a cell here. [💡 rec] 12 Oct */""}
     <div class="card bstrip">
       <div class="bstrip__c"><span class="kpi__n">${b.years} years</span><span class="kpi__s">Experience</span></div>
       <div class="bstrip__c"><span class="kpi__n">${esc(b.since)}</span><span class="kpi__s">On LenderPrism since</span></div>
-      <div class="bstrip__c">${b.verified
-        ? `<span class="kpi__n"><span class="bcta__dot"></span>Verified</span><span class="kpi__s">Pro broker, checked by LenderPrism</span>`
-        : `<span class="kpi__n">Pro broker</span><span class="kpi__s">On LenderPrism's Pro plan</span>`}</div>
+      ${b.verified ? `<div class="bstrip__c"><span class="kpi__n"><span class="bcta__dot"></span>Verified</span><span class="kpi__s">Advisor, checked by LenderPrism</span></div>` : ""}
     </div>
+    ${/* 15 Oct, Alt 2 (Figma 810:14252) as option 1 of the four-layout deck
+          [Tanya picked it]: the two lists left About for cards of their own,
+          headed again, and every list - states too - is a checklist. Alt 2's
+          "verified · member since" line in About was not carried over: the
+          strip above already says both. Until 15 Oct the lists were labelled
+          pill rows inside About (.bsec over .pills, 12 Oct). */""}
     <div class="bsplit">
-      <div class="card">
-        <div class="card__hd"><h2>About</h2></div>
-        <div class="card__ct babout"><p>${esc(b.about)}</p></div>
-        ${/* the two lists are labelled, not headed: .bsec, the directory
-               card's facet label, 6px over the pills. As card__hd titles they
-               matched About in size and sat 18px off their pills. [Tanya · 12 Oct] */""}
-        <div class="card__ct bspecs"><div class="bsec">Property specialties</div>${pills(b.types)}
-          <div class="bsec">Execution specialties</div>${pills(b.fins)}</div>
+      <div class="bcolm">
+        <div class="card">
+          <div class="card__hd"><h2>About</h2></div>
+          <div class="card__ct babout babout--solo"><p>${esc(b.about)}</p></div>
+        </div>
+        <div class="blists">
+          <div class="card"><div class="card__hd"><h2>Property specialties</h2></div><div class="card__ct blist">${chk(b.types)}</div></div>
+          <div class="card"><div class="card__hd"><h2>Execution specialties</h2></div><div class="card__ct blist">${chk(b.fins)}</div></div>
+        </div>
       </div>
       <div class="card">
         <div class="card__hd"><h2>Operates in</h2></div>
-        <div class="card__ct"><div class="bgeo">${usMap(b.geos)}${pills(geoNames)}</div></div>
+        <div class="card__ct blist"><div class="bgeo">${usMap(b.geos)}${chk(geoNames, true)}</div></div>
       </div>
     </div>`;
 }
@@ -26613,7 +26904,7 @@ function renderBProfile() {
   let body;
   if (sec.k === "person") body = `<div class="card"><div class="card__ct">
       <div class="bid" style="margin-bottom:16px"><span class="bav bav--lg">${profAv()}</span>
-        <div><b>Photo</b><span>Shown to your broker on your deals.</span></div>
+        <div><b>Photo</b><span>Shown to your advisor on your deals.</span></div>
         <button class="btn btn--outline btn--sm" type="button" data-bphoto style="margin-left:auto">${P.photo ? "Remove" : "Upload photo"}</button></div>
       <div class="fldrow fldrow--2">${fld("first", "First name", "Alex", 1)}${fld("last", "Last name", "Moreno", 1)}</div>
       ${/* Mobile and office phone, city, state and country added 12 Oct [T, Figma
@@ -26707,7 +26998,7 @@ function renderBProfile() {
       <nav class="profnav" aria-label="Profile sections"><div class="pn__ttl">Your profile</div>
         ${BP_SECS.map(s => `<a href="#/profile/${s.k}" class="${s.k === sec.k ? "on" : ""}">${esc(s.nav)}</a>`).join("")}</nav>
       <div><div class="profhd"><h1>${esc(sec.title)}</h1></div>${body}
-        <div class="bhint" style="margin-top:12px">Your profile is private. A broker sees it only with a deal you send them.</div></div>
+        <div class="bhint" style="margin-top:12px">Your profile is private. An advisor sees it only with a deal you send them.</div></div>
     </div>`;
 }
 
@@ -26783,12 +27074,12 @@ function bAccEmails() {
       ${acts ? `<div class="emrow__acts">${acts}</div>` : ""}</div>`;
 
   const rows = [row(BPROF.email, chip("blue", "Sign-in address"),
-    "You sign in with it, and your broker and LenderPrism reach you here.", "")];
+    "You sign in with it, and your advisor and LenderPrism reach you here.", "")];
   (BPROF.emails || []).forEach((x, i) => {
     if (x.st === "approval") {
       const d = loanById(x.deal), b = d && d.inv ? brokerById(d.inv.broker) : null;
-      rows.push(row(x.email, chip("gold", "Waiting on your broker"),
-        `${b ? esc(bName(b)) : "Your broker"} invited this address to <b>${d ? esc(d.name) : "a loan request"}</b>. You added it ${when(x.on)}, and the request is theirs until they confirm the address is yours.`,
+      rows.push(row(x.email, chip("gold", "Waiting on your advisor"),
+        `${b ? esc(bName(b)) : "Your advisor"} invited this address to <b>${d ? esc(d.name) : "a loan request"}</b>. You added it ${when(x.on)}, and the request is theirs until they confirm the address is yours.`,
         btn(`data-bemrm="${i}"`, "Remove", EMIC.rm, x.email)));
     } else if (x.st === "unverified") {
       rows.push(row(x.email, chip("muted", "Unverified"),
@@ -26807,7 +27098,7 @@ function bAccEmails() {
         <label for="bem_new">New email address</label>
         <input class="inp" id="bem_new" data-bemtx autocomplete="off" value="${esc(add.v)}" placeholder="you@company.com">
         ${add.err ? `<div class="errmsg">${esc(add.err)}</div>`
-          : `<div class="hint">We send a link to confirm it. An address a broker has already invited goes to that broker instead.</div>`}
+          : `<div class="hint">We send a link to confirm it. An address an advisor has already invited goes to that advisor instead.</div>`}
       </div>` : ""}</div>
     <div class="card__ft">${add
       ? `<button class="btn btn--outline" type="button" data-bemx>Cancel</button><button class="btn" type="button" data-bemsave>Add address</button>`
@@ -26955,9 +27246,9 @@ function renderHome() {
     if (!l || !d || !s.seen || s.seen === "\u2014") return null;
     const who = `<b>${esc(l.ct)}</b>`, what = `<b>${esc(d.name)}</b>`, href = "#/deal/" + d.id;
     return s.disp === "quoted" ? { av: "you", tx: `You logged a quote from ${who} on ${what}`, when: s.seen, href }
-      : s.status === "interested" ? { av: l.ct, tx: `${who} is interested in ${what}`, when: s.seen, href }
-      : s.status === "under_review" ? { av: l.ct, tx: `${who} is reviewing ${what}`, when: s.seen, href }
-      : s.status === "not_a_fit" ? { av: l.ct, tx: `${who} marked ${what} not a fit`, when: s.seen, href }
+      : s.status === "interested" ? { av: l.ct, ph: l.ctPhoto, tx: `${who} is interested in ${what}`, when: s.seen, href }
+      : s.status === "under_review" ? { av: l.ct, ph: l.ctPhoto, tx: `${who} is reviewing ${what}`, when: s.seen, href }
+      : s.status === "not_a_fit" ? { av: l.ct, ph: l.ctPhoto, tx: `${who} marked ${what} not a fit`, when: s.seen, href }
       : null;
   }).filter(Boolean).concat(
     /* "returned your credit" was the last live sentence in the file still
@@ -27084,6 +27375,7 @@ function renderHome() {
                 <a class="feed" href="${e.href}">
                   ${e.av === "you" ? `<span class="lpav feed__av">${profAv()}</span>`
                     : e.av === "prism" ? `<span class="lpav feed__av feed__av--sys"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>`
+                    : e.ph ? `<span class="lpav feed__av"><img class="bav__img" src="${esc(e.ph)}" alt="" loading="lazy"></span>`
                     : `<span class="lpav feed__av">${esc(e.av.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase())}</span>`}
                   <span class="feed__tx"><span class="s">${e.tx}</span><span class="when">${esc(e.when)}</span></span>
                 </a>`).join("")}
@@ -27568,6 +27860,8 @@ function render() {
   } else if (S.route === "binvite") {
     const d = loanById(S.dealId);
     view.innerHTML = d && d.inv ? renderBInvite(d) : renderNotFound(S.nf);
+  } else if (S.route === "pjoin") {
+    view.innerHTML = renderPJoin();
   } else if (S.route === "lsent") {
     const d = loanById(S.dealId);
     view.innerHTML = d ? renderLoanSent(d) : renderNotFound(S.nf);
@@ -28107,12 +28401,45 @@ function route() {
   if (mai) {
     const d = loanById(mai[1]);
     S.dealId = null; S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
-    if (!d || !d.inv) { S.route = "notfound"; S.nf = { kind: "record", what: "broker invitation", id: mai[1], at: h }; render(); return; }
+    if (!d || !d.inv) { S.route = "notfound"; S.nf = { kind: "record", what: "advisor invitation", id: mai[1], at: h }; render(); return; }
     S.role = "borrower";
     S.route = "auth"; S.authMode = "invite"; S.authRole = "borrower"; S.authErr = null;
     S.authInv = mai[1]; S.authLogin = !!mai[2];
     S.bvNext = "#/invitation/" + mai[1];
     S.auth.email = d.inv.email;
+    render(); return;
+  }
+  /* THE DEAL INVITATION, tracker row 3 (15 Oct). Two addresses per invitee,
+     like the advisor invitation: #/join/<deal>/<name> is the invitation and
+     #/auth/join/<deal>/<name> its sign-up; /expired on the first is the lapsed
+     state, an address for the reason verify's states are. Both set the
+     borrower role, as /auth/invite does. The invitation page also sets S.cos,
+     because the person reading it is the invitee and the rail should be theirs.
+
+     WHICH DOOR. An address with no account has nothing to read the invitation
+     with, so the invitation sends it to the sign-up - the email's own split,
+     drawn as two emails in Figma. An address that has one but is not the
+     signed-in co-sponsor puts the seeded co-sponsor back: in a prototype with
+     one co-sponsor, following her link is logging in as her. [~] */
+  const mpj = h.match(/^\/(auth\/)?join\/([a-z0-9-]+)\/([a-z-]+)(?:\/(expired))?\/?$/);
+  if (mpj) {
+    const pj = pJoinOf(mpj[2], mpj[3]);
+    S.dealId = null; S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
+    if (!pj) { S.route = "notfound"; S.nf = { kind: "record", what: "deal invitation", id: mpj[2] + "/" + mpj[3], at: h }; render(); return; }
+    S.role = "borrower";
+    S.pj = { id: mpj[2], slug: mpj[3], lapsed: !!mpj[4] };
+    const mine = pj.x.email.toLowerCase() === (BCOS.email || "").toLowerCase();
+    if (mpj[1]) {
+      S.route = "auth"; S.authMode = "join"; S.authRole = "borrower"; S.authErr = null;
+      const [f, ...l] = pj.x.name.split(" ");
+      S.auth.first = f; S.auth.last = l.join(" "); S.auth.email = pj.x.email;
+      S.bvNext = "#/join/" + mpj[2] + "/" + mpj[3];
+      render(); return;
+    }
+    if (!mine && pj.x.st === "Invited" && !(pj.x.inv && pj.x.inv.acct)) { location.hash = "#/auth/join/" + mpj[2] + "/" + mpj[3]; return; }
+    if (!mine && pj.x.inv && pj.x.inv.acct) { Object.assign(BCOS, BCOS0); S.cosFresh = false; }
+    S.route = "pjoin"; S.cos = true;
     render(); return;
   }
   const ma = h.match(/^\/auth(?:\/(signup|login|trial|verify))?(?:\/(borrower|broker|lender))?(?:\/(verified|expired))?\/?$/);
@@ -28322,7 +28649,7 @@ function route() {
        record too — there is nothing at the address to answer. The noun is two
        words for the reason NF_EXIT's "loan request" is: renderNotFound prints
        the key, and "a invitation" is not a sentence. */
-    if (S.route === "binvite" && !((loanById(S.dealId) || {}).inv)) { S.nf = { kind: "record", what: "broker invitation", id: S.dealId, at: h }; S.route = "notfound"; S.dealId = null; }
+    if (S.route === "binvite" && !((loanById(S.dealId) || {}).inv)) { S.nf = { kind: "record", what: "advisor invitation", id: S.dealId, at: h }; S.route = "notfound"; S.dealId = null; }
     if (S.route === "broker" && !brokerById(S.bId)) { S.nf = { kind: "record", what: "broker", id: S.bId, at: h }; S.route = "notfound"; S.bId = null; }
     S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
     S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
@@ -29097,7 +29424,7 @@ document.addEventListener("click", e => {
     const x = (BPROF.emails || [])[Number(bemOk.dataset.bemok)], was = x && x.on;
     if (x) {
       x.st = "verified"; x.on = "just now";
-      S.undo = { msg: x.email + " is confirmed. You can sign in with it, and your broker can reach you there.",
+      S.undo = { msg: x.email + " is confirmed. You can sign in with it, and your advisor can reach you there.",
         fn: () => { x.st = "unverified"; x.on = was; } };
     }
     render(); return;
@@ -29454,9 +29781,9 @@ document.addEventListener("click", e => {
     /* home for a plain sign-up, the invitation for one that started on a
        broker's link - and bvNext is spent on the way through, so a later
        verification does not follow it back [task 12] */
-    if (v === "go") { S.bverify = null; const nx = S.bvNext || "#/home"; S.bvNext = null; location.hash = nx; return; }
+    if (v === "go") { S.bverify = null; S.pjSign = false; const nx = S.bvNext || "#/home"; S.bvNext = null; location.hash = nx; return; }
     if (v === "resend") {
-      S.undo = { msg: "A new link is on its way to " + (BPROF.email || "your email") + "." };
+      S.undo = { msg: "A new link is on its way to " + ((S.pjSign ? BCOS.email : BPROF.email) || "your email") + "." };
       /* resending from the expired state walks back to sent, which is a
          different address; from sent it is the address we are already on, and
          assigning the same hash fires no hashchange, so that case renders. */
@@ -29492,7 +29819,7 @@ document.addEventListener("click", e => {
   if (t.closest("[data-lsave]")) {
     S.ltried = true; if (lMissing(ldraft()).length) { render(); return; }
     const id = lCommit(ldraft(), "save"); S.ldraft = null; S.ltried = false;
-    S.undo = { msg: "Your changes are saved. Your broker sees them on the deal." };
+    S.undo = { msg: "Your changes are saved. Your advisor sees them on the deal." };
     location.hash = "#/loan/" + id; return;
   }
   if (t.closest("[data-ldraft]")) {
@@ -29535,7 +29862,10 @@ document.addEventListener("click", e => {
     /* ownership and access were collected and dropped until the Sponsors &
        guarantors tab gave them a column [4 Oct] */
     const own = parseFloat(f.own);
-    bParts(d).push({ name: f.name.trim(), email: mail, role: f.role, st: "Invited", own: isNaN(own) ? null : own, access: f.access, items: [] });
+    /* inv since 15 Oct: the invitee's page reads when it went and the note
+       the lead wrote for the email [tracker row 3] */
+    bParts(d).push({ name: f.name.trim(), email: mail, role: f.role, st: "Invited", own: isNaN(own) ? null : own, access: f.access, items: [],
+      inv: { on: "Today", note: f.note.trim() } });
     d.events.push({ on: "Today", type: "status", tx: `You invited ${f.name.trim()} as ${f.role.toLowerCase()}` });
     S.undo = { msg: `Invitation sent to ${mail}.` };
     S.binv = null; render(); return;
@@ -29618,6 +29948,29 @@ document.addEventListener("click", e => {
      so it is reversible in fact as well as in the interface. inv is kept with
      st "declined" rather than deleted: the answer is part of the record, and
      the address still has to resolve to a screen that says what happened. */
+/* Answering a deal invitation [tracker row 3, 15 Oct], the same split as the
+     advisor invitation below and for its reasons. Accept discloses, so it
+     navigates with no undo; the dashboard it lands on, carrying the new deal,
+     is the confirmation. Decline discloses nothing and keeps an undo. Both
+     write the lead's participant row, so the lead's Sponsors & guarantors tab
+     and Participants card answer with no second record. */
+  if (t.closest("[data-pjyes]")) {
+    const pj = S.pj && pJoinOf(S.pj.id, S.pj.slug);
+    if (!pj || pj.x.st !== "Invited") { render(); return; }
+    pj.x.st = "Accepted"; pj.x.joined = "Today";
+    pj.d.events.push({ on: "Today", type: "status", tx: `${pj.x.name} joined as ${pj.x.role.toLowerCase()}` });
+    location.hash = "#/home/cosponsor"; return;
+  }
+  if (t.closest("[data-pjno]")) {
+    const pj = S.pj && pJoinOf(S.pj.id, S.pj.slug);
+    if (!pj || pj.x.st !== "Invited") { render(); return; }
+    const x = pj.x, d = pj.d;
+    x.st = "Declined";
+    d.events.push({ on: "Today", type: "status", tx: `${x.name} declined the invitation` });
+    S.undo = { msg: "Declined. Nothing of yours went to " + BPROF.first + " " + BPROF.last + ".",
+      fn: () => { x.st = "Invited"; d.events.pop(); } };
+    render(); return;
+  }
   const biy = t.closest("[data-binvyes]");
   if (biy) {
     const d = loanById(biy.dataset.binvyes), iv = d && d.inv;
@@ -29675,10 +30028,10 @@ document.addEventListener("click", e => {
     if (q) {
       q.st = "selected"; d.stage = "Processing"; d.updated = "Today";
       d.events.push({ on: "Today", type: "quotes", tx: "You selected " + bLender(q) }, { on: "Today", type: "status", tx: "Stage changed to Processing" });
-      d.msgs.push({ from: "sys", tx: "You chose a quote. Your broker has been told.", on: "Today", at: bNowAt(), ref: { k: "quote", id: q.id } });
+      d.msgs.push({ from: "sys", tx: "You chose a quote. Your advisor has been told.", on: "Today", at: bNowAt(), ref: { k: "quote", id: q.id } });
       bTaskDone(d, x => x.type === "quotes");
-      d.next = "Your broker takes the chosen quote into underwriting and will tell you what the lender needs.";
-      S.undo = { msg: `You chose ${bLender(q)}. ${bBroker(d) ? bName(bBroker(d)) : "Your broker"} has been told.` };
+      d.next = "Your advisor takes the chosen quote into underwriting and will tell you what the lender needs.";
+      S.undo = { msg: `You chose ${bLender(q)}. ${bBroker(d) ? bName(bBroker(d)) : "Your advisor"} has been told.` };
     }
     S.bsel = null; render(); return;
   }
@@ -29692,7 +30045,7 @@ document.addEventListener("click", e => {
   const bqp = t.closest("[data-bqpost]");
   if (bqp) {
     const d = loanById(S.dealId), q = d && d.quotes.find(x => x.id === bqp.dataset.bqpost);
-    if (q && S.bqTx.trim()) { q.thread.push({ from: "you", tx: S.bqTx.trim(), on: "Today", at: bNowAt() }); S.bqTx = ""; S.undo = { msg: "Sent. Your broker sees which quote you mean." }; }
+    if (q && S.bqTx.trim()) { q.thread.push({ from: "you", tx: S.bqTx.trim(), on: "Today", at: bNowAt() }); S.bqTx = ""; S.undo = { msg: "Sent. Your advisor sees which quote you mean." }; }
     render(); return;
   }
   if (t.closest("[data-bmattx]")) { S.bmAtt = null; render(); return; }
@@ -30998,7 +31351,7 @@ function hardReset() {
   Object.keys(BPROF).forEach(k => delete BPROF[k]); Object.assign(BPROF, JSON.parse(JSON.stringify(BPROF0)));
   BLOANS.splice(0, BLOANS.length, ...JSON.parse(JSON.stringify(BLOANS0)));
   S.ldraft = null; S.lstep = 1; S.ltried = false; S.lfSlot = null; S.bdel = null; S.bconsent = false;
-  S.bkType.clear(); S.bkGeo.clear(); S.bkFin.clear();
+  S.bkLoc.clear(); S.bkType.clear(); S.bkGeo.clear(); S.bkFin.clear();
   S.bq = ""; S.bsort = "updated"; S.bLoc.clear(); S.bProp.clear(); S.bAmt.clear(); S.bSt.clear();
   S.bview = "active"; S.lmax = 1; S.bqsort = "rate"; S.bQ = null; S.bsel = null; S.bwd = null; S.bact = "all"; S.bactFor = null;
   S.bupId = null; S.bupJust = null; S.bupCat = "Other"; S.bupSave = true; S.bmTx = ""; S.bmRefs = new Set(); S.bmAtt = null; S.bmOpen = null; S.cosTx = ""; S.cosAtt = null; S.bqTx = ""; S.bpadd = null; S.bpnew = {}; S.bcMsg = ""; S.bverify = null; S.battAll = false; S.attAll = false; S.bdealAll = false; S.bdone = null;
