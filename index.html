@@ -2052,7 +2052,11 @@
      on the card that cannot change, and the whole "log in with another
      email" door exists because it cannot. Muted ground, muted ink, and a
      default cursor - the three signals every other inert control here uses. */
-  .inp[readonly] { background: var(--muted); color: var(--muted-foreground); cursor: default; }
+  /* no shadow either since 16 Oct: the library's Input State=Read-only -
+     present but not yours to change. Disabled stays the 50% fade. Its ground
+     is muted/wash since 18 Oct, the lighter step of --muted the board lanes
+     use; .stat--ro follows, as the library's Select/Trigger Read-only. */
+  .inp[readonly] { background: color-mix(in srgb, var(--muted) 55%, #fff); color: var(--muted-foreground); cursor: default; box-shadow: none; }
 
   /* ---- Badge. ui/badge.tsx: rounded-full border px-2 py-0.5 text-xs font-medium ---- */
   .badge {
@@ -2110,6 +2114,15 @@
   .card__hd h2:has(.badge) { display: flex; align-items: center; gap: 8px; }
   .card__hd h2 .badge { flex: none; }
   .card__hd .r { font-size: 13px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  /* Home's cards on the Prism type ramp, from the library's Section/Home card
+     patterns [Tanya, Prism file 16 Oct]: title Body/base-semibold 16/24,
+     counter Body/sm 14/20, header link Body/sm-medium 14/20. Scoped to .home
+     because .card__hd is every card in the file. The rows inside follow the
+     same patterns: .att__tx, .feed__tx .when, .net__n/.net__lb and .njoin__*
+     below. Setup row and the feed sentence are not on a style there yet. */
+  .home .card__hd h2 { font-size: 16px; line-height: 24px; }
+  .home .card__hd .r { font-size: 14px; line-height: 20px; }
+  .home .card__hd a.btn--link { line-height: 20px; }
   /* Visual centring over a table [Tanya, 4 Oct]: a header whose card opens on
      a table has a rule under it, so the title should sit with equal space from
      the card's top edge to its cap height and from its baseline to that rule.
@@ -2517,8 +2530,9 @@
      and loses the trigger — same box, muted ground, no caret and no shadow,
      which is how this file already says "present but not yours to press".
      Padding evens up because the 8px right side existed to sit under the
-     select's own caret. [16 Sep] */
-  .stat--ro { background: var(--muted); color: var(--muted-foreground);
+     select's own caret. [16 Sep] Ground is muted/wash since 18 Oct, with
+     .inp[readonly] and the library's Select/Trigger Read-only. */
+  .stat--ro { background: color-mix(in srgb, var(--muted) 55%, #fff); color: var(--muted-foreground);
     box-shadow: none; padding: 0 12px; font-size: 13px; }
   /* saved-lenders Outreach: labels vary in length, so a hugging trigger leaves a
      ragged gap to the kebab column — fill the cell instead, the same uniform
@@ -4496,6 +4510,12 @@
   .sw textarea.inp { min-height: 150px; }
   .fld__sel { display: flex; align-items: center; height: 36px; border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card); box-shadow: var(--shadow-xs); }
   .fld__sel .sel__trg { flex: 1; height: 100%; padding: 4px 12px; justify-content: space-between; cursor: pointer; }
+  /* min-width 0 lets the trigger shrink to its box, so .sel__val's ellipsis can
+     fire. Without it a flex item never goes below its content width: in the
+     Connect via LenderPrism dialog's half-width Deal column a picked deal
+     ("Lakeview Flats refinance · $3.2M") drew the trigger 261 wide in 225 and
+     put the chevron past the dialog's edge [Tanya, 16 Oct]. */
+  .fld__sel .sel__trg { min-width: 0; }
   /* the same box at btn--xs scale (24px, 12px), for the one place the control
      sits inline in a list row rather than under a label in a form */
   .fld__sel--xs { height: 24px; }
@@ -6062,8 +6082,9 @@
   .card--att .att__ic { background: color-mix(in srgb, var(--brand-gold) 30%, #fff);
     color: var(--color-brand-gold-text); border: none; }
   .att__tx { min-width: 0; }
-  .att__tx b { display: block; font-size: 13.5px; font-weight: 600; }
-  .att__tx span { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
+  /* Body/sm-semibold over 12/16 [Pattern/Attention row, 16 Oct] */
+  .att__tx b { display: block; font-size: 14px; line-height: 20px; font-weight: 600; }
+  .att__tx span { display: block; font-size: 12px; line-height: 16px; color: var(--muted-foreground); margin-top: 1px; }
   .att__hot { color: var(--color-brand-gold-text); font-weight: 600; }
   /* a done task [5 Oct]. The title drops to the sub-line's weight and colour,
      so the open rows above keep the only 600 on the card and the group reads
@@ -6092,14 +6113,28 @@
   /* KPI strip, comp Designivation: eyebrow, big figure, muted caption. Cards
      are doors to the surface that explains their number */
   .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-  .kpi { display: block; padding: 15px 18px 14px; text-decoration: none; color: inherit; }
+  /* Geometry and type from the library's Pattern/KPI tile, 16 Oct [Tanya]:
+     16/18 pad, eyebrow Label/xs-semibold 12/16, 6 to a 26/30 figure, 2 to a
+     Label/xs-regular 12/16 caption - the tile is 104, as in Figma. The
+     eyebrow drops its .05em: at 12px with the style's own tracking "ACTIVE
+     DEALS" is 86 wide, the width it had at 11px tracked out, so the label
+     keeps its footprint and only the glyphs grow.
+     Later the same day the eyebrow became a label: Body/sm-semibold 14/20 in
+     the foreground, sentence case, the style of the Lender network card's
+     "Recently joined" [Tanya, 16 Oct, prototype only]. That ends the caps
+     exception to sentence case, and the tile is 108. Then back to
+     muted-foreground [Tanya]: size and weight from that label, colour from
+     the eyebrow, so the figure stays the darkest thing in the tile */
+  .kpi { display: block; padding: 16px 18px; text-decoration: none; color: inherit; }
   .kpi:hover { border-color: var(--brand-border-100); box-shadow: var(--shadow-md, var(--shadow-sm)); }
-  .kpi__lb { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600;
-    letter-spacing: .05em; text-transform: uppercase; color: var(--muted-foreground); }
+  .kpi__lb { display: flex; align-items: center; gap: 7px; font-size: 14px; line-height: 20px; font-weight: 600;
+    color: var(--muted-foreground); }
   .kpi__lb svg { flex: none; color: var(--brand-navy-600); }
-  .kpi__n { display: block; font-size: 26px; font-weight: 600; line-height: 1.15; margin-top: 7px;
+  .kpi__n { display: block; font-size: 26px; font-weight: 600; line-height: 30px; margin-top: 6px;
     font-variant-numeric: tabular-nums; }
   .kpi__s { display: block; font-size: 12.5px; color: var(--muted-foreground); margin-top: 1px; }
+  /* scoped: the advisor profile's .bstrip reuses .kpi__s for its captions */
+  .kpi .kpi__s { font-size: 12px; line-height: 16px; margin-top: 2px; }
   /* Recently joined - see newJoiners() for why this is a static list and not
      the ticker that was asked for. It lives inside the Lender network card
      below the figures, so it opens on that card's own hairline rather than a
@@ -6108,26 +6143,31 @@
      links and carry the table's hover wash. Negative margins take the rows out
      to the card's edge so the hover band is full-bleed while the text still
      lines up with the figures. */
-  .njoin { margin-top: 12px; padding-top: 4px; border-top: 1px solid var(--border); }
+  /* 8 under the figures, 16 to the label, 8 to the rows, 16 Oct [Tanya, Broker
+     Home 737:4136] - was 12 / 4 / 8 */
+  .njoin { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border); }
   /* sentence case, not the uppercase eyebrow this shipped as (Tanya, 14 Sep,
-     in Figma) - the house rule is sentence case for labels, and .kpi__lb's
-     caps are the exception that belongs to the KPI anatomy, not to every
-     small label. The tracking stays: it is what holds a small label open once
-     the caps are gone. Explicit line-height because the label's own box has to
-     match Figma's 13px one for the 12-above / 8-below spacing to land. Stated
-     as 13px rather than as a ratio from 15 Sep, when the type went 11px to
-     12px (Tanya): a ratio would have taken the spacing up with it. The glyphs
-     grow, the box does not, so nothing around the label moves. */
-  .njoin__hd { font-size: 12px; font-weight: 600; letter-spacing: .05em;
-    line-height: 13px; color: var(--muted-foreground); margin: 8px 0; }
-  .njoin__row { display: flex; align-items: center; gap: 10px; padding: 7px 18px;
+     in Figma) - the house rule is sentence case for labels, with no exception
+     since the KPI eyebrow went sentence case too (16 Oct). Body/sm-semibold in the foreground since 16 Oct [Tanya]: it
+     was a 12/13 muted label tracked .05em, which read as a second eyebrow;
+     at 14/20 it is a subheading over the rows, one step under the card's
+     16/24 title. */
+  .njoin__hd { font-size: 14px; line-height: 20px; font-weight: 600; margin: 0 0 8px; }
+  /* 8 above and below, 16 between the text and the time, 16 Oct [Pattern/
+     Recently-joined row] - was 7 and 10 */
+  .njoin__row { display: flex; align-items: center; gap: 16px; padding: 8px 18px;
     margin: 0 -18px; text-decoration: none; color: inherit; }
   .njoin__row:hover { background: var(--brand-surface-50); }
   .njoin__tx { flex: 1; min-width: 0; }
-  .njoin__tx b { display: block; font-size: 12.5px; font-weight: 600; line-height: 1.3; }
-  .njoin__tx span { display: block; font-size: 11.5px; color: var(--muted-foreground); }
-  .njoin__wh { flex: none; align-self: flex-start; padding-top: 1px;
-    font-size: 11px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  /* Body/sm-medium name over Label/xs meta and time, 16 Oct [Pattern/
+     Recently-joined row]: the name was 12.5/600 and the two small lines 11.5
+     and 11, all off the ramp */
+  .njoin__tx b { display: block; font-size: 14px; font-weight: 500; line-height: 20px; }
+  .njoin__tx span { display: block; margin-top: 2px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  /* centred on the two lines, not hung off the name, 16 Oct [Pattern/
+     Recently-joined row] */
+  .njoin__wh { flex: none;
+    font-size: 12px; line-height: 16px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
   .kpi--gold .kpi__lb svg, .kpi--gold .kpi__n { color: var(--color-brand-gold-text); }
   /* Lender network card, right column, 14 Sep. [T] Tony, Figma comment on
      Home: "Browse Lenders should be an evergreen option vs 'get set up' - it
@@ -6148,21 +6188,27 @@
      and the shared left edge already group them, and a hairline per row made
      a three-row table out of a single fact. The one rule that survives is the
      one under them, which separates the figures from the joined list. */
-  .net__row { display: flex; align-items: center; gap: 11px; padding: 6px 0; }
+  /* 40 a row (8 above and below a 24 figure), a 14 glyph and 12 either side
+     of the figure column, 16 Oct [Pattern/Network stat row] - was 36, 15, 11 */
+  .net__row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
   .net__row svg { flex: none; color: var(--brand-navy-600); }
   /* a fixed column, not min-width: the three figures are 6, 7 and 7 glyphs, so
      sizing to content started each label at a different x and the card read as
      three unrelated lines. 72px clears "10,000+" at 15px/600 with 4px spare,
      which is the landing card's widest figure - a card whose figures are all
      one digit sets --net-n-w to its own, or the label starts an inch out. */
-  .net__n { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;
+  /* Body/base-semibold 16/24 and Label/xs 12/16 since 16 Oct [Pattern/Network
+     stat row]; "10,000+" is 68 at 16px, still inside the 72 */
+  .net__n { font-size: 16px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums;
     width: var(--net-n-w, 72px); flex: none; }
-  .net__lb { font-size: 12.5px; color: var(--muted-foreground); min-width: 0; }
+  .net__lb { font-size: 12px; line-height: 16px; color: var(--muted-foreground); min-width: 0; }
   /* flex, not block: .btn centres its label with inline-flex plus
      justify-content, and display:block threw away the flex formatting context
      so the centring silently stopped applying and the label sat hard left in a
      full-width button. flex keeps both the full width and the centring. */
   .net__go { margin-top: 14px; display: flex; }
+  /* 24 under Browse lenders, 16 Oct [Tanya]: the other Home cards keep 18 */
+  .home .card--net .card__ct { padding-bottom: 24px; }
   .att__row .btn { margin-left: auto; flex: none; }
   /* Trial band — screen 2 as a home card, not a takeover (Tanya, 13 Sep).
      The task doc specced a dedicated screen. Thirteen trial starts sampled on
@@ -6247,7 +6293,7 @@
   .feed__tx { min-width: 0; }
   .feed__tx .s { display: block; font-size: 13.5px; line-height: 1.5; }
   .feed__tx .s b { font-weight: 600; }
-  .feed__tx .when { display: block; margin-top: 1px; font-size: 12px; color: var(--muted-foreground); }
+  .feed__tx .when { display: block; margin-top: 1px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
   /* the Activity page's month heading: the group-label treatment .ms__grp and
      .rail__lbl already use, mixed case, so a heading in a list reads like
      the others in the product */
@@ -7099,6 +7145,9 @@
     border-radius: 50%; background: var(--color-success); color: #fff; }
   .mdl__sec { margin: 20px 0 10px; font-size: 14px; font-weight: 600; letter-spacing: -0.005em; }
   .mdl__bd > :first-child { margin-top: 0; }
+  /* Connect via LenderPrism ends on its Message field since 16 Oct; the
+     field's own 16 below would stack on the body's 16 pad */
+  .mdl--conn .mdl__bd > .fld:last-child { margin-bottom: 0; }
   /* the clock chip sits in the header beside the title (Tanya, 8 Sep). The
      header is a flex row with the close button pushed right, so dropping the
      chip after the title block puts it against the title with no new layout:
@@ -22442,8 +22491,9 @@ function bFeed() {
    11 Oct [Tanya]. The page is one level below Home, the screen the quote
    detail's link was drawn for, and a footer exit with no forward commit
    beside it read as a wizard step - the one place the 4 Oct sweep found no
-   product puts its Back. Not a crumb: the rail lights My deals here
-   (/loans/activity), so a "Home" crumb would name a second parent. */
+   product puts its Back. Not a crumb: the rail lights Home here (since
+   16 Oct [Tanya]; it lit My deals off the /loans address until then), so a
+   "Home" crumb would only repeat it. */
 function renderBActivity() {
   const feed = bFeed();
   return `
@@ -26795,35 +26845,34 @@ function renderBroker(b) {
 /* 04.3 Connect via LenderPrism [sheet 04.3]: an internal message, tracked as
    a house-sourced lead. To is fixed; From is name, email and phone from the
    profile; the deal dropdown lists the borrower's live deals and "No deal -
-   general question"; a consent line says the broker sees the selected
-   deal's request. Send works now (28 Sep): it confirms, the message lands in
+   general question". Send works now (28 Sep): it confirms, the message lands in
    that deal's Messages, and a deal with no broker is sent to this one - the
    broker side of that is an Opportunity, broker Flow 06. Today the button
-   sends an untracked email [C · 21 Sep]; question 130. */
+   sends an untracked email [C · 21 Sep]; question 130.
+   Laid out from Tanya's Figma frame 945:11227 on 16 Oct [Tanya, "I adjusted
+   modal, align prototype"]: name on its own row, email and phone paired, Deal
+   full width, so a deal's name no longer truncates. The consent line, the
+   general-question hint and the "Free to send." note are gone, as in the
+   frame. The sheet's consent line now rests on the selected deal alone. [~] */
 function bMsgModal() {
   const b = brokerById(S.bmsg); if (!b) return "";
   const live = loansNow().filter(bLive);
   const opts = [{ v: "", label: "No deal — general question" }].concat(live.map(d => ({ v: d.id, label: `${d.name} · ${money(d.amt)}` })));
   return `
     <div class="mov" role="dialog" aria-modal="true" aria-label="Connect via LenderPrism">
-      <div class="mdl">
+      <div class="mdl mdl--conn">
         <div class="mdl__hd"><div class="mdl__ttl"><h2>Connect via LenderPrism</h2><p>To ${esc(bName(b))}</p></div>
           <button type="button" class="x" data-bmsgx aria-label="Close">${XCLOSE}</button></div>
         <div class="mdl__bd">
+          <div class="fld"><label for="bm_name">Your name</label><input class="inp" id="bm_name" value="${esc(ME.name)}" readonly></div>
           <div class="fldrow fldrow--2">
-            <div class="fld"><label for="bm_name">Your name</label><input class="inp" id="bm_name" value="${esc(ME.name)}" readonly></div>
             <div class="fld"><label for="bm_email">Your email</label><input class="inp" id="bm_email" value="${esc(ME.email)}" readonly></div>
-          </div>
-          <div class="fldrow fldrow--2">
             <div class="fld"><label for="bm_phone">Your phone</label><input class="inp" id="bm_phone" value="${esc(ME.phone || "")}" readonly></div>
-            <div class="fld"><label>Deal</label><div class="fld__sel">${selCtl("bmd:x", opts, S.bmsgDeal, "Deal")}</div></div>
           </div>
+          <div class="fld"><label>Deal</label><div class="fld__sel">${selCtl("bmd:x", opts, S.bmsgDeal, "Deal")}</div></div>
           <div class="fld"><label for="bm_msg">Message</label><textarea class="inp" id="bm_msg" data-bcmsg rows="4" placeholder="What you are financing, roughly when, and what you want to ask.">${esc(S.bcMsg)}</textarea></div>
-          ${S.bmsgDeal ? `<div class="bhint">${esc(bName(b))} sees ${esc((loanById(S.bmsgDeal) || {}).name || "the deal")}'s financing request with your message. Lenders see nothing.</div>`
-            : `<div class="bhint">A general question shares no deal. <a href="#/loans/new" data-bmsgx>Start a financing request</a> to send one.</div>`}
         </div>
         <div class="mdl__ft">
-          <span class="note">Free to send.</span>
           <button class="btn btn--outline" type="button" data-bmsgx>Cancel</button>
           <button class="btn" type="button" data-bcsend>Send</button>
         </div>
@@ -27387,19 +27436,19 @@ function renderHome() {
         </div>
 
         <div class="home__col">
-          <div class="card">
+          <div class="card card--net">
             <div class="card__hd"><h2>Lender network</h2></div>
             <div class="card__ct">
               <div class="net__row">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 <b class="net__n">1,500+</b><span class="net__lb">non-bank lenders</span>
               </div>
               <div class="net__row">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 21h18"/></svg>
                 <b class="net__n">10,000+</b><span class="net__lb">banks and credit unions</span>
               </div>
               <div class="net__row">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                 <b class="net__n">90,000+</b><span class="net__lb">U.S. locations, by radius</span>
               </div>
               ${newJoiners()}
@@ -28033,11 +28082,14 @@ function render() {
      is lit, rather than leaving Deals lit on a page that is not Deals. */
   document.querySelectorAll(".rail a[data-nav]").forEach(a =>
     a.classList.toggle("on", (S.route === "brokers" || S.route === "broker") ? a.dataset.nav === "brokers"
-      : (S.route === "loan" || S.route === "loannew" || S.route === "lsent" || S.route === "bact" || S.route === "binvite" || (S.route === "deals" && isB())) ? a.dataset.nav === "loans"
+      : (S.route === "loan" || S.route === "loannew" || S.route === "lsent" || S.route === "binvite" || (S.route === "deals" && isB())) ? a.dataset.nav === "loans"
       : S.route === "help" ? a.dataset.nav === "help"
       : S.route === "profile" && isB() ? a.dataset.nav === "bprofile"
       : S.route === "account" ? a.dataset.nav === "account"
-      : S.route === "home" ? a.dataset.nav === "home"
+      /* the activity log lights Home, not My deals [Tanya, 16 Oct]: its one
+         way in is Home's "All activity" and its one way out is Back to home.
+         The address stays under /loans, where the role guard expects it. */
+      : S.route === "home" || S.route === "bact" ? a.dataset.nav === "home"
       : S.route === "lenders" ? a.dataset.nav === "lenders"
       : S.route === "opps" ? a.dataset.nav === "leads"
       : S.route === "soon" ? a.dataset.nav === S.soon
