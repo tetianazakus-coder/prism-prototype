@@ -14023,11 +14023,20 @@ function quotesBody(d) {
        Icon/arrow-down added to Prism the same day), rotate-ccw for Withdraw,
        trash for Delete. */
     const mi = (attr, ic, l, danger) => `<button type="button" role="menuitem"${danger ? ` class="danger"` : ""} ${attr}="${d.id}:${q.id}">${I(ic, 14)}${l}</button>`;
-    const rel = ro || live ? "" : !bn
-      ? `<button class="btn btn--outline btn--sm" type="button" disabled title="${noBor}">${q.wd ? "Release again" : "Release"}</button>`
-      : `<button class="btn btn--outline btn--sm" type="button" data-qrel="${d.id}:${q.id}">${q.wd ? "Release again" : "Release"}</button>`;
+    /* Ghost, not outline, and only on Draft / New rows [Tanya, 19 Oct: the
+       column "looks overloaded"]. Status already says the quote is out, so
+       the row action is a word beside the kebab, and the box is kept for
+       Release all in the bar. A withdrawn row is muted, and a live boxed
+       button inside it broke the hierarchy rule, so Release again moved
+       into its menu. The one-quote case still needs the row word: Release
+       all hides itself below two. */
+    const rel = ro || live || q.wd ? "" : !bn
+      ? `<button class="btn btn--ghost btn--sm" type="button" disabled title="${noBor}">Release</button>`
+      : `<button class="btn btn--ghost btn--sm" type="button" data-qrel="${d.id}:${q.id}">Release</button>`;
     const menu = !open ? "" : `<div class="cardmenu" role="menu" aria-label="Quote actions" draggable="false">
-        ${q.wd ? "" : mi("data-qedit", '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>', "Edit quote")}
+        ${q.wd ? (bn ? mi("data-qrel", '<path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>', "Release again")
+          : `<button type="button" role="menuitem" disabled title="${noBor}">${I('<path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>', 14)}Release again</button>`)
+          : mi("data-qedit", '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>', "Edit quote")}
         ${live && q.rank > 1 ? mi("data-qmove", '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>', "Move up") : ""}
         ${live && q.rank < n ? mi("data-qmovedn", '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>', "Move down") : ""}
         <div class="cardmenu__sep"></div>
