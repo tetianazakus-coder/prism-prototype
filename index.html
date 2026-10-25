@@ -257,7 +257,10 @@
      normal text, so the second tenant needs no new value. Both vanish when
      the rail collapses, because the collapsed rail is icons alone. */
   .rail a .ext { color: color-mix(in srgb, var(--sidebar-foreground) 55%, transparent); font-size: 11px; }
-  .app.rail-min .rail a { width: 32px; justify-content: center; padding: 8px; margin: 0 auto; }
+  /* not the account menu's link: it sits inside .rail too, and this rule
+     outranks .rail__accmenu [role="menuitem"], so collapsing the rail
+     squeezed Your profile to a 32px centred clip [Tanya, 25 Oct] */
+  .app.rail-min .rail a:not([role="menuitem"]) { width: 32px; justify-content: center; padding: 8px; margin: 0 auto; }
   .app.rail-min .rail a .nm, .app.rail-min .rail a .ext { display: none; }
 
   /* Two bands at the foot, not one. The hairline used to fence all three
@@ -851,6 +854,10 @@
   .bclose__t { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px 15px; min-width: 0; display: flex; flex-direction: column; }
   :where(.app--borrower) .bclose__t { padding-bottom: 16px; }  /* ramp:b */
   .bclose__amt { font-size: 18px; line-height: 28px; font-weight: 600; }
+  /* the amount and a checked closing's Verified badge share the first line,
+     the badge at the right edge [Tanya, 25 Oct] */
+  .bclose__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .bclose__top .badge { flex: none; line-height: 16px; }  /* 22 tall, badge.tsx's text-xs + py-0.5 + border (Figma draws it 20, border inside); the inherited 1.5 made it 23 */
   .bclose__nm { font-size: 14px; line-height: 20px; font-weight: 500; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bclose__sub { font-size: 12px; line-height: 16px; color: var(--muted-foreground); margin-top: 2px; }
   .bclose__meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 10px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
@@ -864,9 +871,17 @@
      Add button and doesn't run into it [Tanya, 19 Oct] */
   .clorow:last-child { border-bottom: 1px solid var(--border); }
   .clorow b { font-weight: 600; }
+  .clorow b .badge { margin-left: 4px; vertical-align: 1px; line-height: 16px; }  /* 22 tall, as on the tile; it inherited 26 */
   .clorow .sub { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted-foreground); }
   .clorow__acts { display: flex; align-items: center; gap: 4px; flex: none; }
   .clorow .btn--ico { width: 32px; padding: 0; }
+  /* execTxt's +N: the line is already muted, so it only needs to hold together
+     and take the pointer for its tooltip */
+  .xmore { white-space: nowrap; cursor: default; }
+  /* the Execution type list drops below the dialog's last row, and .mdl__bd's
+     overflow:auto would clip it into an inner scroll. The body has no height
+     cap here (.mdl--ab), so nothing needs the scroll. */
+  .mdl--clo .mdl__bd { overflow: visible; }
   .clorow .btn--ico svg { width: 16px; height: 16px; display: block; }
   .bhint { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); }
   :where(.app--borrower) .bhint { font-size: 12px; line-height: 1.3333; }  /* ramp:b */
@@ -1380,7 +1395,27 @@
      type columns read. */
   .qprev { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 12px 12px; }
   .qprev + .qprev { margin-top: 8px; }
-  .qprev__terms { margin: 4px 0 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  .qprev__terms { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
+  /* the Release preview follows its own Figma frame, Dialog 1287:50914
+     [Tanya, 25 Oct: "I updated modal here ... align the prototype"]: name
+     14/20, badges 20 tall (Prism Badge: 12/16 text in a 20 box; the file's
+     .badge inherits 17.4 and lands at 23.4), rate 24/32, the meta line 16,
+     and New in the success tone. Scoped here: the borrower's Quotes tab
+     keeps .qcol and its outline New as they are.
+     The badges moved up beside the name, 26 Oct (Broker Dialog 4045:47633,
+     Tanya: "I updated this modal in figma ... align the prototype"): one
+     20px row, the name filling and wrapping, the badges hugging on the
+     right, both centred. Each card loses 24 (152 to 128), the dialog 48.
+     The meta and terms lines went to 14/20 (Body/sm) with no gap between
+     them, 26 Oct [Tanya: "updated font size and gap"], then 6 between the
+     rate row and the meta line [Tanya: "updated padding"]: the card 134,
+     the dialog 465. */
+  .qprev .qcol__hd { display: flex; align-items: center; gap: 4px; }
+  .qprev .qcol__hd b { flex: 1; min-width: 0; white-space: normal; font-size: 14px; line-height: 20px; }
+  .qprev .qcol__badges { flex: none; min-height: 0; margin-top: 0; }
+  .qprev .badge { height: 20px; padding-block: 0; line-height: 16px; }
+  .qprev .qcol__rate { font-size: 24px; line-height: 32px; }
+  .qprev .qcol__sub { margin-top: 6px; font-size: 14px; line-height: 20px; }
   .qbr__bar { display: flex; align-items: center; gap: 16px; }
   .qbr__acts { display: flex; align-items: center; gap: 8px; margin-left: auto; flex: none; }
   /* Add quote leads with a plus [Tanya, 22 Oct: "add + to 'add qoute' button"];
@@ -1389,6 +1424,19 @@
   .qbr__st { display: inline-flex; align-items: center; gap: 8px; }
   /* Rank centred, header with it [Tanya, 19 Oct: "center align the number in this column"] */
   .qbr .qbr__rk { text-align: center; }
+  /* sortable headers are buttons, 25 Oct [Tanya: "can you improve
+     interraction on prototype?"]: Tab reaches them, Enter or Space sorts,
+     the global ring shows, and the whole 40px cell is the target. The live
+     column carries its direction (arrow up / down) in foreground; the rest
+     keep the muted up-down, which darkens one step on hover. [💡 rec] */
+  .qbr th.sortable { padding: 0; }
+  .qbr .thsort { display: inline-flex; align-items: center; gap: 4px; box-sizing: border-box; width: 100%; height: 40px; margin: 0; padding: 0 12px;
+    border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+  .qbr .qbr__rk .thsort { justify-content: center; }
+  .qbr .thsort svg { flex: none; color: var(--brand-border-300); transition: color .12s; }
+  .qbr .thsort:hover { color: var(--foreground); }
+  .qbr .thsort:hover svg { color: var(--muted-foreground); }
+  .qbr th.act .thsort, .qbr th.act .thsort svg { color: var(--foreground); }
   .qbr__st .d { width: 8px; height: 8px; border-radius: 9999px; flex: none; }
   /* the name state carries an eye / eye-off glyph [Tanya, 22 Oct: "add eye
      icons near 'Name hidden' / 'Name shown'"]. An <i>, not a span: .nm-cell
@@ -2213,7 +2261,11 @@
   .rail__accwho span { display: block; font-size: 11.5px; color: var(--muted-foreground);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rail__accsep { height: 1px; margin: 4px -4px; background: var(--border); }
-  .app.rail-min .rail__acc { justify-content: center; padding: 6px 0; }
+  /* Collapsed, the footer's 12px sides left a 24px button under a 32px disc,
+     so hover drew a 24x44 pill behind it. A 40px square with 4px round the
+     disc is the expanded row's hover in miniature [Tanya, 25 Oct] */
+  .app.rail-min .rail__end { padding-left: 4px; padding-right: 4px; }
+  .app.rail-min .rail__acc { justify-content: center; width: 40px; height: 40px; padding: 4px; margin: 0 auto; }
   .rail__acc .car { display: grid; place-items: center; flex: none; color: color-mix(in srgb, var(--sidebar-foreground) 60%, transparent); }
   .app.rail-min .rail__acc .who, .app.rail-min .rail__acc .car { display: none; }
 
@@ -3549,6 +3601,10 @@
   /* the quote form's term sheet: a zone and a file row under a field label,
      where the dialog's own 16 above and 12 below would double the field's */
   .mdl--q .fld > .dz, .mdl--q .fld > .dzfiles { margin: 0; }
+  /* the rows stack under the zone since 25 Oct (several files), 6 apart like
+     the rows themselves and the field's label gap [~]. ~ not +: the hidden
+     file input sits between them */
+  .mdl--q .fld > .dz ~ .dzfiles { margin-top: 6px; }
   .dzfiles { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
   /* position/overflow are for .dzbar below: the bar is pinned to the row's own
      bottom edge and clipped by the row's radius, so progress costs no height
@@ -7624,6 +7680,16 @@
      view on a laptop screen; header and footer keep their height [Tanya, 19 Oct] */
   .mdl--q { max-height: calc(100vh - 48px); }
   .mdl--q .mdl__bd { max-height: none; flex: 1 1 auto; min-height: 0; overflow: auto; }
+  /* View as borrower [QTE-04, 25 Oct]: the borrower's comparison at its own
+     width, 150 + 320 a column, so three quotes fit without a scrollbar and
+     more scroll inside the table as they do for the borrower. */
+  .mdl--qv { max-width: 1200px; max-height: calc(100vh - 48px); }
+  .mdl--qv .mdl__bd { max-height: none; flex: 1 1 auto; min-height: 0; overflow: auto; }
+  /* no filler column here: fixed layout splits what the 150 key column
+     leaves equally between the quotes, and the inline min-width (240 a
+     quote) makes five or six scroll rather than squeeze [Tanya, 26 Oct] */
+  .mdl--qv .qcmp { table-layout: fixed; }
+  .mdl--qv .qcmp th.qcol { width: auto; }
   /* The paragraph's own bottom margin is 12.5px of nothing above the footer
      rule - the body's 16px padding is already the gap, and the Figma frame
      stops at the text. Left scoped rather than written on .mdl__bd .hint,
@@ -8589,9 +8655,9 @@ const PROFILE = {
   /* the broker's own tombstones, edited under Profile › Closed transactions and
      shown on the public profile under the map. Same shape as BCLOSE. [~] */
   closings: [
-    { name: "Barton Hills Apartments", amt: 12.4, type: "Multifamily", exec: "Agency (Fannie Mae)", city: "Austin", st: "TX", d: "2026-07-14" },
-    { name: "", amt: 6, type: "Industrial", exec: "Bridge / short-term debt (<3 yrs)", city: "San Marcos", st: "TX", d: "2026-03-22" },
-    { name: "Congress Avenue Hotel", amt: 18, type: "Hotel/motel", exec: "Balance sheet debt", city: "Austin", st: "TX", d: "2025-10-09" }
+    { name: "Barton Hills Apartments", amt: 12.4, type: "Multifamily", execs: ["Agency (Fannie Mae)"], city: "Austin", st: "TX", d: "2026-07-14", v: true },
+    { name: "", amt: 6, type: "Industrial", execs: ["Bridge / short-term debt (<3 yrs)"], city: "San Marcos", st: "TX", d: "2026-03-22" },
+    { name: "Congress Avenue Hotel", amt: 18, type: "Hotel/motel", execs: ["Balance sheet debt", "Mezz debt"], city: "Austin", st: "TX", d: "2025-10-09" }
   ]
 };
 
@@ -8726,7 +8792,7 @@ const DEALS = [
        story reads: she saw Updated and asked. Wording is sample. [~]
        qHideCo is the deal's "Hide all lender names" switch, off here. */
     quotes:[
-      { id:"q1", lender:2, via:"you", pub:true, showCo:true, st:"updated", rank:1, on:"15 Oct", upd:"17 Oct", sheet:"Sunbelt term sheet v2.pdf",
+      { id:"q1", lender:2, via:"you", pub:true, showCo:true, st:"updated", rank:1, on:"15 Oct", upd:"17 Oct", sheets:["Sunbelt term sheet v2.pdf", "Sunbelt term sheet v2 - Exhibit A.pdf"],
         thread:[{ from:"you", tx:"Is the four-year interest-only firm on the updated sheet, or does it move with the rate lock?", on:"17 Oct", at:"6:40 PM" }],
         amt:4.5, rate:"5.85%", index:"10-yr Treasury", spread:"+175 bps", term:"10 years", amort:"30 years", io:"4 years", recourse:"Non-recourse",
         prepay:"5-4-3-2-1 step-down", fee:"1.00%", closing:"$58,000", ds:"$263,250 / yr", dscr:"1.34x", ltv:70, dy:7.8, cond:"Rate lock at application. Replacement reserves of $250 per unit a year." },
@@ -8734,16 +8800,16 @@ const DEALS = [
         amt:4.3, rate:"6.25%", index:"5-yr Treasury", spread:"+225 bps", term:"5 years", amort:"25 years", io:"1 year", recourse:"Full recourse",
         prepay:"3-2-1 step-down", fee:"0.75%", closing:"$41,000", ds:"$268,750 / yr", dscr:"1.31x", ltv:67, dy:8.2, cond:"Deposit relationship required." },
       { id:"q6", lender:null, co:"Lone Star Life", src:"Life insurance company", via:"you", pub:true, showCo:false, st:"new", rank:3, on:"16 Oct",
-        amt:4.2, rate:"6.05%", index:"10-yr Treasury", spread:"+195 bps", term:"15 years", amort:"30 years", io:"", recourse:"Non-recourse",
+        amt:4.2, rate:"6.05%", index:"10-yr Treasury", spread:"+195 bps", term:"15 years", amort:"30 years", io:"None", recourse:"Non-recourse",
         prepay:"Yield maintenance", fee:"0.50%", closing:"$47,000", ds:"$303,800 / yr", dscr:"1.16x", ltv:66, dy:8.4, cond:"" },
       { id:"q3", lender:1, via:"lender", pub:false, showCo:false, st:"new", rank:0, on:"18 Oct",
-        amt:4.8, rate:"7.40%", index:"1-mo SOFR", spread:"+310 bps", term:"3 years", amort:"Interest-only", io:"3 years", recourse:"Non-recourse, standard carve-outs",
+        amt:4.8, rate:"7.40%", index:"1-mo SOFR", spread:"+310 bps", term:"3 years", amort:"Interest-only", io:"Full term", recourse:"Non-recourse, standard carve-outs",
         prepay:"12-month minimum interest", fee:"1.50%", closing:"$62,000", ds:"$355,200 / yr", dscr:"0.99x", ltv:75, dy:7.3, cond:"Funds the $320K CapEx as a holdback. Interest reserve required." },
       { id:"q4", lender:null, co:"Caprock Bank", src:"Regional bank", via:"you", pub:false, showCo:false, st:"new", rank:0, on:"",
-        amt:4.0, rate:"6.50%", index:"5-yr Treasury", spread:"+250 bps", term:"7 years", amort:"25 years", io:"", recourse:"Full recourse",
+        amt:4.0, rate:"6.50%", index:"5-yr Treasury", spread:"+250 bps", term:"7 years", amort:"25 years", io:"None", recourse:"Full recourse",
         prepay:"", fee:"1.00%", closing:"", ds:"", dscr:"", ltv:63, cond:"" },
       { id:"q5", lender:null, co:"Llano Credit Partners", src:"Debt fund", via:"you", pub:false, wd:"14 Oct", showCo:false, st:"new", rank:0, on:"12 Oct",
-        amt:4.6, rate:"7.10%", index:"1-mo SOFR", spread:"+280 bps", term:"2 years", amort:"Interest-only", io:"2 years", recourse:"Non-recourse",
+        amt:4.6, rate:"7.10%", index:"1-mo SOFR", spread:"+280 bps", term:"2 years", amort:"Interest-only", io:"Full term", recourse:"Non-recourse",
         prepay:"6-month minimum interest", fee:"1.25%", closing:"$55,000", ds:"$326,600 / yr", dscr:"1.08x", ltv:72, dy:7.7, cond:"" }
     ]
   },
@@ -9817,7 +9883,7 @@ const S = {
   /* the lender's Requests list, 19 Oct: view, search, three filters, page */
   lview: "decide", lq: "", lrProp: new Set(), lrFin: new Set(), lrSt: new Set(), lpg: 1, lpsz: 10,
   lrSel: false, lpicked: new Set(), lsetupX: false,
-  bview: "active", lmax: 1, bqsort: "rate", bQ: null, bsel: null, bwd: null, bact: "all", bactFor: null,
+  bview: "active", lmax: 1, bqsort: "rate", qsort: "rank", qrev: false, bQ: null, bsel: null, bwd: null, bact: "all", bactFor: null,
   /* the deal id whose done tasks are expanded, not a boolean: moving to
      another deal collapses the group with no second key to clear, which is the
      bug bactFor had to be added to fix a day earlier [5 Oct] */
@@ -11420,45 +11486,63 @@ const BROKERS = [
    so the profile is seen both ways. Sample [~]. */
 const BCLOSE = {
   "jordan-ellis": [
-    { name: "Cypress Creek Apartments", amt: 18.5, type: "Multifamily", exec: "Agency (Freddie Mac)", city: "Houston", st: "TX", d: "2026-08-27" },
-    { name: "", amt: 6.2, type: "Manufactured housing / mobile home park", exec: "Bridge / short-term debt (<3 yrs)", city: "Tulsa", st: "OK", d: "2026-06-03" },
-    { name: "Bayou Industrial Park", amt: 12, type: "Industrial", exec: "Bridge / short-term debt (<3 yrs)", city: "Baton Rouge", st: "LA", d: "2026-04-18" },
-    { name: "The Reserve at Magnolia", amt: 24.75, type: "Multifamily", exec: "Agency (Fannie Mae)", city: "Magnolia", st: "TX", d: "2026-02-11" },
-    { name: "", amt: 3.4, type: "Single-family rentals (1-4 units)", exec: "Bridge / short-term debt (<3 yrs)", city: "Little Rock", st: "AR", d: "2025-11-25" },
-    { name: "Sandia Vista Townhomes", amt: 9.8, type: "Build to rent", exec: "Agency (Freddie Mac)", city: "Albuquerque", st: "NM", d: "2025-09-06" },
-    { name: "Riverwalk Lofts", amt: 15, type: "Mixed-use", exec: "Agency (Fannie Mae)", city: "San Antonio", st: "TX", d: "2025-06-30" }
+    { name: "Cypress Creek Apartments", amt: 18.5, type: "Multifamily", execs: ["Agency (Freddie Mac)"], city: "Houston", st: "TX", d: "2026-08-27", v: true },
+    { name: "", amt: 6.2, type: "Manufactured housing / mobile home park", execs: ["Bridge / short-term debt (<3 yrs)"], city: "Tulsa", st: "OK", d: "2026-06-03" },
+    { name: "Bayou Industrial Park", amt: 12, type: "Industrial", execs: ["Bridge / short-term debt (<3 yrs)", "Mezz debt"], city: "Baton Rouge", st: "LA", d: "2026-04-18" },
+    { name: "The Reserve at Magnolia", amt: 24.75, type: "Multifamily", execs: ["Agency (Fannie Mae)"], city: "Magnolia", st: "TX", d: "2026-02-11", v: true },
+    { name: "", amt: 3.4, type: "Single-family rentals (1-4 units)", execs: ["Bridge / short-term debt (<3 yrs)"], city: "Little Rock", st: "AR", d: "2025-11-25" },
+    { name: "Sandia Vista Townhomes", amt: 9.8, type: "Build to rent", execs: ["Agency (Freddie Mac)"], city: "Albuquerque", st: "NM", d: "2025-09-06" },
+    { name: "Riverwalk Lofts", amt: 15, type: "Mixed-use", execs: ["Agency (Fannie Mae)"], city: "San Antonio", st: "TX", d: "2025-06-30" }
   ],
   "maya-okafor": [
-    { name: "Desert Ridge Plaza", amt: 22, type: "Retail-multi tenant", exec: "CMBS", city: "Phoenix", st: "AZ", d: "2026-07-16" },
-    { name: "", amt: 7.5, type: "Self-storage", exec: "Balance sheet debt", city: "Las Vegas", st: "NV", d: "2026-05-08" },
-    { name: "Elm Street Suites", amt: 14.2, type: "Hotel/motel", exec: "Bridge / short-term debt (<3 yrs)", city: "Dallas", st: "TX", d: "2026-01-21" },
-    { name: "Front Range Commons", amt: 11, type: "Student housing", exec: "Permanent | fixed-rate", city: "Fort Collins", st: "CO", d: "2025-10-12" }
+    { name: "Desert Ridge Plaza", amt: 22, type: "Retail-multi tenant", execs: ["CMBS"], city: "Phoenix", st: "AZ", d: "2026-07-16" },
+    { name: "", amt: 7.5, type: "Self-storage", execs: ["Balance sheet debt"], city: "Las Vegas", st: "NV", d: "2026-05-08" },
+    { name: "Elm Street Suites", amt: 14.2, type: "Hotel/motel", execs: ["Bridge / short-term debt (<3 yrs)"], city: "Dallas", st: "TX", d: "2026-01-21" },
+    { name: "Front Range Commons", amt: 11, type: "Student housing", execs: ["Permanent | fixed-rate"], city: "Fort Collins", st: "CO", d: "2025-10-12" }
   ],
   "luis-caraballo": [
-    { name: "Harbor Point Retail", amt: 9.2, type: "Retail-multi tenant", exec: "Balance sheet debt", city: "Tampa", st: "FL", d: "2026-08-04" },
-    { name: "", amt: 13.5, type: "Multifamily", exec: "Construction loans", city: "Savannah", st: "GA", d: "2026-02-19" },
-    { name: "Gulf Coast Logistics Center", amt: 19, type: "Industrial", exec: "Permanent | fixed-rate", city: "Mobile", st: "AL", d: "2025-07-28" }
+    { name: "Harbor Point Retail", amt: 9.2, type: "Retail-multi tenant", execs: ["Balance sheet debt"], city: "Tampa", st: "FL", d: "2026-08-04" },
+    { name: "", amt: 13.5, type: "Multifamily", execs: ["Construction loans"], city: "Savannah", st: "GA", d: "2026-02-19" },
+    { name: "Gulf Coast Logistics Center", amt: 19, type: "Industrial", execs: ["Permanent | fixed-rate"], city: "Mobile", st: "AL", d: "2025-07-28" }
   ],
   "anjali-mehta": [
-    { name: "Saguaro Springs", amt: 16.8, type: "Multifamily", exec: "FHA/HUD", city: "Tucson", st: "AZ", d: "2026-09-07" },
-    { name: "", amt: 4.1, type: "RV park", exec: "Bridge / short-term debt (<3 yrs)", city: "St. George", st: "UT", d: "2026-06-15" },
-    { name: "Mesa Self Storage", amt: 5.6, type: "Self-storage", exec: "Bridge / short-term debt (<3 yrs)", city: "Mesa", st: "AZ", d: "2026-03-24" },
-    { name: "Canyon View Estates", amt: 8.9, type: "Manufactured housing / mobile home park", exec: "Agency (Freddie Mac)", city: "Henderson", st: "NV", d: "2025-12-02" },
-    { name: "Las Palmas Apartments", amt: 27.5, type: "Multifamily", exec: "Agency (Fannie Mae)", city: "El Paso", st: "TX", d: "2025-08-13" }
+    { name: "Saguaro Springs", amt: 16.8, type: "Multifamily", execs: ["FHA/HUD"], city: "Tucson", st: "AZ", d: "2026-09-07" },
+    { name: "", amt: 4.1, type: "RV park", execs: ["Bridge / short-term debt (<3 yrs)"], city: "St. George", st: "UT", d: "2026-06-15" },
+    { name: "Mesa Self Storage", amt: 5.6, type: "Self-storage", execs: ["Bridge / short-term debt (<3 yrs)"], city: "Mesa", st: "AZ", d: "2026-03-24" },
+    { name: "Canyon View Estates", amt: 8.9, type: "Manufactured housing / mobile home park", execs: ["Agency (Freddie Mac)"], city: "Henderson", st: "NV", d: "2025-12-02" },
+    { name: "Las Palmas Apartments", amt: 27.5, type: "Multifamily", execs: ["Agency (Fannie Mae)"], city: "El Paso", st: "TX", d: "2025-08-13" }
   ],
   "elena-vasquez": [
-    { name: "Aspen Grove Cottages", amt: 21, type: "Build to rent", exec: "Construction loans", city: "Colorado Springs", st: "CO", d: "2026-05-26" },
-    { name: "", amt: 2.8, type: "Land", exec: "Land / lot development", city: "Bozeman", st: "MT", d: "2025-12-10" }
+    { name: "Aspen Grove Cottages", amt: 21, type: "Build to rent", execs: ["Construction loans"], city: "Colorado Springs", st: "CO", d: "2026-05-26" },
+    { name: "", amt: 2.8, type: "Land", execs: ["Land / lot development"], city: "Bozeman", st: "MT", d: "2025-12-10" }
   ]
 };
-/* newest first, whatever order they were entered in */
+/* "Verified" on a closing LenderPrism has checked, 25 Oct: Tony on frame
+   3676:1579, "Perhaps we should add a blue badge that reads 'Verified by
+   LenderPrism'" [T]; per tile, and the one word "Verified", so the advisor
+   seal keeps "Verified by LenderPrism" as its own tooltip [Tanya, 25 Oct].
+   v marks a checked closing. What is checked, and by whom, is Q247, so the
+   tooltip names no document [~]. Saving the dialog writes a fresh record
+   without v, so an edited closing drops the badge until it is checked
+   again [~]. Unchecked closings stay plain. */
+/* the leading space keeps "Verified" a word of its own for a screen reader;
+   a flex row drops it from layout, the broker's row counts it in its gap */
+/* the success green, with the check glyph [Tanya, 25 Oct: "change to
+   smaller", pointing at the Release dialog's green "New" badge, Borrower
+   1287:50120; then "add checmark icon"]. Green, against Tony's "blue": in
+   this file green is done and confirmed (Contacted, Confirmed, Selected),
+   blue is pending or neutral (Requested, Memo on its way, Prospector). */
+const closeVerified = c => c.v ? ` <span class="badge tone-green" title="LenderPrism checked this closing.">${BIC.check}Verified</span>` : "";
+/* newest first, whatever order they were entered in. A closing with no date
+   (optional since 25 Oct) has d "" and sorts after every dated one. */
 const closingsSorted = xs => xs.slice().sort((a, b) => b.d.localeCompare(a.d));
 const MON3 = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 /* the close date is stored to the day and printed to the day: the tiles,
    the broker's rows and the undo line all read "Feb 11, 2026", the same date
    the broker picked in the dialog [Tanya, 19 Oct: "full date to align with"
-   the Close date field; was month and year from the 19 Oct research] */
-const closeOn = d => MON3[Number(d.slice(5, 7)) - 1] + " " + Number(d.slice(8, 10)) + ", " + d.slice(0, 4);
+   the Close date field; was month and year from the 19 Oct research]. No
+   date prints nothing, and each caller drops its "Closed" with it. */
+const closeOn = d => !d ? "" : MON3[Number(d.slice(5, 7)) - 1] + " " + Number(d.slice(8, 10)) + ", " + d.slice(0, 4);
 const brokerById = id => BROKERS.find(b => b.id === id);
 const bName = b => b.first + " " + b.last;
 const bInits = b => (b.first[0] + b.last[0]).toUpperCase();
@@ -11657,7 +11741,7 @@ const reqChecklist = r => [...BDOC_SPONSOR, ...reqPropRows(r), ...(r.property ==
    borrower cannot tell which event it records. `upd` stays null on a quote
    that has never changed, and the detail and the comparison both print it
    only when it is set. */
-const bq = (id, o) => Object.assign({ id, st: "new", rank: 0, pub: true, showCo: false, co: "", sheet: null, upd: null, thread: [] }, o);
+const bq = (id, o) => Object.assign({ id, st: "new", rank: 0, pub: true, showCo: false, co: "", sheets: [], upd: null, thread: [] }, o);
 
 const BLOANS = [
   { id: "lakeview", name: "Lakeview Flats refinance", amt: 3.2, property: "Multifamily", city: "Austin", state: "TX", zip: "78704", addr: "2201 S Lamar Blvd",
@@ -11676,7 +11760,7 @@ const BLOANS = [
       bq("q1", { src: "Agency lender", co: "Hill Country Multifamily Finance", showCo: true, rank: 1, amt: 3.2, rate: "6.10%", index: "10-yr Treasury", spread: "+195 bps",
         term: "10 years", amort: "30 years", io: "3 years", recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$41,500",
         ds: "$232,700 / yr", dscr: "1.37x", ltv: 65, dy: 10, cond: "Replacement reserve $250 per unit per year; 12 months of taxes escrowed.", on: "18 Sep",
-        sheet: "Term sheet - quote 1.pdf",
+        sheets: ["Term sheet - quote 1.pdf", "Term sheet - quote 1, Exhibit A.pdf", "Term sheet - quote 1, Exhibit B.pdf"],
         thread: [{ from: "you", tx: "Is the yield maintenance negotiable to a step-down?", on: "18 Sep", at: "6:22 PM" },
                  { from: "broker", tx: "I asked. They will do 5-4-3-2-1 for 10 bps more on the rate. Worth it if you might sell before year six.", on: "19 Sep", at: "8:10 AM" }] }),
       bq("q2", { src: "Regional bank", rank: 2, st: "updated", upd: "26 Sep", amt: 3.3, rate: "6.35%", index: "5-yr Treasury", spread: "+240 bps",
@@ -11729,8 +11813,8 @@ const BLOANS = [
     quotes: [
       bq("q1", { src: "Agency lender", st: "selected", rank: 1, amt: 7.8, rate: "5.85%", index: "10-yr Treasury", spread: "+170 bps", term: "10 years", amort: "30 years", io: "2 years",
         recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$96,000", ds: "$552,000 / yr", dscr: "1.27x", ltv: 70, dy: 9,
-        cond: "Rate lock at appraisal; springing replacement reserve.", on: "29 Aug", sheet: "Term sheet - selected.pdf" }),
-      bq("q2", { src: "Debt fund", st: "seen", amt: 8.4, rate: "8.25%", index: "SOFR", spread: "+390 bps", term: "3 years", amort: "Interest-only", io: "3 years",
+        cond: "Rate lock at appraisal; springing replacement reserve.", on: "29 Aug", sheets: ["Term sheet - selected.pdf"] }),
+      bq("q2", { src: "Debt fund", st: "seen", amt: 8.4, rate: "8.25%", index: "SOFR", spread: "+390 bps", term: "3 years", amort: "Interest-only", io: "Full term",
         recourse: "Non-recourse", prepay: "12 months minimum interest", fee: "1.50%", closing: "$118,000", ds: "$693,000 / yr", dscr: "1.01x", ltv: 75, dy: 8.3, cond: "Bridge; floating rate with a cap.", on: "30 Aug" })
     ],
     docs: [
@@ -11837,12 +11921,12 @@ const BLOANS = [
       bq("q1", { src: "Regional bank", co: "Sonoran State Bank", showCo: true, rank: 1, amt: 4.1, rate: "6.45%", index: "5-yr Treasury", spread: "+205 bps",
         term: "5 years", amort: "25 years", io: "None", recourse: "Partial recourse, 25% of balance", prepay: "3-2-1 step-down", fee: "0.75%", closing: "$34,500",
         ds: "$330,700 / yr", dscr: "1.33x", ltv: 60, dy: 10.7, cond: "Operating accounts moved to the bank; annual reporting covenant.", on: "1 Oct",
-        sheet: "Term sheet - Sonoran State Bank.pdf" }),
+        sheets: ["Term sheet - Sonoran State Bank.pdf"] }),
       bq("q2", { src: "Life company", rank: 2, amt: 3.9, rate: "6.15%", index: "10-yr Treasury", spread: "+200 bps",
         term: "10 years", amort: "25 years", io: "None", recourse: "Non-recourse", prepay: "Yield maintenance", fee: "0.50%", closing: "$49,000",
         ds: "$305,800 / yr", dscr: "1.44x", ltv: 57, dy: 11.3, cond: "Lower proceeds; no prepayment inside year nine without yield maintenance.", on: "1 Oct" }),
       bq("q3", { src: "Debt fund", rank: 3, amt: 4.4, rate: "8.40%", index: "SOFR", spread: "+405 bps",
-        term: "3 years", amort: "Interest-only", io: "3 years", recourse: "Non-recourse", prepay: "12 months minimum interest", fee: "1.50%", closing: "$62,000",
+        term: "3 years", amort: "Interest-only", io: "Full term", recourse: "Non-recourse", prepay: "12 months minimum interest", fee: "1.50%", closing: "$62,000",
         ds: "$369,600 / yr", dscr: "1.19x", ltv: 65, dy: 10, cond: "Floating with a rate cap escrowed at closing; highest proceeds of the three.", on: "2 Oct" })
     ], docs: [
       { id: "d1", name: "Mesa rent roll.xlsx", cat: "Rent roll", by: "you", on: "8 Sep", ver: 1, st: "accepted" },
@@ -14132,6 +14216,14 @@ const QF_TERMS = [["index", "Index", ""], ["spread", "Spread", "+175 bps"], ["te
      lender's figure, typed like DSCR and LTV, not NOI / amount: a broker deal
      carries no NOI to divide [~]. It fills the last row's empty third cell. */
   ["dy", "Debt yield (%)", ""]];
+/* Interest-only is picked, not typed, since 25 Oct (task on 1285:37699: "Add
+   an Interest-only period column ... expressed in years ... Values run one,
+   two, three years, or full term") [~] author unconfirmed. Full term is its
+   own value because a full-term IO loan's length is its term, and "3 years"
+   in the column read as a partial period. None is a choice, so "no IO" and
+   "not entered" stay apart. Up to 5 years like the request's TERM_IOS, in the
+   form's sentence case. [💡 rec] */
+const QF_IOS = ["None", "1 year", "2 years", "3 years", "4 years", "5 years", "Full term"];
 const brQL = q => q.lender != null ? lenderById(q.lender) : null;
 const brQCo = q => brQL(q) ? brQL(q).co : q.co;
 const brQSrc = q => brQL(q) ? brQL(q).inst : q.src;
@@ -14152,14 +14244,65 @@ const brQState = (d, q) => q.wd ? ["muted", `Withdrawn ${q.wd}`]
   : q.pub ? (q.st === "selected" ? ["green", `Selected by ${brBorName(d) || "the borrower"}`] : ["green", q.upd ? `Updated ${q.upd}` : `Released ${q.on}`])
   : q.via === "lender" ? ["blue", `New from lender · ${q.on}`] : ["muted", "Draft"];
 const brQv = v => v ? esc(v) : `<span class="unset">Not entered</span>`;
+/* the quote table's column sorts, 25 Oct (task on 1285:37699: "Enable
+   sorting on the key columns. Rate, loan amount, interest-only period, term,
+   amortization.") [~] author unconfirmed. Rank is a sort too, the default
+   and the way back to the broker's own order. A first click sorts the useful
+   way round (the borrower's BQ_SORTS labels); a second click on the live
+   column reverses it [Tanya, 25 Oct: "why I can sort only down and not up",
+   then "do recommended"], so the tooltip names what the next click gives.
+   Rank has no reverse. A cell with nothing entered sorts last either way,
+   ties keep the Rank order, and
+   withdrawn quotes stay at the foot under any sort: they are out of play.
+   Move up / Move down still work while sorted; they change the # shown.
+   [💡 rec] */
+const QBR_SORTS = [{ v: "rank", label: "Your ranking" }, { v: "rate", label: "Lowest rate" }, { v: "amount", label: "Highest loan amount" },
+  { v: "term", label: "Longest term" }, { v: "amort", label: "Longest amortization" }, { v: "io", label: "Longest interest-only" }];
+const QBR_REV = { rate: "Highest rate", amount: "Lowest loan amount", term: "Shortest term", amort: "Shortest amortization", io: "Shortest interest-only" };
+const QBR_KEY = {
+  rate: q => parseFloat(q.rate) || Infinity,
+  amount: q => q.amt ? -q.amt : Infinity,
+  term: q => q.term ? -bqYrs(q.term) : Infinity,
+  amort: q => q.amort ? -bqYrs(q.amort) : Infinity,
+  io: q => q.io ? -bqYrs(q.io === "Full term" ? q.term : q.io) : Infinity };
+function brQSorted(d) {
+  const qs = brQOrder(d), k0 = QBR_KEY[S.qsort];
+  if (!k0) return qs;
+  const k = S.qrev ? q => { const x = k0(q); return x === Infinity ? x : -x; } : k0;
+  /* Infinity - Infinity is NaN, which falls through to the Rank order */
+  return qs.filter(q => !q.wd).map((q, i) => [k(q), i, q]).sort((a, b) => a[0] - b[0] || a[1] - b[1]).map(x => x[2])
+    .concat(qs.filter(q => q.wd));
+}
+function qth(v, label, cls, style) {
+  const s = QBR_SORTS.find(x => x.v === v), on = S.qsort === v, up = (v === "rank" || v === "rate") !== (on && S.qrev);
+  const tip = on && QBR_REV[v] ? (S.qrev ? s.label : QBR_REV[v]) : s.label;
+  const ico = !on ? '<path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/>'
+    : up ? '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>' : '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>';
+  return `<th class="sortable${on ? " act" : ""}${cls ? " " + cls : ""}"${style ? ` style="${style}"` : ""}
+    aria-sort="${on ? (up ? "ascending" : "descending") : "none"}"><button type="button" class="thsort" data-qsort="${v}" data-tip="${esc(tip)}">${esc(label)}${I(ico, 14)}</button></th>`;
+}
+/* FLIP: each row glides from where it sat to where the sort put it, so the
+   eye can follow a quote instead of rereading the table. Reduced motion
+   gets the plain jump. Focus goes back to the header just used, since the
+   render replaced it. */
+const qbrTops = () => Object.fromEntries([...document.querySelectorAll("#quotescard tr[data-qid]")].map(r => [r.dataset.qid, r.getBoundingClientRect().top]));
+function qbrSettle(tops, v) {
+  const b = document.querySelector(`#quotescard [data-qsort="${v}"]`);
+  if (b) b.focus({ preventScroll: true });
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.querySelectorAll("#quotescard tr[data-qid]").forEach(r => {
+    const dy = tops[r.dataset.qid] - r.getBoundingClientRect().top;
+    if (dy) r.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 200, easing: "cubic-bezier(.2, 0, 0, 1)" });
+  });
+}
 /* what the borrower's Quotes tab draws for this quote once released: the
    loanQuotes column head, field for field */
 function brQPreview(q, rank) {
   const b = Object.assign({}, q, { co: brQCo(q), src: brQSrc(q), st: "new", on: "Today", upd: null });
   const terms = [b.index && b.spread ? `${b.index} ${b.spread}` : b.index, b.term,
-    b.amort && (/^interest/i.test(b.amort) ? b.amort : `${b.amort} amortization`), b.io && !/^interest/i.test(b.amort) && `${b.io} interest-only`].filter(Boolean);
+    b.amort && (/^interest/i.test(b.amort) ? b.amort : `${b.amort} amortization`), b.io && b.io !== "None" && !/^interest/i.test(b.amort) && `${b.io} interest-only`].filter(Boolean);
   return `<div class="qprev">
-    <div class="qcol__hd"><b>${esc(bLender(b))}</b><div class="qcol__badges"><span class="badge ${rank === 1 ? "tone-gold" : "badge--outline"}">#${rank} from your advisor</span>${bQBadge(b)}</div></div>
+    <div class="qcol__hd"><b>${esc(bLender(b))}</b><div class="qcol__badges"><span class="badge ${rank === 1 ? "tone-gold" : "badge--outline"}">#${rank} from your advisor</span><span class="badge tone-green">New</span></div></div>
     <div class="qcol__key"><span class="qcol__rate num">${esc(b.rate)}</span><span class="qcol__amt num">${money(b.amt)}</span></div>
     <span class="qcol__sub">${bQMetaCol(b)}</span>
     ${terms.length ? `<p class="qprev__terms">${terms.map(esc).join(" · ")}</p>` : ""}
@@ -14186,6 +14329,14 @@ function quotesBody(d) {
      deal page, by that call. */
   const relAll = ro || !bn || out.length < 2 ? "" : `<button class="btn btn--outline btn--sm" type="button" data-qrel="${d.id}:${out.map(q => q.id).join(",")}">Release all ${out.length}</button>`;
   const noBor = "Add a borrower to this deal to release quotes.";
+  /* View as borrower [QTE-04, 25 Oct: Tony asked whether the broker can see
+     the side-by-side tiles the borrower gets; "Either works for him"]. A
+     read-only look at the borrower's own comparison, not a second broker
+     layout: every row action here would need a tile twin, and the borrower's
+     columns stop fitting at the five or six quotes a broker holds. Ghost, the
+     bar's quietest button, since it changes nothing. Shown once there is a
+     borrower to look as. [💡 rec] */
+  const qview = !bn ? "" : `<button class="btn btn--ghost btn--sm" type="button" data-qview="${d.id}">${I('<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>', 16)}View as borrower</button>`;
   const row = q => {
     const [tone, stx] = brQState(d, q), k = `q:${d.id}:${q.id}`, open = S.cardMenu === k, live = brQLive(q);
     const n = qs.filter(brQLive).length;
@@ -14220,13 +14371,14 @@ function quotesBody(d) {
         ${live ? mi("data-qwd", '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>', "Withdraw from " + esc(bn || "borrower"), true)
           : mi("data-qdel", '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>', "Delete quote", true)}
       </div>`;
-    return `<tr${q.wd ? ` class="qbr--wd"` : ""}>
+    return `<tr data-qid="${q.id}"${q.wd ? ` class="qbr--wd"` : ""}>
       <td class="num qbr__rk">${live ? "#" + q.rank : ""}</td>
       <td class="nm-cell" style="white-space:normal"><b>${esc(brQCo(q))}</b><span>${esc(brQSrc(q))} · <i class="qbr__vis">${q.showCo ? QEYE + "Name shown" : QEYEOFF + "Name hidden"}</i></span></td>
       <td class="num" data-l="Rate">${brQv(q.rate)}</td>
       <td class="num" data-l="Amount">${q.amt ? money(q.amt) : brQv("")}</td>
       <td data-l="Term">${brQv(q.term)}</td>
       <td data-l="Amortization">${brQv(q.amort)}</td>
+      <td data-l="Interest-only">${brQv(q.io)}</td>
       <td data-l="Status"><span class="qbr__st"><span class="d d-${tone}"></span>${esc(stx)}</span>${ask}</td>
       <td class="actions-cell"><div class="rowacts">${rel}${ro ? "" : `<button type="button" class="rowkebab" data-tip="More actions" data-kebab="${esc(k)}" aria-haspopup="menu" aria-expanded="${open}" aria-label="More actions for the ${esc(brQCo(q))} quote">${KEBAB}</button>`}${menu}</div></td>
     </tr>`;
@@ -14245,10 +14397,10 @@ function quotesBody(d) {
              the note above QTYPES. On, every name is hidden now and new quotes
              start hidden on this deal. */
           ro ? "" : `<label class="swt qbr__hide"><input type="checkbox" role="switch" data-qhide="${d.id}"${d.qHideCo ? " checked" : ""}><span class="trk"></span><span class="lbl">Hide all lender names</span></label>`}
-        <span class="qbr__acts">${relAll}${add("")}</span>
+        <span class="qbr__acts">${qview}${relAll}${add("")}</span>
       </div>
-      <div class="tscroll"><table class="t qbr"><thead><tr><th class="qbr__rk" style="width:56px">Rank</th><th>Lender</th><th>Rate</th><th>Amount</th><th>Term</th><th>Amortization</th><th>Status</th><th style="width:150px"></th></tr></thead>
-        <tbody>${qs.map(row).join("")}</tbody></table></div>
+      <div class="tscroll"><table class="t qbr"><thead><tr>${qth("rank", "Rank", "qbr__rk", "width:72px")}<th>Lender</th>${qth("rate", "Rate")}${qth("amount", "Amount")}${qth("term", "Term")}${qth("amort", "Amortization")}${qth("io", "Interest-only")}<th>Status</th><th style="width:150px"></th></tr></thead>
+        <tbody>${brQSorted(d).map(row).join("")}</tbody></table></div>
     </div>`;
 }
 
@@ -14317,7 +14469,10 @@ function quoteModal() {
      type select beside the name. [💡 rec] */
   const none = !qLqIds(d).length;
   const miss = s.tried ? { lender: !f.lender && !f.co.trim(), amt: !f.amt.replace(/[^0-9]/g, ""), rate: !f.rate.trim() } : {};
-  const fld = ([k, lbl, ph]) => `<div class="fld">
+  const fld = ([k, lbl, ph]) => k === "io" ? `<div class="fld">
+      <label>${lbl}</label>
+      <div class="fld__sel">${selCtl("qf:io", (f.io && !QF_IOS.includes(f.io) ? [f.io] : []).concat(QF_IOS).map(v => ({ v, label: v })), f.io, lbl, "Choose a period")}</div>
+    </div>` : `<div class="fld">
       <label for="qf_${k}">${lbl}</label>
       <input class="inp" id="qf_${k}" data-qf="${k}" autocomplete="off" value="${esc(f[k])}"${ph ? ` placeholder="${esc(ph)}"` : ""}>
     </div>`;
@@ -14394,19 +14549,35 @@ function quoteModal() {
                remove. Two-state like the form's .dropzone/.filerow: one
                optional file in a longer form, so the zone gives way to the row
                rather than standing above it, and replacing is remove then
-               choose. Save waits while the file is still travelling. */""}
-          ${S.qshFile ? dzFile(S.qshFile, "data-qsheetrm", S.qshBusy)
-            : `<button type="button" class="dz dz--compact" id="qf_dz" aria-label="Upload term sheet">${DZIC.replace(/width="24" height="24"/, 'width="16" height="16"').replace('stroke-width="1.7"', 'stroke-width="2"')}<span>Drag and drop, or <u>browse</u></span></button>
-              <input type="file" id="qf_file" data-qffile accept=".pdf,.docx,.doc" hidden>`}
+               choose. Save waits while the file is still travelling.
+               SEVERAL FILES since 25 Oct (comment on 1285:37699: "Usually a
+               lender issues one, but some issue two or three - exhibit A,
+               exhibit B. The upload needs to accept several."). So the
+               two-state rule above no longer holds: the zone stays and the
+               rows stack under it, the borrower dialog's zone-then-rows order.
+               No type or label per file - the exhibits are parts of one term
+               sheet and the file name says which [~]. */""}
+          ${/* the formats ride the zone's own line, in brackets [Tanya, 25 Oct:
+               "drop hint is the same line, maybe in brackets?"] - a hint line
+               under it was tried first the same day. A refused file's error
+               is the one line under the zone, as Lender's is. The 25 MB limit
+               is said only there [Tanya, 25 Oct: "remove this, show in error
+               state"]. */""}
+          <button type="button" class="dz dz--compact" id="qf_dz" aria-label="Upload term sheet files: PDF or Word"${S.qshErr ? ` aria-describedby="qf_dzmsg"` : ""}>${DZIC.replace(/width="24" height="24"/, 'width="16" height="16"').replace('stroke-width="1.7"', 'stroke-width="2"')}<span>Drag and drop, or <u>browse</u> (PDF or Word)</span></button>
+          <input type="file" id="qf_file" data-qffile accept=".pdf,.docx,.doc" multiple hidden>
+          ${S.qshErr ? `<div class="errmsg" id="qf_dzmsg" role="alert">${esc(S.qshErr)}</div>` : ""}
+          ${S.qshFiles.length ? `<div class="dzfiles">${S.qshFiles.map((x, i) => dzRow(x.name, `data-qsheetrm="${i}"`, x.busy)).join("")}</div>` : ""}
         </div>
-        ${live ? `<div class="hint" style="margin-top:16px">${esc(bn)} sees this quote marked Updated.</div>` : ""}
+        ${/* the "<borrower> sees this quote marked Updated." line under the
+              term sheet went 25 Oct [Tanya: "remove this text"]; the toast
+              after Save changes still says it */""}
       </div>
       <div class="mdl__ft">
         <button class="btn btn--outline" type="button" data-mclose>Cancel</button>
         ${live
-          ? `<button class="btn" type="button" data-qsave="upd"${S.qshBusy ? " disabled" : ""}>Save changes</button>`
-          : `<button class="btn${bn ? " btn--outline" : ""}" type="button" data-qsave="draft"${S.qshBusy ? " disabled" : ""}>${q ? "Save" : "Save as draft"}</button>
-             ${bn ? `<button class="btn" type="button" data-qsave="rel"${S.qshBusy ? " disabled" : ""}>Preview and release</button>` : ""}`}
+          ? `<button class="btn" type="button" data-qsave="upd"${qshUp() ? " disabled" : ""}>Save changes</button>`
+          : `<button class="btn${bn ? " btn--outline" : ""}" type="button" data-qsave="draft"${qshUp() ? " disabled" : ""}>${q ? "Save" : "Save as draft"}</button>
+             ${bn ? `<button class="btn" type="button" data-qsave="rel"${qshUp() ? " disabled" : ""}>Preview and release</button>` : ""}`}
       </div>
     </div>
   </div>`;
@@ -14426,14 +14597,41 @@ function qRelModal() {
         <button type="button" class="x" data-mclose aria-label="Close">${XCLOSE}</button>
       </div>
       <div class="mdl__bd">
-        <p class="prose" style="margin:0 0 12px;font-size:14px">This is what ${esc(bn)} sees on their Quotes tab:</p>
+        ${/* the lead-in ("This is what <borrower> sees on their Quotes tab:")
+             and the closing hint ("They get an email. You can edit or
+             withdraw a released quote later; an edit shows them Updated.")
+             went 25 Oct [Tanya: "can we remove this texts"]. The subtitle
+             already names who receives it, and the success toast still says
+             they get an email. */ ""}
         ${qs.map((q, i) => brQPreview(q, base + i + 1)).join("")}
-        <div class="hint" style="margin-top:12px">They get an email. You can edit or withdraw a released quote later; an edit shows them Updated.</div>
       </div>
       <div class="mdl__ft">
         <button class="btn btn--outline" type="button" data-mclose>Cancel</button>
         <button class="btn" type="button" data-qrelgo>${qs.length === 1 ? "Release quote" : `Release ${qs.length} quotes`}</button>
       </div>
+    </div>
+  </div>`;
+}
+
+/* View as borrower: the borrower's Quotes tab, drawn by loanQuotes itself from
+   the released quotes, with the names and ranks the borrower gets. Withdrawn
+   and unreleased quotes are left out because the borrower never sees them.
+   Wrapped in app--borrower so the comparison takes the borrower's type ramp,
+   not the broker's. */
+function qViewModal() {
+  const d = dealById(S.qView);
+  if (!d) return "";
+  const bn = brBorName(d), qs = (d.quotes || []).filter(brQLive).map(q => Object.assign({}, q, { co: brQCo(q), src: brQSrc(q) }));
+  const body = qs.length ? `<div class="app--borrower">${loanQuotes({ id: d.id, broker: true, quotes: qs }, null, true)}</div>`
+    : `<div class="empty empty--sm"><b>Nothing released yet</b><p>${esc(bn)} sees a quote here once you release it.</p></div>`;
+  return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="View as ${esc(bn)}">
+    <div class="mdl mdl--qv">
+      <div class="mdl__hd">
+        <div class="mdl__ttl"><h2>View as borrower</h2><p>What ${esc(bn)} sees on their Quotes tab &middot; ${esc(d.name)}</p></div>
+        <button type="button" class="x" data-mclose aria-label="Close">${XCLOSE}</button>
+      </div>
+      <div class="mdl__bd">${body}</div>
+      <div class="mdl__ft"><button class="btn btn--outline" type="button" data-mclose>Close</button></div>
     </div>
   </div>`;
 }
@@ -21435,18 +21633,34 @@ function profFocus() {
    the name (or the property type) as the title, the rest of Tony's fields on
    the line under it. Add and Edit open one dialog; Remove takes an undo.
    Saves straight through - the closings are not part of the listing review,
-   which gates the bio and headshot, not a track record [~]. */
+   which gates the bio and headshot, not a track record [~]. Tony confirmed
+   both halves of Q214 on frame 3676:1579, 25 Oct: "Only Pro brokers. Nothing
+   is verified." [T] So Essential and Accelerator get the one card
+   accTerritory() gives them, with the nav item drawn as usual (a hidden tab
+   would be a mystery, a card is an answer); trial previews it, as it does
+   every Pro surface [~]. What a broker's saved closings do after a downgrade
+   is Q246. */
 function profClosings() {
+  if (PLAN.tier === "essential" || PLAN.tier === "accelerator") return `
+    <div class="card">
+      <div class="card__hd"><h2>Closed transactions are part of Pro</h2></div>
+      <div class="card__ct">
+        <div class="billrow"><div><b>Show borrowers your track record</b>
+          <span class="sub">Pro brokers list the transactions they have closed on their public profile,
+            under the map, where borrowers choose who to work with.</span></div>
+          <button class="btn" type="button" data-up="pro" data-upgate="Pro puts your public listing and your closed transactions in front of borrowers.">See Pro</button></div>
+      </div>
+    </div>`;
   const xs = PROFILE.closings.map((c, i) => ({ c, i })).sort((a, b) => b.c.d.localeCompare(a.c.d));
   return `
     <div class="card">
       <div class="card__ct">
         ${xs.length ? `<div class="clorows">${xs.map(({ c, i }) => `
-          <div class="billrow clorow"><div><b>${money(c.amt)}<span class="bdot" aria-hidden="true"> · </span>${esc(c.name || c.type)}</b>
-            <span class="sub">${c.name ? esc(c.type) + " · " : ""}${esc(c.exec)} · ${esc(c.city)}, ${esc(c.st)} · Closed ${closeOn(c.d)}</span></div>
+          <div class="billrow clorow"><div><b>${money(c.amt)}<span class="bdot" aria-hidden="true"> · </span>${esc(c.name || c.type)}${closeVerified(c)}</b>
+            <span class="sub">${[c.name ? esc(c.type) : "", execTxt(c.execs), esc(c.city) + ", " + esc(c.st), c.d ? "Closed " + closeOn(c.d) : ""].filter(Boolean).join(" · ")}</span></div>
             <div class="clorow__acts">
-              <button class="btn btn--ghost btn--sm btn--ico" type="button" data-cloedit="${i}" data-tip="Edit" aria-label="Edit ${esc(c.name || c.type)}, ${closeOn(c.d)}">${LNPEN}</button>
-              <button class="btn btn--ghost btn--sm btn--ico" type="button" data-clorm="${i}" data-tip="Remove" aria-label="Remove ${esc(c.name || c.type)}, ${closeOn(c.d)}">${LNTRASH}</button>
+              <button class="btn btn--ghost btn--sm btn--ico" type="button" data-cloedit="${i}" data-tip="Edit" aria-label="Edit ${esc(c.name || c.type)}${c.d ? ", " + closeOn(c.d) : ""}">${LNPEN}</button>
+              <button class="btn btn--ghost btn--sm btn--ico" type="button" data-clorm="${i}" data-tip="Remove" aria-label="Remove ${esc(c.name || c.type)}${c.d ? ", " + closeOn(c.d) : ""}">${LNTRASH}</button>
             </div></div>`).join("")}</div>`
         : `<div class="empty empty--sm"><b>No transactions yet</b><p>Add the transactions you have closed. They show on your public profile, under the map.</p></div>`}
       </div>
@@ -21455,23 +21669,42 @@ function profClosings() {
 }
 
 /* the add/edit dialog. Tony's six fields in his order; the required set is
-   his. Property type, execution and state are selects on the lists the
+   his. Property type, execution and state pick from the lists the
    profile already uses, so a closing can only name a type the directory
-   knows. The close date is a day, entered in the same native date field
+   knows. Execution type is optional and takes several since 25 Oct [T: "a
+   transaction often has more than one execution type, so the dropdown needs
+   to allow multiple choices as well as being skippable"], so it is the
+   profile's own multiselect (pffin) on the dialog's copy, with the standard
+   Select all + Clear footer [Tanya, 25 Oct]. Close date is optional too
+   since 25 Oct [T, Figma comment, repeated on the call: "Make Close date
+   optional"]. The close date is a day, entered in the same native date field
    as the loan form's Desired closing date; the profile prints it as month
    and year, which is how Tony wrote it ("Month Year") [Tanya, 19 Oct: "close
-   date is day, not just month and year"]. A date after today is refused -
-   these are closed deals. */
+   date is day, not just month and year"]. A date after today is still
+   refused when one is given - these are closed deals. */
 const isoToday = () => { const t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); };
+MSX.cloexec = {
+  key: "cloexec", title: "Execution type", ph: "Search executions…",
+  trigPh: "Select execution types", searchable: true, count: false, removable: true,
+  opts: () => FINANCING_TYPES, groups: () => FINANCING_GROUPS.map(x => ({ g: x.g, v: x.v })),
+  set: () => S.clo.f.execs
+};
+/* a closing's executions where they share a line with its other fields (the
+   broker's row, the borrower's tile): the first, then a muted +N carrying the
+   rest in its tooltip - the shipped My deals table's way (my-deals/page.tsx,
+   firstType + moreTypes). The deal summary's " · " join is for a fact that
+   has the line to itself; here it would read as more fields. None prints
+   nothing, and the callers drop the segment with its dot. */
+const execTxt = xs => xs.length < 2 ? esc(xs[0] || "")
+  : `${esc(xs[0])} <span class="xmore" tabindex="0" data-tip="${esc(xs.slice(1).join(", "))}">+${xs.length - 1}<span class="vh">: ${esc(xs.slice(1).join(", "))}</span></span>`;
 function cloModal() {
   const s = S.clo, f = s.f, tried = s.tried;
   const miss = {
     amt: tried && !f.amt, type: tried && !f.type, city: tried && !f.city.trim(), st: tried && !f.st,
-    exec: tried && !f.exec, d: tried && (!f.d || f.d > isoToday())
+    d: tried && f.d > isoToday()
   };
   const err = (k, msg) => miss[k] ? `<div class="errmsg">${msg}</div>` : "";
   const typeOpts = PROPERTY_TYPES.map(v => ({ v, label: v }));
-  const execOpts = FINANCING_TYPES.map(v => ({ v, label: v }));
   const stOpts = US_STATES.map(([a, n]) => ({ v: a, label: n }));
   return `<div class="mov" data-cloclose role="dialog" aria-modal="true" aria-label="${s.i < 0 ? "Add a transaction" : "Edit transaction"}">
     <div class="mdl mdl--ab mdl--clo">
@@ -21490,11 +21723,22 @@ function cloModal() {
             <div class="amtwrap"><span>$</span><input id="clo_amt" data-clo="amt" inputmode="numeric" autocomplete="off" value="${usdFmt(f.amt)}" placeholder="10,000,000" aria-label="Loan amount in dollars"></div>
             ${err("amt", "Enter the loan amount.")}
           </div>
-          <div class="fld ${miss.type ? "err" : ""}">
-            <label>Property type <span class="req">*</span></label>
-            <div class="fld__sel">${selCtl("clo:type", typeOpts, f.type, "Property type", "Select a property type")}</div>
-            ${err("type", "Choose a property type.")}
+          <!-- beside Loan amount since 25 Oct [Tanya: "move closed date right
+               side from Loan amount"]: once Property type and Execution type
+               took full rows, both were left alone at half width. Moves the
+               date ahead of Tony's order; the pair reads as the deal's facts. -->
+          <div class="fld ${miss.d ? "err" : ""}">
+            <label for="clo_d">Close date <span class="opt">(optional)</span></label>
+            <div class="datewrap"><input class="inp${f.d ? "" : " is-empty"}" id="clo_d" data-clo="d" type="date" max="${isoToday()}" autocomplete="off" value="${esc(f.d)}"><span class="datewrap__ph" aria-hidden="true">mm/dd/yyyy</span></div>
+            ${err("d", "The close date can't be in the future.")}
           </div>
+        </div>
+        <!-- full width since 25 Oct [Tanya]: the longest types ("Manufactured
+             housing / mobile home park") ellipsised in the half column. -->
+        <div class="fld ${miss.type ? "err" : ""}">
+          <label>Property type <span class="req">*</span></label>
+          <div class="fld__sel">${selCtl("clo:type", typeOpts, f.type, "Property type", "Select a property type")}</div>
+          ${err("type", "Choose a property type.")}
         </div>
         <div class="fldrow fldrow--2">
           <div class="fld ${miss.city ? "err" : ""}">
@@ -21508,17 +21752,11 @@ function cloModal() {
             ${err("st", "Choose a state.")}
           </div>
         </div>
-        <div class="fldrow fldrow--2">
-          <div class="fld ${miss.exec ? "err" : ""}">
-            <label>Execution type <span class="req">*</span></label>
-            <div class="fld__sel">${selCtl("clo:exec", execOpts, f.exec, "Execution type", "Select an execution")}</div>
-            ${err("exec", "Choose an execution type.")}
-          </div>
-          <div class="fld ${miss.d ? "err" : ""}">
-            <label for="clo_d">Close date <span class="req">*</span></label>
-            <div class="datewrap"><input class="inp${f.d ? "" : " is-empty"}" id="clo_d" data-clo="d" type="date" max="${isoToday()}" autocomplete="off" value="${esc(f.d)}"><span class="datewrap__ph" aria-hidden="true">mm/dd/yyyy</span></div>
-            ${err("d", f.d ? "The close date can't be in the future." : "Enter the close date.")}
-          </div>
+        <!-- full width since 25 Oct [Tanya]: at half width a second execution
+             already collapses to +1, and the field exists to hold several. -->
+        <div class="fld fld--ms">
+          <label>Execution type <span class="opt">(optional)</span></label>
+          ${msCtl(MSX.cloexec)}
         </div>
       </div>
       <div class="mdl__ft">
@@ -21686,8 +21924,8 @@ function profListing() {
               <em>${esc(profWhere())}</em></span>
           </div>
           <p class="lcard__bio${PROFILE.bio.trim() ? "" : " ph"}" id="lbio">${PROFILE.bio.trim() ? esc(PROFILE.bio) : LBIO_PH}</p>
-          ${facet(PROFILE.types, "Property specialties")}
-          ${facet(PROFILE.fins, "Execution specialties")}
+          ${facet(PROFILE.types, "Property type")}
+          ${facet(PROFILE.fins, "Execution type")}
           ${facet(PROFILE.states.map(a => STATE_NAME[a] || a), "Property location")}
         </div>
       </div>
@@ -24754,9 +24992,34 @@ const bInvTask = d => { const b = brokerById(d.inv.broker);
    which also means the borrower is never watching a bar after they have
    already said yes. `from` names where a reused file came from; that row has
    no bar, because nothing has to travel. */
-const dzFile = (name, attr, up, from) => `<div class="dzfiles"><div class="dzfile"><span>${esc(name)}${from ? `<span class="dzfile__from">${esc(from)}</span>` : ""}</span>
+const dzRow = (name, attr, up, from) => `<div class="dzfile"><span>${esc(name)}${from ? `<span class="dzfile__from">${esc(from)}</span>` : ""}</span>
   ${up ? `<span class="dzfile__st" role="status">Uploading\u2026</span><span class="dzbar" aria-hidden="true"></span>`
-    : `<button type="button" data-tip="Remove" ${attr} aria-label="Remove ${esc(name)}">${XCLOSE}</button>`}</div></div>`;
+    : `<button type="button" data-tip="Remove" ${attr} aria-label="Remove ${esc(name)}">${XCLOSE}</button>`}</div>`;
+const dzFile = (name, attr, up, from) => `<div class="dzfiles">${dzRow(name, attr, up, from)}</div>`;
+/* the quote's term sheet takes several files [25 Oct], so it stages a list
+   rather than dzStage's one name per key. Each entry carries its own busy
+   flag; a timer finds its entry by identity, so a closed form (a fresh list)
+   or a removed row turns it into a no-op. */
+const qshUp = () => S.qshFiles.some(x => x.busy);
+/* PDF or Word, up to 25 MB each [Tanya, 25 Oct: "what file types can be
+   uploaded here?" - the picker's accept filtered browse only, a drop took
+   anything, and 25 MB was never checked]. One gate for both gestures: the
+   files that pass still stage, the rest are named in the error that takes the
+   hint's place until the next pick or drop. */
+const QSH_OK = /\.(pdf|docx?)$/i, QSH_MAX = 25 * 1024 * 1024;
+function qshStage(files) {
+  if (!S.qEd) return;
+  const bad = files.filter(f => !QSH_OK.test(f.name) || f.size > QSH_MAX);
+  S.qshErr = !bad.length ? null : bad.length === 1
+    ? `${bad[0].name} wasn’t added. Use a PDF or Word file up to 25 MB.`
+    : `${bad.length} files weren’t added. Use PDF or Word files up to 25 MB each.`;
+  /* new files go on top, right under the zone, a batch in its own order
+     [Tanya, 25 Oct: "new items - on top"] */
+  const add = files.filter(f => !bad.includes(f)).map(({ name }) => ({ name, busy: true }));
+  S.qshFiles.unshift(...add);
+  add.forEach(x => setTimeout(() => { if (!S.qshFiles.includes(x)) return; x.busy = false; render(); }, 1400));
+  render();
+}
 /* ONE way in for a file, whichever gesture brought it [5 Oct]. The pick, the
    drop and Use were three handlers, and they drifted: when the send became two
    steps the pick learned to stage a name, the drop kept the old instant write
@@ -25193,7 +25456,8 @@ BFILTERS.forEach(f => {
    names WHOSE location it is. Order is his: Property type, Property location,
    Advisor location, Execution type. The card and profile keep the heading
    "Operates in" - a heading names what the broker offers, a filter names the
-   deal, as Property specialties / Property type already split. The CARD's
+   deal, as Property specialties / Property type split until 25 Oct, when
+   Tony asked for one word per field (see renderBroker). The CARD's
    row followed the filter to "Property location" the same day [Tanya, 15
    Oct], so a borrower who filtered by Texas finds it under the same word;
    the listing preview draws that card and changed with it. The profile's
@@ -25214,7 +25478,8 @@ const BROKFILTERS = [
     pass:(b, set) => set.has(STATE_NAME[b.state] || b.state) },
   /* Tony's "Execution specialties" [T · 12 Oct], titled as the broker's own
      field and the deals bar's filter are - beside "Property type" the pair
-     reads as one grammar. The heading on the card and profile is his word. */
+     reads as one grammar. Since 25 Oct the card and profile heading says
+     "Execution type" too [T: "keep it consistent"]. */
   { key:"bkfin",  title:"Execution type", set:() => S.bkFin, of:b => b.fins,
     opts:() => [...new Set(BROKERS.flatMap(x => x.fins))].sort(), searchable:true,
     hit:(b, v) => b.fins.includes(v),
@@ -25967,7 +26232,7 @@ function renderLoanNew() {
             question is optional by construction - the step 4 Sponsor rule. */""}
       ${d.parcels === "Yes" ? radios("contig", "Are the parcels contiguous?", ["Yes", "No", "Don't know"], "", 1) : ""}
       ${d.parcels === "Yes" || d.parcels === "Unknown" ? `<div class="fld"><label for="lf_parcelNote">Notes on the parcels</label>
-        <textarea class="inp" id="lf_parcelNote" data-lf="parcelNote" rows="2" placeholder="How many, how they are split, anything a lender should know">${esc(d.parcelNote)}</textarea></div>` : ""}
+        <textarea class="inp" id="lf_parcelNote" data-lf="parcelNote" rows="2" placeholder="How many, how they are split, anything your advisor should know">${esc(d.parcelNote)}</textarea></div>` : ""}
     </div></div>`;
   if (step === 2) {
     const refi = d.purpose === "Refinance";
@@ -26308,6 +26573,8 @@ function renderLoanNew() {
   }
   if (step !== 5) body += `<input type="file" id="lf_file" hidden>`;
 
+  /* the advisor who accepted the request; the side panel switches on it */
+  const adv = editing && deal ? bBroker(deal) : null;
   const back = step > 1 ? `<a class="btn btn--outline" href="${editing ? `#/loan/${deal.id}/edit/${BW_STEPS[step - 2][0]}` : `#/loans/new/${BW_STEPS[step - 2][0]}`}">Back</a>` : `<a class="btn btn--outline" href="${editing ? `#/loan/${deal.id}` : "#/loans"}">Cancel</a>`;
   const foot = editing
     ? `${back}<span style="flex:1"></span>${step < 5 ? `<a class="btn btn--outline" href="#/loan/${deal.id}/edit/${BW_STEPS[step][0]}">Next</a>` : ""}<button class="btn" type="button" data-lsave>Save changes</button>`
@@ -26339,6 +26606,19 @@ function renderLoanNew() {
     <div class="frm">
       <div>${body}<div class="frmfoot">${foot}</div></div>
       <aside>
+        ${adv ? `<!-- After you save, 25 Oct [Tanya: "yes, draw"]. Once an advisor has
+             accepted, the four steps below have already happened, so the panel
+             says what a save does instead. Tony, 15 Oct: the broker works on a
+             copy made at accept (1), the borrower can still edit their own
+             request and the broker is alerted (3), and lenders see only what
+             the broker sends (5) [T]. The wording is ours [💡 rec]. -->
+        <div class="card"><div class="card__hd"><h2>After you save</h2></div><div class="card__ct">
+          <ol class="bnext">
+            <li><b>${esc(bName(adv))} gets an alert.</b> Every change you save goes to them to review.</li>
+            <li><b>Their version stays as it is</b> until they take your change. They work on a copy of your request.</li>
+            <li><b>Lenders see only what ${esc(adv.first)} sends,</b> never this form.</li>
+          </ol>
+        </div></div>` : `
         <div class="card"><div class="card__hd"><h2>After you submit</h2></div><div class="card__ct">
           <!-- Step one said "Requests go to a Pro broker who works..." until 12 Oct,
                Tony's Figma comment on the panel: ".... go to one of our advisors who
@@ -26359,7 +26639,7 @@ function renderLoanNew() {
                30 Sep [Tanya]. The borrower has already been told it at sign-up and
                on the landing page; by step one of the request it answers nothing
                the card is about, which is what happens after submit. -->
-        </div></div>
+        </div></div>`}
       </aside>
     </div>`;
 }
@@ -26591,7 +26871,7 @@ function renderBInvite(d) {
               asked you to join it" until 12 Oct.
               TRIMMED 12 Oct [Tanya: "too long to read"]: six sentences ran to
               three lines of 150 characters. The title is Tony's sentence alone;
-              "opens the N documents they need" went, since What they will need
+              "opens the N documents they need" went, since What they need
               lists them two inches below. The description keeps the three
               facts a decision turns on - what accepting shares, that documents
               stay hers, what declining shares - plus the expiry. Full width,
@@ -26620,9 +26900,11 @@ function renderBInvite(d) {
                 means the broker has asked and is waiting on the borrower, and
                 nothing is waiting on her until she accepts. No upload kebab
                 either, for the same reason: there is nowhere to put a file on
-                a request she is not on. */""}
+                a request she is not on.
+                "What they need", not "What they will need": "remove the word
+                'will'" [T, Figma comment on 284:5286, about 16 Oct]. */""}
           ${need.length ? `<div class="card">
-            <div class="card__hd"><h2>What they will need</h2></div>
+            <div class="card__hd"><h2>What they need</h2></div>
             <div class="card__ct doclist">${need.map(x => `<div class="docrow docrow--none">
               <span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(bItemName(x))}</span>
               <span class="docrow__note">${esc(x.note || "Requested by your advisor")}${x.due ? ` · due ${esc(x.due)}` : ""}</span>
@@ -27786,17 +28068,17 @@ const BQ_SORTS = [{ v: "rate", label: "Lowest rate" }, { v: "amount", label: "Hi
   { v: "io", label: "Longest interest-only" }, { v: "amort", label: "Longest amortization" },
   { v: "ltv", label: "Highest LTV" }];
 /* "3 years" is 3, "18 months" 1.5, "None" 0. A loan with no amortization
-   ("Interest-only") sorts last on amortization, and full-term IO already
-   carries its length in io. A quote with no LTV sorts last on Highest LTV.
+   ("Interest-only") sorts last on amortization. Full-term IO (io "Full
+   term", since 25 Oct) is as long as the loan's term. A quote with no LTV sorts last on Highest LTV.
    Ties fall back to the lower rate. */
 const bqYrs = s => { const m = /([\d.]+)\s*(year|month)/i.exec(s || ""); return m ? parseFloat(m[1]) / (/month/i.test(m[2]) ? 12 : 1) : 0; };
-function loanQuotes(d, b) {
+function loanQuotes(d, b, ro) {
   const qs = bQuotes(d);
-  if (!b) return `<div class="card"><div class="card__ct"><div class="empty"><b>No quotes yet</b><p>Quotes come through an advisor, and none has this deal yet.</p>
+  if (!b && !ro) return `<div class="card"><div class="card__ct"><div class="empty"><b>No quotes yet</b><p>Quotes come through an advisor, and none has this deal yet.</p>
     ${bLive(d) ? `<div class="acts"><a class="btn" href="#/brokers">Choose an advisor</a></div>` : ""}</div></div></div>`;
   if (!qs.length) return `<div class="card"><div class="card__ct"><div class="empty"><b>Your advisor hasn’t released any quotes yet</b><p>They appear here as ${esc(bName(b))} releases them, side by side.</p></div></div></div>`;
   const rate = q => parseFloat(q.rate) || 99;
-  const bqKey = { amount: q => -q.amt, io: q => -bqYrs(q.io), amort: q => -bqYrs(q.amort), ltv: q => -(+q.ltv || 0) }[S.bqsort];
+  const bqKey = { amount: q => -q.amt, io: q => -bqYrs(q.io === "Full term" ? q.term : q.io), amort: q => -bqYrs(q.amort), ltv: q => -(+q.ltv || 0) }[ro ? "rate" : S.bqsort];
   const sorted = qs.slice().sort((x, y) => (bqKey ? bqKey(x) - bqKey(y) : 0) || rate(x) - rate(y));
   const chosen = qs.some(q => q.st === "selected");
   /* ONE TONE, AND ONLY THE CHOSEN COLUMN HAS ONE. This read `q.st ===
@@ -27847,7 +28129,9 @@ function loanQuotes(d, b) {
      So this row is back to what it was: Select while a choice is open, gone for
      everyone once one is made, and the two remaining controls in the same two
      positions on every column. */
-  const acts = q => `<div class="qcol__acts">
+  /* ro is the broker's View as borrower: the same table, without the
+     borrower's three actions, since none of them is the broker's to take */
+  const acts = q => ro ? "" : `<div class="qcol__acts">
         ${q.st !== "selected" && !chosen && bLive(d) ? `<button class="btn btn--sm" type="button" data-bsel="${q.id}">Select</button>` : ""}
         <a class="btn btn--outline btn--sm" href="#/loan/${d.id}/quotes/${q.id}">View details</a>
         ${bLive(d) ? `<button class="btn btn--ghost btn--sm" type="button" data-bask="${q.id}">Ask your advisor</button>` : ""}</div>`;
@@ -27911,8 +28195,13 @@ function loanQuotes(d, b) {
   const col = q => `<th class="qcol${tone(q)}" scope="col">${chosen ? `<div class="qcol__tab${q.st === "selected" ? " qcol__tab--on" : ""}">${q.st === "selected" ? `${BIC.check}Selected` : ""}</div>` : ""}<div class="qcol__hd"><b title="${esc(bLender(q))}">${esc(bLender(q))}</b><div class="qcol__badges">${q.rank ? `<span class="badge ${q.rank === 1 ? "tone-gold" : "badge--outline"}">#${q.rank} from your advisor</span>` : ""}${q.st === "selected" ? "" : bQBadge(q)}</div></div>
     <div class="qcol__key"><span class="qcol__rate num">${esc(q.rate)}</span><span class="qcol__amt num">${money(q.amt)}</span></div>
     <span class="qcol__sub">${bQMetaCol(q)}</span>${acts(q)}</th>`;
+  /* the trailing filler column keeps the borrower's 320 columns from
+     stretching on a wide page; the broker's View as borrower drops it
+     [Tanya, 26 Oct: "can we remove this gap?"] and the columns share the
+     dialog instead (.mdl--qv .qcmp) */
+  const fillTd = ro ? "" : `<td class="qfill"></td>`;
   const row = k => { const [lbl, f] = BQ_ROWS.find(r => r[0] === k), w = k === "Key conditions" ? " qwrap" : "";
-    return `<tr><th class="qk${w}" scope="row">${lbl}</th>${sorted.map(q => `<td class="${w.trim()}${tone(q)}">${esc(String(f(q)))}</td>`).join("")}<td class="qfill"></td></tr>`; };
+    return `<tr><th class="qk${w}" scope="row">${lbl}</th>${sorted.map(q => `<td class="${w.trim()}${tone(q)}">${esc(String(f(q)))}</td>`).join("")}${fillTd}</tr>`; };
   /* the band is real cells, not one colspan [Tanya, 5 Oct: run the dividers
      through the group headers]. A colspan cell has no column boundary inside
      it, so while this was `colspan="${n + 2}"` every vertical rule stopped dead
@@ -27923,9 +28212,14 @@ function loanQuotes(d, b) {
      three. scope goes from colgroup to rowgroup with the colspan - "Terms" was
      never a header for the columns, it heads the rows beneath it, and the old
      value only looked right because a full-width cell made the claim moot. */
-  const grp = ([g, keys]) => `<tr class="qgrp"><th scope="rowgroup">${g}</th>${sorted.map(q => `<td class="${tone(q).trim()}"></td>`).join("")}<td class="qfill"></td></tr>${keys.map(row).join("")}`;
-  return `<div class="card"><div class="card__ct">
-    <div class="qbar"><span class="stat">${selCtl("bqsort:0", BQ_SORTS, S.bqsort, "Sort by", null, true)}</span>
+  const grp = ([g, keys]) => `<tr class="qgrp"><th scope="rowgroup">${g}</th>${sorted.map(q => `<td class="${tone(q).trim()}"></td>`).join("")}${fillTd}</tr>${keys.map(row).join("")}`;
+  const wrap = h => ro ? h : `<div class="card"><div class="card__ct">${h}</div></div>`;
+  /* View as borrower has no Sort by [Tanya, 26 Oct: "do we need this control
+     for preview?"]: the sort is the borrower's own, the broker cannot set it,
+     and S.bqsort is the borrower role's setting, so the view always shows
+     Lowest rate, the order the borrower opens on. */
+  return wrap(`
+    ${ro ? "" : `<div class="qbar"><span class="stat">${selCtl("bqsort:0", BQ_SORTS, S.bqsort, "Sort by", null, true)}</span>
       ${/* a .bhint stood beside the sort, reading "N quotes released by <broker>.
             Lender names show where your broker chose to share them; contacts are
             never shared." [Tanya, 4 Oct: remove]. Every clause it carried is
@@ -27934,10 +28228,9 @@ function loanQuotes(d, b) {
             column by bQMetaCol - "Lender name not shared" sits under the quote it
             applies to, which is where a reader meets the question. The contacts
             half was the only line with no second home, and it answers something
-            nobody asked on a screen about rates. */""}</div>
-    <div class="tblwrap"><table class="t qcmp"><thead><tr><th class="qk"></th>${sorted.map(col).join("")}<th class="qfill"></th></tr></thead>
-      <tbody>${BQ_GROUPS.map(grp).join("")}</tbody></table></div>
-  </div></div>`;
+            nobody asked on a screen about rates. */""}</div>`}
+    <div class="tblwrap"><table class="t qcmp"${ro ? ` style="min-width:${150 + sorted.length * 240}px"` : ""}><thead><tr><th class="qk"></th>${sorted.map(col).join("")}${ro ? "" : `<th class="qfill"></th>`}</tr></thead>
+      <tbody>${BQ_GROUPS.map(grp).join("")}</tbody></table></div>`);
 }
 
 /* 03.4 Quote detail [sheet]: one quote in full, the term sheet if released,
@@ -27986,8 +28279,10 @@ function loanQuote(d, b) {
         <div class="card__ct">
           <div class="facts">${BQ_ROWS.filter(([k]) => k !== "Key conditions").map(([k, f]) => `<div class="fact"><div class="k">${k}</div><div class="v">${esc(String(f(q)))}</div></div>`).join("")}</div>
           <div class="bsec" style="margin-top:16px">Key conditions</div><p style="margin:0; line-height:1.55">${esc(q.cond)}</p>
-          ${q.sheet ? `<div class="doclist" style="margin-top:14px"><div class="docrow"><span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(q.sheet)}</span><span class="docrow__note">Term sheet · released ${esc(q.on)}</span>
-            <div class="docrow__acts"><button class="rowkebab" type="button" data-tip="Download" aria-label="Download ${esc(q.sheet)}" data-inert="Download is not wired in the prototype.">${DLIC}</button></div></div></div>` : ""}
+          ${/* one row per file since 25 Oct: a term sheet can come with
+                exhibits (A, B), and each downloads on its own [~] */""}
+          ${q.sheets.length ? `<div class="doclist" style="margin-top:14px">${q.sheets.map(nm => `<div class="docrow"><span class="docrow__ic">${DOCIC}</span><span class="docrow__nm">${esc(nm)}</span><span class="docrow__note">Term sheet · released ${esc(q.on)}</span>
+            <div class="docrow__acts"><button class="rowkebab" type="button" data-tip="Download" aria-label="Download ${esc(nm)}" data-inert="Download is not wired in the prototype.">${DLIC}</button></div></div>`).join("")}</div>` : ""}
         </div>
       </div>
       ${/* NOT in .card__ft [Tanya, 1 Oct] - the third screen to make this move
@@ -29173,8 +29468,8 @@ function renderBrokers() {
         b.verified ? `<span class="vtick" role="img" aria-label="Verified" title="Verified by LenderPrism">${VTICK}</span>` : ""}</b><span>${
         esc(b.city)}, ${esc(b.state)}</span></div></div>
       <p class="bcard__about">${esc(b.about)}</p>
-      ${pills(b.types, "Property specialties")}
-      ${pills(b.fins, "Execution specialties")}
+      ${pills(b.types, "Property type")}
+      ${pills(b.fins, "Execution type")}
       ${pills(b.geos.map(x => STATE_NAME[x] || x), "Property location")}
       <span class="bcard__go">View profile <span aria-hidden="true">&rarr;</span></span>
     </a>`;
@@ -29269,6 +29564,13 @@ function usMap(on) {
    "Property type", as Execution specialties keeps "Execution type": a
    control names the field, a heading names what the broker offers.
 
+   Back to "Property type" and "Execution type" on 25 Oct, on the profile,
+   the directory card and the listing preview: Tanya asked on 16:1056 whether
+   the headings should match the filters, the advisor's Areas of focus and
+   the rest of the app, and Tony answered "Please keep it consistent and go
+   with 'Property type' and 'Execution type.'" [T]. One word per field now,
+   heading and filter alike; the heading/filter split above is retired.
+
    Relaid again 12 Oct (Tanya: "find better layout for this page", then "go"
    on the deck's recommendation, options 1 + 3) [💡 rec]. The Details rail
    only counted chips already on the page, so it went: member since and
@@ -29340,8 +29642,8 @@ function renderBroker(b) {
           <div class="card__ct babout babout--solo"><p>${esc(b.about)}</p></div>
         </div>
         <div class="blists">
-          <div class="card"><div class="card__hd"><h2>Property specialties</h2></div><div class="card__ct blist">${chk(b.types)}</div></div>
-          <div class="card"><div class="card__hd"><h2>Execution specialties</h2></div><div class="card__ct blist">${chk(b.fins)}</div></div>
+          <div class="card"><div class="card__hd"><h2>Property type</h2></div><div class="card__ct blist">${chk(b.types)}</div></div>
+          <div class="card"><div class="card__hd"><h2>Execution type</h2></div><div class="card__ct blist">${chk(b.fins)}</div></div>
         </div>
       </div>
       <div class="card">
@@ -29361,10 +29663,10 @@ function bClosingsCard(xs) {
   if (!xs.length) return "";
   const all = closingsSorted(xs), shown = S.bcloseAll ? all : all.slice(0, 6);
   const tile = c => `<div class="bclose__t">
-      <span class="bclose__amt">${money(c.amt)}</span>
+      <div class="bclose__top"><span class="bclose__amt">${money(c.amt)}</span>${closeVerified(c)}</div>
       <span class="bclose__nm" title="${esc(c.name || c.type)}">${esc(c.name || c.type)}</span>
-      <span class="bclose__sub">${c.name ? esc(c.type) + " · " : ""}${esc(c.exec)}</span>
-      <div class="bclose__meta"><span>${IPIN}${esc(c.city)}, ${esc(c.st)}</span><span>${ICAL}Closed ${closeOn(c.d)}</span></div>
+      ${(sub => sub ? `<span class="bclose__sub">${sub}</span>` : "")([c.name ? esc(c.type) : "", execTxt(c.execs)].filter(Boolean).join(" · "))}
+      <div class="bclose__meta"><span>${IPIN}${esc(c.city)}, ${esc(c.st)}</span>${c.d ? `<span>${ICAL}Closed ${closeOn(c.d)}</span>` : ""}</div>
     </div>`;
   return `<div class="card bclose-card">
       <div class="card__hd"><h2>Successfully closed transactions</h2></div>
@@ -30610,7 +30912,7 @@ function render() {
        bodies in one dialog - so it is not on the abOpen fresh-flag path. */
     : S.borAdd ? borAddModal()
     /* the quote form and its release preview: deal editing, same layer */
-    : S.qRel ? qRelModal() : S.qTh ? qThreadModal() : S.qEd ? quoteModal()
+    : S.qRel ? qRelModal() : S.qView ? qViewModal() : S.qTh ? qThreadModal() : S.qEd ? quoteModal()
     : S.addBk ? (abOpen = true, addBkModal()) : "";
   if (mv) {
     view.insertAdjacentHTML("beforeend", mv);
@@ -31843,18 +32145,19 @@ document.addEventListener("click", e => {
       Object.assign(f, { lender: q.lender != null ? String(q.lender) : "other", co: q.co || "", src: q.src || "", showCo: !!q.showCo,
         amt: q.amt ? Math.round(q.amt * 1e6).toLocaleString("en-US") : "", rate: q.rate || "", cond: q.cond || "" });
     }
-    /* the term sheet rides dzStage's "qsh" keys, the upload flows' own
-       staging; fresh lets render() focus the form once, on open */
-    S.qshFile = q ? q.sheet || null : null; S.qshBusy = false; S.qshFrom = null;
+    /* the term sheet files stage through qshStage, a list since 25 Oct;
+       fresh lets render() focus the form once, on open */
+    S.qshFiles = (q && q.sheets || []).map(name => ({ name, busy: false })); S.qshErr = null;
     S.qEd = { id: d.id, qid: q ? q.id : null, f, tried: false, fresh: true };
     render(); return;
   }
-  if (t.closest("[data-qsheetrm]")) { S.qshFile = null; S.qshBusy = false; render(); return; }
+  const qshRm = t.closest("[data-qsheetrm]");
+  if (qshRm) { S.qshFiles.splice(Number(qshRm.dataset.qsheetrm), 1); render(); return; }
   const qSave = t.closest("[data-qsave]");
   if (qSave && S.qEd) {
     const s = S.qEd, d = dealById(s.id), f = s.f, mode = qSave.dataset.qsave;
     const digits = f.amt.replace(/[^0-9]/g, "");
-    if (S.qshBusy) return;
+    if (qshUp()) return;
     if (d) qLqResolve(d, f);
     if (!d || !f.lender || !digits || !f.rate.trim()) { s.tried = true; render(); return; }
     d.quotes = d.quotes || [];
@@ -31862,7 +32165,7 @@ document.addEventListener("click", e => {
     if (!q) { q = { id: "q" + Date.now(), via: "you", pub: false, st: "new", rank: 0, on: "", thread: [] }; d.quotes.push(q); }
     QF_TERMS.forEach(([k]) => { q[k] = k === "ltv" || k === "dy" ? (parseFloat(f[k]) || "") : f[k].trim(); });
     Object.assign(q, { lender: f.lender === "other" ? null : Number(f.lender), co: f.lender === "other" ? f.co.trim() : "", src: f.lender === "other" ? f.src : "",
-      showCo: d.qHideCo ? false : !!f.showCo, amt: Number(digits) / 1e6, rate: f.rate.trim(), cond: f.cond.trim(), sheet: S.qshFile });
+      showCo: d.qHideCo ? false : !!f.showCo, amt: Number(digits) / 1e6, rate: f.rate.trim(), cond: f.cond.trim(), sheets: S.qshFiles.map(x => x.name) });
     /* a selected quote stays selected: the borrower's choice outranks the
        Updated badge, as brQState and bQBadge both order it */
     if (mode === "upd") { if (q.st !== "selected") q.st = "updated"; q.upd = "Today"; S.undo = { msg: `Saved. ${brBorName(d)} sees the ${brQCo(q)} quote marked Updated.` }; }
@@ -31886,6 +32189,8 @@ document.addEventListener("click", e => {
     S.undo = { msg: `Sent. ${brBorName(d)} sees it on the quote.` };
     render(); return;
   }
+  const qView = t.closest("[data-qview]");
+  if (qView) { S.cardMenu = null; S.qView = qView.dataset.qview; render(); return; }
   const qRel = t.closest("[data-qrel]");
   if (qRel) {
     const [di, ids] = qRel.dataset.qrel.split(":");
@@ -32694,14 +32999,14 @@ document.addEventListener("click", e => {
      itself (t === it) closes from there - the Add banker rule. */
   if (t.closest("[data-bcloseall]")) { S.bcloseAll = !S.bcloseAll; render(); return; }
   if (t.closest("[data-cloadd]")) {
-    S.clo = { i: -1, tried: false, fresh: true, f: { name: "", amt: "", type: "", city: "", st: "", exec: "", d: "" } };
+    S.clo = { i: -1, tried: false, fresh: true, f: { name: "", amt: "", type: "", city: "", st: "", execs: new Set(), d: "" } };
     render(); return;
   }
   const ce = t.closest("[data-cloedit]");
   if (ce) {
     const i = Number(ce.dataset.cloedit), c = PROFILE.closings[i];
     if (c) S.clo = { i, tried: false, fresh: true, f: { name: c.name, amt: String(Math.round(c.amt * 1e6)), type: c.type,
-      city: c.city, st: c.st, exec: c.exec, d: c.d } };
+      city: c.city, st: c.st, execs: new Set(c.execs), d: c.d } };
     render(); return;
   }
   const cr = t.closest("[data-clorm]");
@@ -32709,20 +33014,23 @@ document.addEventListener("click", e => {
     const i = Number(cr.dataset.clorm), c = PROFILE.closings[i];
     if (c) {
       PROFILE.closings.splice(i, 1);
-      S.undo = { msg: `${c.name || c.type}, ${closeOn(c.d)} removed from your profile.`, fn: () => { PROFILE.closings.splice(i, 0, c); } };
+      S.undo = { msg: `${c.name || c.type}${c.d ? ", " + closeOn(c.d) : ""} removed from your profile.`, fn: () => { PROFILE.closings.splice(i, 0, c); } };
     }
     render(); return;
   }
   const cc = t.closest("[data-cloclose]");
-  if (cc && (cc.classList.contains("mov") ? t === cc : true)) { S.clo = null; render(); return; }
+  /* the Execution type list is the shared S.open, so it shuts with the dialog
+     or the next dialog would open with the list already down */
+  if (cc && (cc.classList.contains("mov") ? t === cc : true)) { S.clo = null; S.open = null; S.oq = ""; render(); return; }
   if (t.closest("#cloSave")) {
     const s = S.clo; if (!s) return;
     const f = s.f;
-    if (!f.amt || !f.type || !f.city.trim() || !f.st || !f.exec || !f.d || f.d > isoToday()) { s.tried = true; render(); return; }
-    const rec = { name: f.name.trim(), amt: Number(f.amt) / 1e6, type: f.type, exec: f.exec, city: f.city.trim(), st: f.st, d: f.d };
+    if (!f.amt || !f.type || !f.city.trim() || !f.st || f.d > isoToday()) { s.tried = true; render(); return; }
+    /* in the order picked, so the one the broker chose first is the one a row shows */
+    const rec = { name: f.name.trim(), amt: Number(f.amt) / 1e6, type: f.type, execs: [...f.execs], city: f.city.trim(), st: f.st, d: f.d };
     if (s.i < 0) PROFILE.closings.push(rec); else PROFILE.closings[s.i] = rec;
     S.undo = { msg: `${rec.name || rec.type} ${s.i < 0 ? "added to" : "updated on"} your public profile.` };
-    S.clo = null; render(); return;
+    S.clo = null; S.open = null; S.oq = ""; render(); return;
   }
   /* 04.3 Send, 28 Sep: confirmation, the message in the deal's thread, and a
      deal with no broker sent to this one */
@@ -32805,7 +33113,12 @@ document.addEventListener("click", e => {
   if (t.closest("[data-lsave]")) {
     S.ltried = true; if (lMissing(ldraft()).length) { render(); return; }
     const id = lCommit(ldraft(), "save"); S.ldraft = null; S.ltried = false;
-    S.undo = { msg: "Your changes are saved. Your advisor sees them on the deal." };
+    /* names the advisor once one has accepted: the save reaches them as an
+       alert, not as a change to their copy [T, answer 3, 15 Oct]. Parked in
+       S.undoNext because the save navigates, and route() clears S.undo: this
+       toast set S.undo until 25 Oct and never showed. */
+    const adv = bBroker(loanById(id) || {});
+    S.undoNext = { msg: adv ? `Your changes are saved. ${bName(adv)} gets an alert to review them.` : "Your changes are saved. Your advisor sees them on the deal." };
     location.hash = "#/loan/" + id; return;
   }
   if (t.closest("[data-ldraft]")) {
@@ -33356,6 +33669,13 @@ document.addEventListener("click", e => {
      should find each as they left it. */
   const lsrt = t.closest("[data-lsort]");
   if (lsrt) { S.lSort = lsrt.dataset.lsort; render(); return; }
+  const qsrt = t.closest("[data-qsort]");
+  if (qsrt) {
+    const v = qsrt.dataset.qsort;
+    /* a second click on the live column reverses it; Rank has no reverse */
+    if (S.qsort !== v || QBR_REV[v]) { const tops = qbrTops(); S.qrev = S.qsort === v && !S.qrev; S.qsort = v; render(); qbrSettle(tops, v); }
+    return;
+  }
 
   const find = t.closest("[data-find]");
   if (find) { S.cardMenu = null; S.cardSub = false; S.tab = "matches"; S.sumTab = "ov"; S.scrollLenders = true; location.hash = "/deal/" + find.dataset.find + "/matches"; return; }
@@ -33951,7 +34271,7 @@ document.addEventListener("click", e => {
        one also discards typing, and a dialog whose scrim and x do not close
        it is the one kind a broker cannot get out of. */
     S.borAdd = null;
-    S.qEd = null; S.qRel = null; S.qTh = null;
+    S.qEd = null; S.qRel = null; S.qTh = null; S.qView = null;
     S.compose = null; S.dealPick = null; S.dirPick = null; S.dirPickFind = false;
     S.up = null; S.gate8 = false; S.res0 = null; S.funded = null; S.fundedOffer = false; S.memoOk = null;
     /* a scrim click on the cancel dialog means keep the plan, the same as the x
@@ -34440,8 +34760,8 @@ document.addEventListener("input", e => {
     t.value = ""; render(); return;
   }
   if (t.matches("[data-qffile]")) {
-    const f = t.files && t.files[0];
-    t.value = ""; if (f) dzStage("qsh", f.name); else render(); return;
+    const files = [...(t.files || [])];
+    t.value = ""; if (files.length) qshStage(files); else render(); return;
   }
   if (t.matches("[data-bupfile]")) {
     /* a pick landing mid-upload is ignored (dzStage returns while busy): the
@@ -34914,9 +35234,10 @@ document.addEventListener("dragleave", e => { const z = bDz(e); if (z) z.classLi
 document.addEventListener("drop", e => {
   const z = bDz(e); if (!z) return;
   e.preventDefault(); z.classList.remove("over");
+  /* the quote's zone takes every dropped file [25 Oct]; the others take one */
+  if (z.id === "qf_dz") { qshStage([...(e.dataTransfer.files || [])]); return; }
   const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (!f) return;
   if (z.id === "cos_dz") { if (S.cosUp) dzStage("cos", f.name); return; }
-  if (z.id === "qf_dz") { if (S.qEd) dzStage("qsh", f.name); return; }
   dzStage("bup", f.name);
 });
 
@@ -35050,7 +35371,8 @@ document.addEventListener("keydown", e => {
      drawer beneath it: one Escape cancels the form, a second closes the
      drawer that raised it. */
   if (e.key === "Escape" && S.addBk) { S.addBk = null; render(); return; }
-  if (e.key === "Escape" && S.clo && !S.selOpen) { S.clo = null; render(); return; }
+  /* an open Execution type list takes Escape first (the S.open branch below) */
+  if (e.key === "Escape" && S.clo && !S.selOpen && !S.open) { S.clo = null; render(); return; }
   if (S.lb != null) {
     if (e.key === "Escape") { S.lb = null; render(); return; }
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
