@@ -318,9 +318,18 @@
   .udot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-congress-blue); flex: none; }
   /* a read row keeps the dot's slot, so every name starts on one edge */
   .udot--off { visibility: hidden; }
+  /* the dot explains itself on hover [Tanya, 22 Oct: "add tooltip for this
+     dot"]: 8px is too small to find with a pointer, so the hover target
+     reaches 6px past it without moving anything. The list's dot sits in the
+     flow and needs the positioning; Home's is already absolute. */
+  .udot[data-tip]::before { content: ""; position: absolute; inset: -6px; }
+  /* 8 from dot to name [Tanya, 22 Oct: "change gap to 8"], on Home and
+     here alike; a margin, not the flex gap, so the Selected badge keeps
+     its 6 from the name */
+  .t--lreqs .lrnm .udot { position: relative; margin-right: 2px; }
   /* ...and the place line under it starts on the name's edge, not the dot's:
-     8px dot + 6px gap */
-  .t--lreqs .nm-cell > .bsub { padding-left: 14px; }
+     8px dot + 8px gap */
+  .t--lreqs .nm-cell > .bsub { padding-left: 16px; }
   /* the bookmark cell is first, and the shared first-column floor (230px,
      .tblwrap .t th:first-child, further down) belongs to the name. One more
      class than that rule, because this block sits above it. */
@@ -361,6 +370,60 @@
   .lrsel-chip .ct { color: var(--foreground); }
   .lrsel-chip.on .ct { color: inherit; }
   .lrselbar { margin-bottom: 12px; border-radius: var(--radius-md); }
+  /* lender Home, 20 Oct, redrawn 22 Oct [01.4, 01.3]. No count beside the
+     title since 22 Oct: it read 8 over the five rows Home shows [Tanya,
+     22 Oct: "remove count"]. The list's Needs decision tab carries it. */
+  /* Needs your decision as list rows, not a table, 22 Oct. The 20 Oct table
+     put a header row and four columns into a 608px column at 1100: names
+     and place lines both wrapped, and rows ran 85-101px tall. A row here is
+     the pending-request row of the sweep (7shifts, Teams, Lovable,
+     Braintrust): who and what on the left, the decision on the right, no
+     column header. Amount over the received date sits right of the text,
+     as a mail list prints its date. The place line truncates, since the
+     request page holds it in full; the name wraps instead, because at 1100
+     three of the five names truncated and the name is what tells two
+     Austin refinances apart [lender home research] [~]. */
+  /* the row box is the Interested card's .feed beside it: inset rules
+     between rows, none under the title, the hover wash bleeding 10px */
+  .lhq__r { display: flex; align-items: center; gap: 16px; padding: 12px 10px; margin: 0 -10px; border-radius: var(--radius-md); cursor: pointer; }
+  .lhq__r + .lhq__r { border-top: 1px solid var(--brand-border-100); border-radius: 0; }
+  .lhq__r:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
+  .lhq__tx { flex: 1 1 auto; min-width: 0; }
+  /* the badge flows inline after the name, so a name that wraps at 1100
+     keeps it beside its last word; the dot hangs in the 16px indent
+     (its 8 and an 8 gap [Tanya, 22 Oct: "change gap to 8"]) that the place
+     line shares */
+  .lhq__nm { display: block; position: relative; padding-left: 16px; }
+  .lhq__nm .udot { position: absolute; left: 0; top: 6px; }
+  .lhq__nm b { font-size: 14px; line-height: 20px; font-weight: 600; }
+  .lhq__nm b a { color: inherit; text-decoration: none; }
+  .lhq__r:hover .lhq__nm b a { text-decoration: underline; }
+  .lhq__nm .badge { margin-left: 6px; vertical-align: 1px; }
+  .lhq__sub { display: block; padding-left: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  .lhq__amt { flex: none; text-align: right; }
+  .lhq__amt b { display: block; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+  .lhq__amt span { display: block; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  /* the decisions show at rest, as on 20 Oct: five rows of buttons is not
+     the clutter ten to fifty would be, and the list's hover overlay would
+     cover the amount and date [~] */
+  .lhq__r .lracts__in { position: static; transform: none; flex: none; padding-left: 0; background: none; opacity: 1; pointer-events: auto; }
+  /* Interested and Matching side by side under the full-width decisions,
+     22 Oct [Tanya: "put these 2 sections to the bottom"]; one column at 900,
+     where .home__grid also stacks */
+  .lhome__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+  @media (max-width: 900px) { .lhome__pair { grid-template-columns: minmax(0, 1fr); } }
+  /* Matching as label and value, 22 Oct. The sheet's "one line" wrapped to
+     two in the main column; labels read better than a dotted run at half
+     width [~]. The rows are the deal Details tab's kv rows, Broker Figma
+     297:4629 [Tanya, 22 Oct: "reuse items ui from here"]: Matching joins
+     the .fin .fkv rule itself (150 label track, 8 / 12 gaps, 14/20, both
+     at 400). Change takes the value's size. */
+  .lmatch .fkv .btn--link { font-size: inherit; line-height: inherit; }
+  /* Counter beside the title, the CTA alone on the right [Tanya, 22 Oct,
+     Prism Pattern/Home card: Lead = Title + Counter, gap 12, baseline;
+     "you can cta there and hide by default"]. */
+  .lsetup__l { display: flex; align-items: baseline; gap: 12px; }
   .tblwrap .t.t--lreqs td.nm-cell { min-width: 230px; }
   .lpgn { display: flex; align-items: center; justify-content: flex-end; gap: 24px; padding-top: 12px;
     font-size: 14px; color: var(--muted-foreground); }
@@ -1320,10 +1383,18 @@
   .qprev__terms { margin: 4px 0 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
   .qbr__bar { display: flex; align-items: center; gap: 16px; }
   .qbr__acts { display: flex; align-items: center; gap: 8px; margin-left: auto; flex: none; }
+  /* Add quote leads with a plus [Tanya, 22 Oct: "add + to 'add qoute' button"];
+     Prism Button sm with a leading icon pads 10, button.tsx's has-[>svg]:px-2.5 */
+  .btn.qbr__add { padding-left: 10px; padding-right: 10px; }  /* .btn--sm sits later at the same weight */
   .qbr__st { display: inline-flex; align-items: center; gap: 8px; }
   /* Rank centred, header with it [Tanya, 19 Oct: "center align the number in this column"] */
   .qbr .qbr__rk { text-align: center; }
   .qbr__st .d { width: 8px; height: 8px; border-radius: 9999px; flex: none; }
+  /* the name state carries an eye / eye-off glyph [Tanya, 22 Oct: "add eye
+     icons near 'Name hidden' / 'Name shown'"]. An <i>, not a span: .nm-cell
+     span would make it a 13px block on its own line. */
+  .qbr__vis { display: inline-flex; align-items: center; gap: 4px; font-style: normal; vertical-align: top; }
+  .qbr__vis svg { flex: none; }
   .qbr tr.qbr--wd td:not(.actions-cell) { color: var(--muted-foreground); }
   .qbr tr.qbr--wd .nm-cell b { color: var(--muted-foreground); font-weight: 500; }
   .qbr__note { margin: 0; min-width: 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
@@ -1333,13 +1404,20 @@
   .qbr__hide .lbl { font-size: 13px; line-height: 16px; color: var(--foreground); white-space: nowrap; }
   .swt input:disabled + .trk { opacity: .5; cursor: not-allowed; }
   /* the borrower's question count under the status, a link into the thread;
-     bold while the last word is hers. Not a .btn: the row's .btn elements
+     Medium in both states, and the link (glyph and label) turns gold while
+     the last word is hers, the Needs attention ink [Tanya, 22 Oct: "use
+     medium for both, and use gold color for icon if reply needed"]. Not a .btn: the row's .btn elements
      are its actions (Release), and this is a line of the status. */
-  .qbr__q { display: flex; align-items: center; gap: 5px; margin-top: 4px; padding: 0; border: 0; background: none;
-    color: var(--primary); font: inherit; font-size: 12px; line-height: 16px; cursor: pointer; }
+  .qbr__q { display: flex; align-items: center; gap: 4px; margin-top: 4px; padding: 0; border: 0; background: none;
+    color: var(--primary); font: inherit; font-size: 12px; line-height: 16px; font-weight: 500; cursor: pointer; }
   .qbr__q:hover { text-decoration: underline; text-underline-offset: 4px; }
-  .qbr__q svg { width: 12px; height: 12px; }
-  .qbr__q--new { font-weight: 600; }
+  /* down 1px: centred by ink box, the bubble's body sat 1.5px above the
+     digits because its tail pulls the box low; now the body centres on the
+     cap height and the tail hangs past the baseline [Tanya, 22 Oct: "align
+     visually icon with text"] */
+  .qbr__q svg { width: 12px; height: 12px; flex: none; transform: translateY(1px); }
+  /* glyph and label both, 4.55:1 on white [Tanya, 22 Oct: "and text as well"] */
+  .qbr__q--new { color: var(--color-brand-gold-text); }
   /* the rail, one per column while a selection exists; see `col` in loanQuotes
      for why the empty ones are drawn too. Negative margins cancel th's 14px top
      and 12px sides so the strip runs edge to edge, and the 10px below it is the
@@ -2536,6 +2614,12 @@
   .cgrp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; padding: 6px 0; }
   .cgrp .chkrow { font-size: 14px; color: var(--foreground); }
   @media (max-width: 900px) { .cgrp { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  /* a short tickbox set laid out as .rgrp is: one row at the radios' 20px
+     gap and 36px line, options hugging their labels. Lending parameters'
+     three Recourse boxes, which the grid spread a third of the card apart
+     [Tanya, 22 Oct: "use same layout as for radiobutton group"]. The
+     tenants' eight keep the grid. */
+  .cgrp--row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; min-height: 36px; padding: 0; }
   .rad { position: relative; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--foreground); cursor: pointer; }
   .rad input { position: absolute; left: 0; opacity: 0; width: 16px; height: 16px; margin: 0; cursor: pointer; }
   .rad .dot { width: 16px; height: 16px; flex: none; border: 1px solid var(--input); border-radius: 9999px; background: var(--card); box-shadow: var(--shadow-xs); display: grid; place-items: center; }
@@ -3040,6 +3124,7 @@
   .ms__item.zero .cb { border-color: var(--brand-border-300); box-shadow: none; }
   .ms__sep { height: 1px; background: var(--border); margin: 4px -4px; }
   .ms__foot { display: flex; justify-content: flex-end; padding: 2px 4px 0; }
+  .ms__foot--pair { justify-content: space-between; }
   .ms__foot button { background: none; border: 0; color: var(--primary); font-size: 13px; font-weight: 500; cursor: pointer; padding: 4px; }
   :where(.app--borrower) .ms__foot button { font-size: 14px; line-height: 20px; }  /* ramp:b */
   .ms__foot button:disabled { color: var(--brand-border-300); cursor: default; }
@@ -3350,7 +3435,7 @@
      pad, which sat on top of the 12 */
   .fin .sec__edit, .lpvsec .sec__edit { line-height: 16px; }
   .fin .sec > .duo, .lpvsec .sec > .duo { padding-top: 0; }
-  .fin .fkv, .lpvsec .fkv { grid-template-columns: 150px minmax(0, 1fr); gap: 8px 12px; font-size: 14px; line-height: 20px; }
+  .fin .fkv, .lpvsec .fkv, .lmatch .fkv { grid-template-columns: 150px minmax(0, 1fr); gap: 8px 12px; font-size: 14px; line-height: 20px; }
   .fin .su__row, .lpvsec .su__row { font-size: 14px; line-height: 20px; }
   .fin .sw__k, .lpvsec .sw__k { margin-bottom: 12px; }
   .fin .sw__v, .lpvsec .sw__v { font-size: 14px; line-height: 20px; }
@@ -4139,10 +4224,13 @@
      title text-sm, description text-xs via the title's own [&+div] rule,
      at opacity-90. The WEIGHT is not: shadcn sets font-semibold, this is
      Medium, which is what sonner gives [data-title]. [Tanya, 29 Sep]
-     The 13px this replaced was never in any code — it was ours alone. */
+     The 13px this replaced was never in any code — it was ours alone.
+     Description 14/20 since 22 Oct [Tanya, in the Prism Toast]: shadcn's
+     text-xs drop is no longer followed; its opacity-90 still is. Title
+     SemiBold the same day [Tanya], so the weight is now shadcn's too. */
   .toast__text { display: flex; flex-direction: column; gap: 4px; }
-  .toast__t { font-size: 14px; line-height: 20px; font-weight: 500; }
-  .toast__d { font-size: 12px; line-height: 16px; font-weight: 400; opacity: 0.9; }
+  .toast__t { font-size: 14px; line-height: 20px; font-weight: 600; }
+  .toast__d { font-size: 14px; line-height: 20px; font-weight: 400; opacity: 0.9; }
   .toast button { background: none; border: 0; color: #9fc4f5; font-size: 14px; font-weight: 500; cursor: pointer; }
 
   /* Our own annotation — styled so it cannot be mistaken for a control. */
@@ -4477,8 +4565,13 @@
      note hugs. */
   .card__ct.doclist .docrow:not(.docrow--extra) > .docrow__nm { flex-basis: 200px; }
   .docrow:has(> .docrow__ctl) > .docrow__note { flex: 1 1 160px; }
-  .doclist .docrow--extra:has(> .docrow__ctl) > .docrow__nm { flex: 1 1 160px; min-width: 0; }
-  .docrow--extra:has(> .docrow__ctl) > .docrow__note { flex: none; }
+  /* Superseded 12 Oct, evening [Tanya: "make date here same position as
+     here"]: a loose upload's date sat hugged against the selects, at a
+     different x from every slot row's "file · date" note. The filename now
+     takes the slot name's 200 column (ellipsis, full name in the title) and
+     the date starts at the note x every slot row uses. */
+  .doclist .docrow--extra:has(> .docrow__ctl) > .docrow__nm { flex: 0 0 200px; min-width: 0; }
+  .docrow--extra:has(> .docrow__ctl) > .docrow__note { flex: 1 1 160px; }
   /* Capped again, 12 Oct, night [Tanya: "move fields to the left and make
      bigger horizontal gap"]: on a wide screen the uncapped note pushed the
      controls ~300px right of the filenames. 360, not the 308 that was
@@ -5038,6 +5131,11 @@
   .mpv .sub { font-size: 12.5px; color: var(--muted-foreground); margin-top: 2px; }
   .mpv .bands { display: flex; gap: 12px; margin-top: 10px; font-size: 12.5px; }
   .mpv .bands b { font-variant-numeric: tabular-nums; }
+  /* Lending parameters' Matching requests split by property type [02.3]:
+     the summary ledger's .su__row lines under the count, closed by the rule
+     above rather than a dashed one below */
+  .mpv__by { margin-top: 12px; padding-top: 4px; border-top: 1px solid var(--border); }
+  .mpv__by .su__row:last-child { border-bottom: none; }
   .coach { border-left: 2px solid var(--brand-gold); background: color-mix(in srgb, var(--brand-gold) 8%, #fff); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12.5px; line-height: 1.5; }
   .coach b { display: block; margin-bottom: 4px; }
   .coach ul { margin: 0; padding-left: 16px; }
@@ -5144,12 +5242,25 @@
     padding: 10px 14px; margin-bottom: 14px; font-size: 13.5px; }
   .oppurg b { font-weight: 600; }
   .oppurg svg { flex: none; }
-  /* The borrower-request review card on a deal accepted from one (reqCard).
-     Three lists side by side, one column under 900. Tags are the library
-     Badge, muted for Borrower and gold for Edited. */
-  .reqrv__lede { margin: 0 0 16px; font-size: 14px; color: var(--muted-foreground); }
-  .reqrv__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-  @media (max-width: 900px) { .reqrv__cols { grid-template-columns: 1fr; } }
+  /* The borrower-request drawer's lists (reqDrawer) keep the review card's
+     classes; the card itself went on 19 Oct for the strip, the drawer and a
+     Confirm on each section. */
+  .alert__line { grid-column: 2; min-width: 0; }
+  .reqsrc { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; line-height: 16px;
+    font-weight: 400; color: var(--muted-foreground); white-space: nowrap; }
+  .reqsrc svg { flex: none; }
+  .reqok { flex: none; margin-left: auto; }
+  .reqsrcrow { display: flex; align-items: center; gap: 16px; flex: none; }
+  .reqsrcrow .reqok { margin-left: 0; }
+  .docbar .reqsrcrow { margin-left: auto; }
+  .ovblk--req { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  /* one line: text, icon and the link centre on each other, as the Figma
+     Alert's hugging icon slot does */
+  .alert.reqstrip { align-items: center; }
+  .alert.reqstrip > svg { translate: 0 0; }
+  .ldr--req { width: min(480px, 100vw); }
+  .ldr--req .ldr__bd { display: flex; flex-direction: column; gap: 20px; }
+  .ldr--req .alert { margin: 0; }
   .reqrv h3 { font-size: 14px; font-weight: 600; margin: 0 0 8px; }
   .reqrv ul { margin: 0; padding-left: 18px; font-size: 14px; }
   .reqrv li + li { margin-top: 4px; }
@@ -5166,13 +5277,11 @@
   .reqrv__q { display: block; font-size: 12px; color: var(--muted-foreground); }
   .reqrv__st { flex: none; font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
   .reqrv__gaps { margin: 12px 0 0; font-size: 12px; color: var(--muted-foreground); }
-  .reqrv__acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
   /* labels on one line: the column is ~400 at 1600 and .fkv's 132px track
      broke "More than one tax parcel" in two. The track hugs the longest
      label instead and the value takes the rest. [Tanya, 12 Oct] */
   .reqrv .fkv { grid-template-columns: max-content minmax(0, 1fr); column-gap: 16px; }
   .reqrv .fkv dt { white-space: nowrap; }
-  .reqrv--done .card__ct { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted-foreground); }
   .brtag { margin-left: 6px; vertical-align: 1px; }
   .oppnote { display: flex; align-items: center; gap: 10px;
     background: color-mix(in srgb, var(--muted) 42%, var(--card)); border: 1px solid var(--border);
@@ -5849,7 +5958,11 @@
   .prof .card__ft { justify-content: flex-end; gap: 10px; padding: 12px 18px; }
   .prof .card__ft .msg { margin-right: auto; font-size: 12.5px; }
   .prof .card__ft .msg.ok { color: #2f6b23; font-weight: 500; }
-  .prof .fld label .opt, .fld label .opt { color: var(--muted-foreground); font-weight: 400; }
+  /* the "(optional)" tag, one style wherever a label carries it: muted,
+     regular, the label's own size [Tanya, 22 Oct: "for optional fields use
+     this style to mark label everywhere"]. Unscoped since then; it was
+     .fld label only, so a tag outside a .fld rendered in its parent's weight. */
+  .opt { color: var(--muted-foreground); font-weight: 400; }
   .fldrow--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fldrow--2 .amtwrap { max-width: none; }
   /* `.fld:last-child { margin-bottom: 0 }` has to be undone inside a row: the
@@ -6410,6 +6523,20 @@
      .billrow .sub and .ldr__hd .sub, the file's other title-and-sub stacks. */
   .cosdeal__sub { margin: 2px 0 0; font-size: 13px; color: var(--muted-foreground); }
   :where(.app--borrower) .cosdeal__sub { font-size: 14px; line-height: 20px; }  /* ramp:b */
+  /* a deal with nothing owed: the file's .empty--sm, the card-body size of
+     the teaching state [Tanya, 16 Oct: "place here empty state component from
+     library", then the library's Empty/Page]. It replaced the .clear strip:
+     .clear is the attention card's all-clear, and this card is a deal, not an
+     attention list. The sentence names the advisor, so it says who fills it.
+     .card__hd + .empty already gives the 10px under the head.
+     Figma: Prism Empty/Page Size=sm.
+     On the library's type, not .empty's [Tanya, 16 Oct: "align prototype"]:
+     16/24 Semi Bold over 14/20, where .empty runs 15 bold over 13. Scoped to
+     this card because the file-wide .empty scale is question 122, still open
+     with Tony. The measure is the component's 420px; .empty's 52ch grows
+     to 455 at 14px. */
+  .cosdeal .empty b { font-size: 16px; line-height: 24px; font-weight: 600; }
+  .cosdeal .empty p { font-size: 14px; line-height: 20px; max-width: 420px; }
   /* TWO TABLES READ AS ONE LIST [5 Oct]. A table sizes its columns to its own
      content, so the deal cards stacked down this page each picked their own
      grid: Canyon Ridge has no filenames, so its File column collapsed and
@@ -7576,6 +7703,12 @@
   /* Connect via LenderPrism ends on its Message field since 16 Oct; the
      field's own 16 below would stack on the body's 16 pad */
   .mdl--conn .mdl__bd > .fld:last-child { margin-bottom: 0; }
+  /* Connect via LenderPrism ends on its Message field since 16 Oct; the
+     field's own 16 below would stack on the body's 16 pad */
+  .mdl--conn .mdl__bd > .fld:last-child { margin-bottom: 0; }
+  /* Connect via LenderPrism ends on its Message field since 16 Oct; the
+     field's own 16 below would stack on the body's 16 pad */
+  .mdl--conn .mdl__bd > .fld:last-child { margin-bottom: 0; }
   /* the clock chip sits in the header beside the title (Tanya, 8 Sep). The
      header is a flex row with the close button pushed right, so dropping the
      chip after the title block puts it against the title with no new layout:
@@ -8515,6 +8648,10 @@ const DEALS = [
        70% LTV implies a $6.4M basis, and the unit count, NOI and Sources & uses
        follow from it. [~] */
     units:42, occupancy:93.5, built:2016, price:6.4,
+    /* NOI in place and the close-by date: the Borrower Figma file's Riverside
+       sample (15 Oct), so the Overview's money row has both facts. In place is
+       below the $352,000 stabilized NOI the business plan states. [~] */
+    noi:331000, closeBy:"30 Nov",
     su:{ sources:[["Senior debt",4500000],["Cash contributed by sponsors & KPs",1700000],["Cash raised via syndication",775000]],
          uses:[["Purchase price",6400000],["CapEx",320000],["Lender origination fees",45000],["Mortgage broker fee",56000],["Legal fees",60000],["Third-party reports",34000],["Other closing costs",60000]] },
     terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"4-Year",
@@ -8592,22 +8729,22 @@ const DEALS = [
       { id:"q1", lender:2, via:"you", pub:true, showCo:true, st:"updated", rank:1, on:"15 Oct", upd:"17 Oct", sheet:"Sunbelt term sheet v2.pdf",
         thread:[{ from:"you", tx:"Is the four-year interest-only firm on the updated sheet, or does it move with the rate lock?", on:"17 Oct", at:"6:40 PM" }],
         amt:4.5, rate:"5.85%", index:"10-yr Treasury", spread:"+175 bps", term:"10 years", amort:"30 years", io:"4 years", recourse:"Non-recourse",
-        prepay:"5-4-3-2-1 step-down", fee:"1.00%", closing:"$58,000", ds:"$263,250 / yr", dscr:"1.34x", ltv:70, cond:"Rate lock at application. Replacement reserves of $250 per unit a year." },
+        prepay:"5-4-3-2-1 step-down", fee:"1.00%", closing:"$58,000", ds:"$263,250 / yr", dscr:"1.34x", ltv:70, dy:7.8, cond:"Rate lock at application. Replacement reserves of $250 per unit a year." },
       { id:"q2", lender:null, co:"Pedernales Community Bank", src:"Regional bank", via:"you", pub:true, showCo:false, st:"selected", selOn:"18 Oct", rank:2, on:"16 Oct",
         amt:4.3, rate:"6.25%", index:"5-yr Treasury", spread:"+225 bps", term:"5 years", amort:"25 years", io:"1 year", recourse:"Full recourse",
-        prepay:"3-2-1 step-down", fee:"0.75%", closing:"$41,000", ds:"$268,750 / yr", dscr:"1.31x", ltv:67, cond:"Deposit relationship required." },
+        prepay:"3-2-1 step-down", fee:"0.75%", closing:"$41,000", ds:"$268,750 / yr", dscr:"1.31x", ltv:67, dy:8.2, cond:"Deposit relationship required." },
       { id:"q6", lender:null, co:"Lone Star Life", src:"Life insurance company", via:"you", pub:true, showCo:false, st:"new", rank:3, on:"16 Oct",
         amt:4.2, rate:"6.05%", index:"10-yr Treasury", spread:"+195 bps", term:"15 years", amort:"30 years", io:"", recourse:"Non-recourse",
-        prepay:"Yield maintenance", fee:"0.50%", closing:"$47,000", ds:"$303,800 / yr", dscr:"1.16x", ltv:66, cond:"" },
+        prepay:"Yield maintenance", fee:"0.50%", closing:"$47,000", ds:"$303,800 / yr", dscr:"1.16x", ltv:66, dy:8.4, cond:"" },
       { id:"q3", lender:1, via:"lender", pub:false, showCo:false, st:"new", rank:0, on:"18 Oct",
         amt:4.8, rate:"7.40%", index:"1-mo SOFR", spread:"+310 bps", term:"3 years", amort:"Interest-only", io:"3 years", recourse:"Non-recourse, standard carve-outs",
-        prepay:"12-month minimum interest", fee:"1.50%", closing:"$62,000", ds:"$355,200 / yr", dscr:"0.99x", ltv:75, cond:"Funds the $320K CapEx as a holdback. Interest reserve required." },
+        prepay:"12-month minimum interest", fee:"1.50%", closing:"$62,000", ds:"$355,200 / yr", dscr:"0.99x", ltv:75, dy:7.3, cond:"Funds the $320K CapEx as a holdback. Interest reserve required." },
       { id:"q4", lender:null, co:"Caprock Bank", src:"Regional bank", via:"you", pub:false, showCo:false, st:"new", rank:0, on:"",
         amt:4.0, rate:"6.50%", index:"5-yr Treasury", spread:"+250 bps", term:"7 years", amort:"25 years", io:"", recourse:"Full recourse",
         prepay:"", fee:"1.00%", closing:"", ds:"", dscr:"", ltv:63, cond:"" },
       { id:"q5", lender:null, co:"Llano Credit Partners", src:"Debt fund", via:"you", pub:false, wd:"14 Oct", showCo:false, st:"new", rank:0, on:"12 Oct",
         amt:4.6, rate:"7.10%", index:"1-mo SOFR", spread:"+280 bps", term:"2 years", amort:"Interest-only", io:"2 years", recourse:"Non-recourse",
-        prepay:"6-month minimum interest", fee:"1.25%", closing:"$55,000", ds:"$326,600 / yr", dscr:"1.08x", ltv:72, cond:"" }
+        prepay:"6-month minimum interest", fee:"1.25%", closing:"$55,000", ds:"$326,600 / yr", dscr:"1.08x", ltv:72, dy:7.7, cond:"" }
     ]
   },
   {
@@ -9679,7 +9816,7 @@ const S = {
      the profile list being added to, and the Connect message text. */
   /* the lender's Requests list, 19 Oct: view, search, three filters, page */
   lview: "decide", lq: "", lrProp: new Set(), lrFin: new Set(), lrSt: new Set(), lpg: 1, lpsz: 10,
-  lrSel: false, lpicked: new Set(),
+  lrSel: false, lpicked: new Set(), lsetupX: false,
   bview: "active", lmax: 1, bqsort: "rate", bQ: null, bsel: null, bwd: null, bact: "all", bactFor: null,
   /* the deal id whose done tasks are expanded, not a boolean: moving to
      another deal collapses the group with no second key to clear, which is the
@@ -9759,7 +9896,7 @@ const S = {
   /* the quick view drawer: which banker, the deal the click was scoped to,
      and the href of the full profile it stands in front of. lnotes is the
      private note log, session-only. [~] */
-  ldr: null, lnotes: {}, lnote: null, lnoteIdx: null, lnoteTxt: "",
+  ldr: null, reqDr: null, lnotes: {}, lnote: null, lnoteIdx: null, lnoteTxt: "",
   /* the standalone lender search. Its own query and its own four filter sets:
      they narrow a different population from the deals bar and sharing the sets
      would let a state chosen on one page silently filter the other. lSrc is
@@ -10612,12 +10749,19 @@ function sendModal() {
      drift apart. */
   const goes = cap != null ? Math.min(n, cap) : n;
   const sendLbl = k => `Send to ${k} ${k === 1 ? "lender" : "lenders"}`;
+  /* a deal from a request names the sections still unconfirmed, as a warning
+     that does not block [Borrower Figma 559:8806, 12 Oct] */
+  const left = d.fromReq ? REQ_SECS.filter(([k]) => !reqConf(d)[k]).map(x => x[1]) : [];
+  const leftTxt = left.length > 1 ? left.slice(0, -1).join(", ") + " and " + left[left.length - 1] : left[0];
   return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Send loan request">
   <div class="mdl">
     <div class="mdl__hd"><div><h2>Send loan request</h2>
       <p>${esc(d.name)} · ${money(d.amt)} · one request, every recipient sees the same package</p></div>
       <button class="x" type="button" data-upx aria-label="Close">${XCLOSE}</button></div>
     <div class="mdl__bd">
+      ${left.length ? `<div class="alert alert--warning" role="status">${REQ_TRI}
+        <div class="alert__title">${left.length === 1 ? "1 section is" : left.length + " sections are"} not confirmed yet</div>
+        <div class="alert__desc">${esc(leftTxt)} ${left.length === 1 ? "is" : "are"} still as ${esc(d.fromReq.by)} sent ${left.length === 1 ? "it" : "them"}. You can send anyway.</div></div>` : ""}
       ${ls.length ? ls.map(l => `<label class="billrow billrow--pick" style="cursor:pointer">
         <span class="chk"><input type="checkbox" data-sendsel="${l.id}" ${S.sendSel.has(l.id) ? "checked" : ""}><span class="bx">${CHKTICK}</span></span>
         <div style="flex:1"><b>${esc(l.ct)}</b> <span class="sub">${esc(l.co)} · ${money(l.lo)} – ${money(l.hi)}</span></div>
@@ -10640,6 +10784,7 @@ function sendModal() {
     <div class="mdl__ft">
       ${cap != null ? `<span class="note">${TCFG().name} sends each request to <span class="tbd">${cap}</span> lenders.</span>` : ""}
       ${over ? `<button class="btn btn--outline" type="button" data-up="${next}" data-upgate="You picked ${n} lenders — ${TCFG().name} sends to ${cap}." data-upalt="${sendLbl(cap)}">Upgrade</button>` : ""}
+      ${left.length ? `<button class="btn btn--outline" type="button" data-reqfirst>Review first</button>` : ""}
       <button class="btn" type="button" data-sendgo ${n ? "" : "disabled"}>${sendLbl(goes)}</button>
     </div>
   </div></div>`;
@@ -11530,15 +11675,15 @@ const BLOANS = [
     quotes: [
       bq("q1", { src: "Agency lender", co: "Hill Country Multifamily Finance", showCo: true, rank: 1, amt: 3.2, rate: "6.10%", index: "10-yr Treasury", spread: "+195 bps",
         term: "10 years", amort: "30 years", io: "3 years", recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$41,500",
-        ds: "$232,700 / yr", dscr: "1.37x", ltv: 65, cond: "Replacement reserve $250 per unit per year; 12 months of taxes escrowed.", on: "18 Sep",
+        ds: "$232,700 / yr", dscr: "1.37x", ltv: 65, dy: 10, cond: "Replacement reserve $250 per unit per year; 12 months of taxes escrowed.", on: "18 Sep",
         sheet: "Term sheet - quote 1.pdf",
         thread: [{ from: "you", tx: "Is the yield maintenance negotiable to a step-down?", on: "18 Sep", at: "6:22 PM" },
                  { from: "broker", tx: "I asked. They will do 5-4-3-2-1 for 10 bps more on the rate. Worth it if you might sell before year six.", on: "19 Sep", at: "8:10 AM" }] }),
       bq("q2", { src: "Regional bank", rank: 2, st: "updated", upd: "26 Sep", amt: 3.3, rate: "6.35%", index: "5-yr Treasury", spread: "+240 bps",
         term: "7 years", amort: "25 years", io: "2 years", recourse: "Full recourse, burning off at 1.50x", prepay: "3-2-1 step-down", fee: "0.75%", closing: "$28,000",
-        ds: "$263,900 / yr", dscr: "1.21x", ltv: 68, cond: "Deposit relationship required; personal guarantee until DSCR reaches 1.50x.", on: "19 Sep" }),
+        ds: "$263,900 / yr", dscr: "1.21x", ltv: 68, dy: 9.7, cond: "Deposit relationship required; personal guarantee until DSCR reaches 1.50x.", on: "19 Sep" }),
       bq("q3", { src: "Life company", pub: false, amt: 3.0, rate: "5.95%", index: "10-yr Treasury", spread: "+180 bps", term: "10 years", amort: "30 years", io: "None",
-        recourse: "Non-recourse", prepay: "Yield maintenance", fee: "0.50%", closing: "$38,000", ds: "$214,700 / yr", dscr: "1.48x", ltv: 62, cond: "Lower leverage.", on: "19 Sep" })
+        recourse: "Non-recourse", prepay: "Yield maintenance", fee: "0.50%", closing: "$38,000", ds: "$214,700 / yr", dscr: "1.48x", ltv: 62, dy: 10.6, cond: "Lower leverage.", on: "19 Sep" })
     ],
     docs: [
       { id: "d1", name: "Lakeview rent roll Sep.xlsx", cat: "Rent roll", by: "you", on: "9 Sep", ver: 2, st: "accepted" },
@@ -11583,10 +11728,10 @@ const BLOANS = [
     milestone: { t: "Closed & funded", on: "24 Oct" },
     quotes: [
       bq("q1", { src: "Agency lender", st: "selected", rank: 1, amt: 7.8, rate: "5.85%", index: "10-yr Treasury", spread: "+170 bps", term: "10 years", amort: "30 years", io: "2 years",
-        recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$96,000", ds: "$552,000 / yr", dscr: "1.27x", ltv: 70,
+        recourse: "Non-recourse", prepay: "Yield maintenance", fee: "1.00%", closing: "$96,000", ds: "$552,000 / yr", dscr: "1.27x", ltv: 70, dy: 9,
         cond: "Rate lock at appraisal; springing replacement reserve.", on: "29 Aug", sheet: "Term sheet - selected.pdf" }),
       bq("q2", { src: "Debt fund", st: "seen", amt: 8.4, rate: "8.25%", index: "SOFR", spread: "+390 bps", term: "3 years", amort: "Interest-only", io: "3 years",
-        recourse: "Non-recourse", prepay: "12 months minimum interest", fee: "1.50%", closing: "$118,000", ds: "$693,000 / yr", dscr: "1.01x", ltv: 75, cond: "Bridge; floating rate with a cap.", on: "30 Aug" })
+        recourse: "Non-recourse", prepay: "12 months minimum interest", fee: "1.50%", closing: "$118,000", ds: "$693,000 / yr", dscr: "1.01x", ltv: 75, dy: 8.3, cond: "Bridge; floating rate with a cap.", on: "30 Aug" })
     ],
     docs: [
       { id: "d1", name: "Round Rock rent roll.xlsx", cat: "Rent roll", by: "you", on: "12 Aug", ver: 1, st: "accepted" },
@@ -11691,14 +11836,14 @@ const BLOANS = [
     quotes: [
       bq("q1", { src: "Regional bank", co: "Sonoran State Bank", showCo: true, rank: 1, amt: 4.1, rate: "6.45%", index: "5-yr Treasury", spread: "+205 bps",
         term: "5 years", amort: "25 years", io: "None", recourse: "Partial recourse, 25% of balance", prepay: "3-2-1 step-down", fee: "0.75%", closing: "$34,500",
-        ds: "$330,700 / yr", dscr: "1.33x", ltv: 60, cond: "Operating accounts moved to the bank; annual reporting covenant.", on: "1 Oct",
+        ds: "$330,700 / yr", dscr: "1.33x", ltv: 60, dy: 10.7, cond: "Operating accounts moved to the bank; annual reporting covenant.", on: "1 Oct",
         sheet: "Term sheet - Sonoran State Bank.pdf" }),
       bq("q2", { src: "Life company", rank: 2, amt: 3.9, rate: "6.15%", index: "10-yr Treasury", spread: "+200 bps",
         term: "10 years", amort: "25 years", io: "None", recourse: "Non-recourse", prepay: "Yield maintenance", fee: "0.50%", closing: "$49,000",
-        ds: "$305,800 / yr", dscr: "1.44x", ltv: 57, cond: "Lower proceeds; no prepayment inside year nine without yield maintenance.", on: "1 Oct" }),
+        ds: "$305,800 / yr", dscr: "1.44x", ltv: 57, dy: 11.3, cond: "Lower proceeds; no prepayment inside year nine without yield maintenance.", on: "1 Oct" }),
       bq("q3", { src: "Debt fund", rank: 3, amt: 4.4, rate: "8.40%", index: "SOFR", spread: "+405 bps",
         term: "3 years", amort: "Interest-only", io: "3 years", recourse: "Non-recourse", prepay: "12 months minimum interest", fee: "1.50%", closing: "$62,000",
-        ds: "$369,600 / yr", dscr: "1.19x", ltv: 65, cond: "Floating with a rate cap escrowed at closing; highest proceeds of the three.", on: "2 Oct" })
+        ds: "$369,600 / yr", dscr: "1.19x", ltv: 65, dy: 10, cond: "Floating with a rate cap escrowed at closing; highest proceeds of the three.", on: "2 Oct" })
     ], docs: [
       { id: "d1", name: "Mesa rent roll.xlsx", cat: "Rent roll", by: "you", on: "8 Sep", ver: 1, st: "accepted" },
       { id: "d2", name: "Mesa T-12.pdf", cat: "T-12 / operating statements", by: "you", on: "8 Sep", ver: 1, st: "accepted" },
@@ -11811,7 +11956,7 @@ const BLOANS = [
     summary: "Neighbourhood strip centre, eight tenants, grocery-anchored. Refinanced with a local bank.",
     next: "Closed 28 Aug.", milestone: null,
     quotes: [ bq("q1", { src: "Regional bank", co: "Trinity Community Bank", showCo: true, st: "selected", rank: 1, amt: 1.9, rate: "6.40%", index: "5-yr Treasury", spread: "+250 bps",
-      term: "5 years", amort: "25 years", io: "None", recourse: "Full recourse", prepay: "2-1 step-down", fee: "0.50%", closing: "$16,000", ds: "$152,500 / yr", dscr: "1.40x", ltv: 55,
+      term: "5 years", amort: "25 years", io: "None", recourse: "Full recourse", prepay: "2-1 step-down", fee: "0.50%", closing: "$16,000", ds: "$152,500 / yr", dscr: "1.40x", ltv: 55, dy: 11.2,
       cond: "Deposit relationship.", on: "12 Aug" }) ],
     docs: [ { id: "d1", name: "Riverside rent roll.xlsx", cat: "Rent roll", by: "you", on: "28 Jul", ver: 1, st: "accepted" },
       { id: "d2", name: "Natarajan_PFS_2026.pdf", cat: "PFS", by: "you", on: "28 Jul", ver: 1, st: "accepted" },
@@ -12596,6 +12741,11 @@ function applySel(key, v) {
 }
 
 /* checkbox square, same anatomy the board-settings panel draws (ui/checkbox.tsx) */
+/* the options a flat list is showing under the typed search — what the
+   footer's Select all counts and ticks */
+const msShown = f => { const q = f.searchable ? (S.oq || "").trim().toLowerCase() : "";
+  return f.opts().filter(v => !q || v.toLowerCase().includes(q)); };
+
 const CBOX = on => `<span class="cb${on ? " on" : ""}" aria-hidden="true">${on === "mixed"
   ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"/></svg>`
   : on ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 7"/></svg>` : ""}</span>`;
@@ -12714,7 +12864,22 @@ function msCtl(f) {
         })()}
         </div>
         <div class="ms__sep"></div>
-        <div class="ms__foot"><button type="button" data-msclr="${f.key}"${set.size ? "" : " disabled"}>Clear</button></div>
+        ${(() => {
+          /* Select all sits in the footer opposite Clear, both actions on the
+             list in one row (Tanya, 22 Oct: "select all button should be
+             inside the dropdown, opposite to clear"); Motion's filter popover
+             pairs them the same way [comp, Mobbin 22 Oct]. While a search is
+             typed it takes only the matches and says so, "Select 3 shown",
+             Mixpanel's "Select all in list (3)": a footer under one visible
+             row that ticked all 50 would be doing something the list never
+             showed. Every multiselect has it since 22 Oct (Tanya: the paired
+             footer is the default, Prism MultiSelect/Footer); a field opts
+             out with selAll: false. */
+          const clr = `<button type="button" data-msclr="${f.key}"${set.size ? "" : " disabled"}>Clear</button>`;
+          if (f.selAll === false) return `<div class="ms__foot">${clr}</div>`;
+          const shown = msShown(f), done = !shown.length || shown.every(v => set.has(v));
+          return `<div class="ms__foot ms__foot--pair"><button type="button" data-msall="${f.key}"${done ? " disabled" : ""}>${shown.length < f.opts().length ? `Select ${shown.length} shown` : "Select all"}</button>${clr}</div>`;
+        })()}
       </div>
     </div>`;
 }
@@ -13044,6 +13209,9 @@ function listView(rows) {
 const MEMOIC = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
 const OPSIC = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
 const KEBAB = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>`;
+/* Lucide eye / eye-off, the quote row's name state; Prism Icon/eye and Icon/eye-off */
+const QEYE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>`;
+const QEYEOFF = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>`;
 const DLIC = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>`;
 /* Deliberately DLIC's mirror \u2014 same tray, same 15px, arrow reversed \u2014 so the
    two read as one pair on a list where a row has either one or the other. */
@@ -13256,7 +13424,9 @@ function suBlock(d) {
    reported on the Aug 5 walkthrough is answered with helper copy,
    not a rename.
    =========================================================== */
-const DOC_KEYS = ["Executive summary", "Rent roll", "Sponsor PFS", "T-12 operating statement"];
+/* DOC_KEYS, a fixed four (executive summary, rent roll, sponsor PFS, T-12),
+   was every broker deal's checklist until 21 Oct. It is gone: see chkDocs,
+   which seeds the deal from Tony's checklist instead. */
 
 /* Uploads not yet filed against a checklist slot. d.docAssign maps
    slot key \u2192 filename once the broker files one. */
@@ -13366,7 +13536,7 @@ function initDraft() {
     : { name: "", amt: "", property: "", financing: "", txType: "Acquisition", city: "", state: "", zip: "",
         price: "", underContract: "", closeDate: "", propValue: "", balance: "", projCost: "", shovel: "", files: [],
         addr: "", units: "", sf: "", built: "", occupancy: "", photos: [], contacts: [],
-        summary: "", docs: Object.fromEntries(DOC_KEYS.map(k => [k, false])) };
+        summary: "", docs: {} };
   S.formTried = false; S.formWarned = false;
 }
 
@@ -13523,9 +13693,9 @@ function renderDealForm() {
           ${miss.property ? `<div class="errmsg">Pick a property type. Matching scores on it.</div>` : ""}
         </div>
         <div class="fld">
-          <label>Execution type</label>
+          <label>Execution type <span class="opt">(optional)</span></label>
           <div class="fld__sel">${selCtl("nd:financing", finOpts, d.financing, "Execution type")}</div>
-          <div class="hint">Optional. Left blank, matching stays broad, and you can narrow once quotes come in.</div>
+          <div class="hint">Left blank, matching stays broad, and you can narrow once quotes come in.</div>
         </div>
         <div class="fld">
           <label>Transaction</label>
@@ -13957,7 +14127,11 @@ const QTYPES = ["Agency lender", "Regional bank", "Credit union", "Debt fund", "
    an empty form read as filled in [Tanya, 19 Oct] */
 const QF_TERMS = [["index", "Index", ""], ["spread", "Spread", "+175 bps"], ["term", "Term", ""], ["amort", "Amortization", ""],
   ["io", "Interest-only", ""], ["recourse", "Recourse", ""], ["prepay", "Prepayment", "5-4-3-2-1 step-down"], ["fee", "Origination fee", ""],
-  ["closing", "Est. closing costs", ""], ["ds", "Est. debt service", "$263,250 / yr"], ["dscr", "DSCR", ""], ["ltv", "LTV (%)", ""]];
+  ["closing", "Est. closing costs", ""], ["ds", "Est. debt service", "$263,250 / yr"], ["dscr", "DSCR", ""], ["ltv", "LTV (%)", ""],
+  /* [T] Tony, Figma comment on 1340:41250, ~19 Oct: 'Add "Debt yield"'. The
+     lender's figure, typed like DSCR and LTV, not NOI / amount: a broker deal
+     carries no NOI to divide [~]. It fills the last row's empty third cell. */
+  ["dy", "Debt yield (%)", ""]];
 const brQL = q => q.lender != null ? lenderById(q.lender) : null;
 const brQCo = q => brQL(q) ? brQL(q).co : q.co;
 const brQSrc = q => brQL(q) ? brQL(q).inst : q.src;
@@ -13995,8 +14169,9 @@ function brQPreview(q, rank) {
 function quotesBody(d) {
   const ro = roOn(d), qs = brQOrder(d), bn = brBorName(d);
   const gate = `data-up="accelerator" data-upgate="${esc(d.name)} is read-only while Essential&rsquo;s one active slot belongs to another deal, so its quotes cannot change. Accelerator has no deal limit."`;
-  const add = cls => ro ? `<button class="btn${cls} btn--sm" type="button" ${gate}>Add quote</button>`
-    : `<button class="btn${cls} btn--sm" type="button" data-qadd="${d.id}">Add quote</button>`;
+  const plus = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`;
+  const add = cls => ro ? `<button class="btn${cls} btn--sm qbr__add" type="button" ${gate}>${plus}Add quote</button>`
+    : `<button class="btn${cls} btn--sm qbr__add" type="button" data-qadd="${d.id}">${plus}Add quote</button>`;
   if (!qs.length) return `<div class="card__ct" id="quotescard">
       <div class="empty empty--sm"><b>No quotes yet</b>
         <p>Add the terms a lender sends you. ${bn ? `${esc(bn)} sees a quote only once you release it.` : "Nothing reaches a borrower until you release it."}</p>
@@ -14004,9 +14179,11 @@ function quotesBody(d) {
     </div>`;
 
   const out = qs.filter(q => !q.pub && !q.wd);
-  /* Outline, both: the page's one filled button is Send loan request (the
-     14 Sep note on Edit deal), and the empty state above is the only place
-     Add quote fills - where it is the card's single action. */
+  /* Release all is outline; Add quote fills, here as in the empty state
+     [Tanya, 22 Oct: "make Add quote button primary"]. Until then both were
+     outline because the page's one filled button was Send loan request (the
+     14 Sep note on Edit deal); Add quote is now a second filled button on the
+     deal page, by that call. */
   const relAll = ro || !bn || out.length < 2 ? "" : `<button class="btn btn--outline btn--sm" type="button" data-qrel="${d.id}:${out.map(q => q.id).join(",")}">Release all ${out.length}</button>`;
   const noBor = "Add a borrower to this deal to release quotes.";
   const row = q => {
@@ -14045,7 +14222,7 @@ function quotesBody(d) {
       </div>`;
     return `<tr${q.wd ? ` class="qbr--wd"` : ""}>
       <td class="num qbr__rk">${live ? "#" + q.rank : ""}</td>
-      <td class="nm-cell" style="white-space:normal"><b>${esc(brQCo(q))}</b><span>${esc(brQSrc(q))} · ${q.showCo ? "Name shown" : "Name hidden"}</span></td>
+      <td class="nm-cell" style="white-space:normal"><b>${esc(brQCo(q))}</b><span>${esc(brQSrc(q))} · <i class="qbr__vis">${q.showCo ? QEYE + "Name shown" : QEYEOFF + "Name hidden"}</i></span></td>
       <td class="num" data-l="Rate">${brQv(q.rate)}</td>
       <td class="num" data-l="Amount">${q.amt ? money(q.amt) : brQv("")}</td>
       <td data-l="Term">${brQv(q.term)}</td>
@@ -14059,12 +14236,16 @@ function quotesBody(d) {
      switch */
   return `<div id="quotescard">
       <div class="card__ct qbr__bar">
-        <p class="qbr__note">${bn ? `${esc(bn)} sees released quotes only, ranked in this order. A hidden name reads as the lender&rsquo;s type.` : noBor}</p>
+        ${/* the explainer ("<borrower> sees released quotes only, ranked in this
+             order...") went 19 Oct [Tanya: "can we remove this text?"]; the
+             Release preview already shows the borrower's view. Without a
+             borrower the line stays: it is why Release is unavailable. */
+          bn ? "" : `<p class="qbr__note">${noBor}</p>`}
         ${/* Hide all lender names, the bar's one switch [Tanya, 19 Oct]: see
              the note above QTYPES. On, every name is hidden now and new quotes
              start hidden on this deal. */
           ro ? "" : `<label class="swt qbr__hide"><input type="checkbox" role="switch" data-qhide="${d.id}"${d.qHideCo ? " checked" : ""}><span class="trk"></span><span class="lbl">Hide all lender names</span></label>`}
-        <span class="qbr__acts">${relAll}${add(" btn--outline")}</span>
+        <span class="qbr__acts">${relAll}${add("")}</span>
       </div>
       <div class="tscroll"><table class="t qbr"><thead><tr><th class="qbr__rk" style="width:56px">Rank</th><th>Lender</th><th>Rate</th><th>Amount</th><th>Term</th><th>Amortization</th><th>Status</th><th style="width:150px"></th></tr></thead>
         <tbody>${qs.map(row).join("")}</tbody></table></div>
@@ -14580,7 +14761,7 @@ function renderDeal(d) {
           </button>` : mapBox(d)}
         </div>
         <div class="l">
-          <div class="ovblk"><p class="prose" style="margin:0">${esc(d.summary)}</p></div>
+          <div class="ovblk${reqDeal() ? " ovblk--req" : ""}"><p class="prose" style="margin:0">${esc(d.summary)}</p>${reqDeal() ? `<span class="reqsrcrow">${reqSrc("facts")}${reqOk("facts")}</span>` : ""}</div>
           ${dealFacts(d)}
         </div>
       </div>
@@ -14729,7 +14910,7 @@ function renderDeal(d) {
         </div>` : ""}
       </div>
     </div>
-    ${reqCard(d)}
+    ${reqStrip(d)}
     ${summary}
     ${borrowerCard(d)}
     ${tabs}`;
@@ -14842,7 +15023,12 @@ const exsupDocs = d => ["Sponsor SREO",
   d.txType === "Acquisition" ? "Purchase contract"
   : d.txType === "Construction" ? "Construction budget and schedule"
   : "Current loan statement",
-  "Most recent appraisal"];
+  "Most recent appraisal"].filter(k => !(EXSUP_SAME[k] in (d.docs || {})));
+/* the desk's name for a document the deal's checklist already has a row
+   for, 21 Oct: with Tony's list on every deal, "Sponsor SREO" beside "SREO"
+   would be one file asked for twice [~] */
+const EXSUP_SAME = { "Sponsor SREO": "SREO", "Purchase contract": "Purchase agreement",
+  "Construction budget and schedule": "Construction budget", "Most recent appraisal": "Appraisal" };
 
 /* Sample filenames, 24 Sep [Tanya]. The fallback was `key + ".pdf"`, so every
    row read "Executive summary  Executive summary.pdf" — the note repeating the
@@ -14856,6 +15042,8 @@ const DOCFILE = {
   "Rent roll": "RentRoll_Aug26.xlsx",
   "T-12 operating statement": "T12_TTM_Aug26.xlsx",
   "Sponsor PFS": "PFS_signed.pdf",
+  "PFS": "PFS_signed.pdf",
+  "T-12 / operating statements": "T12_TTM_Aug26.xlsx",
   "Sponsor SREO": "SREO_schedule.xlsx",
   "Purchase contract": "PSA_executed.pdf",
   "Construction budget and schedule": "Budget_and_schedule.xlsx",
@@ -14863,6 +15051,50 @@ const DOCFILE = {
   "Most recent appraisal": "Appraisal_2024.pdf"
 };
 const docFile = (d, k) => ((d.docAssign || {})[k]) || DOCFILE[k] || "document.pdf";
+
+/* A deal the broker starts on their own checks against Tony's checklist too,
+   21 Oct [T: "Yes ... They should have the checklist to keep things
+   consistent", Figma comment on Borrower 648:13287; question 229]. Until then
+   it checked against DOC_KEYS, a fixed four, while a deal from a request used
+   his list. The transaction type picks the property rows the way step 2's
+   loan purpose does for the borrower: Acquisition is his Purchase list,
+   Under contract "No" drops the purchase agreement, Hotel/motel adds the
+   hotel rows. The broker form asks no take-out question, so a take-out
+   refinance gets the Refinance rows [~]. The executive summary leaves the
+   list: the broker writes it, so there is nobody to ask for it [💡 rec]; a
+   deal that already holds one keeps the file, unfiled.
+
+   Runs on every save, so a changed transaction type swaps the rows. What the
+   deal holds or has asked for always survives: a filed or asked slot that is
+   not on the new list stays, and only an empty, unasked checklist row from
+   another list goes. Slots that are not checklist rows at all (the desk's
+   execution-support documents, a custom ask) are kept as they are. */
+const TX_PURPOSE = { Acquisition: "Purchase", Refinance: "Refinance", Construction: "Construction" };
+const dealChecklist = d => reqChecklist({ purpose: TX_PURPOSE[d.txType] || "Purchase", contract: d.underContract, property: d.property });
+const CHK_ALL = new Set([...BDOC_SPONSOR, ...Object.values(BDOC_PROP).flat(), ...BDOC_HOTEL].map(x => x[0]));
+/* the old four, renamed to the checklist row that asks for the same file */
+const DOC_OLD = { "Rent roll": "Rent roll", "Sponsor PFS": "PFS", "T-12 operating statement": "T-12 / operating statements" };
+function chkDocs(d) {
+  const was = d.docs || {}, req = d.docReq || {}, chk = dealChecklist(d);
+  const docs = Object.fromEntries(chk.map(x => [x[0], false]));
+  const move = (m, k, n) => { if (m && k in m && k !== n) { m[n] = m[k]; delete m[k]; } };
+  Object.entries(was).forEach(([k, v]) => {
+    if (k === "Executive summary") {
+      const f = docFile(d, k);
+      if (v && !(d.files || []).includes(f)) (d.files = d.files || []).push(f);
+      [d.docAssign, d.docBy, d.docReq, d.docDue].forEach(m => { if (m) delete m[k]; });
+      return;
+    }
+    const n = DOC_OLD[k] || k;
+    if (n in docs || v || req[k] || !CHK_ALL.has(n)) docs[n] = docs[n] || v;
+    [d.docAssign, d.docBy, d.docReq, d.docDue].forEach(m => move(m, k, n));
+  });
+  d.docs = docs;
+  d.docQual = Object.fromEntries(chk.filter(x => x[1]).map(x => [x[0], x[1]]));
+}
+/* the seeded deals, and Reset's pristine copy of them, which was taken
+   before the checklist constants existed */
+[...DEALS, ...DEALS0].forEach(d => { if (!d.fromReq) chkDocs(d); });
 
 const opsOf = id => S.ops[id] || {};
 /* one key order, read by both screens and by the count in the card header. It
@@ -15721,7 +15953,7 @@ function acceptOpp(o) {
     addr: "", units: o.units || null, sf: o.sf || null, built: o.built || null,
     occupancy: o.occupancy != null ? o.occupancy : null, photos: [],
     contacts: [{ name: b.name || "", role: "Borrower", email: b.email || "", phone: b.phone || "" }] };
-  if (o.req) dealFromReq(deal, o, now);
+  if (o.req) dealFromReq(deal, o, now); else chkDocs(deal);
   DEALS.push(deal);
   S.status[id] = "Leads";
   S.oppSt[o.id] = "accepted"; S.oppDeal[o.id] = id; S.oppDec = null; o.closed = now; o.closedTs = Date.now();
@@ -15789,7 +16021,16 @@ function dealFromReq(dl, o, now) {
     credit: yn(r.credit, r.creditNote, "None disclosed"), agency: "",
     synd: r.synd === "Yes" ? "Yes" + (r.sponsorCash ? ", sponsors contribute " + money(r.sponsorCash) : "") : r.synd === "No" ? "No" : "" };
   dl.pdet = { maint: "", env: yn(r.env, r.envNote, "None reported"), lura: r.lura || "", small: "", ground: r.ground || "", crime: "",
-    tenants: (r.tenants || []).filter(x => PROP_TENANTS.includes(x)), elec: "", water: "", gas: "", cable: "", legal: "", drivers: "" };
+    tenants: (r.tenants || []).filter(x => PROP_TENANTS.includes(x)), elec: "", water: "", gas: "", cable: "", legal: "", drivers: "",
+    /* the two parcel answers, as one line and a note [T, 15 Oct, answer 4] */
+    parcels: r.parcels === "Yes" ? "More than one" + (r.contig === "Yes" ? ", contiguous" : r.contig === "No" ? ", not contiguous" : "")
+      : r.parcels === "No" ? "One" : r.parcels === "Unknown" ? "Unknown" : "",
+    parcelNote: r.parcelNote || "" };
+  /* NOI in place, close by, current loan maturity and year renovated had no
+     field on the deal until 15 Oct and sat in the review card's last list */
+  dl.noi = r.noi ? Number(String(r.noi).replace(/[^0-9.]/g, "")) || null : null;
+  dl.closeBy = r.closeBy || ""; dl.renovated = r.renovated || null;
+  dl.maturity = tx === "Refinance" ? r.maturity || o.maturity || "" : "";
   if (r.su) dl.su = { sources: r.su.sources.map(x => x.slice()), uses: r.su.uses.map(x => x.slice()) };
   (r.coSponsors || []).forEach(c => dl.contacts.push({ name: c.name || "", role: "Co-sponsor", email: c.email || "", phone: "" }));
   /* the borrower is on the platform already - they sent the request */
@@ -15816,12 +16057,6 @@ function dealFromReq(dl, o, now) {
   const ten = (r.tenants || []).filter(x => !PROP_TENANTS.includes(x));
   const rest = [
     ["Other addresses", r.addrMore],
-    ["More than one tax parcel", r.parcels && r.parcels + (r.contig ? ", contiguous: " + r.contig : "")],
-    ["Notes on the parcels", r.parcelNote],
-    ["Net operating income", r.noi],
-    ["Year renovated", r.renovated && String(r.renovated)],
-    ["Loan maturity", r.maturity || o.maturity],
-    ["Close by", r.closeBy],
     ["Tenant concentrations", ten.join(", ")],
     ["Notes on tenants", r.tenantNote],
     ["Construction take-out", r.takeout],
@@ -15829,34 +16064,74 @@ function dealFromReq(dl, o, now) {
   const flags = [["Credit issues", r.credit === "Yes" && (r.creditNote || "Yes, no description")],
     ["Environmental issues", r.env === "Yes" && (r.envNote || "Yes, no description")],
     ["Land use restriction", r.lura === "Yes" && "Yes"], ["Ground lease", r.ground === "Yes" && "Yes"]].filter(x => x[1]);
-  dl.fromReq = { by: b.name || "the borrower", on: o.subShort || "", rest, flags, docs: up.length, skipped, reviewed: false, open: false,
+  dl.fromReq = { by: b.name || "the borrower", on: o.subShort || "", rest, flags, docs: up.length, skipped, reviewed: false, conf: {},
     vals: Object.fromEntries(REQ_KEYS.map(k => [k, reqGet(dl, k)]).filter(x => x[1] !== "null" && x[1] !== '""' && x[1] !== "[]")) };
 }
-/* Borrower / Edited, beside a value that came in with the request. Shown
-   until the broker marks the request reviewed; after that the deal is theirs
-   and the marks would be noise on every visit. */
+/* Edited, beside a value the broker changed from what the request sent.
+   The muted Borrower badge on every unchanged value went on 19 Oct: the
+   section's "From the borrower" line says it once for all of them, and Edited
+   is the only mark on a value [Borrower Figma 541:7282, 12 Oct]. */
 let brTagsOn = false;
 function brTag(d, k) {
   const f = d.fromReq;
   if (!brTagsOn || !f || f.reviewed || !(k in f.vals)) return "";
-  if (reqGet(d, k) === f.vals[k]) return ` <span class="badge tone-muted brtag" title="As ${esc(f.by)} sent it">Borrower</span>`;
+  if (reqGet(d, k) === f.vals[k]) return "";
   const v = JSON.parse(f.vals[k]);
   const was = REQ_SETS[k] ? ({ "@tx": txFact, "@loc": locFull, "@size": sizeFact })[k](Object.assign({}, d, Object.fromEntries(REQ_SETS[k].map((p, i) => [p, v[i]]))))
     : Array.isArray(v) ? (k === "su" ? "" : v.join(", ")) : typeof v === "number" && /amt|Value|balance|liquidity|worth/.test(k) ? money(v) : String(v);
   return ` <span class="badge tone-gold brtag" title="${esc(f.by)} sent${was ? ": " + esc(was) : " a different version"}">Edited</span>`;
 }
-/* The review card, first thing on a deal that came from a request. Three
-   lists, in the order a broker acts on them: what the borrower flagged, what
-   on the checklist has not come in, and what the request said that has no
-   field here. Nothing reaches a lender until Send loan request, which
-   is the "adjustment before submitting" Tony describes. */
-function reqCard(d) {
+/* The request on the deal page, 19 Oct: a strip and a drawer, the Borrower
+   Figma file's broker screens (541:7281), built there 12-19 Oct and aligned on
+   the Broker file the same day. The full review card it replaces was the first
+   build [Tanya, 12 Oct: "looks too overloaded … can we hide it in modal or
+   inner page?"].
+   - The strip is a default Alert: "Borrower's request · M. Adeyinka — N of 5
+     sections confirmed", with Review request, which opens the drawer. The role
+     is said once, here [T, 19 Oct: "This is the borrower, right?"].
+   - Five sections are confirmed one by one, each where it sits: Deal facts
+     beside the Overview summary, Sponsor and Property details in their
+     headings, Sources and uses in its own heading, Documents on the tab's bar.
+     Pressing Done in a section's editor confirms it too [~].
+   - The drawer is the lender quick view's layout at 480 [Tanya, 12 Oct]: the
+     flags as warning Alerts, Not yet received with Ask per row and Ask for
+     all, and Confirm all in the footer. [💡 rec] */
+const REQ_SECS = [["facts", "Deal facts"], ["sponsor", "Sponsor"], ["pdet", "Property details"], ["su", "Sources and uses"], ["docs", "Documents"]];
+const reqConf = d => d.fromReq.conf || (d.fromReq.conf = {});
+const reqConfN = d => REQ_SECS.filter(([k]) => reqConf(d)[k]).length;
+/* the deal on screen, when it came from a request; never in the lender preview */
+const reqDeal = () => { const d = S.lpv ? null : dealById(S.dealId); return d && d.fromReq ? d : null; };
+const REQ_TRI = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`;
+const REQ_USER = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+const isReqSec = k => REQ_SECS.some(x => x[0] === k);
+/* "From the borrower", the role and not the name: the strip names them once */
+const reqSrc = k => isReqSec(k) && reqDeal() ? `<span class="reqsrc">${REQ_USER}From the borrower</span>` : "";
+const reqOk = k => {
+  const d = isReqSec(k) && reqDeal();
+  if (!d) return "";
+  return reqConf(d)[k] ? `<span class="badge tone-green reqok">✓ Confirmed</span>`
+    : `<button class="btn btn--outline btn--xs reqok" type="button" data-reqconf="${k}">Confirm</button>`;
+};
+/* Done in a section editor confirms that section: the broker has read and
+   saved it, which is what Confirm says */
+function reqDoneConf(k) {
+  const d = k && reqDeal();
+  const sec = !k ? null : k.startsWith("su") ? "su" : ({ sponsor: "sponsor", pdet: "pdet" })[k];
+  if (d && sec) reqConf(d)[sec] = true;
+}
+function reqStrip(d) {
   const f = d.fromReq;
   if (!f) return "";
-  if (f.reviewed && !f.open) return `<div class="card reqrv reqrv--done" style="margin-bottom:16px"><div class="card__ct">
-      <span>Started from ${esc(f.by)}&rsquo;s request${f.on ? ", " + esc(f.on) : ""}. You marked it reviewed.</span>
-      <button class="btn btn--link btn--sm" type="button" data-reqopen="${d.id}">Show the request</button></div></div>`;
-  const n = Object.keys(f.vals).length;
+  const n = reqConfN(d);
+  return `<div class="alert reqstrip" role="status">${INFOIC}
+      <div class="alert__line">Borrower&rsquo;s request · ${esc(f.by)} — ${n === REQ_SECS.length ? "all sections confirmed" : n + " of " + REQ_SECS.length + " sections confirmed"}</div>
+      <div class="alert__act alert__act--end"><button class="btn btn--link btn--sm" type="button" data-reqopen="${d.id}">${n === REQ_SECS.length ? "View request" : "Review request"}</button></div>
+    </div>`;
+}
+function reqDrawer() {
+  const d = dealById(S.reqDr), f = d && d.fromReq;
+  if (!f) return "";
+  const n = reqConfN(d);
   /* "Not yet received", not "Lenders will look for": the list is the deal's
      checklist slots with no file, which is Tony's checklist for this loan
      purpose. The old heading spoke for lenders and named no source, and Tony
@@ -15874,24 +16149,25 @@ function reqCard(d) {
       ${req[k] ? `<span class="reqrv__st">Asked ${esc(req[k])}</span>`
         : `<button class="btn btn--link btn--sm" type="button" data-askone="${esc(k)}" aria-label="Ask ${esc(f.by)} for the ${esc(k)}">Ask</button>`}</li>`).join("")}</ul>`
     : `<p class="reqrv__none">Everything on the checklist is in.</p>`;
-  const li = xs => xs.length ? `<ul>${xs.join("")}</ul>` : `<p class="reqrv__none">Nothing.</p>`;
-  return `<div class="card reqrv" style="margin-bottom:16px">
-      <div class="card__hd"><h2>From ${esc(f.by)}&rsquo;s request</h2><span class="r">Submitted ${esc(f.on)}</span></div>
-      <div class="card__ct">
-        <p class="reqrv__lede">${n} answers and ${f.docs} document${f.docs === 1 ? "" : "s"} came in with the request. Values marked Borrower are as they were sent; anything you change reads Edited. Lenders see none of it until you send the loan request.</p>
-        <div class="reqrv__cols">
-          <div><h3>The borrower flagged</h3>${li(f.flags.map(x => `<li><b>${esc(x[0])}.</b> ${esc(x[1])}</li>`))}</div>
-          <div><div class="reqrv__h"><h3>Not yet received</h3>${unasked.length > 1 ? `<button class="btn btn--link btn--sm" type="button" data-askb>Ask for all ${unasked.length}</button>` : ""}</div>
-            ${docs}${gaps.length ? `<p class="reqrv__gaps">Still blank on the deal: ${gaps.join(", ")}.</p>` : ""}</div>
-          <div><h3>In the request, no field on the deal</h3>${f.rest.length ? `<dl class="fkv">${f.rest.map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl>` : `<p class="reqrv__none">Nothing.</p>`}</div>
-        </div>
-        <div class="reqrv__acts">
-          <button class="btn btn--link btn--sm" type="button" data-reqtab="fin">Open the details</button>
-          ${f.reviewed ? `<button class="btn btn--outline btn--sm" type="button" data-reqopen="${d.id}">Hide the request</button>`
-            : `<button class="btn btn--outline btn--sm" type="button" data-reqdone="${d.id}">Mark as reviewed</button>`}
-        </div>
-      </div>
-    </div>`;
+  return `<div class="ldrov" data-reqx></div>
+  <aside class="ldr ldr--req" role="dialog" aria-modal="true" aria-label="Borrower&rsquo;s request">
+    <div class="ldr__hd">
+      <div style="min-width:0;flex:1"><h2>Borrower&rsquo;s request</h2>
+        <span class="sub">${esc(f.by)}${f.on ? " · submitted " + esc(f.on) : ""} · ${n} of ${REQ_SECS.length} sections confirmed</span></div>
+      <button class="x" type="button" data-reqx aria-label="Close">${XCLOSE}</button>
+    </div>
+    <div class="ldr__bd reqrv">
+      ${f.flags.map(x => `<div class="alert alert--warning" role="status">${REQ_TRI}<div class="alert__title">${esc(x[0])}</div><div class="alert__desc">${esc(x[1])}</div></div>`).join("")}
+      <div><div class="reqrv__h"><h3>Not yet received</h3>${unasked.length > 1 ? `<button class="btn btn--link btn--sm" type="button" data-askb>Ask for all ${unasked.length}</button>` : ""}</div>
+        ${docs}${gaps.length ? `<p class="reqrv__gaps">Still blank on the deal: ${gaps.join(", ")}.</p>` : ""}</div>
+      ${/* the answers with no field on the deal. Six got one on 15 Oct (NOI,
+           close by, maturity, year renovated, the two parcel answers), so the
+           list is usually empty and then not drawn [T, 15 Oct, answer 4] */""}
+      ${f.rest.length ? `<div><h3>In the request, no field on the deal</h3><dl class="fkv">${f.rest.map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl></div>` : ""}
+    </div>
+    <div class="ldr__ft">${n < REQ_SECS.length ? `<button class="btn btn--sm" type="button" data-reqall>Confirm all</button>`
+      : `<span class="reqrv__none">All sections confirmed</span>`}</div>
+  </aside>`;
 }
 /* the six reasons the product's dialog offers, verbatim. Where the answer
    goes — who reads it, whether the next broker sees it — is unrecorded. [~] */
@@ -19242,7 +19518,7 @@ function secHd(title, key) {
      need no guard: route() clears S.secEdit on the way into every page, so
      an open editor cannot survive the navigation into the preview. */
   return `<div class="sec__hd sec__hd--fix"><span class="sec__cap">${title}</span>
-    ${secEditBtn(key)}</div>`;
+    ${reqSrc(key)}${secEditBtn(key)}${reqOk(key)}</div>`;
 }
 function fixSectE(title, key, inner) {
   return `<section class="sec">${secHd(title, key)}${inner}</section>`;
@@ -19336,6 +19612,11 @@ function suSect(d) {
   const col = (title, key) => S.secEdit === "su:" + key
     ? editCol(title, key)
     : suReadCol(title, d.su[key], secEditBtn("su:" + key));
+  /* A deal from a request gets the heading back, to hold the source line and
+     Confirm [Borrower Figma, 19 Oct]; a broker's own deal keeps the 21 Sep
+     captionless layout [Tanya, 19 Oct]. */
+  if (reqDeal()) return `<section class="sec"><div class="sec__hd sec__hd--fix"><span class="sec__cap">Sources and uses</span>${reqSrc("su")}${reqOk("su")}</div>
+    <div class="su__grid">${col("Sources", "sources")}${col("Uses", "uses")}</div></section>`;
   return `<section class="sec sec--nohd"><div class="su__grid">${col("Sources", "sources")}${col("Uses", "uses")}</div></section>`;
 }
 
@@ -19465,6 +19746,10 @@ function propSect(d) {
         <input class="inp" id="pd_lg" type="text" value="${esc(p.legal || "")}" data-se="pdet.legal" placeholder="None disclosed"></div>
       <div class="fld"><label for="pd_dd">Demand drivers</label>
         <input class="inp" id="pd_dd" type="text" value="${esc(p.drivers || "")}" data-se="pdet.drivers" placeholder="Employment, traffic count, demographics"></div>
+      <div class="fld"><label for="pd_tp">Tax parcels</label>
+        <input class="inp" id="pd_tp" type="text" value="${esc(p.parcels || "")}" data-se="pdet.parcels" placeholder="One"></div>
+      <div class="fld"><label for="pd_pn">Parcel notes</label>
+        <input class="inp" id="pd_pn" type="text" value="${esc(p.parcelNote || "")}" data-se="pdet.parcelNote" placeholder="How they are split"></div>
     </div>`);
   /* the form asks four separate Tenant-or-Landlord questions; a lender reads
      the answer as one split, so it renders as one. Grouping by payer also
@@ -19475,11 +19760,19 @@ function propSect(d) {
     .filter(x => x[1]).map(x => `${x[0]} pays ${x[1]}`).join(" · ");
   return fixSectE("Property details", "pdet", `<div class="duo">
       <div class="duocol"><dl class="fkv">
+        ${/* Year built and Year renovated open the section and the tax-parcel
+             answers close it, since 19 Oct: the Borrower Figma file's
+             Property details [Tanya, 15 Oct]. Current loan matures shows on a
+             refinance only. [💡 rec] */""}
+        <dt>Year built</dt><dd class="num">${d.built || "—"}${brTag(d, "built")}</dd>
+        <dt>Year renovated</dt><dd class="num">${d.renovated || "—"}</dd>
+        ${d.maturity ? `<dt>Current loan matures</dt><dd>${esc(d.maturity)}</dd>` : ""}
         <dt>Deferred maintenance</dt><dd>${p.maint ? esc(p.maint) : "—"}</dd>
         <dt>Environmental</dt><dd>${p.env ? esc(p.env) : "—"}${brTag(d, "pdet.env")}</dd>
         <dt>Land use restriction</dt><dd>${esc(p.lura) || "—"}${brTag(d, "pdet.lura")}</dd>
         <dt>Units under 300 sq ft</dt><dd>${esc(p.small) || "—"}</dd>
         <dt>Ground lease</dt><dd>${esc(p.ground) || "—"}${brTag(d, "pdet.ground")}</dd>
+        <dt>Tax parcels</dt><dd>${p.parcels ? esc(p.parcels) : "—"}</dd>
       </dl></div>
       <div class="duocol"><dl class="fkv">
         <dt>Crime</dt><dd>${esc(p.crime) || "—"}</dd>
@@ -19487,6 +19780,7 @@ function propSect(d) {
         <dt>Utilities</dt><dd>${utils || "—"}</dd>
         <dt>Legal issues</dt><dd>${p.legal ? esc(p.legal) : "—"}</dd>
         <dt>Demand drivers</dt><dd>${p.drivers ? esc(p.drivers) : "—"}</dd>
+        <dt>Parcel notes</dt><dd>${p.parcelNote ? esc(p.parcelNote) : "—"}</dd>
       </dl></div>
     </div>`);
 }
@@ -19678,17 +19972,18 @@ function docsBody(d) {
      are the borrower's checklist, 16 or 17 of them, and the box could only
      count them ("16 documents on Marisol's checklist") without naming one, so
      the list the broker works down vanished exactly when all of it was
-     outstanding. With nothing in, every slot draws as a --none row. The box
-     stays for a deal with no request, where DOC_KEYS still fits one sentence
-     (question 229). [T] [💡 rec] */
-  if (!d.fromReq && !docCounts(d).have && !reqKeys.length) return `<div class="card__ct">
+     outstanding. With nothing in, every slot draws as a --none row. [T] [💡 rec]
+     Since 21 Oct a deal with no request has the same 12 to 17 slots (chkDocs,
+     question 229), so the box is left for a deal with no slots at all; its
+     sentence named the old four and now names none. */
+  if (!Object.keys(d.docs).length && !docCounts(d).have) return `<div class="card__ct">
     ${/* the title is a recorded decision, not drift: deal-creation-improvement-plan
          specifies "icon, No documents yet, the four expected docs in one
          lender-voice sentence, single CTA". Only the container changes. */""}
     <div class="empty empty--sm">
       <div class="empty__ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
       <b>No documents yet</b>
-      <p>Lenders will ask for an executive summary, a rent roll, a sponsor PFS and a T-12 operating statement. You can upload them, or ask ${esc(lead)} to.</p>
+      <p>You can upload documents, or ask ${esc(lead)} to.</p>
       <div class="acts">
         ${askBtn}
         <button class="btn btn--outline btn--sm" type="button" data-docupall>Upload documents</button>
@@ -19817,6 +20112,7 @@ function docsBody(d) {
         <button type="button" class="${folders ? "" : "on"}" data-docview="list" aria-pressed="${!folders}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/></svg>Checklist</button>
         <button type="button" class="${folders ? "on" : ""}" data-docview="folders" aria-pressed="${folders}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>Folders</button>
       </div>
+      ${reqDeal() ? `<span class="reqsrcrow">${reqSrc("docs")}${reqOk("docs")}</span>` : ""}
     </div>`;
   if (folders) return `<div class="card__ct doclist">${bar}${docTree(d, held)}
       <div class="docnote">
@@ -19873,25 +20169,35 @@ function docsBody(d) {
    a field was added to either. [Tanya, 21 Sep] */
 /* the Transaction and size facts as text: the grid prints them, and an Edited
    badge prints what the borrower sent through the same words */
-const txFact = d => d.txType + (d.price ? " · " + money(d.price) : d.balance ? " · " + money(d.balance) + " owed" : d.projCost ? " · " + money(d.projCost) + " total cost" : "")
+const txFact = d => d.txType + (d.price ? " · " + money(d.price) + " price" : d.balance ? " · " + money(d.balance) + " owed" : d.projCost ? " · " + money(d.projCost) + " total cost" : "")
   + (d.propValue && d.balance ? " · " + money(d.propValue) + " value" : "") + (d.underContract === "Yes" ? " · under contract" : "")
   + (d.closeDate ? " · closes " + d.closeDate : "") + (d.shovel === "Yes" ? " · shovel-ready" : "");
 const sizeFact = d => [d.units ? d.units + " units" : "", d.sf ? Number(d.sf).toLocaleString("en-US") + " sf" : "",
   d.occupancy != null ? d.occupancy + "% occupied" : ""].filter(Boolean).join(" \u00b7 ");
-function dealFacts(d) {
+/* Two rows since 19 Oct, the Borrower Figma file's grid [Tanya, 15 Oct]: the
+   money (Loan amount, Leverage, Net operating income, Close by), then the deal
+   (Location, Transaction, Property, Execution type). Property type and size
+   are one Property fact; Year built moved to Property details on the Details
+   tab. The lender preview has no Property details, so it keeps Year built
+   inside its Property line [Tanya, 19 Oct]. Every fact draws, an em dash when
+   the deal has no value, so the columns hold. [💡 rec] */
+const propFact = (d, lender) => {
+  const p = (d.property || "").toLowerCase();
+  return [d.units ? d.units + "-unit " + p : d.sf ? Number(d.sf).toLocaleString("en-US") + " sf " + p : d.property || "",
+    lender && d.built ? "built " + d.built : "", d.occupancy != null ? d.occupancy + "% occupied" : ""].filter(Boolean).join(" \u00b7 ");
+};
+function dealFacts(d, lender) {
+  const base = d.price || d.propValue;
+  const ltv = d.ltv || (d.amt && base ? Math.round(d.amt / base * 100) : null);
   return `  <div class="facts">
     <div class="fact"><div class="k">Loan amount</div><div class="v num">${money(d.amt)}${brTag(d, "amt")}</div></div>
-    ${(() => {
-      const base = d.price || d.propValue;
-      const ltv = d.ltv || (d.amt && base ? Math.round(d.amt / base * 100) : null);
-      return ltv ? `<div class="fact"><div class="k">Leverage</div><div class="v num">${ltv}% LTV</div></div>` : "";
-    })()}
-    <div class="fact"><div class="k">Property type</div><div class="v">${esc(d.property)}${brTag(d, "property")}</div></div>
-    <div class="fact"><div class="k">Execution type</div><div class="v">${esc(d.financing || "Not specified")}</div></div>
+    <div class="fact"><div class="k">Leverage</div><div class="v num">${ltv ? ltv + "% LTV" : "\u2014"}</div></div>
+    <div class="fact"><div class="k">Net operating income</div><div class="v num">${d.noi ? usd(d.noi) : "\u2014"}</div></div>
+    <div class="fact"><div class="k">Close by</div><div class="v">${d.closeBy ? esc(d.closeBy) : "\u2014"}</div></div>
     <div class="fact"><div class="k">Location</div><div class="v">${esc(locFull(d))}${brTag(d, "@loc")}</div></div>
     <div class="fact"><div class="k">Transaction</div><div class="v">${esc(txFact(d))}${brTag(d, "@tx")}</div></div>
-    ${sizeFact(d) ? `<div class="fact"><div class="k">${d.units ? "Units" : d.sf ? "Size" : "Occupancy"}</div><div class="v num">${sizeFact(d)}${brTag(d, "@size")}</div></div>` : ""}
-    ${d.built ? `<div class="fact"><div class="k">Year built</div><div class="v num">${d.built}${brTag(d, "built")}</div></div>` : ""}
+    <div class="fact"><div class="k">Property</div><div class="v">${esc(propFact(d, lender)) || "\u2014"}${brTag(d, "property") || brTag(d, "@size")}</div></div>
+    <div class="fact"><div class="k">Execution type</div><div class="v">${esc(d.financing || "Not specified")}</div></div>
     ${/* no Source row here (Anna, 8 Sep, same day it went in). This
          grid holds facts about the asset and the loan — what is being
          financed, for how much, where. How the deal reached the board
@@ -20098,7 +20404,7 @@ function lpvBody(d, o = {}) {
      and rejected, not why. Keep the grouping below unless that changes. */
   const cards = [
     d.summary ? lpvSect("Overview",
-      `<div class="card__ct"><p class="prose">${esc(d.summary)}</p>${dealFacts(d)}</div>`) : "",
+      `<div class="card__ct"><p class="prose">${esc(d.summary)}</p>${dealFacts(d, true)}</div>`) : "",
     /* the four untitled ones — each is named by the captions inside it, so the
        header above would be the same word twice. See the note on lpvSect.
 
@@ -20802,7 +21108,7 @@ function authSubmit() {
      (setup_controller.rb at 9f3427fc); the sheet has no such state, so it is
      not drawn. Question 238. */
   if (S.authRole === "lender") {
-    S.role = "lender"; S.lFresh = true; S.lpd = null;
+    S.role = "lender"; S.lFresh = true; S.lpd = null; S.lsetupX = false;
     LPROF.first = a.first.trim(); LPROF.last = a.last.trim(); LPROF.email = a.email.trim(); LPROF.company = a.company.trim(); LPROF.photo = "";
     S.bverify = "sent"; location.hash = "#/auth/verify/lender"; return;
   }
@@ -21382,7 +21688,7 @@ function profListing() {
           <p class="lcard__bio${PROFILE.bio.trim() ? "" : " ph"}" id="lbio">${PROFILE.bio.trim() ? esc(PROFILE.bio) : LBIO_PH}</p>
           ${facet(PROFILE.types, "Property specialties")}
           ${facet(PROFILE.fins, "Execution specialties")}
-          ${facet(PROFILE.states.map(a => STATE_NAME[a] || a), "Operates in")}
+          ${facet(PROFILE.states.map(a => STATE_NAME[a] || a), "Property location")}
         </div>
       </div>
     </aside>
@@ -23352,7 +23658,7 @@ const LP_RECOURSE = ["Full recourse", "Partial recourse", "Non-recourse"];
 function lpSaved() {
   if (S.lFresh) return { inst: [], ltype: "", min: "", max: "", rec: [], st: [], prop: [], fin: [], pitch: "" };
   const n = lNet();
-  return { inst: [n.inst], ltype: S.lpType || "Direct lender | investor", min: String(n.lo * 1e6), max: String(n.hi * 1e6),
+  return { inst: S.lpInst || [n.inst], ltype: S.lpType || "Direct lender | investor", min: String(n.lo * 1e6), max: String(n.hi * 1e6),
     rec: S.lpRec || ["Partial recourse", "Non-recourse"], st: n.st.slice(), prop: n.prop.slice(), fin: n.fin.slice(), pitch: n.pitch || "" };
 }
 /* the form edits a draft; leaving with a dirty draft asks first [sheet 02.1,
@@ -23395,6 +23701,31 @@ function lpErrors(d) {
   return m;
 }
 
+/* a request fits when its amount is inside the range and its property type,
+   state and financing are all picked. Institution, lender type and recourse
+   are not on a request, so they cannot narrow it [~]. A request with no
+   financing set is not held to that field, as the deal form treats "Not
+   sure yet". */
+const ST_NAME = Object.fromEntries(US_STATES);
+function lpFits(r, d) {
+  const amt = r.amt * 1e6;
+  return amt >= Number(d.min) && amt <= Number(d.max) && d.prop.has(r.prop) && d.st.has(ST_NAME[r.state])
+    && (!r.fin || d.fin.has(r.fin));
+}
+function lmpvHtml() {
+  /* actionless, like mpvHtml: the fields beside it are the action */
+  const d = lpd();
+  if (!d.prop.size || !d.st.size || !d.min || !d.max)
+    return `<div class="empty--inline"><p>Add loan amounts, property types and states — matching requests preview here before you save.</p></div>`;
+  const all = LREQS.map(lreq), hit = all.filter(r => lpFits(r, d));
+  const by = {};
+  hit.forEach(r => { by[r.prop] = (by[r.prop] || 0) + 1; });
+  const rows = Object.entries(by).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  return `<div class="big">${hit.length}</div>
+    <div class="sub">of ${all.length} recent requests fit these parameters</div>
+    ${rows.length ? `<div class="mpv__by">${rows.map(([k, n]) => `<div class="su__row"><span>${esc(k)}</span><span class="num">${n}</span></div>`).join("")}</div>` : ""}`;
+}
+
 function renderLParams() {
   const d = lpd(), m = S.lpTried ? lpErrors(d) : {};
   /* min < max is checked as you type, not on Save [sheet 02.1, "Inline
@@ -23406,17 +23737,19 @@ function renderLParams() {
   return `
     <div class="head"><div><h1>Lending parameters</h1>
       <p>What you finance. Requests that fit all of it reach you.</p></div></div>
-    <div class="frm frm--solo"><div class="lpcol">
+    <div class="frm"><div class="lpcol">
       <div class="card">
         <div class="card__hd"><h2>Who you are</h2></div>
         <div class="card__ct">
-          <div class="fldrow fldrow--2">
-            ${ms("inst", MSX.lpinst, "Type of institution")}
-            <div class="fld${m.ltype ? " err" : ""}"><label id="lpl_ltype">Direct lender or mortgage broker <span class="req">*</span></label>
-              <div class="rgrp" role="radiogroup" aria-labelledby="lpl_ltype">${LP_TYPES.map(v =>
-                `<label class="rad"><input type="radio" name="lp_ltype" data-lpf="ltype" value="${esc(v)}"${d.ltype === v ? " checked" : ""}><span class="dot" aria-hidden="true"></span>${esc(v)}</label>`).join("")}</div>
-              ${fe("ltype")}</div>
-          </div>
+          ${/* stacked, not paired [Tanya, 22 Oct]: beside the institution
+                field the radios had a 300px cell at 1100, wrapped, and needed
+                an override to stay level with the input. Under it they have
+                the card's width and sit as Recourse does. */""}
+          ${ms("inst", MSX.lpinst, "Type of institution")}
+          <div class="fld${m.ltype ? " err" : ""}"><label id="lpl_ltype">Direct lender or mortgage broker <span class="req">*</span></label>
+            <div class="rgrp" role="radiogroup" aria-labelledby="lpl_ltype">${LP_TYPES.map(v =>
+              `<label class="rad"><input type="radio" name="lp_ltype" data-lpf="ltype" value="${esc(v)}"${d.ltype === v ? " checked" : ""}><span class="dot" aria-hidden="true"></span>${esc(v)}</label>`).join("")}</div>
+            ${fe("ltype")}</div>
         </div>
       </div>
       <div class="card">
@@ -23429,13 +23762,13 @@ function renderLParams() {
               <div class="amtwrap"><span>$</span><input id="lp_max" data-lpf="max" inputmode="numeric" autocomplete="off" value="${usdFmt(d.max)}" placeholder="25,000,000" aria-label="Maximum loan amount in dollars"></div>
               <div class="errmsg" id="lprangeerr" aria-live="polite"${inv && !m.max ? "" : " hidden"}>Maximum is lower than minimum.</div>${fe("max")}</div>
           </div>
-          <div class="fld${m.rec ? " err" : ""}"><label>Recourse <span class="req">*</span></label>
-            <div class="cgrp">${LP_RECOURSE.map(v => chk("rec", v)).join("")}</div>${fe("rec")}</div>
+          <div class="fld${m.rec ? " err" : ""}"><label id="lpl_rec">Recourse <span class="req">*</span></label>
+            <div class="cgrp cgrp--row" role="group" aria-labelledby="lpl_rec">${LP_RECOURSE.map(v => chk("rec", v)).join("")}</div>${fe("rec")}</div>
           <div class="fldrow fldrow--2">
             ${ms("prop", MSX.lpprop, "Property types financed")}
             ${ms("fin", MSX.lpfin, "Types of financing provided")}
           </div>
-          ${ms("st", MSX.lpstate, "States you lend in", d.st.size < US_STATES.length ? `<div class="hint"><button class="btn btn--link" type="button" data-lpallst>Select all states</button></div>` : "")}
+          ${ms("st", MSX.lpstate, "States you lend in")}
         </div>
       </div>
       <div class="card">
@@ -23443,10 +23776,29 @@ function renderLParams() {
         <div class="card__ct">
           <div class="fld"><label for="lp_pitch">What brokers should know before they send you a deal</label>
             <textarea class="inp" id="lp_pitch" data-lpf="pitch" rows="4" placeholder="What you are quickest on, and what you will not do.">${esc(d.pitch)}</textarea>
-            <div class="hint">Shown to brokers on your profile. It does not change which requests reach you.</div></div>
+            ${/* no hint [Tanya, 22 Oct: tooltip it "or skip, if this text is
+                  not mentioned in requirements"]. Sheet 02.1 says only "pitch
+                  (optional)"; "shown to brokers on your profile" is our
+                  reading while question 116 is open. */""}</div>
         </div>
-        <div class="card__ft"><span class="bhint">${lpDirty() ? "Unsaved changes" : S.lFresh ? "Nothing saved yet" : "All changes saved"}</span>
-          <button class="btn" type="button" data-lpsave>Save parameters</button></div>
+      </div>
+      ${/* Save saves all three cards, so it sits under them in a .frmfoot,
+            not in the pitch card's footer, where it read as saving the
+            pitch alone [Tanya, 22 Oct]. The exits-outside-the-card rule is
+            .card__ft's, ~line 2538. */""}
+      <div class="frmfoot"><span class="bhint">${lpDirty() ? "Unsaved changes" : S.lFresh ? "Nothing saved yet" : "All changes saved"}</span>
+        <button class="btn" type="button" data-lpsave>Save parameters</button></div>
+    </div>
+    ${/* 02.3's count, moved into the form by lender-triage-research: live as
+          the fields change, so the lender checks the parameters before the
+          requests arrive. The deal form's Matched lenders rail turned round:
+          same .frm grid, same sticky .frm__rail, same .mpv card. The count is
+          sample data over the 14 LREQS fixtures [~]; no endpoint returns it
+          (question 242). */""}
+    <div class="frm__rail">
+      <div class="card">
+        <div class="card__hd"><h2>Matching requests</h2></div>
+        <div class="card__ct mpv" id="lmpv">${lmpvHtml()}</div>
       </div>
     </div></div>
     ${S.lpLeave ? `<div class="mov mov--ask" role="alertdialog" aria-modal="true" aria-labelledby="lpleaveq" aria-describedby="lpleaveb">
@@ -23624,8 +23976,8 @@ function lOtherDlg() {
   return `
     <div class="mov mov--ask" role="dialog" aria-modal="true" aria-labelledby="lrotq">
       <div class="mdl mdl--ask">
-        <div class="mdl__hd"><div><h2 id="lrotq">${S.route === "lreqs" ? "Pass on " + esc(lreq(r).name) : "Pass on this request"}</h2></div></div>
-        <div class="mdl__bd"><div class="fld"><label for="lrot_t">Note (optional)</label>
+        <div class="mdl__hd"><div><h2 id="lrotq">${S.route === "lreq" ? "Pass on this request" : "Pass on " + esc(lreq(r).name)}</h2></div></div>
+        <div class="mdl__bd"><div class="fld"><label for="lrot_t">Note <span class="opt">(optional)</span></label>
           <textarea class="inp" id="lrot_t" rows="3" placeholder="What would have made it a fit"></textarea></div></div>
         <div class="mdl__ft"><button class="btn btn--outline" type="button" data-lrotx>Cancel</button><button class="btn" type="button" data-lrotgo>Pass</button></div>
       </div>
@@ -23677,7 +24029,7 @@ function renderLReq() {
         <div class="alert__title">${esc(sub.nm)} has been notified. Their contact details are below.</div>
         <div class="alert__desc">You said Interested on ${esc(r.intOn)}.${r.q ? ` Your question: “${esc(r.q)}”` : ""}</div>
         ${r.q ? "" : S.lrQ === r.id
-          ? `<div class="alert__act lrq"><div class="fld"><label for="lrq_t">Question for ${esc(sub.first)} (optional)</label>
+          ? `<div class="alert__act lrq"><div class="fld"><label for="lrq_t">Question for ${esc(sub.first)} <span class="opt">(optional)</span></label>
               <textarea class="inp" id="lrq_t" rows="3" placeholder="Anything you need before you quote"></textarea></div>
               <div class="lrq__ft"><button class="btn btn--outline btn--sm" type="button" data-lrqx>Cancel</button><button class="btn btn--sm" type="button" data-lrqsend>Send to ${esc(sub.first)}</button></div></div>`
           : `<div class="alert__act"><button class="btn btn--link" type="button" data-lrq>Ask ${esc(sub.first)} a question</button></div>`}
@@ -23719,6 +24071,27 @@ function lPass(r, why, whyNote) {
   location.hash = nextId && nextId !== r.id ? "#/requests/" + nextId : "#/requests";
 }
 
+/* the row's decisions as markup, for the list and for Home's Needs your
+   decision block, which the sheet gives the same inline Pass / Interested
+   (01.4: "Pass / Interested inline on each row (03.2)"). r is lreq().
+   Interested is filled, as on the request page, since 22 Oct: of the
+   sweep's accept / decline pairs, five of seven fill the accept and only
+   7shifts draws two equal outlines [lender home research] [~]. */
+const lReasons = (attr, id, other) => LPASS.filter(v => other || v !== "Other").map(v =>
+  `<button type="button" role="menuitem" ${attr}="${id}" data-why="${v}">${v === "Other" ? "Other…" : v}</button>`).join("");
+const lMenu = (lbl, items) => `<div class="cardmenu" role="menu" aria-label="${lbl}" draggable="false"><div class="cardmenu__lbl">Pass with a reason</div>${items}</div>`;
+function lRowActs(r) {
+  if (r.st !== "new") return "";
+  const mid = "lrp:" + r.id, open = S.cardMenu === mid;
+  return `<div class="lracts__in">
+        <div class="splitbtn">
+          <button class="btn btn--outline btn--sm" type="button" data-lrrp="${r.id}" data-why="" aria-label="Pass on ${esc(r.name)}">Pass</button>
+          <button class="btn btn--outline btn--sm splitbtn__car" type="button" data-kebab="${mid}" aria-haspopup="menu" aria-expanded="${open}" aria-label="Pass on ${esc(r.name)} with a reason">${CHEVD}</button>
+          ${open ? lMenu("Pass on " + esc(r.name) + " with a reason", lReasons("data-lrrp", r.id, true)) : ""}
+        </div>
+        <button class="btn btn--sm" type="button" data-lrri="${r.id}" aria-label="Interested in ${esc(r.name)}">Interested</button>
+      </div>`;
+}
 /* the list's two decisions, 03.2. Unlike the request page, nothing opens
    next: the lender is already looking at the next row. The row leaves Needs
    decision at once and the toast holds the way back for 5 s; one toast, one
@@ -23743,19 +24116,147 @@ function lListInt(r) {
   render();
 }
 
-/* Home's one block until milestone F builds 01.4: the count of requests
-   waiting, and the door to them. With none waiting it is the 03.5 empty. */
-function lHomeWaiting() {
-  const k = lreqsNow().filter(r => r.st === "new").length;
-  if (!k) return lEmpty();
-  return `<div class="empty"><b>${k} ${k === 1 ? "request is" : "requests are"} waiting for your decision</b>
-      <p>Matched to your lending parameters, newest first.</p>
-      <div class="acts"><a class="btn btn--sm" href="#/requests">Review requests</a></div></div>`;
+/* ---------- Home, lender — 01.4 and 01.3, milestones F and G, 20 Oct ----------
+   01.4 [sheet]: "Answers: what is new, what needs my decision, what did I
+   say yes to", in three blocks. Block 1, Needs your decision: the count and
+   the newest requests, with the list's parts (unread dot, Selected badge,
+   Pass and Interested, the whole row opens the request) in a list row of
+   its own since 22 Oct, see .lhq__r; the buttons show at rest. Financing
+   rides on the line under the name with property type and place, amount
+   and received date stack on the right: all five of the sheet's fields on
+   two lines. [~] The subtitle counts the unread ones, the dot's meaning
+   in words and the nearest true answer to "what is new" [~]. Block 2,
+   Interested, with the submitter. Block 3, the matching summary: the saved
+   parameters in one line and Edit. The decisions run the page's full
+   width because they carry the actions; Interested and the summary are
+   read-only and sit under them, side by side (.lhome__pair) [Tanya,
+   22 Oct: "put these 2 sections to the bottom"].
+
+   The newest five, not all: Home answers "is there anything", the list
+   answers "what exactly" [~]. Five is the broker Home's own cut for its
+   activity card, and View all carries the rest (renamed from View all requests, Tanya 22 Oct; the label keeps the destination).
+
+   The summary carries the alerts line too, "Weekly digest · Change"
+   [lender triage research, 01.3]: alerts are on by default (lexicon fact
+   7), so a checklist row for them would read not done for something already
+   on. That is the faked row Tony's 9 Sep comment caught on the broker's
+   card [T].
+
+   01.3, the first-session card [sheet]: "Checklist card: set lending
+   parameters, upload a lender pitch / term sheet (optional), turn on
+   new-deal notifications. Start → Lending parameters (02.1). Skip for now.
+   Card disappears when parameters are saved." Built as the research's two
+   rows, with the broker Home's Get set up anatomy (.setuprow): the required
+   row and the optional one, counted "0 of 1 done" on the required row only
+   (Remote's split) [💡 rec]. Notifications came off, as above. It hides on
+   save, as the sheet says. The sheet's Skip for now is a ghost xs button
+   in words, not an X [Tanya, 22 Oct: "make skip as a button? close is for
+   popovers"]: an X reads as close-this-layer, and this is a decision; none
+   of the 18 checklists in the sweep hides itself, but this one has one
+   required row, so finishing it is finishing the card [~].
+
+   While the card is up it is the only door to the parameters on the page:
+   the decisions block and the summary say so in words and carry no button,
+   because three buttons to one page is the launcher printed three times
+   (the broker Home's lesson, 4 Sep) [~]. Skip the card and the decisions
+   block's empty state takes the action back.
+
+   The optional row opens Lending parameters, where 02.2 puts the lender's
+   documents; that section is not built yet (build note, Not done). [~] */
+const LHOME_N = 5;
+/* the unread dot's tooltip, on Home and the list: what the dot means and
+   what clears it, in the lexicon's word [lexicon, Unread] [~] */
+const UDOT_TIP = "Unread. You haven't opened this request yet.";
+const ARROWR = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
+/* Matching's Edit, leading pencil [Tanya, 22 Oct: added, removed, then
+   back as "pencil icon + Edit"]: the file's own LNPEN glyph at the 14 the
+   View all arrows draw at, so the header link icons on Home are one size */
+const PEN14 = LNPEN.replace('width="12" height="12"', 'width="14" height="14"');
+/* "+2" after the first two, the Lenders directory's own cut for a list in
+   a cell [~] */
+const lFew = (a, k = 2) => a.length <= k ? a.join(", ") : a.slice(0, k).join(", ") + " +" + (a.length - k);
+/* the saved parameters as label and value, labels shortened from the
+   Lending parameters form's own field labels */
+function lParamRows() {
+  if (S.lFresh) return null;
+  const n = lNet(), st = n.st.length >= 50 ? "All states" : n.st.length > 4 ? n.st.length + " states" : n.st.join(", ");
+  return [["Loan size", money(n.lo) + " – " + money(n.hi)], ["Institution", n.inst], ["States", st],
+    ["Property types", lFew(n.prop)], ["Financing", lFew(n.fin)]].filter(([, v]) => v);
+}
+function lSetupCard() {
+  return `<div class="card lsetup">
+      <div class="card__hd"><div class="lsetup__l"><h2>Get set up</h2><span class="r">0 of 1 done</span></div>
+        <button class="btn btn--ghost btn--xs" type="button" data-lsetupx>Skip for now</button></div>
+      <div class="card__ct">
+        <a class="setuprow" href="#/parameters">
+          <span class="setuprow__c"></span>
+          <span class="setuprow__tx"><b>Set your lending parameters</b><span>Requests reach you once you have said what you finance.</span></span>
+          <span class="setuprow__go" aria-hidden="true">›</span>
+        </a>
+        <a class="setuprow" href="#/parameters">
+          <span class="setuprow__c"></span>
+          <span class="setuprow__tx"><b>Share a term sheet or programme overview</b><span>Optional · a PDF up to 10 MB</span></span>
+          <span class="setuprow__go" aria-hidden="true">›</span>
+        </a>
+      </div>
+    </div>`;
 }
 function renderLHome() {
-  return `
-    <div class="head"><div><h1>Home</h1><p>${S.lFresh ? `Welcome, ${esc(LPROF.first)}.` : `Welcome back, ${esc(LPROF.first)}.`}</p></div></div>
-    <div class="card"><div class="card__ct">${lHomeWaiting()}</div></div>`;
+  const all = lreqsNow(), setup = S.lFresh && !S.lsetupX;
+  const byOn = (a, b) => dayNum(b.on) - dayNum(a.on);
+  const waiting = all.filter(r => r.st === "new").sort(byOn), shown = waiting.slice(0, LHOME_N);
+  const yes = all.filter(r => r.st === "interested").sort((a, b) => dayNum(b.intOn) - dayNum(a.intOn));
+
+  const rows = shown.map(r0 => {
+    const r = lreq(r0), sub = [r.prop, r.city + ", " + r.state, r.fin].filter(Boolean).map(esc).join(" · ");
+    return `<div class="lhq__r${r.read ? "" : " unread"}" data-go="#/requests/${r.id}">
+      <div class="lhq__tx"><span class="lhq__nm"><span class="udot${r.read ? " udot--off" : ""}" aria-hidden="true"${r.read ? "" : ` data-tip="${UDOT_TIP}"`}></span><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="vh">Unread</span>`}${r.sel
+          ? `<span class="badge tone-blue" data-tip="${esc(lBroker(r0).nm)} picked you for this request">Selected</span>` : ""}</span>
+        <span class="lhq__sub" title="${sub}">${sub}</span></div>
+      <div class="lhq__amt"><b>${money(r.amt)}</b><span><span class="vh">Received </span>${esc(r.on)}</span></div>
+      ${lRowActs(r)}
+    </div>`;
+  }).join("");
+  const unread = waiting.filter(r => !lreq(r).read).length;
+  const decideCt = waiting.length ? rows
+    : setup ? `<div class="empty empty--sm"><b>No matches yet</b><p>Requests reach you once your lending parameters are saved.</p></div>`
+    : lEmpty();
+  const decide = `<div class="card">
+      <div class="card__hd"><h2>Needs your decision</h2>
+        ${waiting.length ? `<a class="btn btn--link" href="#/requests" data-lgov="decide" aria-label="View all requests">View all ${ARROWR}</a>` : ""}</div>
+      <div class="card__ct${waiting.length ? " lhq" : ""}">${decideCt}</div>
+    </div>`;
+
+  /* Empty Matching is the file's .empty--sm, as Interested beside it, not a
+     bare line [Tanya, 22 Oct: "use component here for empty state"; Prism
+     Empty/Page Size=sm]. The description line is ours [~]. */
+  const p = lParamRows(), f = LFREQ.find(([k]) => k === LPROF.freq);
+  const alerts = LPROF.notify.reqs ? esc(f ? f[1] : "Weekly digest") : "Off";
+  const match = `<div class="card lmatch">
+      <div class="card__hd"><h2>Matching</h2>${p ? `<a class="btn btn--link" href="#/parameters">${PEN14}Edit</a>` : ""}</div>
+      <div class="card__ct">${p ? `<dl class="fkv">${p.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}
+        <dt>Alerts</dt><dd>${alerts} · <a class="btn btn--link" href="#/account/notify">Change</a></dd></dl>`
+        : `<div class="empty empty--sm"><b>No lending parameters saved yet</b><p>What you finance shows here once it is saved.</p>${setup ? ""
+          : `<div class="acts"><a class="btn btn--outline btn--sm" href="#/parameters">Set lending parameters</a></div>`}</div>`}</div>
+    </div>`;
+
+  const yesCt = yes.length ? yes.map(r0 => {
+      const r = lreq(r0), b = lBroker(r0);
+      return `<a class="feed" href="#/requests/${r.id}"><span class="lpav feed__av">${esc(b.nm.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase())}</span>
+        <span class="feed__tx"><span class="s"><b>${esc(r.name)}</b></span><span class="when">${esc(b.nm)} · ${esc(b.co)}${r.intOn ? " · " + esc(r.intOn) : ""}</span></span></a>`;
+    }).join("")
+    : `<div class="empty empty--sm"><b>No interested requests</b><p>Requests you say Interested to are kept here, with who sent them.</p></div>`;
+  const interested = `<div class="card">
+      <div class="card__hd"><h2>Interested</h2>${yes.length ? `<a class="btn btn--link" href="#/requests" data-lgov="interested" aria-label="View all interested requests">View all ${ARROWR}</a>` : ""}</div>
+      <div class="card__ct">${yesCt}</div>
+    </div>`;
+
+  return `<div class="home">
+    <div class="head"><div><h1>Home</h1><p>${S.lFresh ? `Welcome, ${esc(LPROF.first)}.` : `Welcome back, ${esc(LPROF.first)}.`}${unread
+        ? ` You have ${unread} unread request${unread === 1 ? "" : "s"}.` : ""}</p></div></div>
+    ${setup ? lSetupCard() : ""}${decide}
+    <div class="lhome__pair">${interested}${match}</div>
+  </div>${lOtherDlg()}`;
 }
 /* 03.1 Requests, 03.4 Saved, 03.5 empty states. The borrower's My deals
    list (renderLoans) is the frame: views on a .seg with counts, the
@@ -23824,9 +24325,7 @@ function renderLRequests() {
   const pickOn = S.lview === "decide";
   [...S.lpicked].forEach(id => { if (!pickOn || !shown.some(r => r.id === id)) S.lpicked.delete(id); });
   const allPicked = shown.length && shown.every(r => S.lpicked.has(r.id));
-  const reasons = (attr, id, other) => LPASS.filter(v => other || v !== "Other").map(v =>
-    `<button type="button" role="menuitem" ${attr}="${id}" data-why="${v}">${v === "Other" ? "Other…" : v}</button>`).join("");
-  const menu = (lbl, items) => `<div class="cardmenu" role="menu" aria-label="${lbl}" draggable="false"><div class="cardmenu__lbl">Pass with a reason</div>${items}</div>`;
+  const reasons = lReasons, menu = lMenu;
   const k = S.lpicked.size, bulkOpen = S.cardMenu === "lrbulk";
   const selbar = k ? `
     <div class="selbar lrselbar">
@@ -23853,21 +24352,14 @@ function renderLRequests() {
 
   const body = shown.map(r0 => {
     const r = lreq(r0), b = lBroker(r0), [stl, stt] = LRST[r.st];
-    const mid = "lrp:" + r.id, open = S.cardMenu === mid, picked = S.lpicked.has(r.id);
-    const acts = r.st !== "new" ? "" : `<div class="lracts__in">
-        <div class="splitbtn">
-          <button class="btn btn--outline btn--sm" type="button" data-lrrp="${r.id}" data-why="" aria-label="Pass on ${esc(r.name)}">Pass</button>
-          <button class="btn btn--outline btn--sm splitbtn__car" type="button" data-kebab="${mid}" aria-haspopup="menu" aria-expanded="${open}" aria-label="Pass on ${esc(r.name)} with a reason">${CHEVD}</button>
-          ${open ? menu("Pass on " + esc(r.name) + " with a reason", reasons("data-lrrp", r.id, true)) : ""}
-        </div>
-        <button class="btn btn--outline btn--sm" type="button" data-lrri="${r.id}" aria-label="Interested in ${esc(r.name)}">Interested</button>
-      </div>`;
+    const open = S.cardMenu === "lrp:" + r.id, picked = S.lpicked.has(r.id);
+    const acts = lRowActs(r);
     return `<tr class="${[r.read ? "" : "unread", picked ? "sel" : "", open ? "menu-open" : ""].filter(Boolean).join(" ")}" data-go="#/requests/${r.id}">
       ${pickOn ? `<td class="pick-cell"><span class="chk"><input type="checkbox" data-lpick="${r.id}" aria-label="Select ${esc(r.name)}" ${picked ? "checked" : ""}><span class="bx">${CHKTICK}</span></span></td>` : ""}
       <td class="bmkcell"><button class="bmkbtn" type="button" data-lrsave="${r.id}" aria-pressed="${r.saved}"
         aria-label="${r.saved ? "Remove " + esc(r.name) + " from saved" : "Save " + esc(r.name)}"
         data-tip="${r.saved ? "Saved" : "Save"}">${r.saved ? BOOKMARKF : BOOKMARK}</button></td>
-      <td class="nm-cell"><span class="lrnm"><span class="udot${r.read ? " udot--off" : ""}" aria-hidden="true"></span><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="vh">Unread</span>`}${r.sel
+      <td class="nm-cell"><span class="lrnm"><span class="udot${r.read ? " udot--off" : ""}" aria-hidden="true"${r.read ? "" : ` data-tip="${UDOT_TIP}"`}></span><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="vh">Unread</span>`}${r.sel
           ? `<span class="badge tone-blue lrselb" data-tip="${esc(b.nm)} picked you for this request">Selected</span>` : ""}</span>
         <span class="bsub">${esc(r.prop)} · ${esc(r.city)}, ${esc(r.state)}</span></td>
       <td data-l="Loan amount"><b class="num">${money(r.amt)}</b></td>
@@ -24701,7 +25193,11 @@ BFILTERS.forEach(f => {
    names WHOSE location it is. Order is his: Property type, Property location,
    Advisor location, Execution type. The card and profile keep the heading
    "Operates in" - a heading names what the broker offers, a filter names the
-   deal, as Property specialties / Property type already split. */
+   deal, as Property specialties / Property type already split. The CARD's
+   row followed the filter to "Property location" the same day [Tanya, 15
+   Oct], so a borrower who filtered by Texas finds it under the same word;
+   the listing preview draws that card and changed with it. The profile's
+   section heading is still "Operates in". */
 const bkGeos = b => b.geos.map(g => STATE_NAME[g] || g);
 const BROKFILTERS = [
   { key:"bktype", title:"Property type", set:() => S.bkType, of:b => b.types,
@@ -26132,6 +26628,40 @@ function renderBInvite(d) {
               <span class="docrow__note">${esc(x.note || "Requested by your advisor")}${x.due ? ` · due ${esc(x.due)}` : ""}</span>
             </div>`).join("")}</div>
           </div>` : ""}
+          ${/* IN THE COLUMN, not on the page background [Tanya, 7 Oct]. This
+                footer stood as a direct child of .home until today, which made
+                it the only commit row in the file that ran out past a sidebar:
+                it ended at 1454 where the column it answers ends at 1098, so
+                the buttons sat 356px right of the last thing read, under the
+                empty space below Who is asking. The note it carried argued
+                from "the call renderLoanSent and the wizard both make", and
+                neither says that - renderLoanSent is one column, so it settles
+                nothing, and the wizard puts its .frmfoot INSIDE the left div
+                with the aside beside it. So does the broker deal form, and so
+                does the quote detail screen, whose own note at ~line 23463
+                reaches this placement from the other end. Three of three.
+
+                The counter-argument is real and loses: Accept and Decline
+                answer the whole page, Who is asking included, so a full-width
+                row is defensible in principle. The quote screen decides the
+                same shape the other way - its right column is the thread about
+                that quote, as much the subject as the terms are - and keeps
+                the footer in the column. .home__col is a 16px flex column, so
+                the gap above comes from the stack, not a margin here. */""}
+          ${/* NO DISABLED ACCEPT while held [task 12]. A greyed primary is a
+                control that has to be interrogated to learn why it is dead, and
+                the alert above has already said it. Decline stays, and stays
+                live: it discloses nothing and is hers whatever he decides, which
+                is the same asymmetry task 11 used to give decline an undo and
+                accept none. The outline button goes to the row that explains the
+                wait rather than to Home, because the wait is an account fact.
+                Decline first, accept last, the order every footer in the file
+                uses. */""}
+          <div class="frmfoot">
+            <button class="btn btn--outline" type="button" data-binvno="${d.id}">Decline</button>
+            ${hold ? `<a class="btn" href="#/account/password">See your email addresses</a>`
+              : `<button class="btn" type="button" data-binvyes="${d.id}">Accept and open the request</button>`}
+          </div>
         </div>
         <div class="home__col">
           <div class="card">
@@ -26146,22 +26676,6 @@ function renderBInvite(d) {
             </div>
           </div>
         </div>
-      </div>
-      ${/* .frmfoot on the page background, the call renderLoanSent and the
-            wizard both make: these buttons leave the page, so they are not
-            part of either card's subject. Decline first, accept last, the
-            order every modal footer in the file uses. */""}
-      ${/* NO DISABLED ACCEPT while held [task 12]. A greyed primary is a
-            control that has to be interrogated to learn why it is dead, and
-            the alert above has already said it. Decline stays, and stays
-            live: it discloses nothing and is hers whatever he decides, which
-            is the same asymmetry task 11 used to give decline an undo and
-            accept none. The outline button goes to the row that explains the
-            wait rather than to Home, because the wait is an account fact. */""}
-      <div class="frmfoot">
-        <button class="btn btn--outline" type="button" data-binvno="${d.id}">Decline</button>
-        ${hold ? `<a class="btn" href="#/account/password">See your email addresses</a>`
-          : `<button class="btn" type="button" data-binvyes="${d.id}">Accept and open the request</button>`}
       </div>
     </div>`;
 }
@@ -26378,8 +26892,12 @@ function renderLoanDraft(d) {
     <div class="head"><div><h1>${esc(d.name)}</h1><p>Draft · last saved ${esc(d.updated)}</p></div></div>
     <div class="card"><div class="card__ct"><div class="empty">
       <b>Not submitted yet</b><p>Saved at step ${d.draftStep || 1} of 5, ${esc(BW_STEPS[(d.draftStep || 1) - 1][1].toLowerCase())}. It becomes a deal when you submit it.</p>
-      <div class="acts"><a class="btn" href="#/loans/new/${BW_STEPS[(d.draftStep || 1) - 1][0]}" data-bdraft="${d.id}">Continue</a>
-        <button class="btn btn--outline" type="button" data-bdel="${d.id}">Archive draft</button></div>
+      ${/* secondary first, primary last [Tanya, 7 Oct] - the order Prism's
+            Empty/Page draws and the one a two-button row takes everywhere
+            else in this file's dialogs. It also keeps Continue, the action
+            that is not destructive, as the one the eye lands on last. */""}
+      <div class="acts"><button class="btn btn--outline" type="button" data-bdel="${d.id}">Archive draft</button>
+        <a class="btn" href="#/loans/new/${BW_STEPS[(d.draftStep || 1) - 1][0]}" data-bdraft="${d.id}">Continue</a></div>
     </div></div></div>`;
 }
 
@@ -26690,7 +27208,7 @@ function renderCosHome() {
       ${its.length ? `<div class="card__ct"><div class="tblwrap"><table class="t">
           <thead><tr><th>Document</th><th>File</th><th>Due</th><th>Status</th><th></th></tr></thead>
           <tbody>${its.map((x, i) => row(d, x, i)).join("")}</tbody></table></div></div>`
-        : `<div class="clear"><span class="clear__ic">${BIC.check}</span><span class="clear__tx">Nothing requested from you right now.</span></div>`}
+        : `<div class="empty empty--sm" role="status"><b>Nothing requested from you right now</b><p>Documents ${esc(d.b ? bName(d.b) : "your advisor")} asks you for on this deal show up here.</p></div>`}
     </div>`; };
   /* an open invitation leads, in the lead's Home's own Action required card
      and its .att__row: the email is one way in, and an account that already
@@ -27188,7 +27706,10 @@ function loanOverview(d, b) {
    [T5]. Unreleased quotes are never counted or hinted at. */
 const BQ_ROWS = [["Loan amount", q => money(q.amt)], ["Interest rate", q => q.rate], ["Index + spread", q => `${q.index} ${q.spread}`], ["Term", q => q.term],
   ["Amortization", q => q.amort], ["Interest-only", q => q.io], ["Recourse", q => q.recourse], ["Prepayment", q => q.prepay], ["Origination fee", q => q.fee],
-  ["Est. closing costs", q => q.closing], ["Est. debt service", q => q.ds], ["DSCR", q => q.dscr], ["LTV", q => q.ltv + "%"], ["Key conditions", q => q.cond]];
+  ["Est. closing costs", q => q.closing], ["Est. debt service", q => q.ds], ["DSCR", q => q.dscr], ["LTV", q => q.ltv + "%"],
+  /* a whole number keeps one decimal, so 10.0% sits beside 9.7% the way
+     yields are quoted; anything typed finer is shown as typed */
+  ["Debt yield", q => q.dy ? (Number.isInteger(+q.dy) ? (+q.dy).toFixed(1) : q.dy) + "%" : ""], ["Key conditions", q => q.cond]];
 /* The row's three statuses, and the absence of a badge is the fourth state.
    [~] NOTHING IN THE FILE EVER WRITES "seen" - 4 Oct, grepped: the string
    occurs once, on hillcrest's Debt fund fixture, and no handler assigns it.
@@ -27242,7 +27763,7 @@ const bQBadge = q => q.st === "selected" ? `<span class="badge badge--outline">$
    not here: they are the column's headline and would print twice. BQ_ROWS
    keeps them for the detail sheet's .facts, which has no header to carry them. */
 const BQ_GROUPS = [["Terms", ["Index + spread", "Term", "Amortization", "Interest-only"]], ["Structure", ["Recourse", "Prepayment"]],
-  ["Costs", ["Origination fee", "Est. closing costs", "Est. debt service"]], ["Coverage", ["DSCR", "LTV"]], ["Conditions", ["Key conditions"]]];
+  ["Costs", ["Origination fee", "Est. closing costs", "Est. debt service"]], ["Coverage", ["DSCR", "LTV", "Debt yield"]], ["Conditions", ["Key conditions"]]];
 /* the sort options, shaped like L_SORTS so the two sorts in this file read the
    same way [5 Oct]. Each label names its own direction, which is the rule that
    file already set for L_SORTS: "a toggle would make half of them lie".
@@ -27688,7 +28209,10 @@ function loanDocs(d) {
           opens the dialog with its own category already matched, and the
           confirmation chains to the next with "Next document". */""}
     ${bLive(d) ? `<div class="docnote docnote--page">
-      <a class="btn btn--outline btn--sm" href="#/loan/${d.id}/upload/new">Upload documents</a></div>` : ""}`;
+      ${/* full size, not btn--sm [Tanya, 7 Oct]: this is the page's own action
+            under the card, not a control inside a card header, so it takes the
+            36px step the other page-level buttons take. */""}
+      <a class="btn btn--outline" href="#/loan/${d.id}/upload/new">Upload documents</a></div>` : ""}`;
 }
 
 /* 03.6 Upload flow [sheet]: one requested item at a time, from a task or a
@@ -28651,7 +29175,7 @@ function renderBrokers() {
       <p class="bcard__about">${esc(b.about)}</p>
       ${pills(b.types, "Property specialties")}
       ${pills(b.fins, "Execution specialties")}
-      ${pills(b.geos.map(x => STATE_NAME[x] || x), "Operates in")}
+      ${pills(b.geos.map(x => STATE_NAME[x] || x), "Property location")}
       <span class="bcard__go">View profile <span aria-hidden="true">&rarr;</span></span>
     </a>`;
   return `
@@ -30120,6 +30644,7 @@ function render() {
   /* the drawer mounts like the modals — state-owned, rebuilt every render —
      and sits under them: a composer opened from it must paint on top */
   if (S.ldr) view.insertAdjacentHTML("beforeend", ldrawer());
+  if (S.reqDr) view.insertAdjacentHTML("beforeend", reqDrawer());
   if (S.bmsg) view.insertAdjacentHTML("beforeend", bMsgModal());
   /* the closing dialog re-renders on every select pick, so it focuses its
      first field once, on open - the banker form's fresh-flag rule */
@@ -30484,7 +31009,7 @@ function route() {
   if (S.bmOpen && location.hash.replace(/^#/, "").replace(/\/$/, "") !== "/loan/" + S.bmOpen + "/messages") bMsgsLeave();
   /* navigation closes the quick view: the drawer belongs to the table it
      opened over, and View full profile is itself a navigation out of it */
-  S.ldr = null; S.lnote = null;
+  S.ldr = null; S.lnote = null; S.reqDr = null;
   /* and the half-typed banker with it. S.addBk names an institution, so it
      cannot outlive the navigation away from it - left set, the form reopened by
      itself the next time that institution was opened, still holding what had
@@ -31160,7 +31685,7 @@ document.addEventListener("click", e => {
      of merely closing, and what keeps "+ Add sources & uses" from shutting the
      editor it just opened. The select popovers need no exception: seSel draws
      .sel__pop inside .sedit, so an option click is already inside. */
-  if (S.secEdit && !t.closest(".sedit") && !t.closest("[data-secedit]") && !t.closest("[data-secadd]")) { S.secEdit = null; render(); }
+  if (S.secEdit && !t.closest(".sedit") && !t.closest("[data-secedit]") && !t.closest("[data-secadd]")) { reqDoneConf(S.secEdit); S.secEdit = null; render(); }
   /* Read-only backstop, 16 Sep. The four controls the deal page's own banner
      points at are drawn disabled or re-pointed at the gate; every other write
      path into a read-only deal — its status from the deals table, saving a
@@ -31251,7 +31776,7 @@ document.addEventListener("click", e => {
   const pht = t.closest("[data-phidx]");
   if (pht) { S.lb = Number(pht.dataset.phidx); render(); return; }
   const sed = t.closest("[data-secedit]");
-  if (sed) { S.secEdit = S.secEdit === sed.dataset.secedit ? null : sed.dataset.secedit; render(); return; }
+  if (sed) { reqDoneConf(S.secEdit); S.secEdit = S.secEdit === sed.dataset.secedit ? null : sed.dataset.secedit; render(); return; }
   const sad = t.closest("[data-secadd]");
   if (sad) {
     const d = dealById(S.dealId);
@@ -31335,7 +31860,7 @@ document.addEventListener("click", e => {
     d.quotes = d.quotes || [];
     let q = s.qid && d.quotes.find(x => x.id === s.qid);
     if (!q) { q = { id: "q" + Date.now(), via: "you", pub: false, st: "new", rank: 0, on: "", thread: [] }; d.quotes.push(q); }
-    QF_TERMS.forEach(([k]) => { q[k] = k === "ltv" ? (parseFloat(f.ltv) || "") : f[k].trim(); });
+    QF_TERMS.forEach(([k]) => { q[k] = k === "ltv" || k === "dy" ? (parseFloat(f[k]) || "") : f[k].trim(); });
     Object.assign(q, { lender: f.lender === "other" ? null : Number(f.lender), co: f.lender === "other" ? f.co.trim() : "", src: f.lender === "other" ? f.src : "",
       showCo: d.qHideCo ? false : !!f.showCo, amt: Number(digits) / 1e6, rate: f.rate.trim(), cond: f.cond.trim(), sheet: S.qshFile });
     /* a selected quote stays selected: the borrower's choice outranks the
@@ -31846,6 +32371,7 @@ document.addEventListener("click", e => {
         addr: d.addr.trim(), units: parseFloat(d.units) || null, sf: parseFloat(d.sf) || null,
         built: parseFloat(d.built) || null, occupancy: parseFloat(d.occupancy) || null,
         photos: d.photos.slice(), contacts: cts, updated: now });
+      if (!editing.fromReq) chkDocs(editing);
       location.hash = "/deal/" + editing.id;
     } else {
       const id = slugFor(d.name);
@@ -31856,6 +32382,7 @@ document.addEventListener("click", e => {
         addr: d.addr.trim(), units: parseFloat(d.units) || null, sf: parseFloat(d.sf) || null,
         built: parseFloat(d.built) || null, occupancy: parseFloat(d.occupancy) || null,
         photos: d.photos.slice(), contacts: cts });
+      chkDocs(DEALS[DEALS.length - 1]);
       S.status[id] = "Leads";
       /* the trial band's button has been satisfied, so the band retires */
       S.trialNew = false;
@@ -32037,6 +32564,16 @@ document.addEventListener("click", e => {
   const lpgb = t.closest("[data-lpg]");
   if (lpgb && !lpgb.disabled) { S.lpg = Number(lpgb.dataset.lpg); render(); return; }
   if (t.id === "lrclrf" || t.id === "lrclrf2") { LRQF.forEach(f => f.set().clear()); S.lrSel = false; if (t.id === "lrclrf2") S.lq = ""; S.lpg = 1; S.open = null; render(); return; }
+  /* ---- Home, lender, milestones F and G [01.4, 01.3] ---- */
+  const lgov = t.closest("[data-lgov]");
+  /* the link navigates on its own; this only opens the list on the view the
+     block was showing */
+  if (lgov) { S.lview = lgov.dataset.lgov; S.lpg = 1; S.lpicked.clear(); LRQF.forEach(f => f.set().clear()); S.lrSel = false; S.lq = ""; }
+  if (t.closest("[data-lsetupx]")) {
+    S.lsetupX = true;
+    S.undo = { msg: "Setup skipped. Lending parameters is in the sidebar whenever you are ready.", fn: () => { S.lsetupX = false; } };
+    render(); return;
+  }
   /* ---- Requests, lender, milestone D [03.2, 03.3] ---- */
   if (t.closest("#lrsel")) { S.lrSel = !S.lrSel; S.lpg = 1; render(); return; }
   if (t.id === "lrclrsel") { S.lpicked.clear(); render(); return; }
@@ -32068,7 +32605,9 @@ document.addEventListener("click", e => {
   if (t.closest("[data-lrotx]")) { S.lrOther = null; render(); return; }
   if (t.closest("[data-lrotgo]")) {
     const r = LREQS.find(x => x.id === S.lrOther), f = document.getElementById("lrot_t"), v = f ? f.value.trim() : "";
-    S.route === "lreqs" ? lListPass([r], "Other", v) : lPass(r, "Other", v); return;
+    /* the request page moves on to the next request; the list and Home
+       stay where they are (milestone F, 20 Oct) */
+    S.route === "lreq" ? lPass(r, "Other", v) : lListPass([r], "Other", v); return;
   }
   if (t.closest("[data-lrint]")) {
     const r = LREQS.find(x => x.id === S.lrId), was = { st: r.st, intOn: r.intOn };
@@ -32105,7 +32644,6 @@ document.addEventListener("click", e => {
   if (lpr) { lpd().ltype = lpr.value; render(); return; }
   const lpck = t.matches && t.matches("input[data-lpchk]") ? t : null;
   if (lpck) { const set = lpd()[lpck.dataset.lpchk]; if (lpck.checked) set.add(lpck.value); else set.delete(lpck.value); render(); return; }
-  if (t.closest("[data-lpallst]")) { US_STATES.forEach(x => lpd().st.add(x[1])); render(); return; }
   if (t.closest("[data-lpstay]")) { S.lpLeave = null; render(); return; }
   if (t.closest("[data-lpdiscard]")) { const to = S.lpLeave; S.lpd = null; S.lpLeave = null; S.lpForce = true; location.hash = to; return; }
   if (t.closest("[data-lpsave]")) {
@@ -32123,6 +32661,11 @@ document.addEventListener("click", e => {
     n.inst = [...d.inst][0]; n.lo = Number(d.min) / 1e6; n.hi = Number(d.max) / 1e6;
     n.st = [...d.st].map(x => STATE_ABBR[x] || x); n.prop = [...d.prop]; n.fin = [...d.fin]; n.pitch = d.pitch.trim();
     S.lpType = d.ltype; S.lpRec = [...d.rec];
+    /* type_of_institution is an array in the repo (lending_parameter.rb,
+       isMulti in LendingParameterFields.jsx), but the network record's inst
+       is one string the broker views print; the full pick is held here so a
+       second type survives the save [22 Oct] */
+    S.lpInst = [...d.inst];
     S.lFresh = false; S.lpd = null; S.lpTried = false;
     S.undo = { msg: "Lending parameters saved." };
     render(); return;
@@ -32731,6 +33274,15 @@ document.addEventListener("click", e => {
     if (cf.sync) cf.sync();
     render(); return;
   }
+  /* the footer's Select all — the matches only while a search is typed,
+     the same filter the list and the label use */
+  const msall = t.closest("[data-msall]");
+  if (msall) {
+    const af = msSrc(msall.dataset.msall);
+    msShown(af).forEach(v => af.set().add(v));
+    if (af.sync) af.sync();
+    render(); return;
+  }
 
   /* must come before [data-ms]: the chip sits inside the trigger, so without
      this the click would fall through and toggle the popover instead */
@@ -32812,15 +33364,15 @@ document.addEventListener("click", e => {
   if (stab) { S.sumTab = stab.dataset.sumtab; render(); return; }
   const dvw = t.closest("[data-docview]");
   if (dvw) { S.docView = dvw.dataset.docview; S.selOpen = null; render(); return; }
-  /* the borrower-request review card: open the Details tab, or mark the
-     request reviewed (and back) */
-  const rqt = t.closest("[data-reqtab]");
-  if (rqt) { S.sumTab = rqt.dataset.reqtab; S.sumClosed.delete("card"); render(); return; }
-  const rqd = t.closest("[data-reqdone]");
-  if (rqd) { const dd = dealById(rqd.dataset.reqdone); if (dd && dd.fromReq) { dd.fromReq.reviewed = true; dd.fromReq.open = false; render(); } return; }
-  /* reopening a reviewed request is reading it, not taking the review back */
+  /* the borrower-request strip and drawer: open, close, confirm one section
+     or all five, and the Send dialog's Review first */
   const rqo = t.closest("[data-reqopen]");
-  if (rqo) { const dd = dealById(rqo.dataset.reqopen); if (dd && dd.fromReq) { dd.fromReq.open = !dd.fromReq.open; render(); } return; }
+  if (rqo) { S.reqDr = rqo.dataset.reqopen; render(); return; }
+  if (t.closest("[data-reqx]")) { S.reqDr = null; render(); return; }
+  const rqc = t.closest("[data-reqconf]");
+  if (rqc) { const dd = reqDeal(); if (dd) { reqConf(dd)[rqc.dataset.reqconf] = true; render(); } return; }
+  if (t.closest("[data-reqall]")) { const dd = dealById(S.reqDr); if (dd && dd.fromReq) { REQ_SECS.forEach(([k]) => { reqConf(dd)[k] = true; }); render(); } return; }
+  if (t.closest("[data-reqfirst]")) { S.reqDr = S.send; S.send = null; S.sendSel.clear(); render(); return; }
   const tab = t.closest("[data-tab]");
   if (tab) { S.tab = tab.dataset.tab; render(); return; }
   /* the lenders page's two tabs live in the hash so either can be linked */
@@ -33804,8 +34356,8 @@ function hardReset() {
   LREQS.splice(0, LREQS.length, ...JSON.parse(JSON.stringify(LREQS0)));
   S.lrId = null; S.lrSeq = null; S.lrFrom = null; S.lrQ = null; S.lrWd = null; S.lrOther = null;
   S.lview = "decide"; S.lq = ""; S.lrProp.clear(); S.lrFin.clear(); S.lrSt.clear(); S.lpg = 1; S.lpsz = 10;
-  S.lrSel = false; S.lpicked.clear();
-  S.lpd = null; S.lpTried = false; S.lpLeave = null; S.lpType = null; S.lpRec = null;
+  S.lrSel = false; S.lpicked.clear(); S.lsetupX = false;
+  S.lpd = null; S.lpTried = false; S.lpLeave = null; S.lpType = null; S.lpRec = null; S.lpInst = null;
   BLOANS.splice(0, BLOANS.length, ...JSON.parse(JSON.stringify(BLOANS0)));
   S.ldraft = null; S.lstep = 1; S.ltried = false; S.lfSlot = null; S.bdel = null; S.bconsent = false;
   S.bkLoc.clear(); S.bkType.clear(); S.bkGeo.clear(); S.bkFin.clear();
@@ -33977,6 +34529,8 @@ document.addEventListener("input", e => {
       const pos = Math.max(0, t.value.length - fromEnd); t.setSelectionRange(pos, pos);
       const re = document.getElementById("lprangeerr");
       if (re) re.hidden = !(d.min && d.max && Number(d.min) > Number(d.max));
+      const mp = document.getElementById("lmpv");
+      if (mp) mp.innerHTML = lmpvHtml();
     } else d[k] = t.value;
     const ft = document.querySelector("[data-lpsave]");
     if (ft && ft.previousElementSibling) ft.previousElementSibling.textContent = lpDirty() ? "Unsaved changes" : "All changes saved";
@@ -34033,6 +34587,7 @@ document.addEventListener("input", e => {
       const pos = Math.max(0, t.value.length - fromEnd);
       t.setSelectionRange(pos, pos);
     } else S.clo.f[k] = t.value;
+    if (t.type === "date") t.classList.toggle("is-empty", !t.value);
     return;
   }
   /* same rule for the borrower form: write through, no render, no caret loss */
@@ -34135,7 +34690,6 @@ document.addEventListener("input", e => {
     const pos = t.selectionStart;
     S.lFq[lfq] = t.value;
     render();
-    if (t.type === "date") t.classList.toggle("is-empty", !t.value);
     const back = document.querySelector(`[data-lfq="${lfq}"]`);
     if (back) { back.focus(); try { back.setSelectionRange(pos, pos); } catch (err) {} }
     return;
@@ -34506,6 +35060,7 @@ document.addEventListener("keydown", e => {
     }
   }
   /* the drawer sits under the modal band, so it closes after them */
+  if (e.key === "Escape" && S.reqDr && S.send == null) { S.reqDr = null; render(); return; }
   if (e.key === "Escape" && S.ldr) { S.ldr = null; S.lnote = null; render(); return; }
   if (e.key === "Escape" && S.settingsOpen) {
     S.settingsOpen = false; S.setDrill = null; render();
