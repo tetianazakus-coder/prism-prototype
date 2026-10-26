@@ -1,0 +1,69 @@
+/* Plan cards: the card from findrealestate.com's "Support beyond buying and selling" row
+   (Tanya, 26 Oct: "option 3 plans section - reuse card layout with hover animations from here").
+   Reference values, read from its stylesheet: three equal columns 30px apart; hovering a card
+   widens its column to 1.2fr and narrows the others to .9fr over 1s cubic-bezier(.16,1,.3,1);
+   the card's line of copy fades in over .4s. Hover only with a fine pointer from tablet width up,
+   as on the reference (columns from 1024px); keyboard focus inside a card does the same. Cards
+   pad 50px. On a phone the row scrolls sideways with cards 330px wide.
+   Solid fills instead of the reference's photos (Tanya, 26 Oct, on the recommendation): the
+   featured plan is dark, the other two white on the section's wash.
+   find.css stays as built; this file loads last. */
+
+.plans { gap: 30px; }
+.plan {
+  display: flex; flex-direction: column; min-height: 470px; padding: 50px;
+  border-top: 0; background: #fff;
+}
+.plan-top { margin-bottom: 26px; }
+.plan h3 { font-size: 44px; line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+/* Two lines kept for the description and the price note, so prices and buttons line up
+   across cards while the columns change width. */
+.plan-for { max-width: 345px; min-height: 3em; font-size: 17px; line-height: 1.5; }
+.price { margin-top: 30px; }
+.plan .price-note { min-height: 3em; }
+
+/* Featured plan: dark card, white type, the pill inverts as the reference's "Learn More" does. */
+.plan.featured { color: #fff; background: var(--ink); }
+.featured .price-note, .featured .micro { color: rgba(255,255,255,.78); }
+.featured .button { background: #fff; color: var(--ink); border-color: #fff; }
+.featured .button:hover { background: rgba(255,255,255,.86); }
+.featured .feature-list li { border-color: rgba(255,255,255,.22); }
+
+@media (min-width: 761px) {
+  .plans { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (min-width: 761px) and (max-width: 1150px) {
+  .plan { padding: 32px; }
+  .plan h3 { font-size: 36px; }
+}
+/* Essential's description takes three lines in these narrow columns. */
+@media (min-width: 761px) and (max-width: 1023px) {
+  .plan-for { min-height: 4.5em; }
+}
+
+@media (min-width: 761px) and (pointer: fine) {
+  .plan-for { opacity: 0; transition: opacity .4s; }
+  .plan:is(:hover, :focus-within) .plan-for { opacity: 1; }
+}
+/* The columns grow from 1024px: below that a .9fr column rewraps the price note and the rows drift. */
+@media (min-width: 1024px) and (pointer: fine) {
+  .plans { transition: grid-template-columns 1s cubic-bezier(.16,1,.3,1); }
+  .plans:has(> .plan:nth-child(1):is(:hover, :focus-within)) { grid-template-columns: 1.2fr .9fr .9fr; }
+  .plans:has(> .plan:nth-child(2):is(:hover, :focus-within)) { grid-template-columns: .9fr 1.2fr .9fr; }
+  .plans:has(> .plan:nth-child(3):is(:hover, :focus-within)) { grid-template-columns: .9fr .9fr 1.2fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plans, .plan-for { transition: none; }
+}
+
+@media (max-width: 760px) {
+  .plans {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(330px, calc(100vw - 2 * var(--gutter) - 30px));
+    gap: 10px; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter);
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none;
+  }
+  .plans::-webkit-scrollbar { display: none; }
+  .plan { scroll-snap-align: start; min-height: 400px; padding: 30px; }
+  .plan-for, .plan .price-note { min-height: 0; }
+  .plan h3 { font-size: 30px; }
+}

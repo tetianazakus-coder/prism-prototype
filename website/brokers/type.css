@@ -1,0 +1,65 @@
+/* Type floor for the Editorial option. Tanya, 26 Oct: "smallest font is non readable enough".
+   Loaded after brokers.css and editorial.css.
+   Roles: label 12 (short caps) · small 14 (notes, meta) · ui 15 (nav, buttons, tabs) ·
+   field 16 (iOS zooms below 16) · body 16-17. Nothing under 12 at any width, and nothing
+   smaller on a phone than on desktop. Display sizes (22px and up) are untouched.
+   Text colours under 18.66px reach 4.5:1 (WCAG 1.4.3). */
+
+/* label 12: short uppercase or numbered markers */
+.eyebrow, .section-label, .small-label, .hero-copy > .eyebrow, .figure-label .eyebrow,
+.figure-label .demo, .pillar-copy > .eyebrow, .roi .eyebrow, .footer-grid h2,
+.matching-visual > figcaption, .screen-register, .map-heading, .plan-top, .billing small {
+  font-size: 12px; line-height: 1.35;
+}
+
+/* small 14: notes, meta, disclaimers, footer */
+.micro, .demo, .hero-actions > .micro, .placeholder, .nav-phone, .solutions-menu span,
+.proof p, .proof small, .desk-line, .hero-bottom, .hero-bottom > a,
+.walk-panel figcaption, .walk-panel .demo, .walk-tabs button small, .screen-notes p,
+.routing-ledger small, .execution-visual small, .territory-map figcaption, .map-legend,
+.territory-grid .micro, .testimonial-placeholder > span:not(.quote-mark), .testimonial-placeholder > small,
+.testimonial-placeholder small, .fee > span:last-child, .scale-label, .annual-cost > span,
+.annual-cost strong > span, .roi-comparison > .micro, .price small, .price-note, .plan .micro,
+.plan > .micro, .pricing-footnote, thead th, .footer-brand > .placeholder, .newsletter .micro,
+.footer-bottom, .footer-bottom button, .disclaimer, .preview-note {
+  font-size: 14px; line-height: 1.5;
+}
+
+/* ui 15: buttons, links, tabs */
+.button, .button.small, .plan > .button, .hero-actions > .button, .final .button,
+.text-link, .hero-actions > .text-link, .walk-panel .text-link, .faq .text-link, .final-grid .text-link,
+.walk-tabs button, .billing button, .comparison > summary, .menu-toggle,
+.footer-grid > div:not(:first-child) > a, .footer-grid > div > button {
+  font-size: 15px;
+}
+
+/* field 16 */
+input, select { font-size: 16px; }
+
+/* body 16-17 */
+.feature-list, .pillar .feature-list, .plan .feature-list, .desk-line strong {
+  font-size: clamp(16px, 1.2vw, 17px); line-height: 1.6;
+}
+
+/* table text */
+table td, tbody th { font-size: 15px; }
+
+/* colour: small text to 4.5:1. Gold text on light is #7A6040 (5.4:1 on paper);
+   the bright bronze stays for headings 24px and up, rules and icons. */
+.eyebrow, .proof small, .proof .unconfirmed, .preview-note { color: #7A6040; }
+.hero-bottom b { color: #7A6040; }                                  /* 17px on phone needs 4.5:1, bronze is 3.85 */
+.quiet-photo figcaption { font-size: 12px; line-height: 1.75; }    /* caps corner notch: label role, was 11 (10 on phone) */
+
+/* Plan buttons: the arrow appears on hover only (Tanya, 26 Oct). It keeps its width while
+   hidden, so the label never moves. */
+.plan .button span { opacity: 0; transform: translate(-4px, 4px);   /* diagonal, with the ↗ */
+  transition: opacity .2s ease, transform .2s ease; }
+.plan .button:hover span, .plan .button:focus-visible span { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .plan .button span { transform: none; transition: opacity .2s ease; } }
+
+/* Solutions menu right padding (Tanya, 26 Oct: "fix right padding here"). The 14px floor made
+   "Leads, lender matching and an execution desk" 299px against a 276px item, and the nav's
+   nowrap pushed it past the item's 14px padding. The desktop menu now hugs its longest line;
+   the full-width phone menu lets the descriptions wrap instead. */
+@media (min-width: 851px) { .solutions-menu { width: max-content; min-width: 330px; } }
+@media (max-width: 850px) { .solutions-menu span { white-space: normal; } }

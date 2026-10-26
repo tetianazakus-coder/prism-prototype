@@ -1,0 +1,194 @@
+/* Bodoni headings, a balanced product cover, and a consistent editorial grid. */
+:root{--serif:'Bodoni Moda',Georgia,serif;--gutter:clamp(22px,5vw,72px);--muted:#586973}
+.wrap{max-width:1216px}.section{padding-block:96px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.025em;line-height:1.08;text-wrap:balance}
+h2,.problem h2,.capabilities-title,.section-heading h2,.territory h2,.testimonial-grid h2,.roi h2,.pricing .section-heading h2,.faq h2{font-size:clamp(40px,3.6vw,52px)}
+h3,.pillar h3{font-size:clamp(30px,2.6vw,36px)}
+.eyebrow,.section-label,.small-label{font-size:11px;letter-spacing:.11em}.micro,.demo{font-size:12px;line-height:1.6}
+.button,.button.small,.plan>.button{font-size:15px;min-height:50px;gap:18px;padding:13px 20px}.button.small{font-size:13px;min-height:44px;padding:10px 16px}
+.button:hover{transform:none}.button span,.text-link span{display:inline-block;font-size:18px;transition:transform 200ms ease}.button:hover span,.text-link:hover span{transform:translateX(3px)}
+.text-link{font-size:15px;gap:16px;transition:color 200ms ease,border-color 200ms ease}.text-link:hover{gap:16px;color:var(--bronze)}
+.header-inner{max-width:1360px;padding-block:17px;gap:42px}nav{font-size:14px;gap:25px}.nav-phone{font-size:12px}
+/* Hero */
+.hero{background-image:linear-gradient(90deg,transparent calc(100% - 1px),#142d3d04 1px);background-size:120px 100%}
+.hero-grid{grid-template-columns:1.08fr 1fr;gap:0 64px;padding-top:54px;align-items:center}
+.hero-copy{grid-column:1;padding:0 0 44px;animation:none}.hero-copy>.eyebrow{font-size:11px;white-space:normal;line-height:1.6;letter-spacing:.07em}.tiny-mark{flex-shrink:0}
+.hero h1{font:400 clamp(60px,5.1vw,76px)/1.04 var(--serif);letter-spacing:-.035em;margin-top:24px}.hero h1>span{display:block}
+.hero h1>em{display:block;font:italic 400 1em/1.04 var(--serif);letter-spacing:-.035em;color:var(--bronze);white-space:normal;max-width:none;margin-top:8px}
+.hero-lower{margin-top:26px}.hero-description{max-width:490px;font-size:18px;line-height:1.65;margin:0}
+.hero-actions{display:grid;grid-template-columns:max-content max-content;align-items:center;justify-content:start;gap:0 24px;margin-top:28px}
+.hero-actions>.button{grid-column:1;grid-row:1}.hero-actions>.text-link{grid-column:2;grid-row:1;margin:0;border:0;padding-block:13px}.hero-actions>.micro{grid-column:1/-1;grid-row:2;font-size:12px;margin:10px 0 0}
+.hero-visual{grid-column:2;margin:0 0 44px;padding:0;min-width:0;animation:none}
+.quiet-photo{align-self:stretch;display:flex;flex-direction:column;position:relative}.quiet-photo>img{width:100%;min-height:480px;height:100%;object-fit:cover;object-position:45% center;filter:saturate(.65);animation:visual-in 450ms ease both}.quiet-photo figcaption{position:absolute;left:0;bottom:0;padding:22px 32px 0 0;background:var(--paper);font-size:11px;line-height:1.75;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}.quiet-photo figcaption>span{display:block;white-space:nowrap}
+@keyframes visual-in{from{opacity:.35;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero-bottom{grid-column:1/-1;gap:24px;padding:26px 0;font-size:12px;letter-spacing:0}.hero-bottom>span{display:flex;gap:12px;align-items:center}.hero-bottom b{font:italic 19px var(--serif);color:var(--bronze)}.hero-bottom>a{font-size:11px;color:var(--muted);gap:6px}.hero-bottom>a span{font-size:14px}
+.proof{padding-block:28px 34px}.proof strong{font:400 36px/1.2 var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}.proof .word-stat{font:400 26px/1.2 var(--serif);white-space:normal}.proof p,.proof small{font-size:12px}
+/* A consistent reading rhythm; one composition per capability. */
+.problem{padding-block:64px}.problem-grid{gap:80px;padding-block:26px 40px}.problem-body{padding-top:0}
+.problem-body>p:first-child,.pillar-copy>p:not(.eyebrow),.territory-grid>div>p:not(.micro),.final-grid p{font-size:16px;line-height:1.7}
+.pullquote{font-size:27px;max-width:430px;margin-top:22px}.desk-line{font-size:13px}
+.capabilities{background:var(--white);padding-bottom:32px}.capabilities-title{max-width:900px;margin:24px 0 64px}
+.pillar{grid-template-columns:1fr 1fr;gap:70px;align-items:center;margin-bottom:64px;padding-top:40px;border-top:1px solid var(--line)}
+.pillar-copy,.matching .pillar-copy{grid-column:auto;max-width:500px;padding:0}.pillar-copy>.eyebrow{font-size:11px;margin-bottom:20px}.chapter-number{font-size:30px;border:0;padding:0}
+.pillar h3 em{color:var(--bronze)}.pillar-copy>p:not(.eyebrow){margin-top:20px}.feature-list,.pillar .feature-list,.plan .feature-list{font-size:14px}.feature-list li::before{content:'—'}
+.routing-ledger{padding:20px 32px;background:var(--paper);border-block:1px solid var(--line)}.routing-ledger>.eyebrow{margin-bottom:22px}.routing-ledger ol{margin:0}
+.routing-ledger li{display:grid;grid-template-columns:35px 1fr;column-gap:18px;padding:24px 0;border-top:1px solid var(--line)}.routing-ledger li>span{grid-row:1/3;font:italic 23px var(--serif);color:var(--bronze)}
+.routing-ledger strong{font:400 26px/1.2 var(--serif)}.routing-ledger small{font-size:13px;color:var(--muted);margin-top:9px}
+.matching{padding-bottom:0;border-bottom:0}.matching-visual{grid-column:1;background:var(--paper);padding:22px;min-height:0;align-self:center;border:1px solid var(--line)}
+.figure-label{padding:0;align-items:center}.figure-label .eyebrow,.figure-label .demo{font-size:11px}.matching-crop{height:285px;margin-top:22px;border-block:1px solid var(--line)}.matching-crop img{width:175%;left:-7%;top:0}
+.matching-visual>figcaption{background:transparent;border:0;padding:18px 0 0;font-size:10px}
+.execution-visual{grid-column:2;background:var(--paper);padding:28px 32px;margin:0;border-block:1px solid var(--line)}.execution-visual li>div{font-size:30px}.execution-visual small{font-size:13px;line-height:1.5}.execution-visual>p{font-size:26px}
+/* Product folio. Tabs remain keyboard operated, screenshots can be scrolled/enlarged. */
+.walkthrough{background:#e9eeeb}.section-heading{gap:48px}.section-heading>p{font-size:16px;max-width:360px}
+.walk-stage{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;align-items:start}.walk-tabs{display:flex;flex-direction:column;border:0}
+.walk-tabs button{display:grid;grid-template-columns:28px 1fr 14px;align-items:start;gap:12px;padding:22px 0;font-size:15px;border:0;border-top:1px solid #bfc9c6;background:transparent}
+.walk-tabs button>span:first-child{font:400 25px var(--serif);color:var(--bronze)}.walk-tabs button small{display:block;font:12px/1.6 var(--sans);margin-top:8px;color:var(--muted)}
+.walk-tabs button[aria-selected=true]{color:var(--ink);background:transparent;border-top:2px solid var(--ink);padding-top:21px}.walk-tabs button[aria-selected=true] b{font-weight:700}.walk-tabs button:hover:not([aria-selected=true]){background:transparent;color:var(--ink)}
+.walk-panel{grid-column:2;grid-row:1;padding:0;margin:0;min-width:0;background:transparent}
+.screen-register{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--ink);padding-block:14px;font-size:10px;letter-spacing:.06em}
+.screen{height:380px;max-height:none;overflow:auto;border:1px solid #c5ceca}.screen img{width:100%;min-width:720px;max-width:none;margin:0;height:auto}
+.screen-notes{display:flex;align-items:center;gap:18px;padding:14px 0;border-bottom:1px solid #c5ceca}.screen-notes>span{font:italic 25px var(--serif);color:var(--bronze)}.screen-notes p{font-size:12px}
+.walk-panel figcaption{display:grid;grid-template-columns:1fr auto;gap:10px 20px;padding:18px 0 0}.annotation{font-size:14px}.annotation b{font-size:15px}
+.walk-panel .demo{grid-column:1;grid-row:2;margin:0;font-size:11px}.walk-panel .text-link{grid-column:2;grid-row:1/3;font-size:12px;align-self:start}
+.walk-panel.tab-enter{animation:panel-in 220ms ease both}@keyframes panel-in{from{opacity:.25}to{opacity:1}}
+.territory-grid{grid-template-columns:5fr 7fr;gap:64px}.territory-grid>div>p:not(.micro){max-width:440px}.map-heading,.territory-map figcaption,.map-legend{font-size:11px}
+.territory-map figcaption .map-legend{margin-top:0}    /* legend replaces "Illustrative map · no live availability" in the caption row (Tanya, 26 Oct) */
+.testimonials{padding-block:64px}.testimonial-placeholder{border-width:0 0 1px;padding:20px 0;min-height:0}.testimonial-placeholder small{font-size:12px}.quote-mark{display:none}
+.roi{background:var(--paper);border-top:1px solid var(--line)}.roi-grid{grid-template-columns:1fr 1fr;gap:80px;padding-top:28px;align-items:start}
+.fee>strong{font:400 clamp(72px,7vw,100px)/1.2 var(--sans);letter-spacing:-.065em;font-variant-numeric:tabular-nums;margin-top:14px}.fee>span:last-child{font-size:13px}
+.annual-cost strong{font:400 36px/1.2 var(--sans);letter-spacing:-.04em}.annual-cost>span,.annual-cost strong>span{font-size:12px}
+.economics-scale{margin-top:30px}.scale-row{margin-bottom:22px}.scale-bar{display:block;height:24px;background:var(--ink)}.scale-row.cost .scale-bar{width:9.54%;background:var(--bronze)}
+.scale-label{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--muted);margin-top:9px}.scale-label b{font-weight:500;color:var(--ink)}.economics-scale figcaption{font:italic 24px/1.4 var(--serif);padding-top:8px}.roi-comparison>.micro{font-size:12px;max-width:100%;margin-top:18px}
+.plan{padding:26px 28px 30px;display:flex;flex-direction:column}.plan-top{font-size:11px}.plan h3{font:400 30px/1.2 var(--serif)}.plan-for{font-size:15px;line-height:1.6;max-width:100%;min-height:72px}
+.price{font:400 54px/1.2 var(--sans);letter-spacing:-.04em}.price small,.price-note{font-size:12px}.price-note{min-height:40px}.plan .micro{font-size:12px}
+.billing button{font-size:14px;min-height:44px}.billing small{font-size:11px}.pricing-footnote,.comparison>summary{font-size:14px}table{font-size:13px}
+.faq-grid{grid-template-columns:4fr 8fr;gap:80px}.faq-items summary{font-size:17px;padding-block:23px}.faq-items details>p{font-size:16px;line-height:1.65}
+@supports(interpolate-size:allow-keywords){.faq-items details{interpolate-size:allow-keywords}.faq-items details::details-content{height:0;overflow:clip;transition:height 240ms ease,content-visibility 240ms allow-discrete}.faq-items details[open]::details-content{height:auto}}
+.final{padding-block:64px}.final h2{font-size:clamp(44px,4.5vw,64px)}.final-grid{grid-template-columns:1fr 1fr;gap:64px;align-items:center}.final-grid>div{max-width:none;margin:0}
+.closing-actions{display:flex;align-items:center;flex-wrap:wrap;gap:20px}.closing-actions .text-link{margin:0;display:inline-flex;border:0}
+.footer-grid{gap:36px}.footer-grid h2{font-size:12px}.footer-brand>p,.newsletter>p,.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{font-size:14px}
+.footer-brand>.placeholder,.newsletter .micro,.footer-bottom,.footer-bottom button,.disclaimer,.preview-note{font-size:12px}.newsletter input,dialog input{font-size:16px}dialog>p:not(.eyebrow),dialog label{font-size:15px}
+@media(max-width:1150px){
+.header-inner{gap:24px}nav{gap:18px}.nav-phone{display:none}nav>a:nth-last-of-type(1){margin-left:auto}
+.hero-grid{gap:0 40px}.hero h1{font-size:61px}.hero-actions{gap:0 16px}.hero-actions>.button{font-size:14px;padding-inline:16px;gap:12px}.hero-actions>.text-link{font-size:14px;gap:8px}
+.pillar{gap:40px}.walk-stage{grid-template-columns:230px minmax(0,1fr);gap:28px}.plan{padding-inline:20px}.plan>.button{font-size:14px;padding-inline:14px;gap:10px}.faq-grid,.roi-grid{gap:48px}
+}
+@media(max-width:850px){
+.section{padding-block:72px}.hero-grid{grid-template-columns:1fr;padding-top:38px}.hero-copy,.hero-visual{grid-column:1}.hero-copy{max-width:640px;padding-bottom:40px}.hero h1{font-size:64px;max-width:620px}.hero-description{max-width:560px}.hero-visual{width:100%;max-width:640px;margin-bottom:30px}.quiet-photo{height:370px}.quiet-photo>img{min-height:0}.hero-actions>.button,.hero-actions>.text-link{font-size:15px}
+.proof{grid-template-columns:repeat(2,1fr)}.proof>div{padding:22px 24px;border:0}.proof>div:nth-child(odd){padding-left:0;border-right:1px solid var(--line)}.proof>div:nth-child(-n+2){border-bottom:1px solid var(--line)}.proof strong{font-size:34px}
+.problem-grid,.territory-grid,.roi-grid,.final-grid{grid-template-columns:1fr 1fr;gap:32px}.pillar{grid-template-columns:1fr;gap:32px}.pillar-copy,.matching .pillar-copy{max-width:620px;grid-column:1}.matching .pillar-copy{grid-row:1}.matching-visual,.execution-visual{grid-column:1;max-width:100%}.matching-crop{height:280px}.matching-crop img{width:140%}
+.walk-stage{grid-template-columns:1fr;gap:24px}.walk-tabs{flex-direction:row}.walk-tabs button{grid-template-columns:25px 1fr;width:33.333%;padding:18px 12px;font-size:14px}.walk-tabs button[aria-selected=true]{padding-top:17px}.walk-tabs button>span:last-child{display:none}.walk-panel{grid-column:1;grid-row:2}
+.plans{grid-template-columns:1fr;border:0;gap:24px}.plan,.plan:first-child,.plan:last-child,.plan.featured{padding:28px;margin:0;border:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:0 24px}.plan.featured{border-top:3px solid var(--bronze)}.plan-top,.price-note,.plan>.button,.plan .feature-list,.plan>.micro{grid-column:1/-1}.plan h3,.plan-for{grid-column:1}.plan-for{min-height:0}.price{grid-column:2;grid-row:2/4;align-self:center}.price-note{min-height:0;margin-top:20px}.price small{display:block;text-align:right}.plan>.button{font-size:15px}
+.faq-grid{grid-template-columns:1fr;gap:36px}.faq-items{margin:0}.final-grid{grid-template-columns:1fr}.final-grid>div{max-width:560px}.footer-grid{gap:28px}
+}
+@media(max-width:600px){
+.section{padding-block:58px}.header-inner{padding-block:16px}.hero-grid{gap:0;padding-top:30px}.hero-copy>.eyebrow{font-size:10px}.hero h1{font-size:clamp(42px,11.8vw,54px);margin-top:22px;line-height:1.06}.hero h1 br:last-child{display:initial}.hero h1>em{font-size:1em;line-height:1.06;margin-top:7px}
+.hero-lower{margin-top:22px}.hero-description{font-size:17px;line-height:1.6}.hero-actions{grid-template-columns:max-content max-content;gap:0 16px;margin-top:24px}.hero-actions>.button{font-size:13px;padding-inline:13px;gap:10px;min-height:50px}.hero-actions>.text-link{font-size:13px;gap:7px;margin:0}.hero-actions>.micro{font-size:11px}
+.hero-visual{margin:0 0 26px}.quiet-photo{height:320px}.quiet-photo figcaption{padding:16px 22px 0 0;font-size:10px}
+.hero-bottom{padding:20px 0;font-size:10px;gap:13px 16px;flex-wrap:wrap}.hero-bottom>span{gap:7px}.hero-bottom b{font-size:17px}.hero-bottom>a{display:none}.proof>div{padding-block:24px!important;min-height:0}.proof strong{font-size:30px}.proof .word-stat{font-size:23px}.proof p,.proof small{font-size:11px}
+h2,.problem h2,.capabilities-title,.section-heading h2,.territory h2,.testimonial-grid h2,.roi h2,.pricing .section-heading h2,.faq h2{font-size:35px;line-height:1.12}.section-label{font-size:10px}
+.problem-grid,.territory-grid,.roi-grid,.final-grid{display:grid;grid-template-columns:1fr;gap:28px}.problem-body{padding:0}.problem-body>p:first-child,.pillar-copy>p:not(.eyebrow),.territory-grid>div>p:not(.micro),.final-grid p{font-size:16px;line-height:1.7}.pullquote{font-size:25px;max-width:100%}.desk-line{font-size:12px}
+.capabilities-title{margin-bottom:36px}.pillar{display:grid;padding-top:30px;margin-bottom:48px;gap:28px}.pillar h3{font-size:29px}.pillar .feature-list,.feature-list{font-size:14px}.pillar-copy .text-link{font-size:15px}.routing-ledger{padding:22px}.routing-ledger strong{font-size:24px}.routing-ledger small{font-size:12px}
+.matching{padding-bottom:0}.matching-visual{padding:18px;min-height:0}.figure-label{padding:0;display:block}.figure-label .demo{margin-top:6px}.matching-crop{height:230px}.matching-crop img{width:190%}.matching-visual>figcaption{font-size:9px;gap:8px;padding:16px 0 0}
+.execution-visual{padding:24px;margin:0}.execution-visual li>div{font-size:26px}.execution-visual small{font-size:12px}.execution-visual>p{font-size:24px}.section-heading>p{font-size:16px;max-width:100%}
+.walk-tabs button{display:flex;flex-wrap:wrap;align-content:start;padding:14px 8px;gap:8px;font-size:12px}.walk-tabs button[aria-selected=true]{padding-top:13px}.walk-tabs button>b{flex-basis:100%}.walk-tabs button small{font-size:11px}.screen-register{font-size:9px;gap:14px}.screen{height:300px}.screen img{min-width:680px}.screen-notes p{font-size:11px}.walk-panel figcaption{grid-template-columns:1fr}.annotation{font-size:14px}.walk-panel .text-link{grid-column:1;grid-row:3;justify-self:start;font-size:13px}
+.territory-grid>div>p:not(.micro){max-width:100%}.territory-grid .micro{font-size:12px}.territory-map{padding-top:10px}.map-heading,.territory-map figcaption,.map-legend{font-size:10px}.territory-map figcaption{flex-direction:column;gap:7px}.testimonial-placeholder>p{font-size:25px}
+.roi-grid{padding-top:20px}.roi-comparison{margin:0}.roi .eyebrow{font-size:11px}.fee>strong{font-size:72px}.annual-cost strong{font-size:32px}.annual-cost>span{font-size:11px}.roi-comparison>.micro{font-size:12px}.economics-scale figcaption{font-size:23px}
+.plan,.plan:first-child,.plan:last-child,.plan.featured{padding:24px 20px!important;margin:0;gap:0 12px}.plan h3{font-size:27px}.plan-top{font-size:10px}.plan-for{font-size:14px}.price{font-size:42px}.price small{font-size:11px}.price-note{font-size:12px}.plan .feature-list{font-size:14px}.plan>.micro{font-size:12px}.pricing-footnote,.comparison>summary{font-size:13px;max-width:none}
+.faq-items summary{font-size:16px}.faq-items details>p{font-size:16px}.final h2{font-size:42px}.final .button,.final-grid .text-link{font-size:14px;min-width:0}.closing-actions{gap:18px}.closing-actions .text-link{margin:0}
+.footer-grid{gap:30px 24px}.footer-grid h2{font-size:11px}.footer-grid>div:not(:first-child)>a,.footer-grid>div>button,.footer-brand>p,.newsletter>p{font-size:14px}.newsletter input{font-size:16px}.footer-bottom>div{flex-wrap:wrap;justify-content:start}dialog h2{font-size:35px}
+}
+@media(max-width:360px){.hero-actions{gap:0 10px}.hero-actions>.button{font-size:12px;padding-inline:10px;gap:8px}.hero-actions>.text-link{font-size:12px;gap:5px}.hero-actions .button span,.hero-actions .text-link span{font-size:15px}.hero-bottom{flex-wrap:wrap}.price{font-size:36px}}
+@media(prefers-reduced-motion:reduce){.walk-panel.tab-enter,.quiet-photo>img{animation:none;transition:none}.button:hover span,.text-link:hover span{transform:none}}
+
+/* Heading accents: their own line, italic, bronze, as on thenest.pl (Tanya, 26 Oct: "for titles use line with italic/gold
+   text ... as previously was"; this replaces the earlier upright, heading-colour rule). Lighter gold on navy. */
+h1 em,h2 em,h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
+.dark h2 em{color:#c2a98a}
+
+/* Motion layer, motion.js, after The Nest (Tanya, 26 Oct: "use only animations/transitions, scroll animation from this site").
+   The head script sets .motion unless reduced motion is on, and .motion-pending hides the hero until its intro is built
+   (2.5s cap). The hero photo tilts inside its frame, as The Nest's plate does, at its 1200px perspective; 1.03 keeps
+   the paper out of the corners while it leans. */
+.motion-pending .hero-copy,.motion-pending .hero-visual,.motion-pending .hero-bottom{visibility:hidden}
+.motion .quiet-photo{overflow:hidden;perspective:1200px}
+.motion .quiet-photo>img{animation:none;transform:scale(1.03)}
+
+/* Hover timings after The Nest: buttons ease colour over 200ms and press to .98; arrows nudge 4px over 150ms; links with
+   no rule at rest draw a 1px underline from the left over 250ms; nav items fill a tint from the centre over 200ms. */
+.button{transition:color 200ms cubic-bezier(.23,1,.32,1),background-color 200ms cubic-bezier(.23,1,.32,1),border-color 200ms cubic-bezier(.23,1,.32,1),transform 200ms cubic-bezier(.23,1,.32,1)}.button:active{transform:scale(.98)}
+.button span,.text-link span{transition:transform 150ms cubic-bezier(.4,0,.2,1)}.button:hover span,.text-link:hover span{transform:translateX(4px)}
+.text-link{transition:color 150ms cubic-bezier(.4,0,.2,1),border-color 150ms cubic-bezier(.4,0,.2,1),background-size 250ms cubic-bezier(.23,1,.32,1)}
+.hero-actions>.text-link,.closing-actions .text-link,.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{width:fit-content;background:linear-gradient(currentColor,currentColor) 0 100%/0% 1px no-repeat;transition:color 150ms cubic-bezier(.4,0,.2,1),background-size 250ms cubic-bezier(.23,1,.32,1)}
+.hero-actions>.text-link{background-position:0 calc(100% - 7px)}
+.hero-actions>.text-link:is(:hover,:focus-visible),.closing-actions .text-link:is(:hover,:focus-visible),.footer-grid>div:not(:first-child)>a:is(:hover,:focus-visible),.footer-grid>div>button:is(:hover,:focus-visible){background-size:100% 1px}
+@media(min-width:851px){#navigation>a,.solutions>summary{position:relative;isolation:isolate}#navigation>a::before,.solutions>summary::before{content:"";position:absolute;inset:-8px -12px;z-index:-1;background:rgba(16,45,64,.06);transform:scale(0);transition:transform 200ms cubic-bezier(.4,0,.2,1);pointer-events:none}#navigation>a:hover::before,.solutions>summary:hover::before,.solutions[open]>summary::before{transform:none}}
+@media(prefers-reduced-motion:reduce){.button:active{transform:none}.button:hover span,.text-link:hover span{transform:none}}
+
+/* Hero product screen (Tanya, 26 Oct: "Visual: new Deals / Opportunity board screen from the redesign"; screen from the
+   Broker Figma file, node 4103:58886). After Harvey's hero on Mobbin: the product window sits on the architectural photo
+   and runs off its right and bottom edges, so the sidebar and deal names read at a legible scale instead of the whole
+   table shrinking to fit. The photo keeps its pointer tilt behind the still window. The screen takes the photo's
+   saturate(.65), and a touch less contrast, so it sits in the same muted palette (Tanya: "a little vanished"). */
+.quiet-photo{overflow:hidden}
+.hero-screen{position:absolute;z-index:1;top:84px;left:64px;width:1080px;background:#fff;border:1px solid rgba(16,45,64,.14);box-shadow:0 28px 70px rgba(10,28,40,.34),0 4px 14px rgba(10,28,40,.12)}
+.hero-screen>img{display:block;width:100%;height:auto;filter:saturate(.65) contrast(.94)}
+.screen-bar{display:flex;align-items:center;gap:6px;height:30px;padding:0 14px;background:#f7f6f2;border-bottom:1px solid #e4e1d8}
+.screen-bar i{width:8px;height:8px;border-radius:50%;background:#d6d2c8}
+.screen-bar span{margin-left:14px;padding:3px 12px;background:#fff;border:1px solid #e4e1d8;font-size:11px;line-height:1.2;color:#6c7479;letter-spacing:0}
+.quiet-photo figcaption{z-index:2}
+@media(max-width:1100px){.hero-screen{top:52px;left:32px;width:900px}}
+@media(max-width:560px){.hero-screen{top:40px;left:22px;width:720px}.screen-bar{height:24px;padding:0 10px}.screen-bar span{display:none}}
+
+/* Walkthrough says each step once (Tanya, 26 Oct: "is it dublicating this?", then "go"). The doc's three annotations
+   are the tab sublines; the field-list notes, caption annotation and second demo-data label under the screen are gone,
+   so the caption holds only "View full screen", right-aligned on desktop and left on phones. */
+.walk-panel figcaption{display:flex;justify-content:flex-end}
+@media(max-width:850px){.walk-panel figcaption{justify-content:flex-start}}
+
+/* Pillar screens (Tanya, 26 Oct: "should be some visuals for broker flow placed there?", then "go"). The doc gives the
+   pillars no visual; its design rule asks for redesign screens. Deal flow shows Opportunities ("Routed to you by
+   territory and asset class"), the execution desk shows a deal page header with Request execution support and Send loan
+   request. Same frame as the matching screen; crops chosen so the key controls stay inside. */
+.pillar-screen{background:var(--paper);padding:22px;align-self:center;border:1px solid var(--line);min-width:0}
+.screen-crop{position:relative;height:285px;margin-top:22px;overflow:hidden;border-block:1px solid var(--line)}
+.screen-crop img{position:absolute;top:0;max-width:none}
+/* Anchored at the window's top-left corner (Tanya, 26 Oct: "don't cut top and left edges of images"), so only the
+   right and bottom run off. The matching screen moves to the same anchor. */
+.screen-crop img,.matching-crop img{left:0;top:0}
+.leads .screen-crop img{width:150%}
+.deal .screen-crop img{width:110%}
+.matching-crop img{width:150%}
+@media(max-width:850px){.pillar-screen{max-width:100%}.screen-crop{height:280px}}
+@media(max-width:600px){.pillar-screen{padding:18px}.screen-crop{height:230px}.leads .screen-crop img,.matching-crop img{width:190%;left:0}.deal .screen-crop img{width:150%;left:0}}
+
+/* Interactive territory map (Tanya, 26 Oct: "make map in option 1 iteractive, as in other options"). The inline map is
+   Cinematic's; its state picker and status line were dropped as not in the requirements ("remove it then"). Hover lifts
+   a state to a lighter slate, the selected state and the territory CTA take the heading's gold (Tanya: "use gold color
+   for CTA and selected map item"), keyboard focus draws a paper outline. */
+.territory-map svg{display:block;width:100%;height:auto;margin:20px 0}
+.territory-map svg path{cursor:pointer;transition:fill .2s ease}
+@media(hover:hover){.territory-map svg path:hover{fill:#4d6779}}
+.territory-map svg path.selected{fill:#c2a98a}
+.territory .button.light{background:#c2a98a;border-color:#c2a98a;color:var(--ink)}
+.territory .button.light:hover{background:#d3bea2;border-color:#d3bea2}
+.territory-map svg path:focus{outline:none}
+.territory-map svg path:focus-visible{stroke:var(--paper);stroke-width:2.5}
+@media(max-width:560px){.territory-map svg{margin:15px 0}}
+/* Testimonials: example quotes as a peek carousel after Speakeasy on Mobbin; Unsplash portraits stand in for broker photos (Tanya, 26 Oct) */
+.testimonials{overflow-x:clip}
+.quote-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px}
+.quote-head h2{margin-top:24px}
+.quote-arrows{display:flex;gap:8px}
+.quote-arrows button{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);font-size:16px;color:var(--ink);transition:border-color .2s,opacity .2s}
+.quote-arrows button:hover:not(:disabled){border-color:var(--ink)}
+.quote-arrows button:disabled{opacity:.35;cursor:default}
+.quote-track{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(50% - 50vw) 0 0;padding:0;list-style:none}
+.quote-track::-webkit-scrollbar{display:none}
+.quote-card{flex:0 0 min(560px,82vw);scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;gap:40px;min-height:340px;padding:36px;background:var(--white);border:1px solid var(--line)}
+.quote-card>p{font:italic 28px/1.35 var(--serif);color:var(--bronze)}
+.quote-card .byline{display:flex;align-items:center;gap:14px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;line-height:1.5;color:var(--muted)}
+.quote-card .byline img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+.quote-card .byline b{display:block;font-weight:500;color:var(--ink)}
+.quote-note{font-size:12px;line-height:1.7;color:var(--muted);max-width:560px;margin-top:22px}
+@media(max-width:600px){.quote-head{margin-bottom:28px}.quote-card{padding:26px;min-height:300px}.quote-card>p{font-size:23px}}

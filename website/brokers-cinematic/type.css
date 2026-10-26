@@ -1,0 +1,246 @@
+/* Type floor for the Cinematic option. Tanya, 26 Oct: "smallest font is non readable enough".
+   Loaded after cinematic.css, which stays byte-identical to the live chatgpt.site build.
+   Roles: label 12 (short caps) · small 14 (notes, meta) · ui 15 (nav, buttons, tabs) ·
+   field 16 (iOS zooms below 16) · body 16-17 · table 15. Nothing under 12 at any width,
+   and nothing smaller on a phone than on desktop. Display sizes (22px and up) are untouched.
+   Text colours under 18.66px reach 4.5:1 (WCAG 1.4.3); the 92px grey accent reaches 3:1. */
+
+/* label 12: short uppercase or numbered markers */
+.eyebrow, .section-label, .plan-top, .screen-register, .map-heading, .hero-bottom,
+.hero-eyebrow, .pillar .eyebrow, .chapter-photo figcaption, .photo-stat small,
+.walk-tabs button > span:first-child, .execution-visual li > span, .billing small {
+  font-size: 12px; line-height: 1.35;
+}
+
+/* small 14: notes, meta, disclaimers, footer */
+.micro, .demo, .hero-actions .micro, .solutions-menu span, .proof p, .proof small, .desk-line,
+.feature-list .placeholder, .execution-visual small, .annotation, .walk-tabs small,
+.walk-panel figcaption .demo, .territory .micro, .territory-map figcaption, .map-selection p,
+.testimonial-placeholder > span:not(.quote-mark), .testimonial-placeholder small,
+.fee > span:last-child, .annual-cost > span, .economics-scale figcaption, .roi-comparison > .micro,
+.plan-for, .price small, .price-note, .plan .micro, .pricing-footnote, .footer-grid h2, .footer-grid p,
+.footer-grid a:not(.brand), .footer-grid button:not([type="submit"]), .footer-brand .placeholder,
+.newsletter form .micro, .footer-bottom, .footer-bottom button, .disclaimer, .preview-note,
+#navigation > .nav-phone {
+  font-size: 14px; line-height: 1.5;
+}
+
+/* ui 15: navigation, buttons, links, tabs, form labels */
+#navigation, .button, #navigation .button, .hero .button, .hero-actions .button, .plan > .button,
+.text-link, .hero-actions .text-link, .walk-panel .text-link, .walk-panel figcaption .text-link,
+.walk-tabs b, .annotation b, .map-selection label, .billing button, form label, .menu-toggle,
+.comparison summary, .faq summary {
+  font-size: 15px;
+}
+
+/* field 16 */
+.map-selection select, .newsletter input { font-size: 16px; }
+
+/* table 15 */
+table { font-size: 15px; line-height: 1.45; }
+
+/* body 16-17 */
+.hero-description, .problem-body, .pillar-copy > p:not(.eyebrow), .faq-items details > p,
+.final-grid > div > p, .section-heading > p, .feature-list li, .plan .feature-list li {
+  font-size: clamp(16px, 1.2vw, 17px); line-height: 1.6;
+}
+
+/* table cells */
+table td, table th { font-size: 15px; }
+
+/* colour: small text to 4.5:1. Gold text on light is #7A6040 (5.4:1 on paper);
+   bright gold stays on dark bands, rules and icons. */
+.placeholder, .unconfirmed, .featured .plan-top, .chapter-number { color: #7A6040; }
+.execution .placeholder, .execution .chapter-number { color: #c8b28a; }
+.walk-tabs button { color: #5a625c; }            /* inactive tabs, was 4.1:1 */
+.problem .you, .capabilities-title em { color: #7e8580; }   /* faded large accents need 3:1, were 2.9 */
+
+/* Arrows (Tanya, 26 Oct: "too many arrows"). An arrow means "this text link takes you
+   somewhere"; list rows are not links, so they take the editorial em dash. */
+.feature-list li:before { content: '—'; }
+
+/* Plan buttons: the arrow appears on hover only (Tanya, 26 Oct). It keeps its width while
+   hidden, so the label never moves. */
+.plan .button span { opacity: 0; transform: translateX(-6px); transition: opacity .2s ease, transform .2s ease; }
+.plan .button:hover span, .plan .button:focus-visible span { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .plan .button span { transform: none; transition: opacity .2s ease; } }
+
+/* Final section: "Start free trial" and "Book a call" on one line (Tanya, 26 Oct). */
+.final-grid>div{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:32px}
+.final-grid>div>p{flex-basis:100%}
+.final-grid .text-link{margin-top:0}
+
+/* Hero, anchored low (Tanya, 26 Oct: option 03 of the cinematic-hero-options study). From 900 up the
+   block drops to the darker foot of the photo, a hairline seats the description and actions, and
+   the actions take the column right of the 72% guide rule, under "Explore the advantage". Phones
+   keep the single column. */
+@media (min-width: 900px) {
+  .hero .hero-eyebrow { margin-top: auto; }
+  .hero .hero-lower { margin-top: 40px; padding-top: 32px; border-top: 1px solid rgba(255, 255, 255, .18); }
+  .hero .hero-description { max-width: 480px; }
+  .hero .hero-actions { grid-template-columns: auto; justify-content: stretch; align-content: start; gap: 12px; }
+  .hero .hero-actions .text-link { padding: 0; }
+  .hero .hero-bottom { margin-top: 48px; padding-top: 0; }
+}
+@media (min-width: 900px) and (max-width: 1199px) {
+  .hero .hero-lower { grid-template-columns: minmax(0, 480px) auto; justify-content: space-between; gap: 48px; }
+  /* Too narrow to start the column at the guide, so the guide would cut the button. */
+  .hero .hero-guide { display: none; }
+}
+@media (min-width: 1200px) {
+  /* Column 2 starts 48px right of the guide (left: 72% of the hero); .wrap caps at 1640. */
+  .hero .hero-lower { grid-template-columns: calc(72vw - max(var(--gutter), (100vw - 1640px) / 2) - 48px) minmax(0, 1fr); gap: 96px; }
+  .hero .hero-actions .button { width: 100%; }
+}
+
+/* Hero trial button hover (Tanya, 26 Oct: "find better animation for hover state"). The arrow
+   leaves to the right and a fresh one arrives from the left, once per hover, instead of the
+   diagonal nudge cinematic.css gives every .button span (made for ↗, wrong for →). */
+@keyframes arrow-through {
+  0% { transform: none; opacity: 1; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  42% { transform: translateX(16px); opacity: 0; }
+  43% { transform: translateX(-16px); opacity: 0; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+  100% { transform: none; opacity: 1; }
+}
+.hero-actions .button { transition: background .3s ease; }
+.hero-actions .button:active { transform: translateY(1px); }
+/* Every → on the page takes it (Tanya, 26 Oct: "use this arrow animation for all buttons with
+   arrows in variant 2"): boxed buttons and text links. "Back to the page ↙" keeps cinematic.css's
+   nudge, which suits a diagonal. Plan buttons hide the arrow at rest, so they play only the
+   arrival half: the same 16px slide in from the left on the same ease. */
+@keyframes arrow-in {
+  from { transform: translateX(-16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.button:hover span, .button:focus-visible span,
+.text-link:not([data-close]):hover span, .text-link:not([data-close]):focus-visible span { transform: none; animation: arrow-through .6s both; }
+.plan .button:hover span, .plan .button:focus-visible span { animation: arrow-in .35s cubic-bezier(.22, 1, .36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .button:hover span, .button:focus-visible span,
+  .text-link:not([data-close]):hover span, .text-link:not([data-close]):focus-visible span,
+  .plan .button:hover span, .plan .button:focus-visible span { animation: none; }
+}
+
+/* State select chevron (Tanya, 26 Oct: "fix dropdown icon in this field"). The native arrow sat
+   flush against the right border; a drawn chevron is inset to match the text's 10px padding. */
+.map-selection select {
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 16px center; background-size: 10px 6px;
+}
+
+/* Hero headline optical size (Tanya, 26 Oct: "Without the overhead." looked too condensed). The
+   font now loads with its opsz axis (9-40). Without the axis Google serves the default instance,
+   opsz 14 (named "9pt"), so everything else is pinned to 14: every other text keeps its width
+   within 0.25px. The hero headline takes the 40pt display cut, which is tighter by design, so its
+   tracking eases from -.065em to -.025em. The third line gets its own em value: it used to
+   inherit the h1's computed -7.02px, which is -8.7% at its 81px. */
+body { font-variation-settings: "opsz" 14; }
+.hero h1 { font-variation-settings: "opsz" 40; letter-spacing: -.025em; }
+.hero h1 .hero-last { letter-spacing: -.015em; }
+
+/* Desk line: no rules (Tanya, 26 Oct: "remove top divider here", then "do recommended" for the
+   bottom one too). It closes its section; the next section's label rule is the only divider. */
+.desk-line { border-block: 0; }
+
+/* Navy dark surfaces (Tanya, 26 Oct: "for varains 2, insted of this color use navy shades, similar as here",
+   pointing at the product sidebar; then "make it closer ti this shade", pointing at the execution band).
+   Base #172635 is sampled from that band (its photo under the #081a29 overlay); the other steps keep its
+   hue. The app's sidebar navy (#08142D) read too saturated beside the photo sections. Photo sections keep
+   their overlays; ink text and dark buttons keep --ink. */
+.dark, .territory, .site-footer { background: #172635; }
+.dark, .site-footer { --muted: #A9B8C7; }
+.dark .micro, .dark .eyebrow { color: #BCC8D4; }
+.territory-grid > div > p:not(.micro) { color: #D3DCE5; }
+.territory-map svg path { fill: #2B4054; stroke: #172635; }
+.territory-map figcaption, .map-selection p { color: #A9B8C7; }
+.map-selection select { background-color: #1F3244; border-color: #3A5068; }
+@media (max-width: 850px) { #navigation { background: #172635; } }
+
+/* Solutions menu hover (Tanya, 26 Oct: "add hover state in opt 2"). Items had no side padding,
+   so 12px of the menu's 20px moves onto them: text stays put and the tint sits 8px in all round. The tint is
+   the walkthrough's #e9ece8. Desktop only; the phone menu is a plain stacked list. */
+@media (min-width: 851px) {
+  .solutions-menu { padding: 8px; }
+  .solutions-menu a, .solutions-menu button { padding: 14px 12px; transition: background .2s ease; }
+  .solutions-menu a:hover, .solutions-menu button:hover,
+  .solutions-menu a:focus-visible, .solutions-menu button:focus-visible { background: #e9ece8; }
+  .solutions-menu a:focus-visible, .solutions-menu button:focus-visible { outline-offset: -2px; }
+}
+/* Testimonials: example quotes as an auto-advancing slider after Harvey on Mobbin (portrait, quote, three progress bars);
+   Unsplash portraits stand in for broker photos (Tanya, 26 Oct). Pauses on hover and focus; no autoplay with reduced motion. */
+.quote-stage { margin-top: 56px; }
+.quote-slide { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 6vw; align-items: center; margin: 0; }
+.quote-slide[hidden] { display: none; }
+.quote-slide > img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; animation: quote-in .6s ease both; }
+.quote-slide blockquote { margin: 18px 0 30px; font-size: clamp(30px, 3.2vw, 48px); letter-spacing: -.05em; line-height: 1.15; color: var(--ink); animation: quote-in .6s .08s ease both; }
+.quote-slide figcaption { font-size: 13px; color: var(--muted); }
+.quote-bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 48px; }
+.quote-bars button { position: relative; height: 24px; padding: 0; border: 0; background: none; }
+.quote-bars button::before, .quote-bars span { content: ''; position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--line); }
+.quote-bars span { background: var(--ink); transform-origin: left; transform: scaleX(0); }
+.quote-bars [aria-pressed="true"] span { transform: scaleX(1); }
+.quote-bars.is-playing [aria-pressed="true"] span { animation: quote-fill 7s linear both; }
+.quote-stage:hover + .quote-bars span, .quote-bars:hover span, .quote-bars:focus-within span { animation-play-state: paused; }
+@keyframes quote-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes quote-in { from { opacity: 0; transform: translateY(10px); } }
+@media (max-width: 760px) { .quote-stage { margin-top: 36px; } .quote-slide { grid-template-columns: 1fr; gap: 28px; } .quote-slide > img { max-width: 300px; } }
+@media (prefers-reduced-motion: reduce) { .quote-slide > img, .quote-slide blockquote { animation: none; } }
+
+/* Hero bottom (Tanya, 26 Oct: "remove this", the INDEPENDENT IN SPIRIT strip, and "move this to the bottom", the
+   description and actions). With the strip gone the lower block closes the hero: 56px off the bottom edge on
+   desktop, pushed down on phones as the strip used to be. */
+.hero .hero-content { padding-bottom: 56px; }
+@media (max-width: 899px) {
+  .hero .hero-lower { margin-top: auto; }
+  .hero .hero-content { padding-bottom: 40px; }
+}
+
+/* Scroll motion (Tanya, 26 Oct: "I want to add more animation to the text and images"). One rule for the page:
+   things are uncovered, not faded. cinematic.js adds .in when an element scrolls into view; every hidden state
+   sits behind .motion-ready, which is never set under reduced motion. */
+/* 1. Headings rise line by line from behind a mask; the grey or gold words take their colour after landing. */
+.split .line { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+.split .line > span { display: block; }
+.motion-ready .split .line > span { transform: translateY(110%); transition: transform 1s cubic-bezier(.2, .7, .1, 1) calc(var(--i) * 90ms); }
+.motion-ready .split.in .line > span { transform: none; }
+.motion-ready .split em { transition: color .8s ease .7s; }
+.motion-ready .split:not(.in) em { color: inherit; }
+/* 2. Photos open from the bottom edge and settle from a slight zoom; the curved corner clips as before. */
+/* The clip sits on the image, not the frame: a frame clipped to nothing never reports as in view. */
+.motion-ready .chapter-photo { background: none; }
+.motion-ready .chapter-photo img { clip-path: inset(100% 0 0 0); scale: 1.15; will-change: transform, translate; transition: transform 1.6s cubic-bezier(.16, 1, .3, 1), clip-path 1.6s cubic-bezier(.65, .05, .25, 1), scale 2.4s cubic-bezier(.16, 1, .3, 1); }
+.motion-ready .chapter-photo.in img { clip-path: inset(0 0 0 0); scale: 1; }
+.motion-ready .chapter-photo figcaption { opacity: 0; transition: opacity .6s ease 1s; }
+.motion-ready .chapter-photo.in figcaption { opacity: 1; }
+.motion-ready .quote-stage:not(.in) .quote-slide > img { clip-path: inset(100% 0 0 0); animation: none; }
+.motion-ready .quote-stage.in .quote-slide > img { animation: photo-wipe 1.4s cubic-bezier(.65, .05, .25, 1) both; }
+@keyframes photo-wipe { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+.motion-ready .execution, .motion-ready .final { overflow: hidden; }
+.motion-ready .execution-backdrop, .motion-ready .final:before { scale: 1.12; transition: scale 2.4s cubic-bezier(.2, .7, .1, 1); }
+.motion-ready .execution.in .execution-backdrop, .motion-ready .final.in:before { scale: 1; }
+/* Hover zoom (Tanya, 26 Oct: "zoom in on hover more"): 1.035 became 1.08, eased out over 1.6s. */
+.pillar:hover .chapter-photo img { transform: scale(1.08); }
+/* 3. Chapter photos drift slower than the page: the image is 14% taller than its frame and moves by --drift. */
+.motion-ready .chapter-photo img { position: absolute; top: -7%; left: 0; height: 114%; translate: 0 var(--drift, 0px); }
+/* 4. Numbers count up; the bars grow from the left. The real value stays in an .sr-only twin. */
+/* The figure spans would otherwise take the size of the old unit spans (.6em, 15px) beside them. */
+:is(.proof strong, .photo-stat, .fee strong, .annual-cost strong) > .count { font-size: inherit; letter-spacing: inherit; margin: 0; font-variant-numeric: tabular-nums; }
+.motion-ready .economics-scale .scale-bar { transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(.2, .7, .1, 1) .2s; }
+.motion-ready .economics-scale .cost .scale-bar { transition-delay: .5s; }
+.motion-ready .economics-scale.in .scale-bar { transform: none; }
+/* 5. List rows come in 60ms apart, the ↗ sliding in with them. */
+.motion-ready .stagger > li { opacity: 0; translate: 0 14px; transition: opacity .6s ease, translate .8s cubic-bezier(.2, .7, .1, 1); transition-delay: calc(.25s + var(--i) * 60ms); }
+.motion-ready .stagger > li:before { display: inline-block; translate: -8px 8px; transition: translate .6s cubic-bezier(.2, .7, .1, 1); transition-delay: calc(.35s + var(--i) * 60ms); }
+.motion-ready .stagger.in > li, .motion-ready .stagger.in > li:before { opacity: 1; translate: none; }
+/* 6. Section labels draw their rule left to right, then the text arrives. */
+.motion-ready .section-label { position: relative; border-top-color: transparent; }
+.motion-ready .section-label:before { content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px; background: var(--line); transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(.7, 0, .2, 1); }
+.motion-ready .section-label > span { opacity: 0; transition: opacity .6s ease .6s; }
+.motion-ready .section-label > span + span { transition-delay: .8s; }
+.motion-ready .section-label.in:before { transform: none; }
+.motion-ready .section-label.in > span { opacity: 1; }
+/* 7. The map fills in once, west to east (--d is each state's x position, set by cinematic.js). */
+.motion-ready .territory-map svg path { opacity: 0; transition: fill .25s, opacity .5s ease calc(var(--d, 0) * 1s); }
+.motion-ready .territory-map.in svg path { opacity: 1; }

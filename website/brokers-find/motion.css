@@ -1,0 +1,42 @@
+/* Motion reused from findrealestate.com (Tanya, 26 Oct). motion.js runs the GSAP part and adds
+   html.gsap-motion; the transitions below are the reference's CSS values. find.css stays as built. */
+
+/* Until the hero intro starts, the hero and header stay hidden (set before first paint in index.html). */
+html.motion-intro .hero-pin, html.motion-intro .site-header { visibility: hidden; }
+/* The GSAP intro replaces find.css's hero-line fade. */
+html.gsap-motion .hero h1 span, html.gsap-motion .hero-description,
+html.gsap-motion .hero .hero-actions, html.gsap-motion .hero .micro { animation: none; }
+
+/* Split text: word masks leave room for ascenders and descenders; curtain blocks sit over each line. */
+.rise-word-mask { padding: .15em; margin: -.15em; vertical-align: top; }
+.curtain-line { position: relative; width: fit-content; }
+.curtain { position: absolute; top: 10%; right: -1%; bottom: -10%; left: 0; z-index: 1; opacity: .9; pointer-events: none; }
+
+/* Hover label roll: 0.9s cubic-bezier(.16,1,.3,1); the copy below is hidden from assistive tech. */
+lp-roll { display: inline-block; overflow: hidden; vertical-align: top; }
+lp-roll-text { display: block; position: relative; transition: transform .9s cubic-bezier(.16,1,.3,1); }
+lp-roll-text::after { content: attr(data-text); content: attr(data-text) / ""; position: absolute; top: 105%; left: 0; right: 0; }
+:is(a, button):is(:hover, :focus-visible) > lp-roll > lp-roll-text { transform: translateY(-105%); }
+html.gsap-motion #navigation > a::after { content: none; }
+/* Pill buttons stretch 2% on a spring (0.7s cubic-bezier(.34,3.56,.64,1)) instead of lifting 2px. */
+html.gsap-motion .button:hover { transform: scaleX(1.02); transition: background .3s, color .3s, transform .7s cubic-bezier(.34,3.56,.64,1); }
+
+/* Panels open by height in motion.js, so their own fade-in steps aside. */
+html.gsap-motion .faq-items p, html.gsap-motion .service-details { animation: none; }
+
+/* Dropdown: 0.25s cubic-bezier(.4,0,.2,1), 5% rise. Dialog: 0.15s scale from .96, backdrop 1s. */
+@keyframes lp-appear { from { opacity: 0; transform: translateY(5%); } to { opacity: 1; transform: none; } }
+@keyframes lp-content-show { from { opacity: 0; transform: translateY(2%) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes lp-overlay-show { from { opacity: 0; } to { opacity: 1; } }
+.solutions-menu { animation: lp-appear .25s cubic-bezier(.4,0,.2,1); }
+dialog[open] { animation: lp-content-show .15s cubic-bezier(.16,1,.3,1); }
+dialog[open]::backdrop { animation: lp-overlay-show 1s cubic-bezier(.16,1,.3,1); }
+
+/* Footer slides out from under the page on desktop; its clipped top hides the offset. */
+.site-footer { overflow: hidden; }
+
+@media (max-width: 900px) {
+  /* The phone menu unrolls in motion.js; .closing keeps it laid out while it rolls back up. */
+  html.gsap-motion #navigation.open { animation: none; }
+  #navigation.closing { display: flex; flex-direction: column; gap: 25px; }
+}

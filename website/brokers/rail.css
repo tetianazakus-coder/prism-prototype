@@ -1,0 +1,17 @@
+/* Solutions staircase rail, after thenest.pl/en "Everything under one address" (Tanya, 26 Oct).
+   Chapters 02 and 03 step one tread right each, as floors do in a building section; rail.js draws
+   the line. Desktop only (1024 and up), like the reference. */
+.capabilities { position: relative; }
+.rail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; display: none; }
+@media (min-width: 1024px) {
+  .rail { display: block; }
+  .capabilities .pillar:nth-of-type(2) { margin-left: 64px; }
+  .capabilities .pillar:nth-of-type(3) { margin-left: 128px; }
+}
+.rail-ink { fill: none; stroke: var(--bronze); stroke-width: 1.5; stroke-dasharray: 12 5 2 5; }
+.rail-tick { stroke: var(--bronze); stroke-width: 1.5; stroke-dasharray: 2 4; opacity: 0; transition: opacity 300ms ease; }
+.rail-node { fill: var(--white, #fff); stroke: var(--bronze); stroke-width: 1.2; opacity: .4; transition: fill 300ms ease, opacity 300ms ease; }
+.rail-node.on { fill: var(--bronze); opacity: 1; }
+.rail-node.on + .rail-tick { opacity: 1; }
+.rail-flag { fill: var(--bronze); }
+@media (prefers-reduced-motion: reduce) { .rail-tick, .rail-node { transition: none; } }

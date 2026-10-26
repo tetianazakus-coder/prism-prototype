@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LenderPrism Brokers — three options</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="img/logo-mark.svg" type="image/svg+xml">
+<style>
+  :root { --navy: #102D40; --line: #D8D7CF; --grey: #637079; --paper: #F6F3ED; }
+  html, body { margin: 0; height: 100%; background: #E9E6DE; font: 14px/1.4 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; color: #142D3D; }
+  body { display: flex; flex-direction: column; }
+  .bar { flex: 0 0 auto; display: flex; align-items: center; gap: 16px; padding: 8px 16px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .bar b { font-weight: 600; margin-right: 4px; white-space: nowrap; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; }
+  .seg button { border: 0; background: #fff; padding: 7px 14px; font: inherit; font-weight: 500; cursor: pointer; color: var(--grey); border-right: 1px solid var(--line); }
+  .seg button:last-child { border-right: 0; }
+  .seg button[aria-pressed="true"] { background: var(--navy); color: #fff; }
+  .seg button:focus-visible { outline: 2px solid var(--navy); outline-offset: -3px; }
+  .note { color: var(--grey); margin-left: auto; white-space: nowrap; }
+  .note kbd { font: inherit; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; background: #fff; }
+  .open { color: var(--navy); text-decoration: none; font-weight: 500; }
+  .stage { flex: 1 1 auto; min-height: 0; display: flex; justify-content: center; }
+  .stage iframe { border: 0; width: 100%; height: 100%; background: #fff; }
+  .stage.phone iframe { width: 390px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+  @media (max-width: 720px) { .note { display: none; } .bar { gap: 8px; } .seg button { padding: 7px 10px; } }
+  /* Open in new tab: the option as its own page in a new tab (Tanya, 26 Oct). On the hosted claude.ai artifact a new tab
+     inherits the page's sandbox and claude.ai refuses to load in it (tested in Chrome, 26 Oct), so there the script
+     builds the option as one self-contained blob page, which never touches claude.ai or the artifact host. */
+  .open { border: 0; background: none; padding: 0; font: inherit; font-weight: 500; cursor: pointer; }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <b>Brokers page</b>
+    <div class="seg" role="group" aria-label="Option">
+      <button data-v="editorial" aria-pressed="true">1 · Editorial</button>
+      <button data-v="cinematic" aria-pressed="false">2 · Cinematic</button>
+      <button data-v="find" aria-pressed="false">3 · Find direction</button>
+    </div>
+    <div class="seg" role="group" aria-label="Width">
+      <button data-w="desktop" aria-pressed="true">Desktop</button>
+      <button data-w="phone" aria-pressed="false">Phone 390</button>
+    </div>
+    <button class="open" id="newtab" type="button">Open in new tab</button>
+    <span class="note">Keys <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> switch, <kbd>P</kbd> toggles phone</span>
+  </div>
+  <div class="stage" id="stage"><iframe id="frame" src="brokers/index.html" title="Editorial"></iframe></div>
+<script>
+  const SRC = { editorial: 'brokers/index.html', cinematic: 'brokers-cinematic/index.html', find: 'brokers-find/index.html' };
+  const vb = document.querySelectorAll('[data-v]'), wb = document.querySelectorAll('[data-w]');
+  const frame = document.getElementById('frame'), stage = document.getElementById('stage');
+  let v = 'editorial', w = 'desktop';
+  function fromHash() {
+    const h = location.hash.slice(1).split('/');
+    if (SRC[h[0]]) v = h[0];
+    if (h[1] === 'phone' || h[1] === 'desktop') w = h[1];
+  }
+  function render(push) {
+    vb.forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+    wb.forEach(b => b.setAttribute('aria-pressed', b.dataset.w === w));
+    stage.classList.toggle('phone', w === 'phone');
+    // ?t= busts the cache: the local static server sends no cache headers, so Chrome
+    // can pair a stale cached page with a fresh stylesheet and break the layout.
+    if (frame.dataset.v !== v) { frame.dataset.v = v; frame.src = SRC[v] + '?t=' + Date.now(); frame.title = v; }
+    const h = '#' + v + (w === 'phone' ? '/phone' : '');
+    if (location.hash !== h) history.replaceState(null, '', h);
+  }
+  vb.forEach(b => b.onclick = () => { v = b.dataset.v; render(); });
+  wb.forEach(b => b.onclick = () => { w = b.dataset.w; render(); });
+  const hosted = location.hostname.endsWith('claudeusercontent.com');
+  // The artifact host serves the files only inside the claude.ai frame: from a new tab it answers "not found"
+  // (Chrome, 26 Oct; Tanya: "this button doesn't work"), so a blob page that loaded them through a <base> came up
+  // bare. The switcher sits inside the frame, so it fetches the option and everything it loads and hands the tab one
+  // self-contained page: stylesheets inline with their url()s, images as data URIs, and the deferred scripts run in
+  // their original order by a small loader, since an inline script ignores defer and would run before its libraries.
+  const local = value => !!value && !/^(?:[a-z][a-z0-9+.-]*:|#|\/\/)/i.test(value);
+  const dataUris = new Map();
+  const dataUri = url => {
+    if (!dataUris.has(url.href)) dataUris.set(url.href, fetch(url).then(r => r.blob()).then(blob => new Promise(done => {
+      const reader = new FileReader(); reader.onload = () => done(reader.result); reader.readAsDataURL(blob);
+    })));
+    return dataUris.get(url.href);
+  };
+  const URL_RE = /url\(\s*['"]?([^'")]+?)['"]?\s*\)/g;
+  async function standalone(src) {
+    const base = new URL(src, location.href);
+    const doc = new DOMParser().parseFromString(await (await fetch(base)).text(), 'text/html');
+    const styles = [...doc.querySelectorAll('link[rel~="stylesheet"][href]')].filter(link => local(link.getAttribute('href'))).map(async link => {
+      const url = new URL(link.getAttribute('href'), base);
+      const css = await (await fetch(url)).text();
+      const refs = [...new Set([...css.matchAll(URL_RE)].map(m => m[1]).filter(local))];
+      const inlined = new Map(await Promise.all(refs.map(async ref => [ref, await dataUri(new URL(ref, url))])));
+      const style = doc.createElement('style');
+      style.textContent = css.replace(URL_RE, (m, ref) => inlined.has(ref) ? `url("${inlined.get(ref)}")` : m);
+      link.replaceWith(style);
+    });
+    const assets = [...doc.querySelectorAll('img[src], source[src], link[rel~="icon"][href], link[rel="preload"][href], [data-enlarge]')].flatMap(el =>
+      ['src', 'href', 'data-enlarge'].filter(attr => local(el.getAttribute(attr))).map(async attr => el.setAttribute(attr, await dataUri(new URL(el.getAttribute(attr), base)))));
+    const scripts = await Promise.all([...doc.querySelectorAll('script[defer]')].map(async script => {
+      const src = script.getAttribute('src');
+      script.remove();
+      return local(src) ? {code: await (await fetch(new URL(src, base))).text()} : {src};
+    }));
+    await Promise.all([...styles, ...assets]);
+    const loader = doc.createElement('script');
+    loader.textContent = `(async () => { for (const s of ${JSON.stringify(scripts).replace(/<\//g, '<\\/')}) await new Promise(done => {
+      const el = document.createElement('script');
+      if (s.src) { el.src = s.src; el.onload = el.onerror = done; } else { el.textContent = s.code; queueMicrotask(done); }
+      document.body.append(el);
+    }); })();`;
+    doc.body.append(loader);
+    return '<!doctype html>' + doc.documentElement.outerHTML;
+  }
+  document.getElementById('newtab').onclick = async () => {
+    if (!hosted) { window.open(SRC[v], '_blank', 'noopener'); return; }
+    const tab = window.open('', '_blank'); // opened before the fetch, while the click still counts as a user gesture
+    if (!tab) return;
+    tab.document.write('<p style="font:14px system-ui;color:#637079;padding:24px">Opening the option…</p>');
+    try {
+      tab.location = URL.createObjectURL(new Blob([await standalone(SRC[v])], { type: 'text/html' }));
+    } catch (error) {
+      tab.document.body.textContent = 'The option could not be opened: ' + error.message;
+    }
+  };
+  addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = { '1': 'editorial', '2': 'cinematic', '3': 'find' }[e.key];
+    if (k) { v = k; render(); }
+    else if (e.key === 'p' || e.key === 'P') { w = w === 'phone' ? 'desktop' : 'phone'; render(); }
+  });
+  addEventListener('hashchange', () => { fromHash(); render(); });
+  fromHash(); render();
+</script>
+</body>
+</html>

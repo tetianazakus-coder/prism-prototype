@@ -1,0 +1,63 @@
+/* Type floor for the Find direction option. Tanya, 26 Oct: "smallest font is non readable enough".
+   Loaded after find.css, which stays byte-identical to the live chatgpt.site build.
+   Roles: label 12 (short caps) · small 14 (notes, meta) · ui 15 (nav, buttons, tabs) ·
+   field 16 (iOS zooms below 16) · body 16-17. Nothing under 12 at any width, and nothing
+   smaller on a phone than on desktop. Display sizes (22px and up) are untouched.
+   Text colours under 18.66px reach 4.5:1 (WCAG 1.4.3). */
+
+/* label 12: short uppercase or numbered markers */
+.screen-register, .map-heading, .plan-top, .image-index, .service-number,
+.walk-tabs > button > span:first-child, .billing small {
+  font-size: 12px; line-height: 1.35;
+}
+
+/* small 14: notes, meta, disclaimers, footer */
+.eyebrow, .hero-eyebrow, .roi-figures .eyebrow, .micro, .hero .micro, .nav-phone, .solutions-menu span,
+.proof p, .proof p small, .quote-content > p, .annotation, .walk-panel .annotation, .scroll-cue,
+.territory-aside span, #state-status, .territory-map figcaption, .testimonial-image figcaption,
+.price small, .price-note, .pricing-footnote, .footer-grid, .footer-grid h2,
+.footer-grid > div > a:not(.brand), .footer-grid > div > button, .newsletter .micro,
+.footer-bottom, .footer-bottom button, .disclaimer, .preview-note {
+  font-size: 14px; line-height: 1.5;
+}
+
+/* ui 15: buttons, links, tabs, pagination */
+.button, .text-link, .hero .text-link, .walk-panel .text-link, .annotation b, .walk-panel .annotation b,
+.map-selection label, .quote-pagination button, .billing button, .menu-toggle {
+  font-size: 15px;
+}
+
+/* field 16 */
+.map-selection select, .newsletter input { font-size: 16px; }
+
+/* body 16-17 */
+.feature-list, .service-description .feature-list, .plan .feature-list, .faq-items p {
+  font-size: clamp(16px, 1.2vw, 17px); line-height: 1.6;
+}
+
+/* table text */
+table td, tbody th { font-size: 15px; }
+thead th, table caption { font-size: 14px; }
+
+/* colour: small text to 4.5:1. Gold text on light is #7A6040 (5.9:1 on white);
+   the bright gold stays for rules and decoration. */
+:root { --muted: #5f6362; }                                          /* was #717574, 4.1:1 on the wash */
+.walk-tabs > button { color: #6b6e6b; }                             /* inactive tabs, was 3.0:1 */
+.walk-tabs > button[aria-selected="true"] > span:first-child { color: #7A6040; }
+.placeholder, .unconfirmed { color: #7A6040 !important; }           /* source sets !important */
+.site-footer .placeholder, .site-footer .unconfirmed { color: #c9b48a !important; }
+.territory-map figcaption { color: #5f625c; }
+.quote-pagination button { color: #6b6e6b; }                        /* inactive pages, was 2.7:1 */
+
+/* Plan buttons: the arrow appears on hover only (Tanya, 26 Oct). It keeps its width while
+   hidden, so the label never moves. */
+.plan .button span { opacity: 0; transform: translateX(-6px); transition: opacity .2s ease, transform .2s ease; }
+.plan .button:hover span, .plan .button:focus-visible span { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .plan .button span { transform: none; transition: opacity .2s ease; } }
+/* Find centres its pill labels; out of flow, the hidden arrow no longer pushes the label left. */
+.plan .button { position: relative; }
+.plan .button span { position: absolute; right: 25px; top: 50%; margin-top: -10px; }
+/* Testimonials: the large image is the active broker's portrait (Unsplash stand-ins), changing with the pager (Tanya, 26 Oct). */
+.testimonial-image img { object-position: center 30%; animation: portrait-in .6s ease both; }
+@keyframes portrait-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .testimonial-image img { animation: none; } }
