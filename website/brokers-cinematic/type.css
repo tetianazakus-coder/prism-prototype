@@ -13,7 +13,7 @@
 }
 
 /* small 14: notes, meta, disclaimers, footer */
-.micro, .demo, .hero-actions .micro, .solutions-menu span, .proof p, .proof small, .desk-line,
+.micro, .demo, .hero-actions .micro, .solutions-menu span, .proof p, .proof small,
 .feature-list .placeholder, .execution-visual small, .annotation, .walk-tabs small,
 .walk-panel figcaption .demo, .territory .micro, .territory-map figcaption, .map-selection p,
 .testimonial-placeholder > span:not(.quote-mark), .testimonial-placeholder small,
@@ -139,10 +139,6 @@ table td, table th { font-size: 15px; }
 body { font-variation-settings: "opsz" 14; }
 .hero h1 { font-variation-settings: "opsz" 40; letter-spacing: -.025em; }
 .hero h1 .hero-last { letter-spacing: -.015em; }
-
-/* Desk line: no rules (Tanya, 26 Oct: "remove top divider here", then "do recommended" for the
-   bottom one too). It closes its section; the next section's label rule is the only divider. */
-.desk-line { border-block: 0; }
 
 /* Navy dark surfaces (Tanya, 26 Oct: "for varains 2, insted of this color use navy shades, similar as here",
    pointing at the product sidebar; then "make it closer ti this shade", pointing at the execution band).
