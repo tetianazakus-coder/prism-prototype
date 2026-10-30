@@ -1346,18 +1346,30 @@
   .bviews { margin-bottom: 12px; }
   .alert.bnextstep { margin: 0; }
   .bdgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
-  .bdcard { cursor: default; display: flex; flex-direction: column; gap: 4px; }
-  .bdcard > b a { color: inherit; text-decoration: none; font-weight: 600; }
-  .bdcard > b a:hover { text-decoration: underline; }
-  .bdcard__addr, .bdcard__last { font-size: 12px; color: var(--muted-foreground); }
-  .bdcard__p { font-weight: 400; color: var(--muted-foreground); font-size: 12.5px; }
-  :where(.app--borrower) .bdcard__p { font-size: 12px; line-height: 16px; }  /* ramp:b */
-  .bdcard__who { display: flex; align-items: center; gap: 7px; font-size: 12.5px; margin: 2px 0 4px; }
-  :where(.app--borrower) .bdcard__who { font-size: 12px; row-gap: 8px; column-gap: 8px; }  /* ramp:b */
-  .bdcard .dcard__ft { margin-top: auto; }
+  /* Prism Pattern/Deal card (1538:900), matched 30 Oct [Tanya: "align this
+     cards ui with figma"]: two groups, as the component nests them. The head is
+     name over address with no gap; the body is amount, stage, advisor and last
+     event 6 apart, 2 below the head. Name, amount, purpose, stage and advisor
+     are Body/sm (14/20), address and last event Label/xs (12/16). The footer
+     sits 12 below the body and 12 under a full-strength border, and its date
+     follows the counts 8 on, as the Borrower Home frame (14:332) draws it. */
+  .bdcard { cursor: default; display: flex; flex-direction: column; gap: 2px; line-height: 20px; }
+  /* Figma's 12 padding sits inside its 1px stroke; a CSS border adds to it */
+  .dcard.bdcard { padding: 11px; }
+  .bdcard__hd, .bdcard__bd { display: flex; flex-direction: column; }
+  .bdcard__bd { gap: 6px; padding-bottom: 10px; }
+  .bdcard .bdcard__hd b { margin: 0; padding-right: 0; }
+  .bdcard__hd b a { color: inherit; text-decoration: none; font-weight: 600; }
+  .bdcard__hd b a:hover { text-decoration: underline; }
+  .bdcard__addr, .bdcard__last { font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  .bdcard .bdcard__bd .amt { margin: 0; font-weight: 600; }  /* beats the board's later .dcard .amt */
+  .bdcard__p { font-weight: 400; color: var(--muted-foreground); font-size: 14px; }
+  .bdcard__who { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .bdcard__who .unset, .bdcard__who > a { font-size: 12px; line-height: 16px; }
+  .bdcard .dcard__ft { margin-top: auto; padding-top: 11px; border-top-color: var(--border); line-height: 16px; }  /* 12 in Figma, stroke inside */
   .bdcard .dcard__ft .cnt { color: inherit; text-decoration: none; }
   .bdcard .dcard__ft .cnt--on { color: var(--foreground); font-weight: 600; }
-  .bdcard .dcard__ft .when { margin-left: auto; }
+  .bdcard .dcard__ft .when { margin-left: 0; }
   .bav--xs { width: 24px; height: 24px; font-size: 10px; }
   .seg .ct--on { color: var(--color-brand-gold-text); font-weight: 600; }
   .bsub { display: block; font-size: 12px; color: var(--muted-foreground); }
@@ -16768,7 +16780,13 @@ function lFacet(f) {
            same geometry, hairline instead of fill. The rail header's total
            keeps the filled variant, and the split is the hierarchy — one
            filled badge for the whole rail, hairline badges per facet. */""}
-      <span>${esc(f.title)}</span>${set.size ? `<span class="n">&middot; ${set.size} selected</span>` : ""}
+      ${/* the count alone, 30 Oct (Tanya): "remove ' selected' word". The
+           ticks right under the header already say what the number counts;
+           the word stays for screen readers, which do not see the ticks.
+           No middot either, the same day (Tanya: "remove dot before the
+           count"): the header's own 7px gap sets the number apart, as
+           "Filters 4" above it does. */""}
+      <span>${esc(f.title)}</span>${set.size ? `<span class="n">${set.size}<span class="vh"> selected</span></span>` : ""}
       <span class="car" aria-hidden="true">${CARET}</span></button>
     ${shut ? "" : `<div class="lfac__bd">
       ${f.searchable ? `<div class="lfac__srch"><span class="mag" aria-hidden="true">${MAG}</span><input type="search" data-lfq="${f.key}"
@@ -25410,14 +25428,14 @@ function renderBHome() {
     const b = bBroker(d), c = d.conn || {}, pend = c.st === "pending" ? brokerById(c.broker) : null;
     const last = (d.events || []).slice(-1)[0];
     return `<article class="dcard bdcard">
-      <b><a href="#/loan/${d.id}">${esc(d.name)}</a></b>
-      <span class="bdcard__addr">${esc(d.addr)}, ${esc(d.city)}, ${esc(d.state)}</span>
-      <span class="amt">${money(d.amt)} <span class="bdcard__p">· ${esc(d.purpose)}</span></span>
+      <div class="bdcard__hd"><b><a href="#/loan/${d.id}">${esc(d.name)}</a></b>
+      <span class="bdcard__addr">${esc(d.addr)}, ${esc(d.city)}, ${esc(d.state)}</span></div>
+      <div class="bdcard__bd"><span class="amt">${money(d.amt)} <span class="bdcard__p">· ${esc(d.purpose)}</span></span>
       <div class="bdcard__st">${bStatus(d)}</div>
       <div class="bdcard__who">${b ? `<span class="bav bav--xs">${bAvatar(b, 24)}</span><span>${esc(bName(b))}</span>`
         : pend ? `<span class="bav bav--xs">${bAvatar(pend, 24)}</span><span>${esc(bName(pend))} <span class="unset">· waiting for response</span></span>`
         : `<span class="unset">No advisor yet</span> <a href="#/brokers">Choose an advisor</a>`}</div>
-      ${last ? `<div class="bdcard__last">${esc(last.tx)} · ${esc(last.on)}</div>` : ""}
+      ${last ? `<div class="bdcard__last">${esc(last.tx)} · ${esc(last.on)}</div>` : ""}</div>
       <div class="dcard__ft">
         ${cnt(BIC.file, bOpenTasks(d).length, "outstanding tasks and documents", `#/loan/${d.id}`)}
         ${cnt(BIC.msg, bUnread(d), "new messages", `#/loan/${d.id}/messages`)}
