@@ -40,7 +40,9 @@ header.top{display:grid;gap:14px;margin-bottom:28px}
 .meta b{color:var(--ink);font-weight:500}
 .lede{max-width:68ch;margin:0}
 .tally{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 0}
-.tally div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:120px}
+.tally button{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:120px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.tally button:hover{border-color:var(--accent)}
+.tally button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .tally strong{display:block;font:600 26px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
 .tally span{font-size:12px;color:var(--muted)}
 .tally .p1 strong{color:var(--p1)} .tally .p2 strong{color:var(--p2)} .tally .p3 strong{color:var(--p3)}
@@ -160,7 +162,7 @@ ol.top li::before{content:counter(t);font:600 22px/1 var(--f-display);color:var(
 ol.top .h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
 ol.top p{margin:0;font-size:13.5px;color:var(--muted)}
 ul.gaps{margin:8px 0 0;padding-left:18px;font-size:14px;max-width:110ch} ul.gaps li{margin:4px 0}
-.tally div.k strong{color:var(--accent)}
+.tally .k strong{color:var(--accent)}
 .pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .pair.one{grid-template-columns:minmax(0,1fr);max-width:720px}
 .pair figure{margin:0;min-width:0}
@@ -222,10 +224,16 @@ const first = s => (String(s).match(/^.*?[.!?](\s|$)/) || [s])[0];
 // tally: only tasks that need attention (open, not merged, not closed, deferred or prototype-only)
 const NEEDS = F.filter(f => isOpen(f) && !/^(Close|Defer|Keep dev|Update prototype)/.test(f.action));
 const fixes = p => NEEDS.filter(f => f.prio === p && f.type !== "Product decision" && f.type !== "Unverified concern").length;
-document.getElementById("tally").innerHTML = [
-  [NEEDS.length, "tasks need attention", "k"], [fixes("P0"), "P0 to fix", "p1"], [fixes("P1"), "P1 to fix", "p1"], [fixes("P2"), "P2 to fix", "p2"], [fixes("P3"), "P3 to fix", "p3"],
-  [NEEDS.filter(f => f.type === "Product decision").length, "decisions to make"], [NEEDS.filter(f => f.type === "Unverified concern").length, "to verify"],
-].map(([v, l, c]) => `<div${c ? ` class="${c}"` : ""}><strong>${v}</strong><span>${esc(l)}</span></div>`).join("");
+// tally tiles filter the list: click one to show only those tasks, click it again (or Reset) to clear
+const fixable = f => f.type !== "Product decision" && f.type !== "Unverified concern";
+const TILES = [["all", "tasks need attention", "k", f => true], ["P0", "P0 to fix", "p1", f => f.prio === "P0" && fixable(f)], ["P1", "P1 to fix", "p1", f => f.prio === "P1" && fixable(f)],
+  ["P2", "P2 to fix", "p2", f => f.prio === "P2" && fixable(f)], ["P3", "P3 to fix", "p3", f => f.prio === "P3" && fixable(f)],
+  ["dec", "decisions to make", "", f => f.type === "Product decision"], ["ver", "to verify", "", f => f.type === "Unverified concern"]];
+const NEED = new Set(NEEDS.map(f => f.id));
+let tile = "";
+const inTile = f => !tile || (NEED.has(f.id) && TILES.find(t => t[0] === tile)[3](f));
+const paintTiles = () => document.querySelectorAll("#tally [data-tile]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tile === tile)));
+document.getElementById("tally").innerHTML = TILES.map(([k, l, c, fn]) => `<button type="button" data-tile="${k}" aria-pressed="false"${c ? ` class="${c}"` : ""}><strong>${NEEDS.filter(fn).length}</strong><span>${esc(l)}</span></button>`).join("");
 // top 10
 // disputes
 const linkIds = s => esc(s).replace(/\b([BIUL]-[A-Z0-9-]*\d)\b/g, m => BY[m] ? `<a class="mono" href="#${m}" data-jump="${m}">${m}</a>` : m);
@@ -275,7 +283,7 @@ const val = id => document.getElementById(id).value;
 const FILTERS = ["ff", "fsc", "fp", "fs", "st", "q"];
 function render() {
   const q = val("q").trim().toLowerCase(), [fl, sc, p, s, st] = ["ff", "fsc", "fp", "fs", "st"].map(val);
-  const keep = f => !f.merged_into && (!fl || f.flow === fl) && (!sc || f.screen === sc) && (!p || f.prio === p) && (!s || f.origin === s) && (!st || (st === "ready") === ready.has(f.id)) && (!q || JSON.stringify(f).toLowerCase().includes(q));
+  const keep = f => !f.merged_into && inTile(f) && (!fl || f.flow === fl) && (!sc || f.screen === sc) && (!p || f.prio === p) && (!s || f.origin === s) && (!st || (st === "ready") === ready.has(f.id)) && (!q || JSON.stringify(f).toLowerCase().includes(q));
   const order = (a, b) => (!!a.merged_into - !!b.merged_into) || srank(a.prio) - srank(b.prio) || a.id.localeCompare(b.id, "en", { numeric: true });
   shown = F.filter(keep).sort(order);
   const fromDR = f => f.fromdr;  // the designer's own review comments lead the list
@@ -285,7 +293,8 @@ function render() {
 }
 ["ff", "fsc", "fp", "fs", "st"].forEach(id => document.getElementById(id).addEventListener("change", render));
 document.getElementById("q").addEventListener("input", render);
-const clear = () => { FILTERS.forEach(id => document.getElementById(id).value = ""); };
+document.getElementById("tally").addEventListener("click", e => { const b = e.target.closest("[data-tile]"); if (!b) return; tile = tile === b.dataset.tile ? "" : b.dataset.tile; paintTiles(); render(); document.getElementById("ledger").scrollIntoView(); });
+const clear = () => { FILTERS.forEach(id => document.getElementById(id).value = ""); tile = ""; paintTiles(); };
 document.getElementById("reset").addEventListener("click", () => { clear(); render(); });
 function jump(id) { while (BY[id] && BY[id].merged_into) id = BY[id].merged_into; clear(); render(); const el = document.getElementById(id); if (el) { el.scrollIntoView(); history.replaceState(null, "", "#" + id); } }
 document.addEventListener("click", e => {
