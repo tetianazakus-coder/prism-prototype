@@ -8303,6 +8303,12 @@
    default offset is 24px (layout.tsx). The prototype's 126 counts its own
    scaffolding bar, which the explainer hides. */
 .toast { top: 24px; }
+/* only Sunbelt's names read as links, since only Sunbelt's profiles are on
+   the script (see X_UNDER); the others are plain text, on Lenders and on a
+   deal's lender table alike */
+#app a[href^="#/lender/"]:not([href^="#/lender/sunbelt"]) { pointer-events: none; text-decoration: none; }
+#app [data-go^="#/lender/"]:not([data-go^="#/lender/sunbelt"]) { cursor: default; }
+#app .t tbody tr[data-go^="#/lender/"]:not([data-go^="#/lender/sunbelt"]):hover { background: none; }
 /* the Lenders filter rail holds still while the table scrolls, as the
    product's full-height filter sidebar does (lenders/page.tsx); capped at the
    window and scrolling inside itself once open facets outgrow it.
@@ -8321,10 +8327,11 @@
 <script>
 /* explainer layer, part 1: the script guard */
 const X_EXACT = ["#/home", "#/deals", "#/deals/new", "#/lenders", "#/lenders/prospector"];
-/* every lender profile, not only Sunbelt's, 30 Oct (Tanya: "make all lenders
-   rows clickable same as the Sunbelt Agency Group"); the script still walks
-   through Sunbelt, and any other profile stands in for stop 5 */
-const X_UNDER = ["#/deal/riverside", "#/lender", "#/profile"];
+/* Sunbelt's profiles only, its account page and each of its bankers. Every
+   lender profile was open for a few hours on 30 Oct ("make all lenders rows
+   clickable"); the same day Tanya narrowed it back: "make only Sunbelt Agency
+   Group row clickable in lenders". */
+const X_UNDER = ["#/deal/riverside", "#/lender/sunbelt", "#/profile"];
 function xOk(hash, role) {
   const h = hash.replace(/\/$/, "");
   if (role === "borrower") return h === "#/home";
@@ -35790,6 +35797,22 @@ DEALS.find(d => d.id === "riverside").updated = "27 Aug";
    filtered to Riverside's four criteria for a few hours, to lift Sunbelt
    Agency Group (the stop-4 hotspot) from row 23 to row 5; Sunbelt is back
    below the fold at 1440x900. Do not pre-filter it again. */
+/* Ten rows off the Network so Sunbelt, the stop-4 hotspot, comes up sooner:
+   row 13 of 18 instead of 23 of 28 (Tanya, 30 Oct: "remove few rows, to
+   scoll less down to Sunbelt Agency Group row", then "remove more rows, for
+   example these", Wade Kimball and Alexis Nwosu). All ten sit above Sunbelt
+   in A-Z order and none is saved to a deal, shortlisted or on a quote.
+   First six: Calder & Bly, Fielding, Keystone and Presidio match no deal;
+   Anchor matched only Crescent and Meridian only Midtown (one match fewer
+   each). Second four, Riverside matches, so Riverside's count drops from 15
+   to 11: Alexis Nwosu and Colin Marsh (Harbor Point keeps Yara Haddad, who
+   is shortlisted), Wade Kimball (Ironwood keeps Sarah Lindqvist) and Hannah
+   Oyelaran (Ridgeway). Kept on purpose: Marisol Reyes and Sarah Lindqvist,
+   whom Home names (Prism found your contact; new to the network), and
+   Cobalt, Atlantic and Palmetto, each the only match of some deal.
+   Removed from NETWORK itself, not hidden from the table, so the Network
+   count and every match count agree with the rows. */
+[19, 7, 12, 15, 18, 4, 3, 25, 27, 14].forEach(id => NETWORK.splice(NETWORK.findIndex(l => l.id === id), 1));
 route();
 /* The labelled rail at any width, as the script's Figma frames draw it. The
    prototype folds the rail to icons at 1550 and below (14 Sep), on load and
@@ -35818,7 +35841,7 @@ const X_STOPS = [
 ];
 const xAt = () => {
   const h = location.hash.replace(/\/$/, "");
-  if (S.role === "broker" && h.startsWith("#/lender/")) return 4;
+  if (S.role === "broker" && h.startsWith("#/lender/sunbelt/")) return 4;
   return X_STOPS.findIndex(([r, s]) => r === S.role && s === h);
 };
 function xGo([role, hash]) {
@@ -35840,6 +35863,10 @@ addEventListener("click", e => {
      prospectors"). They are plain links again: the crumb names Lenders, and
      the page it names opens on the Network tab, unfiltered;
      Prospector is its tab one click on. */
+  /* a row off the script opens nothing: only Sunbelt's rows may open their
+     quick-view drawer, the way only Sunbelt's names are links (X_UNDER) */
+  const row = t.closest('[data-go^="#/lender/"]');
+  if (row && !row.dataset.go.startsWith("#/lender/sunbelt")) { cut(); return; }
 }, true);
 
 /* Right and Left step through the script; off it, either goes to Home */
