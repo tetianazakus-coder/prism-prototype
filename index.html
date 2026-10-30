@@ -312,27 +312,38 @@
   /* Lending parameters stacks three cards in the form column, at Home's
      column gap (.home__col) */
   .lpcol { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-  /* the lender's Requests list, 19 Oct. Unread is a dot and the weight
-     [06.1]; a read request's name drops to 500 so the unread ones stand out
-     without a chip. The pager is the data-table footer of shadcn: rows per
-     page, the range, previous and next. */
+  /* the lender's Requests list, 19 Oct. Unread is the dot [06.1], never a
+     chip. Every name keeps .nm-cell b's 600, read or not, as the broker's
+     Lenders table does [Tanya, 30 Oct: "use same consistent font styles"];
+     a read name used to drop to 500. The pager is the data-table footer of
+     shadcn: rows per page, the range, previous and next. */
   .t--lreqs .lrnm { display: inline-flex; align-items: center; gap: 6px; }
-  .t--lreqs tr:not(.unread) .nm-cell b { font-weight: 500; }
-  .udot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-congress-blue); flex: none; }
-  /* a read row keeps the dot's slot, so every name starts on one edge */
-  .udot--off { visibility: hidden; }
+  /* the name takes the other tables' type, 14 in foreground [Tanya, 29 Oct:
+     "reuse text styles from existing tables"]. .lrnm is a span, so the
+     shared .nm-cell span rule meant for the line under a name (muted, 13)
+     had caught the name itself. Submitted by's first line is a plain cell,
+     14/20 as the borrower's two-line cells are; the firm under it stays the
+     muted sub-line. */
+  .t--lreqs .nm-cell .lrnm { color: var(--foreground); font-size: 14px; }
+  .t--lreqs .bsub { font-size: 13px; }
+  .t--lreqs .bsub--1 { font-size: 14px; line-height: 20px; }
+  .udot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-gold); flex: none; }
+  /* 6px gold since 30 Oct [Tanya, 30 Oct: "make dot slightly smaller and
+     gold color"]; it was 8px congress blue. */
   /* the dot explains itself on hover [Tanya, 22 Oct: "add tooltip for this
-     dot"]: 8px is too small to find with a pointer, so the hover target
-     reaches 6px past it without moving anything. The list's dot sits in the
-     flow and needs the positioning; Home's is already absolute. */
+     dot"]: 6px is too small to find with a pointer, so the hover target
+     reaches 6px past it without moving anything. Both dots sit in the flow
+     and take position: relative for it. */
   .udot[data-tip]::before { content: ""; position: absolute; inset: -6px; }
-  /* 8 from dot to name [Tanya, 22 Oct: "change gap to 8"], on Home and
-     here alike; a margin, not the flex gap, so the Selected badge keeps
-     its 6 from the name */
-  .t--lreqs .lrnm .udot { position: relative; margin-right: 2px; }
-  /* ...and the place line under it starts on the name's edge, not the dot's:
-     8px dot + 8px gap */
-  .t--lreqs .nm-cell > .bsub { padding-left: 16px; }
+  /* the dot trails the name on its first line [Tanya, 30 Oct: "align to the
+     first text row only ... place dot on the right side"], 6 from the name,
+     the flex gap [Tanya, 30 Oct: "change gap to 6 px"; 4 earlier that day,
+     the 22 Oct 8 before]. Only unread rows draw it, so a read name keeps its
+     width and the place line starts on the name's edge with no indent.
+     It centres on the capitals, not the lowercase [Tanya, 30 Oct: "make it
+     visualy center aligned"]: on the x-height it read as sitting low. Flex
+     centring on the 20px line box already lands on the cap-height middle. */
+  .t--lreqs .lrnm .udot { position: relative; }
   /* the bookmark cell is first, and the shared first-column floor (230px,
      .tblwrap .t th:first-child, further down) belongs to the name. One more
      class than that rule, because this block sits above it. */
@@ -356,7 +367,11 @@
   .t--lreqs tbody tr.sel { --lrbg: var(--muted); }
   .t--lreqs tbody tr:hover { --lrbg: color-mix(in srgb, var(--muted) 45%, var(--card)); }
   .t.t--lreqs th.lracts, .t.t--lreqs td.lracts { position: sticky; right: 0; width: 0; min-width: 0; padding: 0; }
-  .lracts__in { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;
+  /* centred by stretching to the cell and align-items, never a transform: a
+     transformed ancestor becomes the containing block of position:fixed,
+     so the reason menu, placed in viewport coordinates, landed some 1300px
+     off to the right and the caret opened nothing [Tanya, 29 Oct] */
+  .lracts__in { position: absolute; right: 12px; top: 0; bottom: 0; align-items: center; display: flex; gap: 8px;
     padding-left: 24px; background: linear-gradient(to right, transparent, var(--lrbg) 24px); white-space: nowrap;
     opacity: 0; pointer-events: none; }
   /* pointer-events too: at opacity 0 the buttons still took clicks, so a
@@ -366,11 +381,20 @@
   .t--lreqs tr:hover .lracts__in, .t--lreqs tr:focus-within .lracts__in, .t--lreqs tr.menu-open .lracts__in { opacity: 1; pointer-events: auto; }
   @media (hover: none) { .lracts__in { opacity: 1; pointer-events: auto; } }
   .splitbtn > .btn--sm.splitbtn__car { width: 32px; }
-  .t--lreqs .lrselb { margin-left: 2px; }
   /* the Shortlist chip's own anatomy in the filter bar (.lfr__scope): label,
-     then the count in foreground, 7 apart */
+     then the count, 7 apart. The label takes .lshort-chip's foreground and
+     medium, the count muted foreground (Tanya, 29 Oct: "swap counters to
+     muted foreground"); pressed, it takes the gold text like the label. */
+  /* "Picked you" reads above the muted firm it leads: the row's one mark of
+     a broker's pick (30 Oct, see renderLRequests). */
+  .lrpick { color: var(--foreground); font-weight: 500; }
+  /* the line may not widen Submitted by: unchecked it took the column from
+     195 to 271 at 1440, out of the name, and 1280 began to scroll. width 0
+     with min-width 100% fills the cell the other rows size, and the firm
+     ellipsizes behind the mark, whole in the title. */
+  .t--lreqs .lrpickln { display: block; width: 0; min-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .lrsel-chip { gap: 7px; padding: 0 10px 0 12px; }
-  .lrsel-chip .ct { color: var(--foreground); }
+  .lrsel-chip .ct { color: var(--muted-foreground); }
   .lrsel-chip.on .ct { color: inherit; }
   .lrselbar { margin-bottom: 12px; border-radius: var(--radius-md); }
   /* lender Home, 20 Oct, redrawn 22 Oct [01.4, 01.3]. No count beside the
@@ -393,16 +417,18 @@
   .lhq__r:hover { background: color-mix(in srgb, var(--muted) 45%, transparent); }
   .lhq__tx { flex: 1 1 auto; min-width: 0; }
   /* the badge flows inline after the name, so a name that wraps at 1100
-     keeps it beside its last word; the dot hangs in the 16px indent
-     (its 8 and an 8 gap [Tanya, 22 Oct: "change gap to 8"]) that the place
-     line shares */
-  .lhq__nm { display: block; position: relative; padding-left: 16px; }
-  .lhq__nm .udot { position: absolute; left: 0; top: 6px; }
+     keeps it beside its last word. The dot trails the name as in the list
+     (30 Oct), 6 after it [Tanya, 30 Oct: "change gap to 6 px"]. vertical-align
+     middle puts its centre on the lowercase's middle, which read as low
+     [Tanya, 30 Oct: "make it visualy center aligned"]; top: -1.5px lifts it
+     to the capitals' middle, as the list's flex centring does. */
+  .lhq__nm { display: block; }
+  .lhq__nm .udot { display: inline-block; position: relative; top: -1.5px; vertical-align: middle; margin-left: 6px; }
   .lhq__nm b { font-size: 14px; line-height: 20px; font-weight: 600; }
   .lhq__nm b a { color: inherit; text-decoration: none; }
   .lhq__r:hover .lhq__nm b a { text-decoration: underline; }
   .lhq__nm .badge { margin-left: 6px; vertical-align: 1px; }
-  .lhq__sub { display: block; padding-left: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  .lhq__sub { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
   .lhq__amt { flex: none; text-align: right; }
   .lhq__amt b { display: block; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
@@ -428,12 +454,24 @@
      "you can cta there and hide by default"]. */
   .lsetup__l { display: flex; align-items: baseline; gap: 12px; }
   .tblwrap .t.t--lreqs td.nm-cell { min-width: 230px; }
-  .lpgn { display: flex; align-items: center; justify-content: flex-end; gap: 24px; padding-top: 12px;
-    font-size: 14px; color: var(--muted-foreground); }
-  .lpgn__sz { display: flex; align-items: center; gap: 8px; }
-  .lpgn__sel { width: 72px; }
-  .lpgn__ct { font-variant-numeric: tabular-nums; }
+  /* the product's data-table footer, Prism's one pager [Tanya, 29 Oct:
+     "check prism existing component for pagination and apply it"]: there is
+     none in the Figma library or the AINDF bundle, so the source is
+     AdminDataTablePagination (frontend/src/components/data-table/, used by
+     four admin tables at 9f3427fc). Total rows muted on the left; Rows per
+     page and Page X of Y in foreground at medium; first, previous, next and
+     last as 32px outline icon buttons; 8 inside a group, 32 between groups.
+     First and last drop below lg (1024), the label and the total below sm
+     (640), as there. */
+  .lpgn { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 12px; font-size: 14px; }
+  .lpgn__tot { color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+  .lpgn__r { display: flex; align-items: center; gap: 32px; margin-left: auto; }
+  .lpgn__sz { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+  .lpgn__sel { width: 70px; }
+  .lpgn__ct { width: 110px; text-align: center; font-weight: 500; font-variant-numeric: tabular-nums; }
   .lpgn__nav { display: flex; gap: 8px; }
+  @media (max-width: 1023px) { .lpgn__nav .btn.lpgn__end { display: none; } }
+  @media (max-width: 639px) { .lpgn__tot, #lpg_lbl { display: none; } .lpgn__r { gap: 24px; } }
   .lpgn .btn--ico, .lrbar .btn--ico { width: 32px; padding: 0; }
   /* the request page, 04.1. The bar is sticky under nothing: the rail stays,
      so it is not the preview's navy .lpvbar, which stands in for a whole
@@ -2541,6 +2579,8 @@
   .card__hd h2 .badge { flex: none; }
   .card__hd .r { font-size: 13px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
   :where(.app--deal) .card__hd .r { font-size: 14px; line-height: 20px; }  /* ramp:d */
+  /* the Opportunities count sits on the same 14/20 as Deal summary's "Updated 4 Aug", whose style it borrows (Tanya, 29 Oct) */
+  .card--opps > .card__hd .r { font-size: 14px; line-height: 20px; }
   /* Home's cards on the Prism type ramp, from the library's Section/Home card
      patterns [Tanya, Prism file 16 Oct]: title Body/base-semibold 16/24,
      counter Body/sm 14/20, header link Body/sm-medium 14/20. Scoped to .home
@@ -2920,8 +2960,11 @@
   /* the third shape: a name with nothing beside it. The list covered a name
      wrapped for a badge and a name wrapped in a link, so a plain <b> silently
      lost the 2px and that table's subtitles sat tighter than every other
-     table's on the same page. */
+     table's on the same page. The fourth: the lender's Requests name, whose
+     line is .lrnm (dot, name, badge), so its place line sat flush under it
+     [Tanya, 30 Oct: match the Lenders table]. */
   .nm-cell > .nml + span,
+  .nm-cell > .lrnm + span,
   .nm-cell > b + span,
   .nm-cell > a > b + span { margin-top: 2px; }
   .nm-cell a { color: inherit; text-decoration: none; }
@@ -7097,12 +7140,16 @@
      so 17G is set to BASELINE rather than approximated with a nudge. */
   .lptail--found { align-items: baseline; }
   /* the in-bar shortlist toggle: a filter drawn at the bar's control height,
-     gold when pressed — the filled bookmark's color, never green (that is "saved") */
+     gold when pressed — the filled bookmark's color, never green (that is "saved").
+     Label in foreground at medium, the bookmark keeps .bmk's muted grey and each
+     surface sets the count in muted foreground (Tanya, 29 Oct: "text and count
+     foreground and medium", then "swap counters to muted foreground"). With the
+     label already foreground, hover moves to the border, as on the .ms__btn beside it. */
   .lshort-chip { display: inline-flex; align-items: center; height: 36px; padding: 0 12px;
     border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card);
-    font: inherit; font-size: 14px; font-weight: 500; color: var(--muted-foreground);
+    font: inherit; font-size: 14px; font-weight: 500; color: var(--foreground);
     cursor: pointer; box-shadow: var(--shadow-xs); }
-  .lshort-chip:hover { color: var(--foreground); }
+  .lshort-chip:hover { border-color: var(--brand-navy-600); }
   .lshort-chip.on { background: color-mix(in srgb, var(--brand-gold) 14%, #fff);
     border-color: color-mix(in srgb, var(--brand-gold) 45%, #fff); color: var(--color-brand-gold-text); box-shadow: none; }
 
@@ -7273,9 +7320,15 @@
      count, State=on when pressed), so it takes the chip's shell - 36 tall at
      14px, padding 0 8 0 12, gap 7, label regular, count medium in foreground.
      The 34px/13px cut it had was the only reason the Shortlist toggle was a
-     component of its own. [Tanya, 28 Sep] */
-  .lfr__scope .lshort-chip { width: 100%; height: 36px; gap: 7px; padding: 0 8px 0 12px; font-size: 14px; font-weight: 400; }
-  .lfr__scope .ct { margin-left: auto; font-weight: 500; color: var(--foreground); }
+     component of its own. [Tanya, 28 Sep] Since 29 Oct the label is medium
+     too, so the rail no longer overrides the chip's weight. */
+  .lfr__scope .lshort-chip { width: 100%; height: 36px; gap: 7px; padding: 0 8px 0 12px; font-size: 14px; }
+  /* the count, all on 29 Oct: muted grey to match the label (Tanya: "make count
+     color on this button same as text"), then both foreground and medium the
+     same day (Tanya: "text and count foreground and medium"), then the count
+     back to muted foreground under the foreground label (Tanya: "swap
+     counters to muted foreground") */
+  .lfr__scope .ct { margin-left: auto; font-weight: 500; color: var(--muted-foreground); }
   .lfr__scope .lshort-chip.on .ct { color: inherit; }
   .lfr__scope .hint { font-size: 11.5px; color: var(--muted-foreground); margin: 6px 0 0; line-height: 1.4; }
   /* the last facet keeps its divider: the rail is shorter than the table
@@ -15944,13 +15997,16 @@ function renderOpps() {
     ${urg ? `<div class="oppurg" role="status">${OPP_CLOCK}
       <span>${money(urg.amt)} ${esc(urg.city)} expires in <b data-oppleft="${urg.id}">${fmtLeft(urg.expires - Date.now())}</b>. It moves to the next broker after that.</span>
     </div>` : ""}
-    <div class="card">
-      ${/* the title names the card's contents, the badge names its state
-         (Anna, 8 Sep): the card holds every opportunity including the closed
-         ones, so a title counting only the open ones undercounted itself,
-         and a count is state, not a name */""}
+    <div class="card card--opps">
+      ${/* the title names the card's contents (Anna, 8 Sep): the card holds
+         every opportunity including the closed ones, so a title counting only
+         the open ones undercounted itself. The count of open ones beside it is
+         plain muted text, the .r style "Updated 4 Aug" uses on Deal summary,
+         not a gold badge (Tanya, 29 Oct). [~] Every open row already carries
+         its own Needs response badge, so a second gold pill in the header
+         competed with them; as text it reads as a summary of the table */""}
       <div class="card__hd"><h2>All opportunities</h2>${openN
-        ? `<span class="badge tone-gold">${openN} need${openN === 1 ? "s" : ""} your response</span>`
+        ? `<span class="r">${openN} need${openN === 1 ? "s" : ""} your response</span>`
         : ""}</div>
       <div class="card__ct">${oppsTable(rows)}</div>
     </div>`;
@@ -16007,7 +16063,15 @@ function oppModal(o) {
     /* no status badge beside it (Anna, 8 Sep): the green alert at the top of
        the body already says accepted, in a sentence carrying the date and the
        deal, and the row behind the dialog carries the badge */
+    /* Close beside it (Tanya, 29 Oct). Once accepted, the broker has two equal
+       next steps, the deal or the rest of the list, and the second one was only
+       the corner X, so Open the deal read as the only way out. Outline Close
+       plus the primary is this file's usual pair (the upload and message
+       dialogs). The open state does not get one: next to Decline, Close reads
+       as a second way to say no, and X, Esc and the scrim already mean
+       "not now". [💡 rec] */
     : st === "accepted" && deal ? `
+      <button class="btn btn--outline" type="button" data-oppx>Close</button>
       <a class="btn" href="#/deal/${deal.id}">Open the deal</a>`
     /* a settled record has no verdict left to give, so it gets no footer at
        all (Anna, 8 Sep). The status badge that used to sit here said in one
@@ -20722,8 +20786,13 @@ function placeCardMenu() {
   let top = k.bottom + 4;
   if (top + m.height > window.innerHeight - 8) top = Math.max(8, k.top - m.height - 4);
   menu.style.top = top + "px";
-  menu.style.left = Math.max(8, Math.min(k.right - m.width, window.innerWidth - m.width - 8)) + "px";
+  /* --start: left-aligned, for a trigger that opens a line of text rather
+     than closing a row (Add a reason on a passed request) */
+  const left = menu.classList.contains("cardmenu--start") ? k.left : k.right - m.width;
+  menu.style.left = Math.max(8, Math.min(left, window.innerWidth - m.width - 8)) + "px";
 }
+/* the open menu's focusable items, in order, for the arrow keys */
+const cardMenuItems = () => [...document.querySelectorAll('.cardmenu [role^="menuitem"]:not(:disabled)')];
 
 /* the option list caps at eight rows and scrolls past it — the cap .ms__list
    already sets on the filter popover, so every dropdown on the page stops at
@@ -23844,7 +23913,9 @@ const lBroker = r => {
 };
 /* the five views [lender lexicon, 06.1]: Needs decision is the default,
    because it is the only one with work in it */
-const LVIEWS = [["decide", "Needs decision"], ["interested", "Interested"], ["passed", "Passed"], ["saved", "Saved"], ["all", "All"]];
+/* All leads the strip [Tanya, 29 Oct: "All should be the first tab"]; the
+   list still opens on Needs decision (S.lview), the one view with work in it */
+const LVIEWS = [["all", "All"], ["decide", "Needs decision"], ["interested", "Interested"], ["passed", "Passed"], ["saved", "Saved"]];
 const lInView = (r, v) => v === "all" || (v === "saved" ? r.saved : v === "decide" ? r.st === "new" : r.st === v);
 const LRST = { new: ["New", "tone-blue"], interested: ["Interested", "tone-green"], passed: ["Passed", "tone-muted"] };
 /* filters on the shared multiselect, the BFILTERS pattern. No status
@@ -24211,15 +24282,36 @@ function lSeq(r) {
 function lOtherDlg() {
   const r = S.lrOther && LREQS.find(x => x.id === S.lrOther);
   if (!r) return "";
+  /* S.lrOtherAdd: the same note, reached from Add a reason on a request
+     already passed, so it adds rather than passes */
+  const add = S.lrOtherAdd;
   return `
     <div class="mov mov--ask" role="dialog" aria-modal="true" aria-labelledby="lrotq">
       <div class="mdl mdl--ask">
-        <div class="mdl__hd"><div><h2 id="lrotq">${S.route === "lreq" ? "Pass on this request" : "Pass on " + esc(lreq(r).name)}</h2></div></div>
+        <div class="mdl__hd"><div><h2 id="lrotq">${add ? "Add a reason" : S.route === "lreq" ? "Pass on this request" : "Pass on " + esc(lreq(r).name)}</h2></div></div>
         <div class="mdl__bd"><div class="fld"><label for="lrot_t">Note <span class="opt">(optional)</span></label>
           <textarea class="inp" id="lrot_t" rows="3" placeholder="What would have made it a fit"></textarea></div></div>
-        <div class="mdl__ft"><button class="btn btn--outline" type="button" data-lrotx>Cancel</button><button class="btn" type="button" data-lrotgo>Pass</button></div>
+        <div class="mdl__ft"><button class="btn btn--outline" type="button" data-lrotx>Cancel</button><button class="btn" type="button" data-lrotgo>${add ? "Add reason" : "Pass"}</button></div>
       </div>
     </div>`;
+}
+/* Cancel and Escape: focus goes back to the control that opened the note -
+   the caret on the request page or the row, or Add a reason */
+function lOtherClose() {
+  const id = S.lrOther, add = S.lrOtherAdd;
+  S.lrOther = null; S.lrOtherAdd = false; render();
+  const back = document.querySelector(add ? '[data-kebab="lradd"]' : `[data-kebab="lrpass"], [data-kebab="lrp:${id}"]`);
+  if (back) back.focus();
+}
+/* a reason added after a reason-less pass [lender pass research, 22 Oct]:
+   the request stays passed, only the reason changes; Undo takes it back */
+function lAddWhy(r, why, whyNote) {
+  const was = { why: r.why, whyNote: r.whyNote };
+  Object.assign(r, { why, whyNote: whyNote || "" });
+  S.cardMenu = null; S.lrOther = null; S.lrOtherAdd = false;
+  S.undo = { msg: why === "Other" ? (whyNote ? "Your note was added." : "Reason added: Other.") : "Reason added: " + why + ".",
+    fn: () => { Object.assign(r, was); } };
+  render();
 }
 const CHEVD = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
 const CHKSM = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg>`;
@@ -24277,9 +24369,10 @@ function renderLReq() {
         <div class="alert__title">You passed on this request${r.passOn ? " on " + esc(r.passOn) : ""}.</div>
         <div class="alert__desc">${r.why === "Other" && r.whyNote ? "Your note: “" + esc(r.whyNote) + "”"
           : r.why ? "Reason: " + esc(r.why) + "." + (r.whyNote ? " “" + esc(r.whyNote) + "”" : "") : "No reason given."}</div>
+        ${r.why ? "" : `<div class="alert__act">${lAddWhyBtn()}</div>`}
       </div>` : "";
   const meta = `<div class="lrmeta"><span class="badge ${stt}">${stl}</span><span>Received ${esc(r.on)}</span>${r.sel
-    ? `<span class="badge tone-blue" data-tip="${esc(sub.nm)} picked you for this request">Selected by ${esc(sub.nm)}</span>` : ""}</div>`;
+    ? `<span class="badge tone-blue" data-tip="${esc(sub.nm)} picked you for this request">Picked by ${esc(sub.nm)}</span>` : ""}</div>`;
   const other = lOtherDlg();
   const wd = S.lrWd === r.id ? `
     <div class="mov mov--ask" role="alertdialog" aria-modal="true" aria-labelledby="lrwdq" aria-describedby="lrwdb">
@@ -24302,7 +24395,7 @@ function lPass(r, why, whyNote) {
   S.cardMenu = null; S.lrOther = null;
   /* undoNext: route() clears S.undo on every arrival, and this toast has to
      ride across the navigation onto the next request */
-  S.undoNext = { msg: "Passed on " + lreq(r).name + ".", fn: () => {
+  S.undoNext = { msg: "Passed on " + lreq(r).name + "." + (why && why !== "Other" ? " Reason: " + why + "." : ""), fn: () => {
     Object.assign(r, was);
     if (seq.label === "Needs decision" && !seq.ids.includes(r.id)) seq.ids.splice(i, 0, r.id);
     location.hash = "#/requests/" + r.id; } };
@@ -24318,6 +24411,15 @@ function lPass(r, why, whyNote) {
 const lReasons = (attr, id, other) => LPASS.filter(v => other || v !== "Other").map(v =>
   `<button type="button" role="menuitem" ${attr}="${id}" data-why="${v}">${v === "Other" ? "Other…" : v}</button>`).join("");
 const lMenu = (lbl, items) => `<div class="cardmenu" role="menu" aria-label="${lbl}" draggable="false"><div class="cardmenu__lbl">Pass with a reason</div>${items}</div>`;
+/* Add a reason, on a request passed with none. A menu button, not a split:
+   there is no default here, so the whole control opens the six reasons
+   [lender pass research, 29 Oct] */
+function lAddWhyBtn() {
+  const open = S.cardMenu === "lradd";
+  return `<button class="btn btn--link" type="button" data-kebab="lradd" aria-haspopup="menu" aria-expanded="${open}">Add a reason</button>${open
+    ? `<div class="cardmenu cardmenu--start" role="menu" aria-label="Add a reason" draggable="false">${LPASS.map(v =>
+      `<button type="button" role="menuitem" data-lradd="${v}">${v === "Other" ? "Other…" : v}</button>`).join("")}</div>` : ""}`;
+}
 function lRowActs(r) {
   if (r.st !== "new") return "";
   const mid = "lrp:" + r.id, open = S.cardMenu === mid;
@@ -24357,7 +24459,7 @@ function lListInt(r) {
 /* ---------- Home, lender — 01.4 and 01.3, milestones F and G, 20 Oct ----------
    01.4 [sheet]: "Answers: what is new, what needs my decision, what did I
    say yes to", in three blocks. Block 1, Needs your decision: the count and
-   the newest requests, with the list's parts (unread dot, Selected badge,
+   the newest requests, with the list's parts (unread dot, Picked mark,
    Pass and Interested, the whole row opens the request) in a list row of
    its own since 22 Oct, see .lhq__r; the buttons show at rest. Financing
    rides on the line under the name with property type and place, amount
@@ -24448,9 +24550,8 @@ function renderLHome() {
   const rows = shown.map(r0 => {
     const r = lreq(r0), sub = [r.prop, r.city + ", " + r.state, r.fin].filter(Boolean).map(esc).join(" · ");
     return `<div class="lhq__r${r.read ? "" : " unread"}" data-go="#/requests/${r.id}">
-      <div class="lhq__tx"><span class="lhq__nm"><span class="udot${r.read ? " udot--off" : ""}" aria-hidden="true"${r.read ? "" : ` data-tip="${UDOT_TIP}"`}></span><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="vh">Unread</span>`}${r.sel
-          ? `<span class="badge tone-blue" data-tip="${esc(lBroker(r0).nm)} picked you for this request">Selected</span>` : ""}</span>
-        <span class="lhq__sub" title="${sub}">${sub}</span></div>
+      <div class="lhq__tx"><span class="lhq__nm"><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="udot" aria-hidden="true" data-tip="${UDOT_TIP}"></span><span class="vh">Unread</span>`}</span>
+        <span class="lhq__sub" title="${r.sel ? "Picked for you · " : ""}${sub}">${r.sel ? lPick(lBroker(r0).nm, "Picked for you") + " · " : ""}${sub}</span></div>
       <div class="lhq__amt"><b>${money(r.amt)}</b><span><span class="vh">Received </span>${esc(r.on)}</span></div>
       ${lRowActs(r)}
     </div>`;
@@ -24508,7 +24609,8 @@ function renderLHome() {
    row; it is the broker's own name for the deal, and without it two
    multifamily refinances in Austin are one row twice [~].
 
-   Unread is the dot and the weight, never a chip [06.1]. Save is the
+   Unread is the dot, never a chip [06.1]; names are 600 read or not, as
+   in the Lenders table (30 Oct). Save is the
    Lenders directory's bookmark cell, in the same leading place [03.4,
    Reuse]. The whole row opens the request (04.1) since milestone E. [~]
 
@@ -24527,12 +24629,19 @@ function renderLHome() {
    and a pass is a reply to a broker [~]. The bar is the Lenders directory's
    .selbar, count left and actions right.
 
-   Selected (03.3) is a broker's pick, not LenderPrism's [lexicon fact 3,
-   question 235]. On the row the badge reads Selected and the tooltip names
-   the broker, who is already named one column over in Submitted by; the
-   request page names them in the badge itself. The filter is a toggle chip
-   on the bar, the Lenders directory's Shortlist chip (Pattern/Filter chip),
-   counting within the view, not a sub-tab as today [sheet 03.3]. [~] */
+   Picked (03.3) is a broker's pick, not LenderPrism's [lexicon fact 3,
+   question 235]. Since 30 Oct the row says it in Submitted by, "Picked you"
+   ahead of the firm under the broker who did it, not as a Selected badge
+   after the name [Tanya, 30 Oct: "go with A"]: the badge cost 76px of the
+   name on every picked row, named the broker one column away from their
+   name, and "Selected" is the word the tick column and "2 selected" own. The
+   tooltip still names the broker. Home has no Submitted by, so its line
+   under the name opens with "Picked for you"; the request page keeps a badge,
+   "Picked by" and the broker, where the header has room. The filter is a
+   toggle chip on the bar, the Lenders directory's Shortlist chip
+   (Pattern/Filter chip), counting within the view, not a sub-tab as today
+   [sheet 03.3]. [~] */
+const lPick = (nm, label) => `<span class="lrpick" data-tip="${esc(nm)} picked you for this request">${label}</span>`;
 function renderLRequests() {
   const all = lreqsNow(), rows = visibleLReqs();
   const n = v => all.filter(r => lInView(r, v)).length;
@@ -24547,7 +24656,7 @@ function renderLRequests() {
       ${srchBox("lq", S.lq, "Search requests", "Search requests", "max-width:260px")}
       ${LRQF.map(msCtl).join("")}
       <button type="button" class="lshort-chip lrsel-chip${S.lrSel ? " on" : ""}" id="lrsel" aria-pressed="${S.lrSel}"
-        data-tip="Requests a broker picked you for">Selected for you<span class="ct">${all.filter(r => lInView(r, S.lview) && r.sel).length}</span></button>
+        data-tip="Requests a broker picked you for">Picked for you<span class="ct">${all.filter(r => lInView(r, S.lview) && r.sel).length}</span></button>
       ${LRQF.some(f => f.set().size) || S.lrSel ? `<button class="clrall" type="button" id="lrclrf">Clear all filters</button>` : ""}
     </div>`;
 
@@ -24577,14 +24686,20 @@ function renderLRequests() {
         <button class="btn btn--ghost btn--sm" type="button" id="lrclrsel">Clear</button>
       </div>
     </div>` : "";
+  const pgBtn = (to, lbl, path, off, cls) => `<button class="btn btn--outline btn--sm btn--ico${cls ? " " + cls : ""}" type="button" data-lpg="${to}" aria-label="${lbl}"${off ? " disabled" : ""}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg></button>`;
   const pager = rows.length <= LPG_SIZES[0] ? "" : `
     <div class="lpgn">
-      <div class="lpgn__sz"><span id="lpg_lbl">Rows per page</span>
-        <div class="fld__sel fld__sel--sm lpgn__sel">${selCtl("lpg:size", LPG_SIZES.map(v => ({ v: String(v), label: String(v) })), String(sz), "Rows per page")}</div></div>
-      <span class="lpgn__ct">${from + 1}–${from + shown.length} of ${rows.length}</span>
-      <div class="lpgn__nav">
-        <button class="btn btn--outline btn--sm btn--ico" type="button" data-lpg="${pg - 1}" aria-label="Previous page"${pg <= 1 ? " disabled" : ""}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
-        <button class="btn btn--outline btn--sm btn--ico" type="button" data-lpg="${pg + 1}" aria-label="Next page"${pg >= pages ? " disabled" : ""}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      <span class="lpgn__tot">${rows.length} total row${rows.length === 1 ? "" : "s"}</span>
+      <div class="lpgn__r">
+        <div class="lpgn__sz"><span id="lpg_lbl">Rows per page</span>
+          <div class="fld__sel fld__sel--sm lpgn__sel">${selCtl("lpg:size", LPG_SIZES.map(v => ({ v: String(v), label: String(v) })), String(sz), "Rows per page")}</div></div>
+        <span class="lpgn__ct">Page ${pg} of ${pages}</span>
+        <div class="lpgn__nav">
+          ${pgBtn(1, "Go to first page", '<path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/>', pg <= 1, "lpgn__end")}
+          ${pgBtn(pg - 1, "Go to previous page", '<path d="m15 18-6-6 6-6"/>', pg <= 1)}
+          ${pgBtn(pg + 1, "Go to next page", '<path d="m9 18 6-6-6-6"/>', pg >= pages)}
+          ${pgBtn(pages, "Go to last page", '<path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/>', pg >= pages, "lpgn__end")}
+        </div>
       </div>
     </div>`;
 
@@ -24597,13 +24712,12 @@ function renderLRequests() {
       <td class="bmkcell"><button class="bmkbtn" type="button" data-lrsave="${r.id}" aria-pressed="${r.saved}"
         aria-label="${r.saved ? "Remove " + esc(r.name) + " from saved" : "Save " + esc(r.name)}"
         data-tip="${r.saved ? "Saved" : "Save"}">${r.saved ? BOOKMARKF : BOOKMARK}</button></td>
-      <td class="nm-cell"><span class="lrnm"><span class="udot${r.read ? " udot--off" : ""}" aria-hidden="true"${r.read ? "" : ` data-tip="${UDOT_TIP}"`}></span><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="vh">Unread</span>`}${r.sel
-          ? `<span class="badge tone-blue lrselb" data-tip="${esc(b.nm)} picked you for this request">Selected</span>` : ""}</span>
+      <td class="nm-cell"><span class="lrnm"><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="udot" aria-hidden="true" data-tip="${UDOT_TIP}"></span><span class="vh">Unread</span>`}</span>
         <span class="bsub">${esc(r.prop)} · ${esc(r.city)}, ${esc(r.state)}</span></td>
       <td data-l="Loan amount"><b class="num">${money(r.amt)}</b></td>
       <td data-l="Transaction">${esc(r.tx)}</td>
       <td data-l="Financing">${r.fin ? esc(r.fin) : NIL}</td>
-      <td data-l="Submitted by"><span class="bsub bsub--1">${esc(b.nm)}</span><span class="bsub">${esc(b.co)}</span></td>
+      <td data-l="Submitted by"><span class="bsub bsub--1">${esc(b.nm)}</span>${r.sel ? `<span class="bsub lrpickln" title="${esc(b.co)}">${lPick(b.nm, "Picked you")} · ${esc(b.co)}</span>` : `<span class="bsub">${esc(b.co)}</span>`}</td>
       <td data-l="Received">${esc(r.on)}</td>
       <td data-l="Status"><span class="badge ${stt}">${stl}</span></td>
       <td class="lracts">${acts}</td>
@@ -32782,7 +32896,10 @@ document.addEventListener("click", e => {
     S.cardSub = false;
     render();
     const back = document.querySelector(`[data-kebab="${id}"]`);
-    if (back && S.cardMenu) back.focus();
+    /* opened from the keyboard (Enter or Space: a click with detail 0), focus
+       goes to the first item, as the ARIA menu button promises and Radix's
+       DropdownMenu does; a mouse open leaves it on the trigger */
+    if (back && S.cardMenu) (e.detail === 0 && cardMenuItems()[0] || back).focus();
     return;
   }
   const sub = t.closest("[data-substatus]");
@@ -32885,7 +33002,7 @@ document.addEventListener("click", e => {
   const lrrp = t.closest("[data-lrrp]");
   if (lrrp) {
     const r = LREQS.find(x => x.id === lrrp.dataset.lrrp), why = lrrp.dataset.why;
-    if (why === "Other") { S.cardMenu = null; S.lrOther = r.id; render(); const f = document.getElementById("lrot_t"); if (f) f.focus(); return; }
+    if (why === "Other") { S.cardMenu = null; S.lrOther = r.id; S.lrOtherAdd = false; render(); const f = document.getElementById("lrot_t"); if (f) f.focus(); return; }
     lListPass([r], why); return;
   }
   const lrri = t.closest("[data-lrri]");
@@ -32904,12 +33021,19 @@ document.addEventListener("click", e => {
   const lrp = t.closest("[data-lrpass]");
   if (lrp) {
     const r = LREQS.find(x => x.id === S.lrId), why = lrp.dataset.lrpass;
-    if (why === "Other") { S.cardMenu = null; S.lrOther = r.id; render(); const f = document.getElementById("lrot_t"); if (f) f.focus(); return; }
+    if (why === "Other") { S.cardMenu = null; S.lrOther = r.id; S.lrOtherAdd = false; render(); const f = document.getElementById("lrot_t"); if (f) f.focus(); return; }
     lPass(r, why); return;
   }
-  if (t.closest("[data-lrotx]")) { S.lrOther = null; render(); return; }
+  const lrad = t.closest("[data-lradd]");
+  if (lrad) {
+    const r = LREQS.find(x => x.id === S.lrId), why = lrad.dataset.lradd;
+    if (why === "Other") { S.cardMenu = null; S.lrOther = r.id; S.lrOtherAdd = true; render(); const f = document.getElementById("lrot_t"); if (f) f.focus(); return; }
+    lAddWhy(r, why); return;
+  }
+  if (t.closest("[data-lrotx]")) { lOtherClose(); return; }
   if (t.closest("[data-lrotgo]")) {
     const r = LREQS.find(x => x.id === S.lrOther), f = document.getElementById("lrot_t"), v = f ? f.value.trim() : "";
+    if (S.lrOtherAdd) { lAddWhy(r, "Other", v); return; }
     /* the request page moves on to the next request; the list and Home
        stay where they are (milestone F, 20 Oct) */
     S.route === "lreq" ? lPass(r, "Other", v) : lListPass([r], "Other", v); return;
@@ -35382,6 +35506,9 @@ document.addEventListener("keydown", e => {
     }
   }
   /* the drawer sits under the modal band, so it closes after them */
+  /* the Other note is a dialog like every .mov--ask: Escape is its Cancel. Above
+     the drawer, because the dialog sits over it */
+  if (e.key === "Escape" && S.lrOther) { e.preventDefault(); lOtherClose(); return; }
   if (e.key === "Escape" && S.reqDr && S.send == null) { S.reqDr = null; render(); return; }
   if (e.key === "Escape" && S.ldr) { S.ldr = null; S.lnote = null; render(); return; }
   if (e.key === "Escape" && S.settingsOpen) {
@@ -35396,6 +35523,30 @@ document.addEventListener("keydown", e => {
     const b = document.querySelector(`[data-sel="${CSS.escape(k)}"]`);
     if (b) b.focus();
     return;
+  }
+  /* role="menu" promises the arrows [lender pass research, 22 Oct]: on a
+     trigger, down or up opens its menu on the first or last item; inside,
+     they move between items and wrap, Home and End jump. Every data-kebab
+     menu shares this, not only Pass. */
+  if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) {
+    const trg = e.target.closest && e.target.closest("[data-kebab]");
+    const inMenu = e.target.closest && e.target.closest(".cardmenu");
+    if (trg && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      e.preventDefault();
+      if (S.cardMenu !== trg.dataset.kebab) { S.cardMenu = trg.dataset.kebab; S.cardSub = false; render(); }
+      const its = cardMenuItems();
+      if (its.length) its[e.key === "ArrowDown" ? 0 : its.length - 1].focus();
+      return;
+    }
+    if (inMenu && S.cardMenu) {
+      e.preventDefault();
+      const its = cardMenuItems(), i = its.indexOf(document.activeElement), n = its.length;
+      if (!n) return;
+      const to = e.key === "Home" ? 0 : e.key === "End" ? n - 1
+        : e.key === "ArrowDown" ? (i + 1) % n : (i - 1 + n) % n;
+      its[to].focus();
+      return;
+    }
   }
   if (e.key === "Escape" && S.cardMenu) {
     const id = S.cardMenu;
