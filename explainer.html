@@ -3267,7 +3267,11 @@
   .col.over { outline: 2px solid var(--primary); outline-offset: -2px; background: var(--accent); }
   .dcard { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs); padding: 11px 12px; cursor: pointer; }
   :where(.app--borrower) .dcard { padding-top: 12px; padding-bottom: 12px; }  /* ramp:b */
-  .dcard:hover { border-color: var(--brand-border-300); box-shadow: var(--shadow-sm); }
+  /* hover lifts to --shadow-lg, Prism Shadow/Light/lg [Tanya, 30 Oct: "more
+     prominent hover state for cards - just increase the shadow", then md was
+     not enough: "increase the shadow"]; it was --shadow-sm, lighter than the
+     rest --shadow-xs, so hover barely showed */
+  .dcard:hover { border-color: var(--brand-border-300); box-shadow: var(--shadow-lg); }
   tbody tr[data-row], tbody tr[data-go] { cursor: pointer; }
   /* the deals table's row logic, generalized: hovering the row underlines its
      primary name, clicking anywhere that is not a control opens the details */
