@@ -1356,6 +1356,9 @@
   .bdcard { cursor: default; display: flex; flex-direction: column; gap: 2px; line-height: 20px; }
   /* Figma's 12 padding sits inside its 1px stroke; a CSS border adds to it */
   .dcard.bdcard { padding: 11px; }
+  /* hover as the Home KPI tiles, --shadow-md, not the board card's lg [Tanya,
+     30 Oct: "for these cards hover state use same style as here"] */
+  .dcard.bdcard:hover { box-shadow: var(--shadow-md); }
   .bdcard__hd, .bdcard__bd { display: flex; flex-direction: column; }
   .bdcard__bd { gap: 6px; padding-bottom: 10px; }
   .bdcard .bdcard__hd b { margin: 0; padding-right: 0; }
