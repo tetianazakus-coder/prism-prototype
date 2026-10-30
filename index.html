@@ -6780,7 +6780,11 @@
      muted-foreground [Tanya]: size and weight from that label, colour from
      the eyebrow, so the figure stays the darkest thing in the tile */
   .kpi { display: block; padding: 16px 18px; text-decoration: none; color: inherit; }
-  .kpi:hover { border-color: var(--brand-border-100); box-shadow: var(--shadow-md, var(--shadow-sm)); }
+  /* hover as the board's .dcard: the rest border stays [Tanya, 30 Oct: "hover
+     state for KPI cards should be aligned with kanban"]; it lightened to
+     --brand-border-100, so the edge vanished. The lift is one step under the
+     board's lg, --shadow-md ["make shadow for KPI slightly smaller"] */
+  .kpi:hover { border-color: var(--brand-border-300); box-shadow: var(--shadow-md); }
   .kpi__lb { display: flex; align-items: center; gap: 7px; font-size: 14px; line-height: 20px; font-weight: 600;
     color: var(--muted-foreground); }
   .kpi__lb svg { flex: none; color: var(--brand-navy-600); }
