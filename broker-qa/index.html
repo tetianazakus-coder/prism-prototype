@@ -83,6 +83,13 @@ article.f.P1{border-left-color:var(--p1)} article.f.P2{border-left-color:var(--p
 .fix{border-top:1px dashed var(--line);padding-top:8px}
 .fix .lab{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .ev{font-size:12px}
+/* Ready ticks are Chris's own progress, saved in his browser only (Tanya, 30 Oct: browser only, with a copy button to send the list). */
+.ready{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;user-select:none}
+.ready input{width:16px;height:16px;margin:0;accent-color:var(--accent);cursor:pointer}
+article.f.done{background:var(--bg)}
+article.f.done h3{text-decoration:line-through;color:var(--muted)}
+article.f.done .ready{color:var(--accent)}
+.bar .chip.copy{margin-left:4px}
 details.evidence{margin:4px 0 14px}
 details.evidence summary{cursor:pointer;font-size:13px;color:var(--accent);padding:4px 0}
 .shots{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
@@ -137,8 +144,11 @@ details.evidence summary{cursor:pointer;font-size:13px;color:var(--accent);paddi
   <button class="chip" data-sev="P3" aria-pressed="false" type="button">P3</button>
   <label class="eyebrow" for="cat" style="margin-left:6px">Category</label>
   <select id="cat"><option value="">All</option></select>
+  <label class="eyebrow" for="st" style="margin-left:6px">Status</label>
+  <select id="st"><option value="">All</option><option value="open">Open</option><option value="ready">Ready</option></select>
   <input type="search" id="q" placeholder="Search findings, e.g. sentence case, LEN-102" aria-label="Search findings">
   <span class="count" id="count"></span>
+  <button class="chip copy" id="copyready" type="button">Copy ready list</button>
 </div>
 
 <main id="out"></main>
@@ -158,10 +168,14 @@ document.querySelector("#screens tbody").innerHTML = S.map(s => {
 for (const [id, k] of [["nr", "notreached"], ["bnp", "builtnotproto"], ["pnb", "protonotbuilt"]]) document.getElementById(id).innerHTML = X[k].map(t => `<li>${esc(t)}</li>`).join("");
 const cats = [...new Set(F.map(f => f.cat))].sort();
 document.getElementById("cat").innerHTML += cats.map(c => `<option>${esc(c)}</option>`).join("");
-let sev = "all";
+let sev = "all", shown = 0;
+const READY_KEY = "broker-qa-ready-2026-10-30";
+const ready = new Set((() => { try { return JSON.parse(localStorage.getItem(READY_KEY)) || []; } catch { return []; } })());
+const saveReady = () => { try { localStorage.setItem(READY_KEY, JSON.stringify([...ready])); } catch {} };
+const setCount = () => document.getElementById("count").textContent = `${shown} of ${F.length} shown · ${ready.size} ready`;
 function card(f) {
-  return `<article class="f ${f.sev}" id="${f.id}">
-    <div class="fhead"><span class="id">${f.id}</span><span class="sev ${f.sev}">${f.sev}</span><h3>${esc(f.area)}</h3><span class="cat">${esc(f.cat)}</span><span class="len mono">${esc(f.len)}</span>${f.global ? `<span class="glob">part of <a href="#${f.global}">${f.global}</a></span>` : ""}${f.screens ? `<span class="cat">screens: ${esc(f.screens)}</span>` : ""}</div>
+  return `<article class="f ${f.sev}${ready.has(f.id) ? " done" : ""}" id="${f.id}">
+    <div class="fhead"><span class="id">${f.id}</span><span class="sev ${f.sev}">${f.sev}</span><h3>${esc(f.area)}</h3><span class="cat">${esc(f.cat)}</span><span class="len mono">${esc(f.len)}</span>${f.global ? `<span class="glob">part of <a href="#${f.global}">${f.global}</a></span>` : ""}${f.screens ? `<span class="cat">screens: ${esc(f.screens)}</span>` : ""}<label class="ready"><input type="checkbox" data-ready="${f.id}"${ready.has(f.id) ? " checked" : ""}> Ready</label></div>
     <div class="vs"><div class="l"><span class="lab">Live</span><p>${esc(f.live)}</p></div><div class="p"><span class="lab">Prototype</span><p>${esc(f.proto)}</p></div></div>
     <div class="fix"><span class="lab">Fix</span><p>${esc(f.fix)}</p></div>
     <div class="ev"><a href="img/${esc(f.ev)}">Evidence: ${esc(f.ev.replace(/\.png$/, ""))}</a></div>
@@ -169,8 +183,9 @@ function card(f) {
 }
 function render() {
   const q = document.getElementById("q").value.trim().toLowerCase(), c = document.getElementById("cat").value;
-  const keep = f => (sev === "all" || f.sev === sev) && (!c || f.cat === c) && (!q || JSON.stringify(f).toLowerCase().includes(q));
-  let shown = 0;
+  const st = document.getElementById("st").value;
+  const keep = f => (sev === "all" || f.sev === sev) && (!st || (st === "ready") === ready.has(f.id)) && (!c || f.cat === c) && (!q || JSON.stringify(f).toLowerCase().includes(q));
+  shown = 0;
   document.getElementById("out").innerHTML = S.map(s => {
     const all = F.filter(f => f.screen === s.id), list = all.filter(keep);
     shown += list.length;
@@ -180,10 +195,33 @@ function render() {
       <details class="evidence"><summary>Evidence (${evs.length} image${evs.length > 1 ? "s" : ""}, live above prototype)</summary><div class="shots">${evs.map(e => `<figure><img loading="lazy" src="img/${esc(e)}" alt="Live above, prototype below: ${esc(e)}"><figcaption>${esc(e.replace(/\.png$/, ""))} · ${list.filter(f => f.ev === e).map(f => f.id).join(", ")}</figcaption></figure>`).join("")}</div></details>
       <div class="find">${list.map(card).join("")}</div></section>`;
   }).join("") || `<p class="empty">No findings match these filters.</p>`;
-  document.getElementById("count").textContent = `${shown} of ${F.length} shown`;
+  setCount();
 }
 document.querySelectorAll("[data-sev]").forEach(b => b.addEventListener("click", () => { sev = b.dataset.sev; document.querySelectorAll("[data-sev]").forEach(x => x.setAttribute("aria-pressed", x === b)); render(); }));
 document.getElementById("cat").addEventListener("change", render);
+document.getElementById("st").addEventListener("change", render);
+// Ticking only restyles the card, so it stays put under the pointer even with a status filter on; the filter applies on its next change.
+document.getElementById("out").addEventListener("change", e => {
+  const id = e.target.dataset.ready;
+  if (!id) return;
+  e.target.checked ? ready.add(id) : ready.delete(id);
+  saveReady();
+  e.target.closest("article").classList.toggle("done", e.target.checked);
+  setCount();
+});
+document.getElementById("copyready").addEventListener("click", async e => {
+  const b = e.currentTarget, list = F.filter(f => ready.has(f.id));
+  const text = [`Broker design QA, 30 Oct: ${list.length} of ${F.length} ready`, ...list.map(f => `${f.id} · ${f.sev} · ${f.area}`)].join("\n");
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch {
+    const t = Object.assign(document.createElement("textarea"), { value: text });
+    document.body.append(t); t.select();
+    try { ok = document.execCommand("copy"); } catch {}
+    t.remove();
+  }
+  b.textContent = ok ? `Copied ${list.length}` : "Copy failed";
+  setTimeout(() => b.textContent = "Copy ready list", 2000);
+});
 document.getElementById("q").addEventListener("input", render);
 render();
 const viewer = document.getElementById("viewer");
