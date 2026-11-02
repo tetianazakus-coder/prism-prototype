@@ -22,8 +22,9 @@ h3{font-size:clamp(30px,2.6vw,36px)}
    and the Figma file (Tanya, 2 Nov). 1em wide like the glyph. The box is .8em tall and sits on the baseline, so it never grows a 1em line box;
    the glyph's top (810) and tail (-78) overflow it, visibly. */
 .arrow{display:inline-block;width:1em;height:.8em;fill:currentColor;overflow:visible}
-/* The home role-card disc centres its content by box, not baseline; the glyph's old line box put it .09em higher. */
-.role-arrow .arrow{transform:translateY(-.09em)}
+/* The home role-card disc and the testimonial ← → buttons centre their content by box, not baseline; the glyph's old line box put it .09em higher.
+   ← → are Arial's outlines (DM Sans lacks them; Arial, next in the stack, drew them). Back to top ↑ stays text: the DM Sans webfont has U+2191. */
+.role-arrow .arrow,.quote-arrows .arrow{transform:translateY(-.09em)}
 .text-link:hover{gap:16px;color:var(--bronze)}
 .header-inner{max-width:1360px;padding-block:17px;gap:42px}
 nav{font-size:14px;gap:25px}
