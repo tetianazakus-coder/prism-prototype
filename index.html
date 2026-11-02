@@ -7901,7 +7901,10 @@
      them; the 480 case below is restated rather than inherited. */
   .facts--rows { grid-template-columns: 1fr; gap: 0; }
   .facts--rows .fact { display: grid; grid-template-columns: 148px minmax(0, 1fr);
-    align-items: baseline; column-gap: 16px; padding: 7px 0; }
+    align-items: baseline; column-gap: 16px; padding: 4px 0; }
+  /* 4px top and bottom, not 7 [Tanya, 2 Nov: "I updated padding in this
+     component to 4px (top and bottom)" in Figma] - a 14px value on its 20px
+     line makes a 28px row, the Figma Hug height */
   .facts--rows .fact .k { margin-bottom: 0; }
   /* the rail's version [Tanya, 5 Oct: the lender account's Institution card
      goes horizontal like the deal summary]. 148px is half of the 342px the
