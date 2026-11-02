@@ -8373,9 +8373,11 @@
         <a href="#/requests" class="l-only" data-nav="requests" title="Requests">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
           <span class="nm">Requests</span></a>
-        <a href="#/parameters" class="l-only" data-nav="params" title="Lending parameters">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
-          <span class="nm">Lending parameters</span></a>
+        <!-- No Lending parameters item since 2 Nov [Tanya: "we remove 'Lending
+             parameters' from nav sidebar, so CTA should be prominent enough"].
+             Its door is the outline button in the Requests header; Home's
+             Matching card Edit and the empty states keep theirs. See
+             lender-requests-parameters-cta-research.md. -->
         <!-- Borrower rail, 21 Sep. Loan request is the borrower's noun — Tony
              used "their loan requests" unprompted on the 21 Sep call [T] and the
              tracker's 07.1 row asks for it; Deal stays the broker's. Shown only
@@ -23948,9 +23950,13 @@ const lBroker = r => {
 };
 /* the five views [lender lexicon, 06.1]: Needs decision is the default,
    because it is the only one with work in it */
-/* All leads the strip [Tanya, 29 Oct: "All should be the first tab"]; the
-   list still opens on Needs decision (S.lview), the one view with work in it */
-const LVIEWS = [["all", "All"], ["decide", "Needs decision"], ["interested", "Interested"], ["passed", "Passed"], ["saved", "Saved"]];
+/* Needs decision leads and All closes the strip, the tracker's order [sheet
+   03.1], since 2 Nov [Tanya: "do recommended"]. This reverses 29 Oct ("All
+   should be the first tab"): the list opens on Needs decision (S.lview), and
+   the tab that opens should be the first one. The order follows a request,
+   waiting, then decided either way, then kept, then everything. Saved is a
+   bookmark across states, so the counts do not sum to All's [~] */
+const LVIEWS = [["decide", "Needs decision"], ["interested", "Interested"], ["passed", "Passed"], ["saved", "Saved"], ["all", "All"]];
 const lInView = (r, v) => v === "all" || (v === "saved" ? r.saved : v === "decide" ? r.st === "new" : r.st === v);
 const LRST = { new: ["New", "tone-blue"], interested: ["Interested", "tone-green"], passed: ["Passed", "tone-muted"] };
 /* filters on the shared multiselect, the BFILTERS pattern. No status
@@ -24676,12 +24682,20 @@ function renderLHome() {
    toggle chip on the bar, the Lenders directory's Shortlist chip
    (Pattern/Filter chip), counting within the view, not a sub-tab as today
    [sheet 03.3]. [~] */
+const LSLIDERS = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>`;
 const lPick = (nm, label) => `<span class="lrpick" data-tip="${esc(nm)} picked you for this request">${label}</span>`;
 function renderLRequests() {
   const all = lreqsNow(), rows = visibleLReqs();
   const n = v => all.filter(r => lInView(r, v)).length;
   const anyF = LRQF.some(f => f.set().size) || S.lrSel || S.lq.trim();
-  const head = `<div class="head"><div><h1>Requests</h1><p>Requests matched to your lending parameters.</p></div></div>`;
+  /* The door to Lending parameters, 2 Nov [Tanya: "go with this", option B
+     of the options deck]. The rail item is gone, so this is the standing
+     way in. Outline, not filled: a filled header button is a page's create
+     action, and the row's Interested is already filled. Drawn on the empty
+     state too, so the door never moves; the empty state keeps its own
+     button. Prism Button outline, default size, the old rail's sliders. */
+  const head = `<div class="head"><div><h1>Requests</h1><p>Requests matched to your lending parameters.</p></div>
+    <div class="head__acts"><a class="btn btn--outline" href="#/parameters">${LSLIDERS}Lending parameters</a></div></div>`;
   if (!all.length) return head + `<div class="card"><div class="card__ct">${lEmpty()}</div></div>`;
 
   const views = `<div class="seg" role="group" aria-label="Requests view">${LVIEWS.map(([k, l]) =>
@@ -26060,10 +26074,14 @@ const lRoute = (d, skip) => BROKERS.find(b => b.id !== skip && b.types.includes(
    A past broker is anyone assigned on one of your deals, funded and dead
    included, most recent assignment first; the badge names that deal. "The
    last broker" is the first of them and comes pre-selected [💡 rec], which
-   is question 183 until Tony says what "last" means. The list holds only
-   brokers who work this request's state and property type, his 21 Sep rule,
-   so a past broker who does not is left out (question 178). New brokers
-   follow the past ones; three show, the rest behind Show more. */
+   was question 183; Tony settled it about 26 Oct ("everyone they've worked
+   with (most recent first)"). Past brokers are listed whether or not they
+   work this request's state and property type [T, Figma 522:6189: "If last
+   time's advisor doesn't cover this request (different state or property
+   type), do we still show them?" "Yes"]. New brokers must still fit, his
+   21 Sep rule, and follow the past ones; three show, the rest behind Show
+   more. One deal has one broker [T: "No", to "Can one transaction have more
+   than one advisor"], so each past broker carries one deal's badge. */
 function bwPast(skipId) {
   const m = new Map();
   loansNow().filter(d => d.id !== skipId && d.broker && d.conn && d.conn.st === "assigned")
@@ -26074,12 +26092,13 @@ function bwPast(skipId) {
 const dealShort = d => ((d.name.match(/^(?:[A-Z0-9]\S*\s*)+/) || [d.name])[0]).trim();
 function bwBrokers(d) {
   const past = bwPast(d.id), fits = b => b.types.includes(d.property) && b.geos.includes(d.state);
-  const list = [...past.keys()].map(brokerById).filter(b => b && fits(b)).concat(BROKERS.filter(b => fits(b) && !past.has(b.id)));
+  const list = [...past.keys()].map(brokerById).filter(Boolean).concat(BROKERS.filter(b => fits(b) && !past.has(b.id)));
   return { list, past };
 }
 /* "assign", or a broker id. Unset means the default: the last broker if
-   there is one who fits, otherwise let us assign. A pick that no longer fits
-   (the property or state changed on step 1) falls back the same way. */
+   there is one, otherwise let us assign. A pick that has left the list (a
+   new broker who no longer fits after step 1 changed the property or state)
+   falls back the same way. */
 function bwPick(d) {
   const { list, past } = bwBrokers(d);
   if (d.bpick === "assign" || d.bpick === "invite") return d.bpick;
@@ -26088,8 +26107,8 @@ function bwPick(d) {
 }
 /* the card. Three radios, the Figma wording: Let us assign, Choose an advisor,
    Invite your own advisor. Under Choose, the directory's card (.bcard) as a
-   radio, with an info badge on a past broker. No broker who fits means Choose
-   is off and says why - submit still matches, and lRoute finds no one either,
+   radio, with an info badge on a past broker. No past broker and nobody who
+   fits means Choose is off and says why - submit still matches, and lRoute finds no one either,
    so the deal lands as "No broker yet". */
 /* Invite your own advisor [T, Figma comment on step 5, about 17 Oct]: "Let's
    add an option to (1) invite a broker who is not on the platform. If
@@ -31122,8 +31141,10 @@ function render() {
     a.classList.toggle("on", (S.route === "brokers" || S.route === "broker") ? a.dataset.nav === "brokers"
       : (S.route === "loan" || S.route === "loannew" || S.route === "lsent" || S.route === "binvite" || (S.route === "deals" && isB())) ? a.dataset.nav === "loans"
       : S.route === "help" ? a.dataset.nav === "help"
-      : S.route === "lreqs" || S.route === "lreq" ? a.dataset.nav === "requests"
-      : S.route === "lparams" ? a.dataset.nav === "params"
+      /* Lending parameters lights Requests since its rail item went, 2 Nov:
+         the form's standing door is the Requests header, and the parameters
+         decide that list [~] */
+      : S.route === "lreqs" || S.route === "lreq" || S.route === "lparams" ? a.dataset.nav === "requests"
       : S.route === "profile" && isB() ? a.dataset.nav === "bprofile"
       : S.route === "account" ? a.dataset.nav === "account"
       /* the activity log lights Home, not My deals [Tanya, 16 Oct]: its one
@@ -33028,7 +33049,7 @@ document.addEventListener("click", e => {
   if (lgov) { S.lview = lgov.dataset.lgov; S.lpg = 1; S.lpicked.clear(); LRQF.forEach(f => f.set().clear()); S.lrSel = false; S.lq = ""; }
   if (t.closest("[data-lsetupx]")) {
     S.lsetupX = true;
-    S.undo = { msg: "Setup skipped. Lending parameters is in the sidebar whenever you are ready.", fn: () => { S.lsetupX = false; } };
+    S.undo = { msg: "Setup skipped. Lending parameters is on the Requests page whenever you are ready.", fn: () => { S.lsetupX = false; } };
     render(); return;
   }
   /* ---- Requests, lender, milestone D [03.2, 03.3] ---- */
