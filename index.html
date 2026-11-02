@@ -13847,15 +13847,16 @@ function renderDealForm() {
           <div class="amtwrap"><span>$</span><input id="f_amt" data-df="amt" inputmode="numeric" autocomplete="off" value="${usdIn(d.amt)}" placeholder="12,000,000" aria-label="Loan amount in dollars"></div>
           ${miss.amt ? `<div class="errmsg">Loan amount is required.</div>` : ""}
         </div>
-        <div class="fld ${miss.property ? "err" : ""}">
-          <label>Property type <span class="req">*</span></label>
-          <div class="fld__sel">${selCtl("nd:property", propOpts, d.property, "Property type")}</div>
-          ${miss.property ? `<div class="errmsg">Pick a property type. Matching scores on it.</div>` : ""}
-        </div>
-        <div class="fld">
-          <label>Execution type <span class="opt">(optional)</span></label>
-          <div class="fld__sel">${selCtl("nd:financing", finOpts, d.financing, "Execution type")}</div>
-          <div class="hint">Left blank, matching stays broad, and you can narrow once quotes come in.</div>
+        <div class="fldrow fldrow--2">
+          <div class="fld ${miss.property ? "err" : ""}">
+            <label>Property type <span class="req">*</span></label>
+            <div class="fld__sel">${selCtl("nd:property", propOpts, d.property, "Property type")}</div>
+            ${miss.property ? `<div class="errmsg">Pick a property type. Matching scores on it.</div>` : ""}
+          </div>
+          <div class="fld">
+            <label>Execution type <span class="opt">(optional)</span></label>
+            <div class="fld__sel">${selCtl("nd:financing", finOpts, d.financing, "Execution type")}</div>
+          </div>
         </div>
         <div class="fld">
           <label>Transaction</label>
@@ -13898,7 +13899,7 @@ function renderDealForm() {
     <div class="card" style="margin-bottom:16px">
       <div class="card__hd"><h2>Property details</h2></div>
       <div class="card__ct">
-        <div class="fldrow">
+        <div class="fldrow fldrow--4">
           <div class="fld ${miss.units ? "err" : ""}">
             <label for="f_units">Units <span class="req">*</span></label>
             <input class="inp" id="f_units" data-df="units" inputmode="numeric" autocomplete="off" value="${esc(d.units)}" placeholder="42">
