@@ -1,15 +1,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LenderPrism</title>
-<meta name="robots" content="noindex, nofollow">
-<!-- Home (/) is page 3 in the sitemap and not designed yet; until it is, the root opens the Brokers page. -->
-<meta http-equiv="refresh" content="0; url=brokers/">
-<link rel="icon" href="img/logo-mark.svg" type="image/svg+xml">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Brokers, borrowers and lenders work one deal process — run by people, powered by a matching engine.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>LenderPrism — A capital markets desk for commercial real estate</title>
+  <link rel="icon" href="img/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/base.css?v=20261102a">
+  <link rel="stylesheet" href="shared/editorial.css?v=20261102a">
+  <link rel="stylesheet" href="shared/components.css?v=20261102f">
+  <link rel="stylesheet" href="home.css?v=20261102i">
+  <link rel="stylesheet" href="shared/type.css?v=20261102c">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
+  <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
+  <script src="shared/site.js?v=20261102g" defer></script>
+  <script src="shared/motion.js?v=20261102g" defer></script>
 </head>
 <body>
-<p><a href="brokers/">LenderPrism for brokers</a></p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="./" aria-label="LenderPrism home"><img src="img/logo-mark.svg" width="29" height="34" alt=""><span>Lender<em>Prism</em></span></a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">≡</span></button>
+    <nav id="navigation" aria-label="Main navigation">
+      <details class="solutions"><summary>Solutions <svg class="chev" width="8" height="5" viewBox="0 0 8 5" aria-hidden="true"><path d="M1 1l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="solutions-menu">
+        <a href="brokers/"><b>For Brokers</b><span>Leads, lender matching and an execution desk</span></a>
+        <a href="borrowers/"><b>For Borrowers</b><span>A vetted broker on your deal within 24 hours</span></a>
+        <a href="lenders/"><b>For Lenders</b><span>Only deals that fit your box</span></a>
+      </div></details>
+      <a href="pricing/">Pricing</a><a href="about/">About</a>
+      <span class="nav-phone placeholder">[Phone number]</span>
+      <a href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/login">Log in</a>
+      <a class="button small" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/broker">Start free trial</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Home, requirements doc "Home /" §1–8, copy verbatim; [brackets] are Tony's open placeholders. The umbrella page:
+       explain LenderPrism in one screen and route each visitor to their role. -->
+  <section class="hero home-hero" aria-labelledby="hero-title">
+    <!-- Backdrop (Tanya, 2 Nov: "add some image + overlay on background"): a city at dusk under a navy overlay, after
+         the photo-under-navy sections on Mobbin (Wise). Decorative, so empty alt. Photo from Unsplash (README, 2 Nov). -->
+    <div class="hero-backdrop" aria-hidden="true"><img src="img/hero-city-dusk.jpg" width="2400" height="1600" alt="" fetchpriority="high"></div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="tiny-mark" aria-hidden="true"></span> For multifamily &amp; commercial real estate</p>
+        <h1 id="hero-title"><span>A capital markets desk</span><em>for commercial real estate.</em></h1>
+        <div class="hero-lower"><p class="hero-description">Brokers, borrowers and lenders work one deal process — run by people, powered by a matching engine.</p></div>
+      </div>
+      <!-- The three role cards take the visual column: on this page the routing is the picture. -->
+      <div class="hero-visual role-cards">
+        <a class="role-card" href="brokers/"><span class="role-name">I'm a <em>broker</em></span><span class="role-line">Get leads, matched lenders and a team that packages your deals.</span><span class="role-arrow" aria-hidden="true">↗</span></a>
+        <a class="role-card" href="borrowers/"><span class="role-name">I'm a <em>borrower</em></span><span class="role-line">Submit once. A vetted broker calls you within 24 hours.</span><span class="role-arrow" aria-hidden="true">↗</span></a>
+        <a class="role-card" href="lenders/"><span class="role-name">I'm a <em>lender</em></span><span class="role-line">See only pre-screened deals that fit your box.</span><span class="role-arrow" aria-hidden="true">↗</span></a>
+        <p class="role-call">Prefer to talk? Call <span class="placeholder">[Phone number]</span></p>
+      </div>
+    </div>
+  </section>
+  <section class="proof wrap" aria-label="LenderPrism network facts">
+    <div><strong>10,000<span>+</span></strong><p>Banks &amp; credit unions</p></div>
+    <div><strong>1,500<span>+</span></strong><p>Non-bank lenders</p></div>
+    <div><strong>90,000<span>+</span></strong><p>U.S. lender locations</p></div>
+    <div><strong class="unconfirmed">[N]</strong><p>Brokers on the platform</p></div>
+  </section>
+  <section class="steps section" aria-labelledby="steps-title">
+    <div class="wrap">
+      <div class="section-heading"><h2 id="steps-title">One submission. The right lenders. <br><em>Real people the whole way.</em></h2></div>
+      <div class="step-track">
+        <span class="step-rail" aria-hidden="true"><span class="step-line"></span><i class="step-flag" style="--i:0"></i><i class="step-node" style="--i:1"></i><i class="step-node" style="--i:2"></i><i class="step-node" style="--i:3"></i></span>
+        <ol class="step-list">
+        <li><span class="step-number" aria-hidden="true">01</span><h3>Submit once.</h3><p>Property type, loan size, location and timeline. No reformatting for every lender.</p></li>
+        <li><span class="step-number" aria-hidden="true">02</span><h3>A broker takes it on.</h3><p>A LenderPrism broker reviews the deal and confirms fit before anything goes out.</p></li>
+        <li><span class="step-number" aria-hidden="true">03</span><h3>Packaged and matched.</h3><p>Our team packages the deal to institutional standard and matches it by asset, size and geography.</p></li>
+        <li><span class="step-number" aria-hidden="true">04</span><h3>Quotes side by side.</h3><p>Lenders compete. Terms come back in one place, and your broker works them to close.</p></li>
+      </ol>
+      </div>
+    </div>
+  </section>
+  <section class="sides section" aria-labelledby="sides-title">
+    <div class="wrap">
+      <div class="section-heading"><h2 id="sides-title">Built for every side <br><em>of the deal.</em></h2><p>One deal, three seats. This is the screen each side works in.</p></div>
+      <!-- Option B of the layout review (Tanya, 2 Nov: "build Option B · recommended"). The hero cards already route the
+           three audiences, so this section shows what they cannot: the screen each side works in. A switcher only earns
+           its click when the panel carries a picture (Mobbin: Fibery, Reducto, Intercom; text-only sites show columns).
+           One side open at a time, each a disclosure button over its region, as Ploy's accordion; closed regions are
+           inert, not hidden, so they can fold shut and the screens can cross-fade (Tanya, 2 Nov: "smooth animation"). The open side's screen
+           stands beside the list from 851px and inside the region below. No 01-03 numerals: the steps above own them.
+           The intro line is our draft, not the structure doc's. [💡 rec] -->
+      <div class="sides-list" data-sides>
+        <div class="side-item">
+          <h3><button type="button" id="side-0" aria-expanded="true" aria-controls="side-panel-0"><span class="side-for">For brokers</span><span class="side-lead">Run a pipeline like a large firm.</span></button></h3>
+          <div class="side-panel" id="side-panel-0" role="region" aria-labelledby="side-0"><div class="side-body"><p>House-sourced leads in your territory, a matching engine across 11,500+ lenders, and an execution desk that packages and chases quotes.</p><a class="button" href="pricing/">Explore broker plans <span aria-hidden="true">↗</span></a><figure class="side-screen"><img src="img/hero-deals-board.png" width="1680" height="886" alt="The LenderPrism Deals board: a filterable table of the broker's deals with amount, state, execution type, lender matches and status"></figure></div></div>
+        </div>
+        <div class="side-item">
+          <h3><button type="button" id="side-1" aria-expanded="false" aria-controls="side-panel-1"><span class="side-for">For borrowers</span><span class="side-lead">Financing with a person, not a portal.</span></button></h3>
+          <div class="side-panel" id="side-panel-1" role="region" aria-labelledby="side-1" inert><div class="side-body"><p>A vetted broker reviews your deal, takes it to lenders who actually lend on it, and brings back competing quotes. Free for borrowers.</p><a class="button" href="borrowers/">Learn more<span class="sr-only"> about LenderPrism for borrowers</span> <span aria-hidden="true">↗</span></a><figure class="side-screen"><img src="img/hero-borrower-deals.png" width="1552" height="750" alt="LenderPrism My deals: the borrower's deals in one table, with loan request, advisor, stage, quotes, outstanding items and last activity"></figure></div></div>
+        </div>
+        <div class="side-item">
+          <h3><button type="button" id="side-2" aria-expanded="false" aria-controls="side-panel-2"><span class="side-for">For lenders</span><span class="side-lead">Deal flow that fits your box.</span></button></h3>
+          <div class="side-panel" id="side-panel-2" role="region" aria-labelledby="side-2" inert><div class="side-body"><p>Set your lending parameters once; packaged, pre-screened deals arrive by email. Pass in one click on the rest.</p><a class="button" href="lenders/">Learn more<span class="sr-only"> about LenderPrism for lenders</span> <span aria-hidden="true">↗</span></a><figure class="side-screen"><img src="img/hero-lender-requests.png" width="1552" height="892" alt="LenderPrism Requests: the loan requests matched to the lender's parameters, with filters for property type, type of financing and state"></figure></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="people section" aria-labelledby="people-title">
+    <div class="wrap">
+      <div class="section-heading"><h2 id="people-title">Technology finds the lenders. <br><em>People close the deal.</em></h2><p>Every deal on LenderPrism has a broker on it — backed by our capital markets team for packaging, lender outreach and execution on larger transactions.</p></div>
+      <ul class="person-grid">
+        <li class="person-card"><div class="portrait"><img src="img/tony-talamas.jpg" width="512" height="512" alt="" loading="lazy"></div><h3>Tony Talamas</h3><p class="person-role">Founder · <span class="sample">LenderPrism</span></p><p><span class="sample">Two decades in commercial real estate finance. Built LenderPrism so independents get a desk, not a login.</span></p></li>
+        <li class="person-card"><div class="portrait"><img src="img/brokers/sean-hasson.jpg" width="800" height="800" alt="" loading="lazy"></div><h3>Sean Hasson</h3><p class="person-role">Magnolia, TX</p><p>Multifamily, Assisted Living / Memory Care, Build to Rent <span class="more">+19 more</span></p></li>
+        <li class="person-card"><div class="portrait"><img src="img/brokers/matthew-morelli.jpg" width="800" height="800" alt="" loading="lazy"></div><h3>Matthew Morelli</h3><p class="person-role">Belmar, NJ</p><p>Multifamily, Assisted Living / Memory Care, Build to Rent <span class="more">+11 more</span></p></li>
+        <li class="person-card"><div class="portrait"><img src="img/brokers/dustin-shively.jpg" width="800" height="800" alt="" loading="lazy"></div><h3>Dustin Shively</h3><p class="person-role">Richmond Hill, GA</p><p>Multifamily, Assisted Living / Memory Care, Build to Rent <span class="more">+17 more</span></p></li>
+      </ul>
+      <p class="people-more"><a class="text-link" href="find-a-broker/">Find a broker <span aria-hidden="true">↗</span></a></p>
+    </div>
+  </section>
+  <!-- Hidden at launch if Tony has no confirmed quotes (doc §6). The three quotes, names and faces are SAMPLE content (class "sample";
+       the 26 Oct option B copy and the Brokers page's stock portraits) so the section can be reviewed filled (Tanya, 2 Nov: "add some examples
+       of content instead just empty placeholders"). Replace or remove before launch. -->
+  <section class="testimonials section" data-publication-placeholder aria-labelledby="quotes-title">
+    <div class="wrap"><div class="quote-head"><div><h2 id="quotes-title">What industry <br><em>pros say</em></h2></div><div class="quote-arrows"><button type="button" data-step="-1" aria-label="Previous testimonial">←</button><button type="button" data-step="1" aria-label="Next testimonial">→</button></div></div>
+      <ul class="quote-track" aria-label="Testimonials">
+        <li class="quote-card sample"><p>“Three of my last five closings started as LenderPrism leads in my own county. The borrowers arrived with the property, the loan amount and the timeline already filled in, so the first call was about structure, not paperwork.”</p><div class="byline"><img src="img/testimonials/ruiz-sq.jpg" width="48" height="48" alt="" loading="lazy"><span><b>Elena Ruiz</b>Ruiz Commercial Finance · Phoenix</span></div></li>
+        <li class="quote-card sample"><p>“The match list had two credit unions I had never heard of. One of them won the deal. I used to pitch the same ten banks on everything; now every package goes to lenders who already do this kind of loan.”</p><div class="byline"><img src="img/testimonials/pike-sq.jpg" width="48" height="48" alt="" loading="lazy"><span><b>Jordan Pike</b>Pike Laurent Advisors · Charlotte</span></div></li>
+        <li class="quote-card sample"><p>“We run the outreach and the follow-up calls. The broker stays the face of the deal. On larger transactions we write the memo, line up the lenders and chase every term sheet, and the borrower only ever hears from their broker.”</p><div class="byline"><img src="img/testimonials/whitfield-sq.jpg" width="48" height="48" alt="" loading="lazy"><span><b>Dana Whitfield</b>Capital markets, LenderPrism</span></div></li>
+      </ul>
+    </div>
+  </section>
+  <section class="platforms section" aria-labelledby="platforms-title">
+    <div class="wrap">
+      <div class="section-heading"><h2 id="platforms-title">Part of the <br><em>Prism family</em></h2></div>
+      <div class="platform-pair">
+        <article class="platform-card"><p class="eyebrow">Debt</p><h3>LenderPrism</h3><p>Debt financing for multifamily and CRE.</p><p class="platform-here"><span class="tiny-mark" aria-hidden="true"></span> You are here</p></article>
+        <article class="platform-card"><p class="eyebrow">Equity</p><h3>InvestorPrism</h3><p>Where syndicators showcase deals to accredited investors.</p><a class="text-link" href="https://join.investorprism.com/" target="_blank" rel="noopener">Visit InvestorPrism <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></article>
+      </div>
+    </div>
+  </section>
+  <section class="final dark section"><div class="wrap"><div class="final-grid"><h2>Let's move your <br>next deal <em>forward.</em></h2><div><p>Tell us who you are and we'll show you the fastest way in.</p><div class="closing-actions role-actions"><a class="button light" href="brokers/">I'm a broker</a><a class="button ghost" href="borrowers/">I'm a borrower</a><a class="button ghost" href="lenders/">I'm a lender</a></div></div></div></div></section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="./"><img src="img/logo-mark.svg" width="29" height="34" alt=""><span>Lender<em>Prism</em></span></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span> <br><span class="placeholder">[Email address]</span></div><div><h2>Solutions</h2><a href="brokers/">For Brokers</a><a href="borrowers/">For Borrowers</a><a href="lenders/">For Lenders</a><a href="find-a-broker/">Find a broker</a><a href="pricing/">Pricing</a></div><div><h2>Company</h2><a href="about/">About</a><a href="about/#contact">Contact</a><button data-unavailable="Broker Agreement">Broker Agreement</button><h2 class="platforms-label">Our platforms</h2><a href="./">LenderPrism — debt</a><a href="https://join.investorprism.com/">InvestorPrism — equity</a></div><div class="newsletter"><h2>Stay in the know</h2><p>Market notes and new lenders, <br>once a month.</p><form id="newsletter-form"><label class="sr-only" for="newsletter-email">Email for market notes</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required><button type="submit" aria-label="Subscribe">↗</button></div><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><p class="disclaimer">LenderPrism is a commercial real estate financing platform and brokerage network. We are not a lender. Commercial-purpose financing only.</p></div></footer>
+<dialog id="inquiry-dialog" aria-labelledby="inquiry-title"><button class="dialog-close" data-close aria-label="Close territory inquiry">×</button><p class="eyebrow">PRO / TERRITORY INQUIRY</p><h2 id="inquiry-title">Let's talk <em>territory.</em></h2><p>Tell us where you want to build your business.</p><form id="territory-form"><div class="form-row"><label>Full name<input name="name" autocomplete="name" required></label><label>Work email<input name="email" type="email" autocomplete="email" required></label></div><label>States<input name="states" placeholder="e.g. Texas, Florida" required></label><label>Asset classes<input name="assets" placeholder="e.g. Multifamily, Industrial" required></label><div class="form-actions"><button class="button" type="submit">Review inquiry</button><a class="text-link" href="https://calendly.com/tony_talamas/lenderprism-investorprism-demo-intro" target="_blank" rel="noopener">Book a call <span aria-hidden="true">↗</span></a></div><p id="inquiry-status" role="status"></p></form></dialog>
+<dialog id="notice-dialog" aria-labelledby="notice-title"><button class="dialog-close" data-close aria-label="Close notice">×</button><p class="eyebrow">LENDERPRISM / DESIGN PREVIEW</p><h2 id="notice-title"></h2><p id="notice-body"></p><button class="text-link" data-close>Back to the page <span aria-hidden="true">↙</span></button></dialog>
 </body>
 </html>

@@ -1,0 +1,36 @@
+/* About (/about): only what it adds to ../shared/. Load order: base.css, editorial.css, components.css, this file,
+   type.css. */
+
+/* Our story: title left, Tony's paragraphs right, in the FAQ's 4:8 grid, on the navy band the Brokers problem section
+   uses (2 Nov), so the page opens paper, navy, paper as Brokers does. Until his text arrives the column holds the
+   doc's placeholder in a dashed frame. */
+.story-grid,.contact-grid{display:grid;grid-template-columns:4fr 8fr;gap:80px;align-items:start}
+.story-body{max-width:720px}
+.story-body>p{font-size:18px;line-height:1.75}
+.story-body>p+p{margin-top:20px}
+.story-body>p.placeholder{padding:28px 32px;border:1px dashed #5a6a88;color:#d9bf98}
+
+.team{background:var(--white)}
+
+/* Contact: the doc's form beside the phone, email and reply time. Fields at the inquiry dialog's values. */
+.contact{background:#eef1f6}
+.contact-intro{display:flex;flex-direction:column;gap:16px}
+.contact-intro>p{font-size:16px;line-height:1.7;color:var(--muted)}
+.contact-lines{display:flex;flex-direction:column;gap:6px}
+.contact-lines .placeholder{font-size:17px}
+.contact-form{display:grid;gap:22px;max-width:720px}
+.contact-form .form-row{gap:22px 20px}
+.contact-form label,.radio-group legend{display:block;font-size:15px;font-weight:500}
+.contact-form input:not([type=radio]),.contact-form textarea{display:block;width:100%;margin-top:8px;padding:12px 14px;min-height:48px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);color:var(--ink);font:inherit;font-size:16px;font-weight:400}
+.contact-form textarea{resize:vertical;min-height:132px}
+.contact-form :is(input,textarea):focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+/* "I am a": four fixed answers, so radios; a segmented control only switches views. */
+.radio-group{display:flex;flex-wrap:wrap;gap:12px 28px;margin:0;padding:0;border:0}
+.radio-group legend{width:100%;margin-bottom:12px;padding:0}
+.radio-group label{display:inline-flex;align-items:center;gap:10px;font-weight:400;cursor:pointer}
+.radio-group input{width:18px;height:18px;margin:0;accent-color:var(--navy)}
+.contact-form .form-actions{margin-top:0}
+#contact-status{font-size:15px;color:var(--muted);min-height:1.5em}
+
+@media(max-width:1150px){.story-grid,.contact-grid{gap:48px}}
+@media(max-width:850px){.story-grid,.contact-grid{grid-template-columns:1fr;gap:32px}}

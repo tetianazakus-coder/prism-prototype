@@ -1,0 +1,53 @@
+/* Find a broker (/find-a-broker): only what it adds to ../shared/. Load order: base.css, editorial.css,
+   components.css, this file, type.css. */
+
+.find-head .hero-copy{padding-bottom:48px}
+.directory{padding-top:0;border-top:1px solid var(--line)}
+
+/* Filters: three multiselect buttons in a row; each opens a checkbox list over the grid with its footer. */
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:28px 0 40px}
+.filter{position:relative}
+.filter-toggle{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:10px 16px;border:1px solid var(--line);background:var(--white);font-size:15px;color:var(--ink)}
+.filter-toggle:hover,.filter.active .filter-toggle{border-color:var(--ink)}
+.filter-toggle[aria-expanded=true] .chev{transform:rotate(180deg)}
+.filter-count{color:#7A6040}
+.filter-pop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:300px;background:var(--white);border:1px solid var(--line);box-shadow:0 18px 40px rgba(14,28,53,.12)}
+.filter-options{display:grid;max-height:300px;overflow:auto;padding:8px 0}
+.filter-options label{display:flex;align-items:flex-start;gap:12px;padding:9px 16px;font-size:15px;line-height:1.4;cursor:pointer}
+.filter-options label:hover{background:#f3efe7}
+.filter-options input{flex:0 0 16px;width:16px;height:16px;margin:2px 0 0;accent-color:var(--navy)}
+.filter-foot{display:flex;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--line)}
+.filter-foot button{font-size:15px;font-weight:500;color:var(--ink);padding:4px 0}
+.filter-foot button:hover{color:var(--bronze)}
+.find-count{margin-left:auto;font-size:15px;color:var(--muted)}
+
+/* Broker card: the person card with types, states served and the connect button. */
+.broker-card{gap:8px}
+.broker-card>.portrait{background:#ece7de;border:0;overflow:hidden}
+.broker-types{font-size:15px;line-height:1.6;color:var(--ink)}
+.broker-types>span{color:var(--muted);white-space:nowrap}
+.broker-states{display:flex;flex-direction:column;gap:2px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line);font-size:15px}
+.broker-states>span{font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7A6040}
+.broker-card>.button{margin-top:16px;justify-content:space-between}
+.broker-card[hidden]{display:none}
+
+.find-empty{display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding:48px;background:var(--white);border:1px dashed #b9ab95}
+.find-empty[hidden]{display:none}
+.find-empty p{font:400 clamp(26px,2.2vw,32px)/1.25 var(--serif);letter-spacing:-.02em;max-width:620px}
+
+.find-banner{padding-block:40px}
+.find-banner p{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 40px;font:400 clamp(28px,2.6vw,38px)/1.2 var(--serif);letter-spacing:-.02em}
+.find-banner .text-link{font-family:var(--sans);letter-spacing:0;color:var(--paper)}
+.find-banner .text-link:hover{color:#c2a98a}
+
+@media(max-width:1150px){.broker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  .filters{padding:20px 0 28px}
+  .filter,.filter-toggle{width:100%}
+  .filter-toggle{justify-content:space-between}
+  .filter-toggle .chev{margin-left:auto}
+  .filter-pop{width:100%}
+  .find-count{margin-left:0}
+  .broker-grid{grid-template-columns:1fr;max-width:420px}
+  .find-empty{padding:28px 24px}
+}

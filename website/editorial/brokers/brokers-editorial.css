@@ -1,0 +1,247 @@
+/* Rules only the Brokers page uses, from its editorial.css (site-wide ones moved to ../shared/editorial.css on
+   2 Nov). */
+.problem h2,.capabilities-title,.territory h2,.testimonial-grid h2,.roi h2{font-size:clamp(40px,3.6vw,52px)}
+.pillar h3{font-size:clamp(30px,2.6vw,36px)}
+/* Pillar titles run two lines: the plain sentence, then the italic tail. No <br> in the markup; 35px max (29px min) is what lets "The right lenders for every deal," sit on one line in the 500px copy column at 1440 and the 409px one at 1024. Where it still can't (851-1015, phones under ~560), balance splits it evenly instead of leaving "deal," alone. */
+.pillar h3{font-size:clamp(29px,2.6vw,35px);text-wrap:balance}
+.small-label{font-size:11px;letter-spacing:.11em}
+.demo{font-size:12px;line-height:1.6}
+.quiet-photo figcaption{position:absolute;left:0;bottom:0;padding:22px 32px 0 0;background:var(--paper);font-size:11px;line-height:1.75;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.quiet-photo figcaption>span{display:block;white-space:nowrap}
+.hero-bottom{grid-column:1/-1;gap:24px;padding:26px 0;font-size:12px;letter-spacing:0}
+.hero-bottom>span{display:flex;gap:12px;align-items:center}
+.hero-bottom b{font:italic 19px var(--serif);color:var(--bronze)}
+.hero-bottom>a{font-size:11px;color:var(--muted);gap:6px}
+.hero-bottom>a span{font-size:14px}
+.proof small{font-size:12px}
+/* A consistent reading rhythm; one composition per capability. */
+.problem-grid{gap:80px;padding-block:0}
+.problem-body{padding-top:0}
+.problem-body>p:first-child,.pillar-copy>p:not(.eyebrow),.territory-grid>div>p:not(.micro){font-size:16px;line-height:1.7}
+.pullquote{font-size:27px;max-width:430px;margin-top:22px}
+.desk-line{font-size:13px}
+.capabilities{background:var(--white)}
+.capabilities .pillar:last-child{margin-bottom:0}
+@media(min-width:851px){.pillar-copy>:last-child{margin-bottom:0}}
+.capabilities-title{max-width:900px;margin:0 0 64px}
+.pillar{grid-template-columns:1fr 1fr;gap:70px;align-items:center;margin-bottom:64px;padding-top:40px;border-top:1px solid var(--line)}
+.pillar-copy,.matching .pillar-copy{grid-column:auto;max-width:500px;padding:0}
+.pillar-copy>.eyebrow{font-size:11px;margin-bottom:20px}
+.chapter-number{font-size:30px;border:0;padding:0}
+.pillar h3 em{color:var(--bronze)}
+.pillar-copy>p:not(.eyebrow){margin-top:20px}
+.pillar .feature-list{font-size:14px}
+/* Pillar bullets: a 6px bronze square turned 45deg, the staircase rail's diamond (8.5px corner to corner), no row dividers (Tanya, 2 Nov). Block, not the base flex row, so a long item and its [Fee] tag wrap under the text with a hanging indent instead of dropping below the marker. Rows tighten from 11px to 6px since there is no rule to clear. The plan cards
+   take the same diamond in place of their dash (Tanya, 2 Nov: "instead of this dashes for bullet points use same icons as here") and keep their dividers and 11px rows. */
+.pillar .feature-list li{display:block;position:relative;border-bottom:0;padding:6px 0 6px 20px}
+.pillar .feature-list li::before{content:'';position:absolute;left:1px;top:calc(6px + .85em - 3px);width:6px;height:6px;transform:rotate(45deg);background:var(--bronze);font-size:inherit}
+.routing-ledger{padding:20px 32px;background:var(--paper);border-block:1px solid var(--line)}
+.routing-ledger>.eyebrow{margin-bottom:22px}
+.routing-ledger ol{margin:0}
+.routing-ledger li{display:grid;grid-template-columns:35px 1fr;column-gap:18px;padding:24px 0;border-top:1px solid var(--line)}
+.routing-ledger li>span{grid-row:1/3;font:italic 23px var(--serif);color:var(--bronze)}
+.routing-ledger strong{font:400 26px/1.2 var(--serif)}
+.routing-ledger small{font-size:13px;color:var(--muted);margin-top:9px}
+.matching{padding-bottom:0;border-bottom:0}
+.matching-visual{grid-column:1;background:var(--paper);padding:22px;min-height:0;align-self:center;border:1px solid var(--line)}
+.figure-label{padding:0;align-items:center}
+.figure-label .eyebrow,.figure-label .demo{font-size:11px}
+.matching-crop{height:307px;margin-top:22px;border-block:1px solid var(--line)}
+.matching-crop img{width:175%;left:-7%;top:0}
+.matching-visual>figcaption{background:transparent;border:0;padding:18px 0 0;font-size:10px}
+.execution-visual{grid-column:2;background:var(--paper);padding:28px 32px;margin:0;border-block:1px solid var(--line)}
+.execution-visual li>div{font-size:30px}
+.execution-visual small{font-size:13px;line-height:1.5}
+.execution-visual>p{font-size:26px}
+/* Product folio. Tabs remain keyboard operated; since 2 Nov the screen is a live walkthrough that autoplays on scroll (screens.js)
+   shown whole at 16:10, with no scroll inside it, and the full-screen action is an icon on the frame. */
+.walkthrough{background:#eef1f6}
+.section-heading>p{font-size:16px;max-width:360px}
+/* The lede's last line sits on the title's last baseline, "posted to quoted." The base end alignment plus a 6px pad sized
+   for the old 13px lede left it 5.8px high at 1440 (Tanya, 2 Nov: "align bottom line with the title"). Walkthrough only:
+   the pricing heading's partner is the billing toggle, not text. */
+.walkthrough .section-heading{align-items:last baseline}
+.walkthrough .section-heading>p{padding-bottom:0}
+.walk-stage{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;align-items:start}
+.walk-tabs{display:flex;flex-direction:column;border:0}
+.walk-tabs button{display:grid;grid-template-columns:28px 1fr 14px;align-items:start;gap:12px;padding:22px 0;font-size:15px;border:0;border-top:1px solid #c0c8d6;background:transparent}
+.walk-tabs button>span:first-child{font:400 25px var(--serif);color:var(--bronze)}
+.walk-tabs button small{display:block;font:12px/1.6 var(--sans);margin-top:8px;color:var(--muted)}
+.walk-tabs button[aria-selected=true]{color:var(--ink);background:transparent;border-top:2px solid var(--ink);padding-top:21px}
+.walk-tabs button[aria-selected=true] b{font-weight:700}
+.walk-tabs button:hover:not([aria-selected=true]){background:transparent;color:var(--ink)}
+.walk-screen{grid-column:2;grid-row:1;min-width:0;background:#e4e8ef;padding:22px;border:1px solid #c6cddb}
+.walk-panel{padding:0;margin:0;min-width:0;background:transparent}
+.screen{position:relative;aspect-ratio:8/5;max-height:none;overflow:hidden;border:1px solid #c6cddb;background:#eff3f8}
+.screen img{width:100%;min-width:0;max-width:none;height:100%;margin:0;object-fit:cover;object-position:left top}
+.screen.ps-live{border:0;box-shadow:0 20px 50px rgba(10,28,40,.22),0 3px 10px rgba(10,28,40,.08)}
+.screen-notes{display:flex;align-items:center;gap:18px;padding:14px 0;border-bottom:1px solid #c6cddb}
+.screen-notes>span{font:italic 25px var(--serif);color:var(--bronze)}
+.screen-notes p{font-size:12px}
+.annotation{font-size:14px}
+.annotation b{font-size:15px}
+/* Chapter switch (Tanya, 2 Nov: "make that screens appear same way when switching tabs", as Home's "every side"): the
+   panels share one grid cell, so the leaving chapter fades out on its last frame while the next fades in with a short
+   rise. A closed panel keeps [hidden] for the tab script but stays rendered and invisible (the !important outranks
+   brokers.css's [hidden] rule, for these panels only), so it can fade; visibility
+   still takes it out of focus and the accessibility tree once the fade ends. */
+.walk-screen{display:grid}
+.walk-panel{grid-area:1/1;transition:opacity 550ms ease 80ms,transform 650ms cubic-bezier(.4,0,.2,1) 80ms}
+.walk-panel[hidden]{display:block!important;visibility:hidden;opacity:0;transform:translateY(12px);transition:opacity 350ms ease,transform 350ms ease,visibility 0s 350ms}
+.territory-grid{grid-template-columns:5fr 7fr;gap:64px}
+.territory-grid>div>p:not(.micro){max-width:440px}
+.map-heading,.territory-map figcaption,.map-legend{font-size:11px}
+.territory-map figcaption .map-legend{margin-top:0}
+/* legend replaces "Illustrative map · no live availability" in the caption row (Tanya, 26 Oct) */
+.testimonial-placeholder{border-width:0 0 1px;padding:20px 0;min-height:0}
+.testimonial-placeholder small{font-size:12px}
+.quote-mark{display:none}
+.roi{background:var(--paper);border-top:1px solid var(--line)}
+.roi-grid{grid-template-columns:1fr 1fr;gap:80px;padding-top:0;align-items:start}
+.fee>strong{font:400 clamp(72px,7vw,100px)/1.2 var(--sans);letter-spacing:-.065em;font-variant-numeric:tabular-nums;margin-top:14px}
+.fee>span:last-child{font-size:13px}
+.annual-cost strong{font:400 36px/1.2 var(--sans);letter-spacing:-.04em}
+.annual-cost>span,.annual-cost strong>span{font-size:12px}
+.economics-scale{margin-top:30px}
+.scale-row{margin-bottom:22px}
+.scale-bar{display:block;height:24px;background:var(--ink)}
+.scale-row.cost .scale-bar{width:9.54%;background:var(--bronze)}
+.scale-label{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--muted);margin-top:9px}
+.scale-label b{font-weight:500;color:var(--ink)}
+.economics-scale figcaption{font:italic 24px/1.4 var(--serif);padding-top:8px}
+.roi-comparison>.micro{font-size:12px;max-width:100%;margin-top:18px}
+.footer-bottom button,.preview-note{font-size:12px}
+@media(max-width:1150px){.pillar{gap:40px}
+.walk-stage{grid-template-columns:230px minmax(0,1fr);gap:28px}
+.roi-grid{gap:48px}}
+@media(max-width:850px){.problem-grid,.territory-grid,.roi-grid{grid-template-columns:1fr 1fr;gap:32px}
+.pillar{grid-template-columns:1fr;gap:32px}
+.pillar-copy,.matching .pillar-copy{max-width:620px;grid-column:1}
+.matching .pillar-copy{grid-row:1}
+.matching-visual,.execution-visual{grid-column:1;max-width:100%}
+.matching-crop{height:302px}
+.matching-crop img{width:140%}
+.walk-stage{grid-template-columns:1fr;gap:24px}
+.walk-tabs{flex-direction:row}
+.walk-tabs button{grid-template-columns:25px 1fr;width:33.333%;padding:18px 12px;font-size:14px}
+.walk-tabs button[aria-selected=true]{padding-top:17px}
+.walk-tabs button>span:last-child{display:none}
+.walk-screen{grid-column:1;grid-row:2}
+.plan>.micro{grid-column:1/-1}}
+@media(max-width:600px){.quiet-photo figcaption{padding:16px 22px 0 0;font-size:10px}
+.hero-bottom{padding:20px 0;font-size:10px;gap:13px 16px;flex-wrap:wrap}
+.hero-bottom>span{gap:7px}
+.hero-bottom b{font-size:17px}
+.hero-bottom>a{display:none}
+.proof small{font-size:11px}
+.problem h2,.capabilities-title,.territory h2,.testimonial-grid h2,.roi h2{font-size:35px;line-height:1.12}
+.problem-grid,.territory-grid,.roi-grid{display:grid;grid-template-columns:1fr;gap:28px}
+.problem-body{padding:0}
+.problem-body>p:first-child,.pillar-copy>p:not(.eyebrow),.territory-grid>div>p:not(.micro){font-size:16px;line-height:1.7}
+.pullquote{font-size:25px;max-width:100%}
+.desk-line{font-size:12px}
+.capabilities-title{margin-bottom:36px}
+.pillar{display:grid;padding-top:30px;margin-bottom:48px;gap:28px}
+.pillar h3{font-size:29px}
+.pillar .feature-list{font-size:14px}
+.pillar-copy .text-link{font-size:15px}
+.routing-ledger{padding:22px}
+.routing-ledger strong{font-size:24px}
+.routing-ledger small{font-size:12px}
+.matching{padding-bottom:0}
+.matching-visual{padding:18px;min-height:0}
+.figure-label{padding:0;display:block}
+.figure-label .demo{margin-top:6px}
+.matching-crop{height:252px}
+.matching-crop img{width:190%}
+.matching-visual>figcaption{font-size:9px;gap:8px;padding:16px 0 0}
+.execution-visual{padding:24px;margin:0}
+.execution-visual li>div{font-size:26px}
+.execution-visual small{font-size:12px}
+.execution-visual>p{font-size:24px}
+.section-heading>p{font-size:16px;max-width:100%}
+.walk-tabs button{display:flex;flex-wrap:wrap;align-content:start;padding:14px 8px;gap:8px;font-size:12px}
+.walk-tabs button[aria-selected=true]{padding-top:13px}
+.walk-tabs button>b{flex-basis:100%}
+.walk-tabs button small{font-size:11px}
+.screen{aspect-ratio:auto;height:360px}
+.walk-screen{padding:18px}
+.screen-notes p{font-size:11px}
+.annotation{font-size:14px}
+.territory-grid>div>p:not(.micro){max-width:100%}
+.territory-grid .micro{font-size:12px}
+.territory-map{padding-top:10px}
+.map-heading,.territory-map figcaption,.map-legend{font-size:10px}
+.territory-map figcaption{flex-direction:column;gap:7px}
+.testimonial-placeholder>p{font-size:25px}
+.roi-grid{padding-top:0}
+.roi-comparison{margin:0}
+.roi .eyebrow{font-size:11px}
+.fee>strong{font-size:72px}
+.annual-cost strong{font-size:32px}
+.annual-cost>span{font-size:11px}
+.roi-comparison>.micro{font-size:12px}
+.economics-scale figcaption{font-size:23px}
+.plan>.micro{font-size:12px}}
+@media(max-width:360px){.hero-bottom{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.walk-panel,.walk-panel[hidden]{transition:none}}
+h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
+/* The three product screens lost their eyebrow labels (Tanya, 29 Oct: not in the requirements doc), so each crop sits on
+   the frame's own padding instead of 22px below a label, and took the label's 22px as height (307/302/252, were
+   285/280/230): the frames keep their size and the gap is the same on all four sides (Tanya, 29 Oct). */
+.pillar-screen>.screen-crop:first-child,.matching-visual>.matching-crop:first-child{margin-top:0}
+.quiet-photo figcaption{z-index:2}
+/* Walkthrough says each step once (Tanya, 26 Oct: "is it dublicating this?", then "go"). The doc's three annotations
+   are the tab sublines; there is no caption under the screen since 2 Nov: "View full screen" became the icon button
+   on the frame. */
+
+/* Pillar screens (Tanya, 26 Oct: "should be some visuals for broker flow placed there?", then "go"). The doc gives the
+   pillars no visual; its design rule asks for redesign screens. Deal flow shows Opportunities ("Routed to you by
+   territory and asset class"), the execution desk shows a deal page header with Request execution support and Send loan
+   request. Same frame as the matching screen; crops chosen so the key controls stay inside. */
+.pillar-screen{background:var(--paper);padding:22px;align-self:center;border:1px solid var(--line);min-width:0}
+.screen-crop{position:relative;height:307px;margin-top:22px;overflow:hidden;border-block:1px solid var(--line)}
+.screen-crop img{position:absolute;top:0;max-width:none}
+/* Anchored at the window's top-left corner (Tanya, 26 Oct: "don't cut top and left edges of images"), so only the
+   right and bottom run off. The matching screen moves to the same anchor. */
+.screen-crop img,.matching-crop img{left:0;top:0}
+.leads .screen-crop img{width:150%}
+.deal .screen-crop img{width:110%}
+.matching-crop img{width:150%}
+@media(max-width:850px){.pillar-screen{max-width:100%}
+.screen-crop{height:302px}}
+@media(max-width:600px){.pillar-screen{padding:18px}
+.screen-crop{height:252px}
+.leads .screen-crop img,.matching-crop img{width:190%;left:0}
+.deal .screen-crop img{width:150%;left:0}}
+/* Interactive territory map (Tanya, 26 Oct: "make map in option 1 iteractive, as in other options"). The inline map is
+   Cinematic's; its state picker and status line were dropped as not in the requirements ("remove it then"). Hover lifts
+   a state to a lighter slate, the selected state and the territory CTA take the heading's gold (Tanya: "use gold color
+   for CTA and selected map item"), keyboard focus draws a paper outline. */
+.territory-map svg{display:block;width:100%;height:auto;margin:20px 0}
+@media(min-width:601px){.territory-map{padding-top:0}
+.territory-map svg{margin-top:0}}
+.territory-map svg path{cursor:pointer;transition:fill .2s ease}
+/* Open territory shows before any click (Tanya, 2 Nov: "show by default some available states marked on map"): twelve
+   states carry class="available" (Maine and Iowa went back to taken, "remove available from here", "remove from Iowa"; Wyoming, Texas, Missouri and South Dakota joined, "add available for Wyoming", "and for Texas", "and for Missouri", "and for South Dakota"), and the rest read as taken. The set is illustrative, not real availability [~].
+   Open states are hatched in thin gold over the navy (the map SVG's #map-open pattern), not filled: ten solid gold
+   blocks outweighed the "Check my territory" button and read as sand (Tanya, 2 Nov: "do you like how this gold color
+   looks for available?", then "go" on the hatch). Solid gold stays for the picked state alone, as for the CTA. Hover
+   keeps each state in its family: taken lifts to slate, open to a brighter hatch on a lifted ground (#map-open-hover). */
+.territory-map svg path.available{fill:url(#map-open)}
+@media(hover:hover){.territory-map svg path:hover{fill:#455a82}
+.territory-map svg path.available:hover{fill:url(#map-open-hover)}}
+.territory-map svg path.selected,.territory-map svg path.selected:hover{fill:#c2a98a}
+.map-legend i.available{background:repeating-linear-gradient(-45deg,#c2a98a 0 1.5px,#2a3d60 1.5px 3.5px)}
+.territory .button.light{background:#c2a98a;border-color:#c2a98a;color:var(--ink)}
+.territory .button.light:hover{background:#d3bea2;border-color:#d3bea2}
+.territory-map svg path:focus{outline:none}
+.territory-map svg path:focus-visible{stroke:var(--paper);stroke-width:2.5}
+/* Hover label, built by brokers.js: a paper tag 14px above the pointer, the state's name and then its status. */
+.territory-map{position:relative}
+.map-tip{position:absolute;z-index:2;transform:translate(-50%,calc(-100% - 14px));pointer-events:none;white-space:nowrap;background:var(--paper);color:var(--ink);font:500 13px/1.3 var(--sans);padding:6px 10px;box-shadow:0 6px 18px rgba(4,10,24,.35)}
+.map-tip span{margin-left:8px;font-weight:400;color:#5d6578}
+@media(max-width:560px){.territory-map svg{margin:15px 0}}
+/* "Compare all features ↗" under the plan footnote, centred with it above 600px; it opens /pricing#compare (2 Nov). */
+.pricing-more{text-align:center;margin-top:20px}
+@media(max-width:600px){.pricing-more{text-align:left}}

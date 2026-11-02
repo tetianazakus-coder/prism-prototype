@@ -48,26 +48,50 @@
 
   document.fonts.ready.then(() => {
     // Hero, on load, at The Nest's delays: eyebrow, photo 0.1s, copy 0.15s, title lines 0.2s.
+    // Pages without a photo or a lower block (Pricing) skip those steps.
     const hero = document.querySelector('.hero');
-    reveal(hero.querySelector('.eyebrow'));
-    reveal(hero.querySelector('.hero-visual'), .1);
-    reveal(hero.querySelector('.hero-lower'), .15);
-    lines(hero.querySelector('h1'), .2);
+    const pick = selector => hero.querySelector(selector);
+    if (pick('.eyebrow')) reveal(pick('.eyebrow'));
+    if (pick('.hero-visual')) reveal(pick('.hero-visual'), .1);
+    if (pick('.hero-lower')) reveal(pick('.hero-lower'), .15);
+    lines(pick('h1'), .2);
     root.classList.remove('motion-pending');
 
     document.querySelectorAll('main section h2').forEach(title => lines(title));
 
     // Blocks, each on its own trigger as The Nest wraps them. A container that holds a title reveals its other
     // children instead, so no title moves twice.
-    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .faq-grid > *, .final-grid > *')
+    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .person-grid > li, .platform-pair > *, .feature-cards > *, .notify > *, .faq-grid > *, .final-grid > *')
       .flatMap(block => block.querySelector('h2') ? [...block.children] : block)
       .filter(block => block.tagName !== 'H2');
     const blocks = [...new Set(picked)];
     blocks.filter(block => !blocks.some(other => other !== block && other.contains(block))).forEach(block => reveal(block));
 
     // Drafted: the economics bars draw from the left (0.45s power3.out, 0.07s apart) once the scale is 90% down.
-    gsap.fromTo('.scale-bar', {scaleX: 0, transformOrigin: 'left center'}, {scaleX: 1, duration: .45, ease: 'power3.out', stagger: .07,
+    if (document.querySelector('.scale-bar')) gsap.fromTo('.scale-bar', {scaleX: 0, transformOrigin: 'left center'}, {scaleX: 1, duration: .45, ease: 'power3.out', stagger: .07,
       scrollTrigger: {trigger: '.economics-scale', start: 'top 90%', once: true}});
+
+    // Steps rail (Home, Option A of the steps review, Tanya 2 Nov): the bronze dash-dot line draws left to right as the
+    // list travels from 80% to 45% down the viewport, and each step wakes once the line reaches its diamond; the steps
+    // take no block reveal of their own. From 851px only, where the rail runs across four columns (home.css); below,
+    // and without motion, the rail stays fully drawn and every step awake.
+    const track = document.querySelector('.step-track');
+    if (track) gsap.matchMedia().add('(min-width: 851px)', () => {
+      const items = [...track.querySelectorAll('.step-list > li')];
+      const nodes = [...track.querySelectorAll('.step-node')];
+      // Where each diamond's centre sits along the line, 0 to 1: column starts are a gap past the quarters.
+      const at = node => (node.offsetLeft + node.offsetWidth / 2) / track.offsetWidth;
+      const draw = p => {
+        track.style.setProperty('--p', p);
+        nodes.forEach(node => node.classList.toggle('on', p >= at(node)));
+        items.forEach((item, n) => item.classList.toggle('on', n ? p >= at(nodes[n - 1]) : p > .02));
+      };
+      track.classList.add('live');
+      draw(0);
+      const trigger = ScrollTrigger.create({trigger: track, start: 'top 80%', end: 'top 45%', onUpdate: self => draw(self.progress)});
+      draw(trigger.progress);
+      return () => { track.classList.remove('live'); track.style.removeProperty('--p'); items.concat(nodes).forEach(n => n.classList.remove('on')); };
+    });
 
     // Count-up, as on the Find and Cinematic options (Tanya, 29 Oct): each proof figure counts from 0 over 1.5s expo.out
     // as its block reveals. The digits are hidden from screen readers; an .sr-only twin carries the real figure.

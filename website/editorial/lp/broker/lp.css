@@ -1,0 +1,4 @@
+/* /lp/broker: the Brokers page without the top nav. The header keeps the logo, the phone and Start free trial. */
+.lp-actions{margin-left:auto;display:flex;align-items:center;gap:28px}
+.lp-actions .nav-phone{display:block;margin:0}
+@media(max-width:600px){.lp-actions .nav-phone{display:none}}

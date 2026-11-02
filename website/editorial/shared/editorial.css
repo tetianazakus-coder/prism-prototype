@@ -1,0 +1,282 @@
+/* Site-wide rules from the Brokers page's editorial.css, split on 2 Nov; rules only Brokers uses moved to
+   brokers/brokers-editorial.css. Load order on a page: base.css, the page's rules from the old brokers.css, editorial.css, the page's rules from
+   the old editorial.css, then type.css last as the type floor. The split keeps every rule in its old order
+   across the two files, so nothing on the Brokers page moved (screenshot hashes at 1440, 1100, 800 and 390). */
+/* Bodoni headings, a balanced product cover, and a consistent editorial grid. */
+:root{--serif:'Bodoni Moda',Georgia,serif;--gutter:clamp(22px,5vw,72px);--muted:#586973}
+.wrap{max-width:1216px}
+.section{padding-block:96px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.025em;line-height:1.08;text-wrap:balance}
+h2,.section-heading h2,.pricing .section-heading h2,.faq h2{font-size:clamp(40px,3.6vw,52px)}
+h3{font-size:clamp(30px,2.6vw,36px)}
+.eyebrow{font-size:11px;letter-spacing:.11em}
+.micro{font-size:12px;line-height:1.6}
+.button,.button.small,.plan>.button{font-size:15px;min-height:50px;gap:18px;padding:13px 20px}
+.button.small{font-size:13px;min-height:44px;padding:10px 16px}
+.button:hover{transform:none}
+.button span,.text-link span{display:inline-block;font-size:18px;transition:transform 200ms ease}
+.button:hover span,.text-link:hover span{transform:translateX(3px)}
+.text-link{font-size:15px;gap:16px;transition:color 200ms ease,border-color 200ms ease}
+.text-link:hover{gap:16px;color:var(--bronze)}
+.header-inner{max-width:1360px;padding-block:17px;gap:42px}
+nav{font-size:14px;gap:25px}
+.nav-phone{font-size:12px}
+/* Hero */
+.hero{background-image:linear-gradient(90deg,transparent calc(100% - 1px),#0e1c3504 1px);background-size:120px 100%}
+.hero-grid{grid-template-columns:1.08fr 1fr;gap:0 64px;padding-top:54px;align-items:center}
+.hero-copy{grid-column:1;padding:0 0 44px;animation:none}
+.hero-copy>.eyebrow{font-size:11px;white-space:normal;line-height:1.6;letter-spacing:.07em}
+.tiny-mark{flex-shrink:0}
+.hero h1{font:400 clamp(60px,5.1vw,76px)/1.04 var(--serif);letter-spacing:-.035em;margin-top:24px}
+.hero h1>span{display:block}
+.hero h1>em{display:block;font:italic 400 1em/1.04 var(--serif);letter-spacing:-.035em;color:var(--bronze);white-space:normal;max-width:none;margin-top:8px}
+.hero-lower{margin-top:26px}
+.hero-description{max-width:490px;font-size:18px;line-height:1.65;margin:0}
+.hero-actions{display:grid;grid-template-columns:max-content max-content;align-items:center;justify-content:start;gap:0 24px;margin-top:28px}
+.hero-actions>.button{grid-column:1;grid-row:1}
+.hero-actions>.text-link{grid-column:2;grid-row:1;margin:0;border:0;padding-block:13px}
+.hero-actions>.micro{grid-column:1/-1;grid-row:2;font-size:12px;margin:10px 0 0}
+/* The photo ends 3px above the copy column's last line box (47 vs the copy's 44px bottom pad), so it overshoots the "No card required"
+   baseline by the same 3.5px it overshoots the eyebrow cap tops (Tanya, 2 Nov: "make visually identical top and bottom padding"). */
+.hero-visual{grid-column:2;margin:0 0 47px;padding:0;min-width:0;animation:none}
+.quiet-photo{align-self:stretch;display:flex;flex-direction:column;position:relative}
+.quiet-photo>img{width:100%;min-height:480px;height:100%;object-fit:cover;object-position:45% center;filter:saturate(.65);animation:visual-in 450ms ease both}
+@keyframes visual-in{from{opacity:.35;transform:translateY(10px)}to{opacity:1;transform:none}}
+.proof{padding-block:28px 34px}
+.proof strong{font:400 36px/1.2 var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.proof .word-stat{font:400 26px/1.2 var(--serif);white-space:normal}
+.proof p{font-size:12px}
+.final-grid p{font-size:16px;line-height:1.7}
+.feature-list,.plan .feature-list{font-size:14px}
+.feature-list li::before{content:'—'}
+.plan .feature-list li::before{content:'';position:absolute;left:1px;top:calc(6px + .85em - 3px);width:6px;height:6px;transform:rotate(45deg);background:var(--bronze);font-size:inherit}
+.plan .feature-list li{display:block;position:relative;padding-left:20px}
+.plan .feature-list li::before{top:calc(11px + .85em - 3px)}
+.section-heading{gap:48px}
+.pricing{border-top:1px solid var(--line)}
+/* Plan columns, side by side: the dividers between cards are an inset shadow, not border-right. A border meets the card's top rule
+   at a mitred corner, which cut the 3px bronze and the 1px navy into diagonals (Tanya, 2 Nov: "fix this broken lines here").
+   An inset shadow paints inside the border, so each divider starts under its top rule and the corners stay square. Both dividers
+   belong to the featured middle card, so the bronze bar spans them and its two ends match (Tanya, 2 Nov: "align left edge same as right"). */
+@media(min-width:851px){.plan{border-right:0}
+.plan.featured{box-shadow:inset 1px 0 var(--line),inset -1px 0 var(--line)}}
+.plan{padding:26px 28px 30px;display:flex;flex-direction:column}
+.plan-top{font-size:11px}
+.plan h3{font:400 30px/1.2 var(--serif)}
+.plan-for{font-size:15px;line-height:1.6;max-width:100%;min-height:72px}
+.price{font:400 54px/1.2 var(--sans);letter-spacing:-.04em}
+.price small,.price-note{font-size:12px}
+.price-note{min-height:40px}
+.plan .micro{font-size:12px}
+/* Plan cards, 3 columns: the description reserves two lines, not three (no copy wraps past two at 851+), and the price sits 6px under it
+   and the button 18px under the price note, so both read 40px of white (Tanya, 2 Nov: "make here same padding as here", "make it 40"). */
+@media(min-width:851px){.plan-for{min-height:48px}
+.price{margin-top:6px}
+.plan>.button{margin-top:18px}}
+/* "No card required" sits in the Accelerator's top row, opposite MOST POPULAR, instead of under its feature list (Tanya, 2 Nov: "can we move it
+   to the right side here, oposite to 'MOST POPULAR'"). The doc gives it as that card's button microcopy (Pricing §3). Sentence case, no full stop (Tanya: "remove dot after required"), untracked, line-height 1 so the row stays its 16px and the card's rows stay level with its neighbours. */
+.plan-top{align-items:baseline;gap:12px}
+.plan .plan-top>.micro{letter-spacing:0;margin:0;line-height:1}
+.billing button{font-size:14px;min-height:44px}
+.billing small{font-size:11px}
+.pricing-footnote{font-size:14px}
+table{font-size:13px}
+.faq-grid{grid-template-columns:4fr 8fr;gap:80px}
+.faq-items summary,.comparison>summary{font-size:17px;padding-block:23px}
+.faq-items details>p{font-size:16px;line-height:1.65}
+/* FAQ: no rule above the first question, and, side by side (above 850px), its text starts on the eyebrow line; rules only separate questions, the last one closes the list; phones keep the grid so the 36px gap separates heading and list now no rule does; the pricing "Compare all features" toggle reuses the same accordion, minus the closing rule once open, where the table and its note end the block (Tanya, 2 Nov, after Mobbin: Zendesk, Dropbox, Lovable, ElevenLabs) */
+.faq-items{border-top:0}
+.comparison{border-bottom:1px solid var(--line)}
+.comparison[open]{border-bottom-color:transparent}
+.comparison>summary{border-block:0;align-items:center;gap:20px}
+.comparison>summary span{font-size:24px;font-weight:400;color:var(--bronze);transition:transform .2s}
+@media(min-width:851px){.faq-items details:first-child>summary{padding-top:0}}
+@media(max-width:600px){.faq-grid{display:grid}}
+@supports(interpolate-size:allow-keywords){.faq-items details,.comparison{interpolate-size:allow-keywords}.faq-items details::details-content,.comparison::details-content{height:0;overflow:clip;transition:height 240ms ease,content-visibility 240ms allow-discrete}.faq-items details[open]::details-content,.comparison[open]::details-content{height:auto}.comparison::details-content{transition-duration:560ms;transition-timing-function:cubic-bezier(.22,.61,.36,1)}}
+/* Compare all features opens a ~900px table, not an ~80px answer: 240ms read as a jump, so it gets 560ms on an ease-out curve and the FAQ answer's fade (Tanya, 2 Nov: "make expand animation smoother") */
+.comparison[open]>:not(summary){animation:answer-in .5s ease both}
+.final h2{font-size:clamp(44px,4.5vw,64px)}
+.final-grid{grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.final-grid>div{max-width:none;margin:0}
+.closing-actions{display:flex;align-items:center;flex-wrap:wrap;gap:20px}
+.closing-actions .text-link{margin:0;display:inline-flex;border:0}
+.footer-grid{gap:36px}
+.footer-grid h2{font-size:12px}
+.footer-brand>p,.newsletter>p,.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{font-size:14px}
+.footer-brand>.placeholder,.newsletter .micro,.footer-bottom,.disclaimer{font-size:12px}
+.newsletter input,dialog input{font-size:16px}
+dialog>p:not(.eyebrow),dialog label{font-size:15px}
+@media(max-width:1150px){.header-inner{gap:24px}
+nav{gap:18px}
+.nav-phone{display:none}
+nav>a:nth-last-of-type(1){margin-left:auto}
+.hero-grid{gap:0 40px}
+.hero h1{font-size:61px}
+.hero-actions{gap:0 16px}
+.hero-actions>.button{font-size:14px;padding-inline:16px;gap:12px}
+.hero-actions>.text-link{font-size:14px;gap:8px}
+.plan{padding-inline:20px}
+.plan>.button{font-size:14px;padding-inline:14px;gap:10px}
+.faq-grid{gap:48px}}
+@media(max-width:850px){.section{padding-block:72px}
+.hero-grid{grid-template-columns:1fr;padding-top:38px}
+.hero-copy,.hero-visual{grid-column:1}
+.hero-copy{max-width:640px;padding-bottom:40px}
+.hero h1{font-size:64px;max-width:620px}
+.hero-description{max-width:560px}
+.hero-visual{width:100%;max-width:640px;margin-bottom:30px}
+.quiet-photo{height:370px}
+.quiet-photo>img{min-height:0}
+.hero-actions>.button,.hero-actions>.text-link{font-size:15px}
+.proof{grid-template-columns:repeat(2,1fr)}
+.proof>div{padding:22px 24px;border:0}
+.proof>div:nth-child(odd){padding-left:0;border-right:1px solid var(--line)}
+.proof>div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+.proof strong{font-size:34px}
+.final-grid{grid-template-columns:1fr 1fr;gap:32px}
+.plans{grid-template-columns:1fr;border:0;gap:24px}
+.plan,.plan:first-child,.plan:last-child,.plan.featured{padding:28px;margin:0;border:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:0 24px}
+.plan.featured{border-top:3px solid var(--bronze)}
+.plan-top,.price-note,.plan>.button,.plan .feature-list{grid-column:1/-1}
+.plan h3,.plan-for{grid-column:1}
+.plan-for{min-height:0}
+.price{grid-column:2;grid-row:2/4;align-self:center}
+.price-note{min-height:0;margin-top:20px}
+.price small{display:block;text-align:right}
+.plan>.button{font-size:15px}
+.faq-grid{grid-template-columns:1fr;gap:36px}
+.faq-items{margin:0}
+.final-grid{grid-template-columns:1fr}
+.final-grid>div{max-width:560px}
+.footer-grid{gap:28px}}
+@media(max-width:600px){.section{padding-block:58px}
+.header-inner{padding-block:16px}
+.hero-grid{gap:0;padding-top:30px}
+.hero-copy>.eyebrow{font-size:10px}
+.hero h1{font-size:clamp(42px,11.8vw,54px);margin-top:22px;line-height:1.06}
+.hero h1 br:last-child{display:initial}
+.hero h1>em{font-size:1em;line-height:1.06;margin-top:7px}
+.hero-lower{margin-top:22px}
+.hero-description{font-size:17px;line-height:1.6}
+.hero-actions{grid-template-columns:max-content max-content;gap:0 16px;margin-top:24px}
+.hero-actions>.button{font-size:13px;padding-inline:13px;gap:10px;min-height:50px}
+.hero-actions>.text-link{font-size:13px;gap:7px;margin:0}
+.hero-actions>.micro{font-size:11px}
+.hero-visual{margin:0 0 26px}
+.quiet-photo{height:320px}
+.proof>div{padding-block:24px!important;min-height:0}
+.proof strong{font-size:30px}
+.proof .word-stat{font-size:23px}
+.proof p{font-size:11px}
+h2,.section-heading h2,.pricing .section-heading h2,.faq h2{font-size:35px;line-height:1.12}
+.final-grid{display:grid;grid-template-columns:1fr;gap:28px}
+.final-grid p{font-size:16px;line-height:1.7}
+.feature-list{font-size:14px}
+.plan,.plan:first-child,.plan:last-child,.plan.featured{padding:24px 20px!important;margin:0;gap:0 12px}
+.plan h3{font-size:27px}
+.plan-top{font-size:10px}
+.plan-for{font-size:14px}
+.price{font-size:42px}
+.price small{font-size:11px}
+.price-note{font-size:12px}
+.plan .feature-list{font-size:14px}
+.pricing-footnote{font-size:13px;max-width:none}
+.comparison>summary{max-width:none}
+.faq-items summary,.comparison>summary{font-size:16px}
+.faq-items details>p{font-size:16px}
+.final h2{font-size:42px}
+.final .button,.final-grid .text-link{font-size:14px;min-width:0}
+.closing-actions{gap:18px}
+.closing-actions .text-link{margin:0}
+.footer-grid{gap:30px 24px}
+.footer-grid h2{font-size:11px}
+.footer-grid>div:not(:first-child)>a,.footer-grid>div>button,.footer-brand>p,.newsletter>p{font-size:14px}
+.newsletter input{font-size:16px}
+.footer-bottom>div{flex-wrap:wrap;justify-content:start}
+dialog h2{font-size:35px}}
+@media(max-width:360px){.hero-actions{gap:0 10px}
+.hero-actions>.button{font-size:12px;padding-inline:10px;gap:8px}
+.hero-actions>.text-link{font-size:12px;gap:5px}
+.hero-actions .button span,.hero-actions .text-link span{font-size:15px}
+.price{font-size:36px}}
+@media(prefers-reduced-motion:reduce){.quiet-photo>img{animation:none;transition:none}
+.button:hover span,.text-link:hover span{transform:none}}
+/* Heading accents: their own line, italic, bronze, as on thenest.pl (Tanya, 26 Oct: "for titles use line with italic/gold
+   text ... as previously was"; this replaces the earlier upright, heading-colour rule). Lighter gold on navy. */
+h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
+.dark h2 em{color:#c2a98a}
+/* On navy, text links hover to the same gold as the italic heading line, not the page bronze (#947552), which reads muddy there (Tanya, 2 Nov). The underline draws in currentColor, so it follows. */
+.dark .text-link:hover{color:#c2a98a}
+/* Territory inquiry dialog (Tanya, 2 Nov: "what fields should take full width, put CTAs into one line, one line for title").
+   The title runs on one line, with the italic accent inline. The fields sit on one grid with an even gap: label margins
+   used to stack 17+17 under the name row and collapse to 17 between the lists. Name and email are short and stay paired.
+   States and asset classes are lists that grow, and the map prefills States, so they keep the full width. The button and
+   the calendar link share one row, as in the closing section, with the status line under them. */
+#inquiry-dialog h2 em{display:inline}
+#territory-form{display:grid;gap:18px;margin-top:28px}
+#territory-form label{margin:0}
+#territory-form .form-row{gap:18px 20px}
+.form-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 28px;margin-top:10px}
+.form-actions .text-link{margin:0;display:inline-flex;border:0;font-size:14px;gap:8px}
+#inquiry-status{margin:0}
+#inquiry-status:empty{display:none}
+/* Motion layer, motion.js, after The Nest (Tanya, 26 Oct: "use only animations/transitions, scroll animation from this site").
+   The head script sets .motion unless reduced motion is on, and .motion-pending hides the hero until its intro is built
+   (2.5s cap). The hero photo tilts inside its frame, as The Nest's plate does, at its 1200px perspective; 1.03 keeps
+   the paper out of the corners while it leans. */
+.motion-pending .hero-copy,.motion-pending .hero-visual,.motion-pending .hero-bottom{visibility:hidden}
+.motion .quiet-photo{overflow:hidden;perspective:1200px}
+.motion .quiet-photo>img{animation:none;transform:scale(1.03)}
+/* Hover timings after The Nest: buttons ease colour over 200ms and press to .98; arrows nudge 4px over 150ms; links with
+   no rule at rest draw a 1px underline from the left over 250ms; nav items fill a tint from the centre over 200ms. */
+.button{transition:color 200ms cubic-bezier(.23,1,.32,1),background-color 200ms cubic-bezier(.23,1,.32,1),border-color 200ms cubic-bezier(.23,1,.32,1),transform 200ms cubic-bezier(.23,1,.32,1)}
+.button:active{transform:scale(.98)}
+.button span,.text-link span{transition:transform 150ms cubic-bezier(.4,0,.2,1)}
+.button:hover span,.text-link:hover span{transform:translateX(4px)}
+.text-link{transition:color 150ms cubic-bezier(.4,0,.2,1),border-color 150ms cubic-bezier(.4,0,.2,1),background-size 250ms cubic-bezier(.23,1,.32,1)}
+.hero-actions>.text-link,.closing-actions .text-link,.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{width:fit-content;background:linear-gradient(currentColor,currentColor) 0 100%/0% 1px no-repeat;transition:color 150ms cubic-bezier(.4,0,.2,1),background-size 250ms cubic-bezier(.23,1,.32,1)}
+.hero-actions>.text-link{background-position:0 calc(100% - 7px)}
+.hero-actions>.text-link:is(:hover,:focus-visible),.closing-actions .text-link:is(:hover,:focus-visible),.footer-grid>div:not(:first-child)>a:is(:hover,:focus-visible),.footer-grid>div>button:is(:hover,:focus-visible){background-size:100% 1px}
+@media(min-width:851px){#navigation>a,.solutions>summary{position:relative;isolation:isolate}
+#navigation>a:not(.button)::before,.solutions>summary::before{content:"";position:absolute;inset:-8px -12px;z-index:-1;background:rgba(14,28,53,.06);transform:scale(0);transition:transform 200ms cubic-bezier(.4,0,.2,1);pointer-events:none}
+#navigation>a:not(.button):hover::before,.solutions>summary:hover::before,.solutions[open]>summary::before{transform:none}
+/* The header "Start free trial" became a link on 2 Nov, so the nav link hover (this tint pill, and brokers.css bronze text) skips .button: it keeps the primary button hover, navy lift, white text (Tanya, 2 Nov: "for primary buttons use this hover state"). */}
+/* the newsletter's submit ↗ nudges like every other arrow (Tanya, 29 Oct) */
+.newsletter form button{transition:transform 150ms cubic-bezier(.4,0,.2,1)}
+.newsletter form button:is(:hover,:focus-visible){transform:translateX(4px)}
+@media(prefers-reduced-motion:reduce){.button:active{transform:none}
+.button:hover span,.text-link:hover span,.newsletter form button:is(:hover,:focus-visible){transform:none}}
+/* Hero product screen (Tanya, 26 Oct: "Visual: new Deals / Opportunity board screen from the redesign"; screen from the
+   Broker Figma file, node 4103:58886). After Harvey's hero on Mobbin: the product window sits on the architectural photo
+   and runs off its right and bottom edges, so the sidebar and deal names read at a legible scale instead of the whole
+   table shrinking to fit. The photo keeps its pointer tilt behind the still window. The screen takes the photo's
+   saturate(.65), and a touch less contrast, so it sits in the same muted palette (Tanya: "a little vanished"). */
+.quiet-photo{overflow:hidden}
+.hero-screen{position:absolute;z-index:1;top:84px;left:64px;width:1080px;background:#fff;box-shadow:0 28px 70px rgba(7,14,27,.34),0 4px 14px rgba(7,14,27,.12)}
+.hero-screen>img{display:block;width:100%;height:auto;filter:saturate(.65) contrast(.94)}
+.screen-bar{display:flex;align-items:center;gap:6px;height:30px;padding:0 14px;background:#f7f6f2;border-bottom:1px solid #e4e1d8}
+.screen-bar i{width:8px;height:8px;border-radius:50%;background:#d6d2c8}
+.screen-bar span{margin-left:14px;padding:3px 12px;background:#fff;border:1px solid #e4e1d8;font-size:11px;line-height:1.2;color:#6c7479;letter-spacing:0}
+@media(max-width:1100px){.hero-screen{top:52px;left:32px;width:900px}}
+@media(max-width:560px){.hero-screen{top:40px;left:22px;width:720px}
+.screen-bar{height:24px;padding:0 10px}
+.screen-bar span{display:none}}
+/* Testimonials: example quotes as a peek carousel after Speakeasy on Mobbin; Unsplash portraits stand in for broker photos (Tanya, 26 Oct) */
+.testimonials{overflow-x:clip}
+.quote-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px}
+.quote-arrows{display:flex;gap:8px}
+.quote-arrows button{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);font-size:16px;color:var(--ink);transition:border-color .2s,opacity .2s}
+.quote-arrows button:hover:not(:disabled){border-color:var(--ink)}
+.quote-arrows button:disabled{opacity:.35;cursor:default}
+.quote-track{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(50% - 50vw) 0 0;padding:0;list-style:none}
+.quote-track::-webkit-scrollbar{display:none}
+.quote-card{flex:0 0 min(560px,82vw);scroll-snap-align:start;display:flex;flex-direction:column;justify-content:space-between;gap:40px;min-height:340px;padding:36px;background:var(--white);border:1px solid var(--line)}
+/* Quote body in DM Sans, ink, not italic bronze Bodoni: Didone italic hairlines over 3-4 lines were hard to read; sans chosen because real quotes run 4-5 lines (Tanya, 2 Nov) */
+.quote-card>p{font:400 21px/1.55 var(--sans);color:var(--ink);letter-spacing:-.01em}
+.quote-card .byline{display:flex;align-items:center;gap:14px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;line-height:1.5;color:var(--muted)}
+.quote-card .byline img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+.quote-card .byline b{display:block;font-weight:500;color:var(--ink)}
+.quote-note{font-size:12px;line-height:1.7;color:var(--muted);max-width:560px;margin-top:22px}
+@media(max-width:600px){.quote-head{margin-bottom:28px}
+.quote-card{padding:26px;min-height:300px}
+.quote-card>p{font-size:18px}}

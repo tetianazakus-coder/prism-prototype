@@ -1,0 +1,60 @@
+/* Pricing page (/pricing): only what it adds to ../shared/. Load order: base.css, editorial.css, this file, type.css. */
+
+/* Header: the Brokers hero grid with no photo; the doc's callout takes the visual column, set like a pull quote on
+   the bronze rule the plan cards use. */
+.price-head .hero-grid{align-items:end}
+.price-head .hero-copy{padding-bottom:56px}
+.price-callout{margin:0 0 56px;border-top:1px solid var(--bronze);padding-top:26px;max-width:520px;justify-self:end}
+.price-callout p{font:400 clamp(26px,2.3vw,34px)/1.3 var(--serif);letter-spacing:-.02em;color:var(--ink)}
+.price-callout em{font-style:italic;color:var(--bronze)}
+
+/* Plans follow the header directly, so the section keeps only a short top padding, clear of the header's rule; the
+   toggle sits right, over Pro. */
+#plans{padding-top:40px}
+.plans-head{justify-content:flex-end;margin-top:0}
+.plans-head .billing{margin-top:0}
+
+/* Full cards: "Everything in X, plus:" leads the list, and Pro's territory line sits under it. */
+.plan-includes{margin-top:22px;font-size:14px;line-height:1.6;color:var(--muted)}
+.plan-includes+.feature-list{margin-top:6px}
+.plan-addon{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.plan-addon .inline-link{color:var(--ink)}
+
+/* Comparison: one table, so the plan columns line up across groups. Each feature group is a disclosure, collapsed by
+   default with "See what's included" (Tony's ask, requirements doc Pricing intro); support and revenue share always show. */
+.compare table{table-layout:fixed;min-width:0}
+.compare thead th{font:400 24px/1.2 var(--serif);letter-spacing:-.02em;padding-bottom:16px;border-bottom:1px solid var(--ink)}
+.compare thead th:first-child{width:40%}
+.compare-group th{padding:0}
+.compare-group button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font-size:17px;font-weight:500;text-align:left}
+.compare-see{display:inline-flex;align-items:center;gap:12px;font-size:14px;font-weight:400;color:var(--muted)}
+.compare-see span{font-size:24px;line-height:1;color:var(--bronze);transition:transform .2s}
+.compare-group button[aria-expanded=true] .compare-see span{transform:rotate(45deg)}
+.compare-group button:hover .compare-see{color:var(--ink)}
+.compare tbody[id] th,.compare tbody[id] td{animation:answer-in .5s ease both}
+.compare-always th,.compare-always td{border-bottom-color:var(--line)}
+.compare-always tr:first-child>*{border-top:1px solid var(--ink)}
+.compare-notes{margin-top:24px;display:grid;gap:8px;font-size:14px;color:var(--muted);max-width:760px}
+.compare-notes .inline-link{color:var(--ink)}
+
+@media(max-width:850px){
+  .price-head .hero-copy{padding-bottom:32px}
+  .price-callout{justify-self:start;margin-bottom:48px}
+  .plan-includes,.plan-addon{grid-column:1/-1}
+  .plans-head{justify-content:flex-start}
+}
+
+/* Phones: no sideways scroll. Each feature row stacks its name over three labelled values. */
+@media(max-width:600px){
+  .compare table,.compare tbody,.compare tr,.compare th,.compare td{display:block}
+  .compare thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .compare tbody[hidden]{display:none}
+  .compare tbody[id] tr,.compare-always tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 12px;border-bottom:1px solid var(--line);padding:14px 0}
+  .compare tbody[id] th,.compare tbody[id] td,.compare-always th,.compare-always td{border:0;padding:0}
+  .compare tbody[id] th,.compare-always th{grid-column:1/-1;margin-bottom:6px}
+  .compare td::before{content:attr(data-plan);display:block;font-size:12px;letter-spacing:.04em;color:var(--muted)}
+  .compare td{color:var(--ink)}
+  .compare-always tr:first-child{border-top:1px solid var(--ink)}
+  .compare-always tr:first-child>*{border-top:0}
+  .compare-group button{font-size:16px;padding:18px 0}
+}

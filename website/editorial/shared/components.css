@@ -1,0 +1,79 @@
+/* Components the pages after Brokers share (Home, Borrowers, Lenders, About, Find a broker), added 2 Nov. Brokers and
+   Pricing do not load this file. Load order: base.css, editorial.css, this file, the page's own file, type.css. */
+
+/* A section heading's side note. Brokers styles its own in brokers-editorial.css, at the same values. */
+.section-heading>p{font-size:16px;line-height:1.7;color:var(--muted);max-width:400px}
+
+/* Person card (Home "Who runs your deal", About team, Find a broker): a portrait frame over name, role and one line.
+   Until photos are confirmed the frame is dashed and carries the [Photo] placeholder. */
+.person-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:0;padding:0;list-style:none}
+.person-card{display:flex;flex-direction:column;gap:6px;min-width:0}
+.portrait{display:grid;place-items:center;aspect-ratio:1;margin-bottom:16px;background:#ece7de;border:1px dashed #b9ab95}
+.portrait>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* A frame holding a photo drops the dashed "to confirm" border; absolute keeps a non-square photo (Tony's 853×1067 stand-in) from stretching the square. */
+.portrait{position:relative;overflow:hidden}
+.portrait:has(>img){border:0}
+.person-card h3{font-size:clamp(24px,2vw,28px);line-height:1.2}
+.person-card h3 .placeholder{font-size:inherit}
+.person-role{font-size:14px;line-height:1.5;color:var(--muted)}
+.person-card>p:not(.person-role){font-size:16px;line-height:1.6}
+
+/* Platform pair (Home "Part of the Prism family", About "Our platforms"): two plain cards on the bronze rule. */
+.platform-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.platform-card{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:32px 36px 36px;background:var(--white);border:1px solid var(--line);border-top:2px solid var(--bronze)}
+.platform-card h3{font-size:clamp(32px,2.8vw,40px)}
+.platform-card>p:not(.eyebrow){font-size:16px;line-height:1.7;color:var(--muted);max-width:420px}
+.platform-card>:last-child{margin-top:auto}
+.platform-card .platform-here{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);padding-top:8px}
+.platform-card .text-link{border:0;padding-block:8px 0}
+
+
+/* One-column hero with no visual (Borrowers and Lenders under a status badge, About). */
+.text-hero .hero-copy{grid-column:1/-1;max-width:820px;padding-bottom:72px}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border:1px solid #c9b597;border-radius:999px;font-size:14px;line-height:1.3;color:#7A6040;background:var(--white)}
+
+/* Feature cards (Borrowers and Lenders "What's coming", About "What we believe"): three numbered columns on the ink
+   rule, as Home's steps and the Brokers plan columns are set, not boxed cards (Tanya, 2 Nov: like the Brokers page). */
+.feature-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin:0;padding:0;list-style:none}
+.feature-card{display:flex;flex-direction:column;gap:14px;padding-top:24px;border-top:1px solid var(--ink)}
+.feature-card>span{font:400 44px/1 var(--serif);letter-spacing:-.02em;color:var(--bronze)}
+.feature-card h3{font-size:clamp(24px,2vw,28px);line-height:1.2}
+.feature-card p{font-size:16px;line-height:1.7;color:var(--muted)}
+
+/* Trust strip: the proof strip's rule and place, under the hero, with text in place of figures. The cards after it
+   take the white band, as Home's steps do. */
+.trust-strip{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px;margin:0;padding:30px 0 34px;list-style:none;border-top:1px solid var(--line)}
+.coming{background:var(--white)}
+.trust-strip li{display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.5}
+.trust-strip li::before{content:'';flex:0 0 6px;height:6px;margin-top:.55em;background:var(--bronze);transform:rotate(45deg)}
+
+/* Get notified: the final section's grid, an email field and one button; the small link closes it. The column keeps
+   Brokers' rhythm, line, action, link, with no rule and no reserved gap: the status line takes room only once it says
+   something, and the form fills the column so the field and button end where the column does. */
+.notify-form{display:flex;gap:12px}
+.notify-form label{flex:1}
+.notify-form input{width:100%;min-height:50px;padding:12px 16px;border:1px solid #5a6a88;background:transparent;color:var(--paper);font:inherit;font-size:16px}
+.notify-form input::placeholder{color:#9aa6bb}
+.notify-form input:focus-visible{outline:2px solid #c2a98a;outline-offset:2px}
+.notify-status{margin-top:14px;font-size:15px;color:#d6dbe5}
+.notify-status:empty{margin:0}
+.notify .soon-more{margin:24px 0 0;font-size:15px;color:#b6bfcf}
+.notify .soon-more a{color:var(--paper);border-bottom:1px solid currentColor;padding-bottom:2px}
+.notify .soon-more a:hover{color:#c2a98a}
+
+@media(max-width:850px){
+  .person-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .platform-pair,.feature-cards{grid-template-columns:1fr}
+  .text-hero .hero-copy{padding-bottom:56px}
+  .trust-strip{flex-direction:column}
+}
+@media(max-width:600px){
+  .section-heading>p{margin-top:18px;max-width:100%}
+  .person-grid{gap:32px 16px}
+  .person-card h3{font-size:22px}
+  .platform-card{padding:26px 24px 28px}
+  .feature-cards{gap:32px}
+  .feature-card>span{font-size:36px}
+  .notify-form{flex-direction:column}
+  .notify-form .button{justify-content:center}
+}

@@ -727,7 +727,10 @@
     };
     const fill = (index, progress) => tabs.forEach((tab, i) => tab.style.setProperty('--p', i === index ? progress : 0));
     const play = index => {
-      chapters.forEach(redraw);
+      // Only the incoming chapter starts over. The leaving one stops on its current frame and fades out on it (the
+      // panels cross-fade, brokers-editorial.css); it is redrawn when it next plays.
+      chapters.forEach(other => { if (other !== chapters[index]) { other.tl?.kill(); other.tl = null; } });
+      redraw(chapters[index]);
       at = index;
       const screen = chapters[index];
       screen.tl = FLOWS[screen.crop.dataset.screen](screen)
@@ -742,7 +745,7 @@
     };
     show('pause');
     // a tab picked by click, keyboard or the film itself plays that chapter
-    stage.addEventListener('walk:select', event => play(event.detail));
+    stage.addEventListener('tabs:select', event => play(event.detail));
     button.addEventListener('click', () => {
       const tl = chapters[at].tl;
       if (state === 'replay') tabs[0].click();
