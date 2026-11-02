@@ -396,7 +396,21 @@
   .lrsel-chip { gap: 7px; padding: 0 10px 0 12px; }
   .lrsel-chip .ct { color: var(--muted-foreground); }
   .lrsel-chip.on .ct { color: inherit; }
-  .lrselbar { margin-bottom: 12px; border-radius: var(--radius-md); }
+  /* the Lenders directory's bar as drawn there, not an inset box [Tanya, 2 Nov:
+     "reuse pattern for bulk action bar same as in lenders"]: it bleeds to the
+     card's side edges as the table under it does and sits flush on the header,
+     square. Lenders gets its top rule from .cut; the filter bar here draws none,
+     so the bar carries its own. Was margin-bottom 12px, radius-md, inset 18px. */
+  .lrselbar { margin: 0 -18px; border-top: 1px solid var(--border); }
+  /* 02.2 lender documents, 2 Nov. The zone is Prism Upload dropzone compact,
+     the quote form's; the rows are the broker side's .mktdoc, so a file reads
+     the same to the lender who shares it and the broker who opens it. */
+  .ldocs__lead { margin: 0 0 12px; font-size: 13px; color: var(--muted-foreground); }
+  .ldocs .mktdocs { margin-top: 12px; }
+  .ldocs .mktdoc { padding-right: 4px; }
+  .ldocs .mktdoc__sz { white-space: nowrap; }
+  .ldocs .mktdoc__acts { display: flex; flex: none; gap: 2px; margin-left: 4px; }
+  .ldocs .empty--inline { padding-bottom: 0; }
   /* lender Home, 20 Oct, redrawn 22 Oct [01.4, 01.3]. No count beside the
      title since 22 Oct: it read 8 over the five rows Home shows [Tanya,
      22 Oct: "remove count"]. The list's Needs decision tab carries it. */
@@ -458,20 +472,23 @@
      "check prism existing component for pagination and apply it"]: there is
      none in the Figma library or the AINDF bundle, so the source is
      AdminDataTablePagination (frontend/src/components/data-table/, used by
-     four admin tables at 9f3427fc). Total rows muted on the left; Rows per
-     page and Page X of Y in foreground at medium; first, previous, next and
-     last as 32px outline icon buttons; 8 inside a group, 32 between groups.
-     First and last drop below lg (1024), the label and the total below sm
-     (640), as there. */
+     four admin tables at 9f3427fc). Reworked 2 Nov after the pagination
+     research [Tanya, 2 Nov: "build"; pagination-research.md]: the left side
+     is one range in the list's noun, "1–10 of 14 requests", muted, in
+     place of "14 total rows" plus "Page 1 of 2" (16 of 29 products on
+     Mobbin read a range; MUI and Carbon do; the broker Lenders table in
+     the product already says "of N lenders") [💡 rec]. First and last are
+     gone: 6 of 29 products draw them and MUI defaults them off [💡 rec].
+     Rows per page and previous / next stay as there: 32px outline icon
+     buttons, 8 apart, 32 between groups. The footer is a nav landmark; the
+     label drops below sm (640), the range stays, as Carbon keeps it. */
   .lpgn { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 12px; font-size: 14px; }
   .lpgn__tot { color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
   .lpgn__r { display: flex; align-items: center; gap: 32px; margin-left: auto; }
   .lpgn__sz { display: flex; align-items: center; gap: 8px; font-weight: 500; }
   .lpgn__sel { width: 70px; }
-  .lpgn__ct { width: 110px; text-align: center; font-weight: 500; font-variant-numeric: tabular-nums; }
   .lpgn__nav { display: flex; gap: 8px; }
-  @media (max-width: 1023px) { .lpgn__nav .btn.lpgn__end { display: none; } }
-  @media (max-width: 639px) { .lpgn__tot, #lpg_lbl { display: none; } .lpgn__r { gap: 24px; } }
+  @media (max-width: 639px) { #lpg_lbl { display: none; } .lpgn__r { gap: 24px; } }
   .lpgn .btn--ico, .lrbar .btn--ico { width: 32px; padding: 0; }
   /* the request page, 04.1. The bar is sticky under nothing: the rail stays,
      so it is not the preview's navy .lpvbar, which stands in for a whole
@@ -2845,10 +2862,14 @@
      Without this the grey band runs open at the top into the card - the same
      defect the .tscroll rule below was written to fix. The three flush-above
      suppressions that rule carries are not repeated here: .cut, .selbar and
-     .mapbox all precede a .tscroll, never a .tblwrap. Measured, not assumed:
+     .mapbox all precede a .tscroll, never a .tblwrap - bar one: since 2 Nov the
+     Requests .lrselbar does, and gets its own suppression just below. Measured, not assumed:
      the only things above a nested .tblwrap are .toolbar and .msbar, and
      both separate with margin, not a rule. */
   .card__ct .tblwrap > .t thead th { border-top: 1px solid var(--border); }
+  /* except under the Requests selection bar, whose bottom rule already closes
+     the band - the .selbar + .tscroll suppression below, for a .tblwrap */
+  .card__ct .lrselbar + .tblwrap > .t thead th { border-top: 0; }
   /* and it bleeds to the card's side edges [💡 rec · 24 Sep]. Once the table
      stopped drawing its own ring there was no reason for it to sit inset from
      one - the 18px gutter was the ring's breathing room, and the ring is gone.
@@ -4350,6 +4371,9 @@
   .toast__t { font-size: 14px; line-height: 20px; font-weight: 600; }
   .toast__d { font-size: 14px; line-height: 20px; font-weight: 400; opacity: 0.9; }
   .toast button { background: none; border: 0; color: #9fc4f5; font-size: 14px; font-weight: 500; cursor: pointer; }
+  /* a toast's one onward step (S.undo.go), inked as its Undo is */
+  .toast a.toast__go { color: #9fc4f5; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+  .toast a.toast__go:hover { text-decoration: underline; }
 
   /* Our own annotation — styled so it cannot be mistaken for a control. */
   .note-ass {
@@ -6563,6 +6587,20 @@
   .tgl__sw i { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 9999px; background: #fff; transition: left .12s; }
   .tgl__sw[aria-pressed="true"] { background: var(--primary); }
   .tgl__sw[aria-pressed="true"] i { left: 18px; }
+  /* A choice that belongs to the switch above it (lender Notifications'
+     frequency, 2 Nov): a page-tint inset straight under the row, so it reads
+     as the switch's child, not a second setting. Tanya asked for the layout
+     to be improved ("maybe just add divider"); a hairline would have split
+     the child from its parent, the opposite. Klaviyo and Vanta nest the same
+     way [💡 rec]. Present only while the switch is on. Tanya went through a
+     tinted box (the white radio discs washed out on it), an outlined one
+     (too heavy for one setting) and option B of five in
+     assets/notify-layout-options.html, a 2px left rule, which she then
+     asked to remove, then the indent too. What is left is the group flush
+     with the switch's text, 17px below its description. */
+  .tgl__sub { margin-top: 6px; }
+  .tgl__sub .fld { margin: 0; }
+  .tgl__sub .rgrp { min-height: 28px; }
 
   /* 06.1 the addresses on the account [task 12, 5 Oct]. .tgl's metrics
      exactly - the hairline-separated settings row this page already reads as -
@@ -8609,6 +8647,8 @@
       <a class="mbar__credits" href="#/account/plan" id="mbarPlan">Trial</a>
     </div>
     <div class="page" id="view"></div>
+    <!-- the pager's announcer: outside #view so render() never replaces it -->
+    <div class="vh" id="lpgLive" aria-live="polite"></div>
   </div>
 </div>
 </div>
@@ -9156,8 +9196,8 @@ const DEALS = [
 const NETWORK = [
   { id:1,  co:"Sandbox Debt Fund", ct:"Lena Lender", ctPhoto:"brokers/lena-lender.jpg" /* Unsplash QGr6H7pri-Q */, role:"Principal", acct:"sandbox", src:"network", inst:"Debt fund", observed:true, lo:1, hi:25, mo:0,
     pitch:"We are quickest on stabilised multifamily and industrial across Texas and the Southeast \u2014 if the rent roll is clean we can usually come back with an indicative inside two days. We are not the right call for ground-up construction, hospitality, or a sponsor who has not closed a deal of this size before.",
-    docs:[{ n:"Sandbox Debt Fund \u2014 bridge program overview", kb:412 },
-          { n:"Multifamily term sheet, sample", kb:186 }],
+    docs:[{ n:"Sandbox Debt Fund \u2014 bridge program overview", kb:412, on:"14 Aug" /* sample date [~] */ },
+          { n:"Multifamily term sheet, sample", kb:186, on:"3 Sep" }],
     prop:["Multifamily","Industrial","Retail-multi tenant","Mixed-use"], st:["TX","FL","GA","NC"],
     fin:["Agency (Fannie Mae)","Agency (Freddie Mac)","Permanent | fixed-rate","Bridge / short-term debt (<3 yrs)","CMBS"],
     adm:{ by:"Tony Talamas", on:"12 Jun", mo:3,
@@ -24136,8 +24176,14 @@ function renderLParams() {
             not in the pitch card's footer, where it read as saving the
             pitch alone [Tanya, 22 Oct]. The exits-outside-the-card rule is
             .card__ft's, ~line 2538. */""}
-      <div class="frmfoot"><span class="bhint">${lpDirty() ? "Unsaved changes" : S.lFresh ? "Nothing saved yet" : "All changes saved"}</span>
+      ${/* the hint speaks only when something is unsaved; "All changes saved"
+            is gone [Tanya, 2 Nov: "can we remove this text"] - the Saved toast
+            already says it, and a clean form needs no caption. The span stays
+            empty so the live update below still finds it. */""}
+      <div class="frmfoot"><span class="bhint">${lpDirty() ? "Unsaved changes" : S.lFresh ? "Nothing saved yet" : ""}</span>
         <button class="btn" type="button" data-lpsave>Save parameters</button></div>
+      ${/* the Documents card that sat here 2 Nov moved to Account › Documents
+            the same day; see LACC_SECS */""}
     </div>
     ${/* 02.3's count, moved into the form by lender-triage-research: live as
           the fields change, so the lender checks the parameters before the
@@ -24162,6 +24208,89 @@ function renderLParams() {
       </div></div>` : ""}`;
 }
 
+/* 02.2 LENDER DOCUMENTS, 2 Nov [sheet 02.2; Tanya: "go"]. The sheet: "Today
+   the PDF upload sits above the parameters that drive matching. Move it below
+   or to its own section: these are documents the lender shares with brokers
+   (term sheet, programme overview)." Columns: file name, uploaded date, size.
+   PDF up to 10 MB. Actions: upload, replace, delete (confirm). Empty: "No
+   documents uploaded".
+
+   ITS OWN SECTION, Account › Documents, since later on 2 Nov [Tanya: "should
+   the documents be separate tab? it look weird now", then "build"]. It was
+   first built as a card under Save parameters; measured, it started ~1039px
+   down, below a 900 fold, after the page's last action, and it saved on its
+   own while the form above saved on a button. The sheet allows "its own
+   section", Tony puts the files on the contact's "own profile" [T, 14 Sep],
+   and the borrower's Profile › Documents is the house precedent.
+   lender-documents-placement-research.md has the sweep. [💡 rec]
+
+   Delete ends in an Undo toast, not a dialog, since 2 Nov [Tanya: "do
+   recommended"]. The sheet says "delete (confirm)"; a dialog did that until
+   this move. Reversibility decides, as for the lender's Pass (22 Oct): a
+   delete the server holds until the toast closes can be taken back, and every
+   other file removal here already undoes (data-docrm, 25 Sep; the file's rule
+   since 3 Sep). A broker who downloaded the file keeps it either way, so a
+   dialog guarded nothing the toast does not. [💡 rec]
+
+   One store with the broker side: the rows edit the network record's docs,
+   the list mktSec and docMark already read, so what the lender deletes leaves
+   the broker's lender profile too. "On your profile" is our reading of who
+   sees them; question 116 is open. [~] A fresh lender starts with none. */
+const LDOC_MAX = 10 * 1024 * 1024;
+const LDOC_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+function lDocs() {
+  if (S.lFresh) return S.lfDocs || (S.lfDocs = []);
+  const n = lNet(); return n.docs || (n.docs = []);
+}
+/* the refusal names the file, then the rule, in one line under the zone, as
+   the quote form's zone does [~] */
+const lDocErr = f => !(f.type === "application/pdf" || /\.pdf$/i.test(f.name))
+  ? `${f.name} is not a PDF. Upload a PDF up to 10 MB.`
+  : f.size > LDOC_MAX ? `${f.name} is ${(f.size / 1048576).toFixed(1)} MB. The limit is 10 MB.` : "";
+const lDocOf = f => ({ n: f.name, kb: Math.max(1, Math.round(f.size / 1024)), on: "today" });
+function lDocAdd(files) {
+  const ok = files.filter(f => !lDocErr(f)), bad = files.find(f => lDocErr(f));
+  S.ldocErr = bad ? lDocErr(bad) : "";
+  if (ok.length) {
+    const docs = lDocs(), add = ok.map(lDocOf);
+    docs.push(...add);
+    S.undo = { msg: add.length === 1 ? `${add[0].n} uploaded.` : `${add.length} documents uploaded.`,
+      fn: () => add.forEach(x => { const i = docs.indexOf(x); if (i > -1) docs.splice(i, 1); }) };
+  }
+  render();
+}
+function lDocReplace(i, f) {
+  const docs = lDocs(), was = docs[i]; if (!was) return;
+  S.ldocErr = lDocErr(f);
+  if (!S.ldocErr) { docs[i] = lDocOf(f); S.undo = { msg: `${was.n} replaced with ${f.name}.`, fn: () => { docs[i] = was; } }; }
+  render();
+}
+function lDocsCard() {
+  const docs = lDocs();
+  /* the page is titled Documents, so the card head counts what is shared,
+     as the borrower's Reusable documents card does ("N on your profile").
+     No "(optional)": nothing on the page is required, and the tag is a
+     contrast label (renderBProfile's rule). [~] */
+  return `<div class="card ldocs" id="ldocs">
+        <div class="card__hd"><h2>${docs.length ? `<span class="num">${docs.length}</span> on your profile` : "On your profile"}</h2></div>
+        <div class="card__ct">
+          <p class="ldocs__lead">A term sheet or programme overview, shared with brokers on your profile.</p>
+          <button type="button" class="dz dz--compact" id="ldoc_dz" aria-label="Upload documents: PDF up to 10 MB"${S.ldocErr ? ` aria-describedby="ldoc_dzmsg"` : ""}>${DZIC.replace(/width="24" height="24"/, 'width="16" height="16"').replace('stroke-width="1.7"', 'stroke-width="2"')}<span>Drag and drop, or <u>browse</u> (PDF up to 10 MB)</span></button>
+          <input type="file" id="ldoc_file" data-ldocfile accept=".pdf,application/pdf" multiple hidden>
+          <input type="file" id="ldoc_rfile" data-ldocrfile accept=".pdf,application/pdf" hidden>
+          ${S.ldocErr ? `<div class="errmsg" id="ldoc_dzmsg" role="alert">${esc(S.ldocErr)}</div>` : ""}
+          ${docs.length ? `<div class="mktdocs">${docs.map((f, i) => `<div class="mktdoc">
+            ${I(IC.file, 15)}<span class="mktdoc__nm">${esc(f.n)}</span>
+            <span class="mktdoc__sz">Uploaded ${esc(f.on || "")} · <span class="num">${kbText(f.kb)}</span></span>
+            <span class="mktdoc__acts">
+              <button type="button" class="rowkebab" data-ldocrep="${i}" data-tip="Replace" aria-label="Replace ${esc(f.n)}">${RPLIC}</button>
+              <button type="button" class="docrow__rm docrow__rm--del" data-ldocdel="${i}" data-tip="Delete" aria-label="Delete ${esc(f.n)}">${LDOC_DEL}</button>
+            </span>
+          </div>`).join("")}</div>` : `<div class="empty--inline"><b>No documents uploaded</b></div>`}
+        </div>
+      </div>`;
+}
+
 /* Home and Requests until milestones C and F: the empty states of 03.5,
    which are true for both people the prototype can be. A lender who has
    just signed up has no parameters, so nothing can match [sheet 01.3,
@@ -24180,14 +24309,19 @@ function lEmpty() {
 }
 /* ---------- Account, lender — #/account/(profile|password|notify) ----------
    Tracker 05.1-05.3, all Reuse, 19 Oct. The broker's Account shell (.prof,
-   app--prof) with three sections and no billing: the lender's plan is
+   app--prof) with four sections and no billing: the lender's plan is
    question 237 [~], and a section for it would be drawn ahead of the answer.
-   Profile lives here, not on a separate #/profile, because the lender has
-   no public profile to edit apart from the lending parameters, which are
-   their own rail item [sheet 02.1]. #/profile redirects here. 05.4 Support
-   is the shared Help page, already role-aware since milestone A. */
+   Profile lives here, not on a separate #/profile. #/profile redirects here.
+   05.4 Support is the shared Help page, already role-aware since milestone A.
+   Documents (02.2) joined on 2 Nov: the files a contact shares with brokers
+   are the one other thing the lender keeps on their own profile [T, 14 Sep],
+   so "no public profile to edit apart from the lending parameters" no longer
+   holds. The parameters are reached from the Requests header, not the rail,
+   since the same day. Documents sits beside Profile, the two things brokers
+   read, ahead of the credentials. [~] */
 const LACC_SECS = [
   { k: "profile",  nav: "Profile",       title: "Profile" },
+  { k: "documents", nav: "Documents",    title: "Documents" },
   { k: "password", nav: "Password",      title: "Password" },
   { k: "notify",   nav: "Notifications", title: "Notifications" }
 ];
@@ -24201,13 +24335,19 @@ const LACC_SECS = [
    - the switch gates every match email, line 19;
    - an admin-assigned or hand-selected request goes at once whatever the
      frequency, lines 32 and 61; only auto-matched requests wait for a digest.
-   The note under the radios says that second fact, because a lender who
-   picks Weekly and then gets an email on Tuesday would read it as a bug.
+   A note under the radios used to say that second fact, so that a lender
+   on Weekly who gets an email on a Tuesday would not read it as a bug.
+   Tanya removed it on 2 Nov: the sheet does not ask for it, and the fact
+   waits on question 241.
    The sheet's third trigger, a broker's reply, is not drawn: Messages is
    Soon and no such email exists, the same rule accNotify follows. The
    frequency hides when the switch is off - a live choice under an off
    parent is the hierarchy Tanya rejected on 19 Oct [💡 rec]. Switches and
-   radios write straight through, as the broker's do; no Save. */
+   radios write straight through, as the broker's do; no Save.
+   2 Nov: the frequency sits in a .tgl__sub inset under the switch, and the
+   off note joined the switch's own line instead of floating below it.
+   There is no separate "always on" row for broker-sent requests: line 19
+   gates those on the switch too, so it would have been false. */
 /* labels as the live select words them, in sentence case; no sub-line
    under each, because the house radio (.rgrp) is one line in a row */
 const LFREQ = [["instant", "Instant"], ["daily", "Daily digest"], ["weekly", "Weekly digest"]];
@@ -24218,14 +24358,13 @@ function lAccNotify() {
       <div class="card__hd"><h2>Email alerts</h2></div>
       <div class="card__ct">
         <div class="tgl">
-          <span><span class="tgl__t">New requests</span><span class="tgl__s">A request that matches your lending parameters.</span></span>
+          <span><span class="tgl__t">New requests</span><span class="tgl__s">A request that matches your lending parameters.${on ? "" : " Emails are off; new requests still appear under Requests."}</span></span>
           <button type="button" class="tgl__sw" data-lnotify="reqs" aria-pressed="${on}" aria-label="New requests"><i></i></button>
         </div>
-        ${on ? `<div class="fld" style="margin-top:16px"><label id="lnf_freq">How often</label>
-          <div class="rgrp" role="radiogroup" aria-labelledby="lnf_freq" aria-describedby="lnf_freq_h">${LFREQ.map(([v, t]) =>
-            `<label class="rad"><input type="radio" name="lnf_freq" data-lnfreq value="${v}"${LPROF.freq === v ? " checked" : ""}><span class="dot" aria-hidden="true"></span>${t}</label>`).join("")}</div>
-          <div class="hint" id="lnf_freq_h">A request a broker sends you or hand-selects for you is emailed at once, whatever you pick here.</div></div>`
-        : `<div class="fld" style="margin-top:12px"><div class="hint">No request emails. New requests still appear under Requests.</div></div>`}
+        ${on ? `<div class="tgl__sub"><div class="fld"><label id="lnf_freq">How often</label>
+          <div class="rgrp" role="radiogroup" aria-labelledby="lnf_freq">${LFREQ.map(([v, t]) =>
+            `<label class="rad"><input type="radio" name="lnf_freq" data-lnfreq value="${v}"${LPROF.freq === v ? " checked" : ""}><span class="dot" aria-hidden="true"></span>${t}</label>`).join("")}</div></div></div>`
+        : ""}
       </div>
     </div>`;
 }
@@ -24234,6 +24373,7 @@ function renderLAccount() {
   const sec = LACC_SECS.find(s => s.k === S.accSec) || LACC_SECS[0];
   const body = sec.k === "password" ? accPassword()
              : sec.k === "notify"   ? lAccNotify()
+             : sec.k === "documents" ? lDocsCard()
              : profContact("profile");
   return `
     <div class="prof">
@@ -24542,8 +24682,9 @@ function lListInt(r) {
    (the broker Home's lesson, 4 Sep) [~]. Skip the card and the decisions
    block's empty state takes the action back.
 
-   The optional row opens Lending parameters, where 02.2 puts the lender's
-   documents; that section is not built yet (build note, Not done). [~] */
+   The optional row opens Account › Documents, where 02.2 puts the lender's
+   documents since 2 Nov. It opened Lending parameters and scrolled to a card
+   under Save until the card moved the same day. [~] */
 const LHOME_N = 5;
 /* the unread dot's tooltip, on Home and the list: what the dot means and
    what clears it, in the lexicon's word [lexicon, Unread] [~] */
@@ -24574,7 +24715,7 @@ function lSetupCard() {
           <span class="setuprow__tx"><b>Set your lending parameters</b><span>Requests reach you once you have said what you finance.</span></span>
           <span class="setuprow__go" aria-hidden="true">›</span>
         </a>
-        <a class="setuprow" href="#/parameters">
+        <a class="setuprow" href="#/account/documents">
           <span class="setuprow__c"></span>
           <span class="setuprow__tx"><b>Share a term sheet or programme overview</b><span>Optional · a PDF up to 10 MB</span></span>
           <span class="setuprow__go" aria-hidden="true">›</span>
@@ -24709,10 +24850,11 @@ function renderLRequests() {
       ${LRQF.some(f => f.set().size) || S.lrSel ? `<button class="clrall" type="button" id="lrclrf">Clear all filters</button>` : ""}
     </div>`;
 
-  /* pages: the sheet's 10 / 20 / 50. The page clamps rather than resets on a
-     size change, so a lender on page 2 of 10 lands on page 1 of 20, not on
-     an empty page 2. Drawn only when there is a second page at the smallest
-     size, the way the product's other short lists carry no footer [~]. */
+  /* pages: the sheet's 10 / 20 / 50. A size change returns to page 1 (the
+     "lpg" select handler), as the product's pushPerPage and Carbon do; this
+     comment used to say the page clamps, which the code never did. Drawn
+     only when there is a second page at the smallest size, the way the
+     product's other short lists carry no footer [~]. */
   const sz = S.lpsz, pages = Math.max(1, Math.ceil(rows.length / sz));
   const pg = Math.min(S.lpg, pages), from = (pg - 1) * sz;
   const shown = rows.slice(from, from + sz);
@@ -24735,22 +24877,23 @@ function renderLRequests() {
         <button class="btn btn--ghost btn--sm" type="button" id="lrclrsel">Clear</button>
       </div>
     </div>` : "";
-  const pgBtn = (to, lbl, path, off, cls) => `<button class="btn btn--outline btn--sm btn--ico${cls ? " " + cls : ""}" type="button" data-lpg="${to}" aria-label="${lbl}"${off ? " disabled" : ""}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg></button>`;
+  /* the arrows carry ids so the click handler can put focus back on the one
+     pressed, or on the other when the pressed one turns disabled at an end
+     (MUI's rule) — render() replaces the footer, and focus used to fall to
+     body [pagination-research.md, measured 2 Nov] */
+  const pgBtn = (id, to, lbl, path, off) => `<button class="btn btn--outline btn--sm btn--ico" type="button" id="${id}" data-lpg="${to}" aria-label="${lbl}"${off ? " disabled" : ""}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg></button>`;
   const pager = rows.length <= LPG_SIZES[0] ? "" : `
-    <div class="lpgn">
-      <span class="lpgn__tot">${rows.length} total row${rows.length === 1 ? "" : "s"}</span>
+    <nav class="lpgn" aria-label="Pagination">
+      <span class="lpgn__tot">${from + 1}–${from + shown.length} of ${rows.length} request${rows.length === 1 ? "" : "s"}</span>
       <div class="lpgn__r">
         <div class="lpgn__sz"><span id="lpg_lbl">Rows per page</span>
           <div class="fld__sel fld__sel--sm lpgn__sel">${selCtl("lpg:size", LPG_SIZES.map(v => ({ v: String(v), label: String(v) })), String(sz), "Rows per page")}</div></div>
-        <span class="lpgn__ct">Page ${pg} of ${pages}</span>
         <div class="lpgn__nav">
-          ${pgBtn(1, "Go to first page", '<path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/>', pg <= 1, "lpgn__end")}
-          ${pgBtn(pg - 1, "Go to previous page", '<path d="m15 18-6-6 6-6"/>', pg <= 1)}
-          ${pgBtn(pg + 1, "Go to next page", '<path d="m9 18 6-6-6-6"/>', pg >= pages)}
-          ${pgBtn(pages, "Go to last page", '<path d="m6 17 5-5-5-5"/><path d="m13 17 5-5-5-5"/>', pg >= pages, "lpgn__end")}
+          ${pgBtn("lpg_prev", pg - 1, "Go to previous page", '<path d="m15 18-6-6 6-6"/>', pg <= 1)}
+          ${pgBtn("lpg_next", pg + 1, "Go to next page", '<path d="m9 18 6-6-6-6"/>', pg >= pages)}
         </div>
       </div>
-    </div>`;
+    </nav>`;
 
   const body = shown.map(r0 => {
     const r = lreq(r0), b = lBroker(r0), [stl, stt] = LRST[r.st];
@@ -24772,9 +24915,12 @@ function renderLRequests() {
       <td class="lracts">${acts}</td>
     </tr>`;
   }).join("");
+  /* Request spans the bookmark and name columns, the Lenders table's colspan="2"
+     header (Tanya, 2 Nov: "align first column header same way as we have in
+     lenders"), so it prints on the bookmark glyph's axis, not the name's. */
   const table = `${selbar}<div class="tblwrap"><table class="t t--lreqs"><thead><tr>
       ${pickOn ? `<th class="lpickth"><span class="chk"><input type="checkbox" id="lpickall" aria-label="Select all on this page" ${allPicked ? "checked" : ""}><span class="bx">${CHKTICK}</span></span></th>` : ""}
-      <th class="bmkth"><span class="vh">Saved</span></th><th>Request</th><th>Loan amount</th><th>Transaction</th>
+      <th colspan="2">Request</th><th>Loan amount</th><th>Transaction</th>
       <th>Financing</th><th>Submitted by</th><th>Received</th><th>Status</th><th class="lracts"><span class="vh">Actions</span></th></tr></thead><tbody>${body}</tbody></table></div>`;
 
   /* 03.5: one action per empty state [sheet]. All caught up is the sheet's
@@ -31199,7 +31345,12 @@ function render() {
     const uDesc = uCut ? uMsg.slice(uCut[0].length) : "";
     t.innerHTML = `<div class="toast__text"><span class="toast__t">${esc(uTitle)}</span>`
       + (uDesc ? `<span class="toast__d">${esc(uDesc)}</span>` : "")
-      + `</div>${S.undo.fn ? `<button type="button" id="undo">Undo</button>` : ""}`;
+      + `</div>${S.undo.fn ? `<button type="button" id="undo">Undo</button>`
+        /* S.undo.go = { href, label }: one link where there is nothing to
+           undo, so a toast can carry the next step a row asks for (02.3's
+           "View matching requests", 2 Nov). Undo wins if both are set: one
+           action per toast. [~] */
+        : S.undo.go ? `<a class="toast__go" href="${esc(S.undo.go.href)}">${esc(S.undo.go.label)}</a>` : ""}`;
     document.body.appendChild(t);
     if (S.undo !== undoTimerFor) {
       clearTimeout(undoTimer);
@@ -31698,15 +31849,16 @@ function route() {
     S.open = null; S.oq = ""; S.msExpand = new Set();
     render(); return;
   }
-  /* sections are per role: the lender has profile, password and notify; the
-     broker's billing and territory, and profile, are 404 on the wrong side */
+  /* sections are per role: the lender has profile, documents, password and
+     notify; the broker's billing and territory, and the lender's profile and
+     documents, are 404 on the wrong side */
   if ((isL() && /^\/account\/(plan|credits|territory|delete|security)\/?$/.test(h)) ||
-      (!isL() && /^\/account\/profile\/?$/.test(h))) {
+      (!isL() && /^\/account\/(profile|documents)\/?$/.test(h))) {
     S.route = "notfound"; S.dealId = null; S.nf = { kind: "route", at: h };
     S.open = null; S.oq = ""; S.msExpand = new Set(); S.cardMenu = null;
     render(); return;
   }
-  const mac = h.match(/^\/account(?:\/(plan|credits|territory|notify|password|delete|security|profile))?\/?$/);
+  const mac = h.match(/^\/account(?:\/(plan|credits|territory|notify|password|delete|security|profile|documents))?\/?$/);
   if (mac) {
     /* /account/credits was a section until 13 Sep; the credits model is
        retired [task doc] and a hash that used to work should land somewhere
@@ -32235,7 +32387,7 @@ document.addEventListener("click", e => {
      borrower's .bdrop got it for free by being a <label>. One guard matters:
      fi.click() dispatches a click that bubbles back through the zone, so the
      input has to be excluded or this calls itself forever. */
-  const bdz = t.closest("#bup_dz, #cos_dz, #qf_dz");
+  const bdz = t.closest("#bup_dz, #cos_dz, #qf_dz, #ldoc_dz");
   /* a compact zone is itself a <button>, so its input sits beside it as
      <id>_file rather than inside (no input inside a button) */
   if (bdz && !t.closest("input[type=file]")) { const fi = bdz.querySelector("input[type=file]") || document.getElementById(bdz.id.replace(/_dz$/, "_file")); if (fi) fi.click(); return; }
@@ -33040,7 +33192,16 @@ document.addEventListener("click", e => {
   const lvw = t.closest("[data-lview]");
   if (lvw) { S.lview = lvw.dataset.lview; S.lpg = 1; S.open = null; S.lpicked.clear(); render(); return; }
   const lpgb = t.closest("[data-lpg]");
-  if (lpgb && !lpgb.disabled) { S.lpg = Number(lpgb.dataset.lpg); render(); return; }
+  if (lpgb && !lpgb.disabled) {
+    S.lpg = Number(lpgb.dataset.lpg); render();
+    /* focus stays on the arrow pressed, or moves to the other at an end; the
+       new range is read out through #lpgLive, which outlives render() so the
+       change is announced, not a freshly inserted region */
+    const same = document.getElementById(lpgb.id), other = document.getElementById(lpgb.id === "lpg_next" ? "lpg_prev" : "lpg_next");
+    (same && !same.disabled ? same : other)?.focus();
+    const live = document.getElementById("lpgLive"), rng = document.querySelector(".lpgn__tot");
+    if (live && rng) live.textContent = rng.textContent;
+    return; }
   if (t.id === "lrclrf" || t.id === "lrclrf2") { LRQF.forEach(f => f.set().clear()); S.lrSel = false; if (t.id === "lrclrf2") S.lq = ""; S.lpg = 1; S.open = null; render(); return; }
   /* ---- Home, lender, milestones F and G [01.4, 01.3] ---- */
   const lgov = t.closest("[data-lgov]");
@@ -33130,6 +33291,16 @@ document.addEventListener("click", e => {
   const lpck = t.matches && t.matches("input[data-lpchk]") ? t : null;
   if (lpck) { const set = lpd()[lpck.dataset.lpchk]; if (lpck.checked) set.add(lpck.value); else set.delete(lpck.value); render(); return; }
   if (t.closest("[data-lpstay]")) { S.lpLeave = null; render(); return; }
+  /* 02.2: replace picks one file for that row; delete takes the row out at
+     once and the toast puts it back where it was (see the 02.2 comment) */
+  const ldr = t.closest("[data-ldocrep]");
+  if (ldr) { S.ldocRep = Number(ldr.dataset.ldocrep); const fi = document.getElementById("ldoc_rfile"); if (fi) fi.click(); return; }
+  const ldd = t.closest("[data-ldocdel]");
+  if (ldd) {
+    const docs = lDocs(), i = Number(ldd.dataset.ldocdel), x = docs.splice(i, 1)[0];
+    if (x) S.undo = { msg: `${x.n} deleted.`, fn: () => docs.splice(i, 0, x) };
+    render(); return;
+  }
   if (t.closest("[data-lpdiscard]")) { const to = S.lpLeave; S.lpd = null; S.lpLeave = null; S.lpForce = true; location.hash = to; return; }
   if (t.closest("[data-lpsave]")) {
     const d = lpd(), m = lpErrors(d);
@@ -33137,9 +33308,13 @@ document.addEventListener("click", e => {
     if (Object.keys(m).length) { render(); const f = document.querySelector(".fld.err"); if (f) f.scrollIntoView({ block: "center" }); return; }
     /* one record: the save writes the network entry the broker's directory
        reads [💡 rec]. Lender type and recourse have no field there and are
-       held in state. 02.3's "Saved. N current requests match" is not built:
-       the research moved the count before the save, and it waits for the
-       fixtures (milestone C) and for question 242. Question 238 decides
+       held in state. 02.3's "Saved. N current requests match" is not a
+       screen: the research moved the count before the save, into the
+       Matching requests rail (lmpvHtml, built 22 Oct on the 14 fixtures; a
+       real count waits for question 242). The sheet's "View matching
+       requests" is the toast's link since 2 Nov [Tanya: "fix all what you
+       recommend"]; "Edit again" needs nothing, the form stays open.
+       Question 238 decides
        whether this save sends an approved lender back for review, as the
        live code does (setup_controller.rb:106); the prototype does not. */
     const n = lNet();
@@ -33152,7 +33327,7 @@ document.addEventListener("click", e => {
        second type survives the save [22 Oct] */
     S.lpInst = [...d.inst];
     S.lFresh = false; S.lpd = null; S.lpTried = false;
-    S.undo = { msg: "Lending parameters saved." };
+    S.undo = { msg: "Lending parameters saved.", go: { href: "#/requests", label: "View requests" } };
     render(); return;
   }
 
@@ -34939,6 +35114,8 @@ document.addEventListener("input", e => {
     if (f) S.cosAtt = { name: f.name, size: fileSize(f.size) };
     t.value = ""; render(); return;
   }
+  if (t.matches("[data-ldocfile]")) { const files = [...(t.files || [])]; t.value = ""; if (files.length) lDocAdd(files); return; }
+  if (t.matches("[data-ldocrfile]")) { const f = t.files && t.files[0]; t.value = ""; if (f && S.ldocRep != null) lDocReplace(S.ldocRep, f); S.ldocRep = null; return; }
   if (t.matches("[data-qffile]")) {
     const files = [...(t.files || [])];
     t.value = ""; if (files.length) qshStage(files); else render(); return;
@@ -35033,7 +35210,7 @@ document.addEventListener("input", e => {
       if (mp) mp.innerHTML = lmpvHtml();
     } else d[k] = t.value;
     const ft = document.querySelector("[data-lpsave]");
-    if (ft && ft.previousElementSibling) ft.previousElementSibling.textContent = lpDirty() ? "Unsaved changes" : "All changes saved";
+    if (ft && ft.previousElementSibling) ft.previousElementSibling.textContent = lpDirty() ? "Unsaved changes" : "";
     return;
   }
   const pf = t.closest("[data-pf]");
@@ -35408,7 +35585,7 @@ document.addEventListener("drop", e => {
    each of these dialogs is one requested item, so a drop of three takes the
    first and ignores the rest rather than silently filing them under the wrong
    category. Same names-only rule as the broker's zone - nothing is read. */
-const bDz = e => e.target.closest && e.target.closest("#bup_dz, #cos_dz, #qf_dz");
+const bDz = e => e.target.closest && e.target.closest("#bup_dz, #cos_dz, #qf_dz, #ldoc_dz");
 document.addEventListener("dragover", e => { const z = bDz(e); if (z) { e.preventDefault(); z.classList.add("over"); } });
 document.addEventListener("dragleave", e => { const z = bDz(e); if (z) z.classList.remove("over"); });
 document.addEventListener("drop", e => {
@@ -35416,6 +35593,7 @@ document.addEventListener("drop", e => {
   e.preventDefault(); z.classList.remove("over");
   /* the quote's zone takes every dropped file [25 Oct]; the others take one */
   if (z.id === "qf_dz") { qshStage([...(e.dataTransfer.files || [])]); return; }
+  if (z.id === "ldoc_dz") { lDocAdd([...(e.dataTransfer.files || [])]); return; }
   const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (!f) return;
   if (z.id === "cos_dz") { if (S.cosUp) dzStage("cos", f.name); return; }
   dzStage("bup", f.name);
