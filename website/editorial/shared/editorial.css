@@ -17,6 +17,13 @@ h3{font-size:clamp(30px,2.6vw,36px)}
 .button span,.text-link span{display:inline-block;font-size:18px;transition:transform 200ms ease}
 .button:hover span,.text-link:hover span{transform:translateX(3px)}
 .text-link{font-size:15px;gap:16px;transition:color 200ms ease,border-color 200ms ease}
+/* The ↗ is an inline SVG, not the character: DM Sans has no U+2197, so each OS drew its own fallback glyph (macOS: Hiragino Sans W4).
+   The path is that Hiragino outline (1000-unit em, baseline at 0, ascent 880), so Mac rendering is unchanged and every OS now matches it
+   and the Figma file (Tanya, 2 Nov). 1em wide like the glyph. The box is .8em tall and sits on the baseline, so it never grows a 1em line box;
+   the glyph's top (810) and tail (-78) overflow it, visibly. */
+.arrow{display:inline-block;width:1em;height:.8em;fill:currentColor;overflow:visible}
+/* The home role-card disc centres its content by box, not baseline; the glyph's old line box put it .09em higher. */
+.role-arrow .arrow{transform:translateY(-.09em)}
 .text-link:hover{gap:16px;color:var(--bronze)}
 .header-inner{max-width:1360px;padding-block:17px;gap:42px}
 nav{font-size:14px;gap:25px}

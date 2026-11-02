@@ -244,4 +244,12 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
 @media(max-width:560px){.territory-map svg{margin:15px 0}}
 /* "Compare all features ↗" under the plan footnote, centred with it above 600px; it opens /pricing#compare (2 Nov). */
 .pricing-more{text-align:center;margin-top:20px}
+/* "Compare all features" uses the hero and closing "Book a call" link: no rule at rest; a 1px line drawn from the left over 250ms on hover and keyboard focus, bronze text on hover (Tanya, 2 Nov: "reuse same ui as here") */
+.pricing-more .text-link{border:0;background:linear-gradient(currentColor,currentColor) 0 100%/0% 1px no-repeat}
+.pricing-more .text-link:is(:hover,:focus-visible){background-size:100% 1px}
+/* The line under the cards and "Compare all features" share one row, at opposite ends, from 851px up (Tanya, 2 Nov: "move text and button to one line, oposide sides"). Done on the wrap, not a wrapper div, because tools/build-lp.py cuts from the comment through .pricing-more; lp/broker has no .pricing-more, so :has() leaves it alone. */
+@media(min-width:851px){.pricing>.wrap:has(>.pricing-more){display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:32px;align-items:baseline}
+.pricing>.wrap:has(>.pricing-more)>*{grid-column:1/-1}
+.pricing>.wrap>.pricing-footnote:has(~.pricing-more){grid-column:1;text-align:left;margin-top:32px}
+.pricing>.wrap>.pricing-more{grid-column:2;margin-top:32px}}
 @media(max-width:600px){.pricing-more{text-align:left}}
