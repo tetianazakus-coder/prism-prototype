@@ -1,0 +1,272 @@
+/* Product screens (Tanya, 29 Oct: "can we make some animations for that screens/flows?"). The three capability
+   chapters show live HTML rebuilds of redesign prototype screens (assets/deals-prototype.html, routes #/leads,
+   #/lenders and #/deal/riverside), not screenshots, so a row can arrive, a filter can tick and a status can change.
+   screens.js builds them in place of the PNGs and runs each flow once. Sizes, colours and type are the prototype's,
+   measured at 1280 in Chromium on 29 Oct; every value below is in prototype pixels, and the whole screen is scaled
+   to its crop with one transform. Class names carry a ps- prefix so no page rule reaches inside. */
+/* The live screen sits flush in its crop, with no grey margin, and floats on a lighter version of the hero window's shadow (Tanya, 29 Oct) */
+.screen-crop.ps-live,.matching-crop.ps-live{background:#eff3f8;border-block:0;box-shadow:0 20px 50px rgba(10,28,40,.22),0 3px 10px rgba(10,28,40,.08)}
+.matching-visual:has(.ps-live){overflow:visible}
+.ps{position:absolute;top:0;left:0;transform-origin:0 0;background:#eff3f8;
+  font:400 14px/1.45 Inter,system-ui,sans-serif;letter-spacing:-.154px;color:#0f172a;-webkit-font-smoothing:antialiased;
+  text-align:left;user-select:none;pointer-events:none}
+.ps *{box-sizing:border-box}
+.ps-app{position:relative;display:flex;height:100%;background:#eff3f8;overflow:hidden}
+.ps-rail{flex:0 0 48px;background:#08142d;display:flex;flex-direction:column;align-items:center}
+.ps-rail-top{width:100%;height:57px;display:grid;place-items:center;border-bottom:1px solid #1a325a}
+.ps-mark{width:30px;height:34px;background:#fff;-webkit-mask:url(../img/logo-mark.svg) center/contain no-repeat;mask:url(../img/logo-mark.svg) center/contain no-repeat}
+.ps-rail-menu{display:flex;flex-direction:column;gap:4px;padding-top:11px}
+.ps-rail-menu i{width:32px;height:32px;border-radius:6px;display:grid;place-items:center;color:rgba(210,220,240,.78)}
+.ps-rail-menu i.on{background:#142a52;color:#fff}
+.ps-rail-menu i.gap{margin-top:7px}
+.ps svg{display:block;flex:none}
+.ps-main{flex:1;min-width:0;padding:26px 28px 0;position:relative}
+.ps-h1{font-size:26px;line-height:32px;font-weight:700;letter-spacing:-.78px}
+.ps-lede{color:#586478;margin-top:6px;max-width:582px;line-height:20.3px}
+.ps-crumb{color:#012758;font-size:14px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.ps-crumb s{text-decoration:none;color:#94a0b4}
+.ps-card{background:#fff;border:1px solid #bec8dc;border-radius:12px;overflow:hidden}
+.ps-card-head{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 18px}
+.ps-card-head b{font-size:15px;font-weight:600;letter-spacing:-.15px}
+.ps-due{color:#586478;font-variant-numeric:tabular-nums;line-height:20px}
+.ps-badge{display:inline-flex;align-items:center;gap:6px;height:21px;padding:0 8px;border:1px solid;border-radius:9999px;font-size:12px;font-weight:500;white-space:nowrap}
+.ps-gold{background:#f6f1e6;color:#8a6a1f;border-color:#e2d3ae}
+.ps-green{background:#e9f3e5;color:#2f6b23;border-color:#bfddb4}
+.ps-blue{background:#ebeff6;color:#023e8a;border-color:#c0cfe2}
+.ps-red{background:#fceded;color:#dc2626;border-color:#f5c2c2}
+.ps-muted{background:#d6dce8;color:#586478;border-color:#bec8dc}
+.ps-time{font-weight:600}
+.ps-btn{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid #bec8dc;border-radius:6px;background:#eff3f8;font-weight:500;white-space:nowrap}
+.ps-btn.white{background:#fff}
+.ps-btn.primary{background:#012758;border-color:#012758;color:#fff}
+.ps-btn.lg{height:38px;padding:0 14px}
+.ps-kebab{width:24px;display:grid;place-items:center;color:#586478}
+.ps-th,.ps-tr{display:grid;align-items:center}
+.ps-th{height:40px;background:#f0f3f7;border-block:1px solid #bec8dc;color:#586478;font-size:13px;font-weight:500}
+.ps-tr{border-bottom:1px solid #bec8dc;overflow:hidden;position:relative}
+.ps-th>*,.ps-tr>*{padding:0 8px;min-width:0}
+.ps-th>:first-child,.ps-tr>:first-child{padding-left:14px}
+.ps-sub{display:block;color:#586478;font-size:12.5px;line-height:1.3}
+.ps-tr>span,.ps-tr .ps-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ps-unset{color:#586478;font-style:italic}
+.ps-wash{position:absolute;inset:0;grid-column:1/-1;grid-row:1;z-index:0;pointer-events:none;opacity:0}
+.ps-tr>:not(.ps-wash){position:relative;z-index:1}
+.ps-check{width:16px;height:16px;border:1px solid #bec8dc;border-radius:4px;background:#fff;display:grid;place-items:center;color:#fff;flex:none}
+.ps-check svg{opacity:0}
+.ps-check.on{background:#012758;border-color:#012758}
+.ps-check.on svg{opacity:1}
+.ps-plus{display:inline-grid;place-items:center;height:20px;padding:0 6px;margin-left:6px;border:1px dashed #bec8dc;border-radius:9999px;font-size:12px;color:#586478}
+.ps-seg{display:inline-flex;padding:3px;background:#d6dce8;border-radius:8px;gap:2px}
+.ps-seg span{height:30px;padding:0 12px;display:flex;align-items:center;gap:8px;border-radius:6px;color:#586478}
+.ps-seg span.on{background:#fff;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,.08)}
+.ps-seg em{font-style:normal;color:#586478}
+.ps-input{height:34px;border:1px solid #bec8dc;border-radius:6px;background:#fff;display:flex;align-items:center;gap:8px;padding:0 10px;color:#7a8597}
+.ps-toggle{width:32px;height:18px;border-radius:9px;background:#d6dce8;position:relative}
+.ps-toggle:after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff}
+.ps-sel{height:36px;border:1px solid #bec8dc;border-radius:6px;background:#fff;display:flex;align-items:center;gap:8px;padding:0 10px 0 12px}
+.ps-sel .ps-chev{margin-left:auto;color:#94a0b4}
+.ps-dot{width:7px;height:7px;border-radius:50%;flex:none}
+.ps-cursor{position:absolute;top:0;left:0;width:26px;height:26px;z-index:5;opacity:0;filter:drop-shadow(0 2px 3px rgba(8,20,45,.35))}
+.ps-ripple{position:absolute;top:0;left:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:2px solid #b48b2b;z-index:4;opacity:0}
+
+/* Opportunities (#/leads) */
+.ps-opps .ps-card{margin-top:24px}
+.ps-opps .ps-th,.ps-opps .ps-tr{grid-template-columns:100px minmax(150px,1.4fr) minmax(120px,1.1fr) 168px 136px 100px}
+.ps-opps .ps-tr{height:56px}
+.ps-opps .ps-tr>:first-child{font-weight:600}
+.ps-opps .ps-tr>:nth-child(6){padding-right:12px;justify-self:end;overflow:visible}
+.ps-opps .ps-new{height:0;border-bottom-width:0}
+/* The opportunity record (oppModal, .mdl--opp), measured open and accepted at 1280: a 650px dialog over a 50% scrim (700 until 2 Nov, when Figma Dialog/record went to 650) */
+.ps-scrim{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;padding:22px 16px;background:rgba(0,0,0,.5);opacity:0;visibility:hidden}
+.ps-mdl{position:relative;width:650px;max-height:100%;display:flex;flex-direction:column;background:#fff;border:1px solid #bec8dc;border-radius:8px;overflow:hidden;
+  box-shadow:0 10px 15px -3px rgba(19,35,57,.12),0 4px 6px -4px rgba(19,35,57,.08)}
+.ps-mhd{flex:none;display:flex;align-items:flex-start;gap:12px;padding:24px 48px 16px 24px}
+.ps-mttl{flex:1;min-width:0}
+.ps-mttl b{display:block;font-size:18px;line-height:18px;font-weight:600}
+.ps-mttl span{display:block;margin-top:8px;color:#586478;line-height:20px}
+.ps-left{display:inline-flex;align-items:center;gap:6px;margin-top:-3px;padding:4px 11px;border:1px solid #e2d3ae;border-radius:9999px;background:#f6f1e6;color:#8a6a1f;font-size:13px;line-height:18.85px;font-weight:600;white-space:nowrap}
+.ps-x{position:absolute;top:17px;right:17px;color:#586478}
+.ps-mbd{flex:1;min-height:0;overflow:hidden;padding:16px 24px}
+.ps-sec{display:block;font-weight:600;line-height:20.3px}
+.ps-sec-b{margin:20px 0 10px}
+.ps-prose{max-width:629px;margin:10px 0 14px;font-size:13.5px;line-height:19.575px}
+/* fact rows pad 4px, matching the prototype .facts--rows and the Figma component (Tanya, 2 Nov) */
+.ps-fact{display:grid;grid-template-columns:148px 1fr;gap:16px;align-items:center;padding:4px 0}
+.ps-fact>:first-child{color:#586478;font-size:12px;line-height:17.4px}
+.ps-fact>:last-child{font-weight:500;line-height:20.3px}
+.ps-note{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid #bec8dc;border-radius:6px;background:#eef0f5;color:#586478;font-size:13.5px;line-height:19.575px}
+.ps-note svg{margin-top:3px}
+.ps-note.ok{margin-bottom:20px;border-color:#c8e2be;background:#f0f7ee;color:#2f6b23}
+.ps-note.ok u{font-weight:600}
+.ps-mft{flex:none;display:flex;gap:12px;padding:16px 24px;border-top:1px solid #bec8dc}
+.ps-mft .ps-btn{height:36px;padding:0 16px;border-color:transparent}
+.ps-btn.danger{margin-right:auto;background:#dc2626;color:#fff}
+.ps-mft .ps-btn.outline{margin-left:auto;border-color:#bec8dc}
+.ps-swap{position:relative;display:inline-grid}
+.ps-swap>*{grid-area:1/1;justify-self:start}
+
+/* Lenders (#/lenders) */
+.ps-lenders .ps-seg{margin-top:18px}
+.ps-lenders .ps-body{display:flex;gap:16px;margin-top:14px;align-items:flex-start}
+.ps-filters{flex:0 0 210px}
+.ps-filters>b{display:block;font-size:15px;font-weight:600;margin:4px 0 10px}
+.ps-short{height:36px;border:1px solid #bec8dc;border-radius:6px;background:#fff;display:flex;align-items:center;gap:8px;padding:0 12px;color:#0f172a;font-weight:500}
+.ps-short svg{color:#586478}
+.ps-short strong{margin-left:auto;color:#586478;font-weight:500}
+.ps-fgroup{border-top:1px solid #bec8dc;margin-top:12px;padding-top:12px}
+.ps-fgroup>p{display:flex;justify-content:space-between;align-items:center;font-weight:600;margin-bottom:8px}
+.ps-fgroup .ps-input{height:30px;margin-bottom:8px;font-size:13px}
+.ps-opt{display:flex;align-items:center;gap:10px;height:25px}
+.ps-more{color:#012758;margin-top:4px;display:block}
+.ps-lenders .ps-card{flex:1;min-width:0}
+.ps-tools{display:flex;align-items:center;gap:12px;height:64px;padding:0 16px}
+.ps-tools .ps-input{width:240px}
+.ps-icon-btn{width:38px;height:36px;border:1px solid #bec8dc;border-radius:6px;background:#eff3f8;display:grid;place-items:center}
+.ps-lenders .ps-th,.ps-lenders .ps-tr{grid-template-columns:36px 30px minmax(210px,2fr) minmax(130px,1fr) minmax(150px,1.1fr) 104px}
+.ps-lenders .ps-th>:first-child,.ps-lenders .ps-tr>:first-child{padding-left:16px}
+.ps-lenders .ps-tr{height:62px}
+.ps-lenders .ps-tr b{font-weight:600;font-size:14.5px}
+.ps-lenders .ps-sub{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ps-nm{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.ps-bm{color:#586478}
+.ps-lenders .ps-tr>.ps-bm{width:30px;height:30px;padding:0;display:grid;place-items:center;border-radius:4px;overflow:visible}
+.ps-bm.hover{background:#d2dcf0;color:#0f172a}
+.ps-bm.on{color:#b48b2b}
+.ps-bm.on path{fill:currentColor}
+/* the prototype's #tipbox, measured on #/lenders: shown on hover, hidden the moment the button is used */
+.ps-tip{position:absolute;z-index:6;padding:6px 9px;border:1px solid #bec8dc;border-radius:10px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.12);
+  font-size:12px;line-height:16.2px;color:#0f172a;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden}
+
+/* Deal (#/deal/riverside) and Request execution support */
+.ps-scene{position:absolute;inset:26px 28px 0}
+.ps-deal-head{display:flex;align-items:center;gap:10px}
+.ps-deal-head .ps-h1{margin-right:auto}
+.ps-row-card{margin-top:16px;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.ps-row-card b,.ps-req-card>b{font-size:16px;font-weight:600}
+.ps-row-card span{color:#586478;display:flex;gap:10px;align-items:center}
+.ps-deal .ps-lend{margin-top:16px}
+.ps-lend .ps-card-head{height:62px}
+.ps-lend .ps-seg{margin:0 0 14px 18px}
+.ps-deal .ps-th,.ps-deal .ps-tr{grid-template-columns:40px minmax(240px,2fr) minmax(130px,1fr) minmax(120px,1fr) 236px 40px}
+.ps-deal .ps-tr{height:70px}
+.ps-deal .ps-tr b{font-weight:600}
+.ps-deal .ps-tr .ps-sel{width:220px}
+/* The Outreach list (sel__pop / sel__item, measured open on #/deal/riverside at 1280); screens.js places it 6px under the select */
+.ps-pop{position:absolute;z-index:4;padding:4px;background:#fff;border:1px solid #bec8dc;border-radius:6px;opacity:0;visibility:hidden;
+  box-shadow:0 4px 6px -1px rgba(19,35,57,.1),0 2px 4px -2px rgba(19,35,57,.08)}
+.ps-pi{position:relative;display:flex;align-items:center;gap:8px;height:28px;padding:0 32px 0 8px;border-radius:4px;font-size:13px;white-space:nowrap}
+.ps-pi.hover{background:#d2dcf0;color:#012758}
+.ps-tick{position:absolute;right:8px;top:7px;color:#0f172a}
+.ps-req{display:flex;gap:16px;margin-top:20px;align-items:flex-start}
+.ps-req-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px}
+.ps-req-card{padding:22px 20px 8px}
+/* What we will ask you to supply (.docrow, measured on #/deal/riverside/support at 1280) and the form footer (.frmfoot) */
+.ps-supply{padding:14px 18px 7px}
+.ps-supply>b{display:block;font-size:15px;line-height:21.75px;font-weight:600;margin-bottom:18px}
+.ps-doc{display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 19px 0 11px;margin-bottom:7px;border:1px solid #bec8dc;border-radius:6px;font-size:13.5px;font-weight:500}
+.ps-foot{display:flex;justify-content:flex-end;gap:9px}
+.ps-btn.ghost{background:none;border-color:transparent}
+.ps-foot .ps-btn{height:36px;padding:0 16px}
+.ps-req-side{flex:0 0 300px;padding:22px 20px}
+.ps-need{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #d6dce8}
+.ps-need:last-child{border:0}
+.ps-need .ps-check{margin-top:2px}
+.ps-need b{font-weight:600;display:block}
+.ps-have{margin-top:12px}
+.ps-have span{display:block;color:#586478;font-size:12.5px}
+.ps-have strong{display:block;font-weight:500;margin-bottom:8px}
+
+/* The flow's pause / play / replay button (WCAG 2.2.2): inside the frame, 10px in from the screen's bottom-right
+   corner, shown while the pointer is over the frame (Tanya, 29 Oct). It also shows on keyboard focus and while the
+   flow is paused, and stays on where there is no hover (touch). Paper square, line border, ink glyph. Only drawn when
+   the flows animate. */
+.pillar-screen:has(.ps-ctl),.matching-visual:has(.ps-ctl){position:relative}
+.ps-ctl{position:absolute;right:33px;bottom:33px;z-index:5;width:36px;height:36px;display:grid;place-items:center;
+  background:#fff;border:0;color:var(--ink);cursor:pointer;box-shadow:0 4px 12px rgba(10,28,40,.12);
+  opacity:0;transition:opacity 200ms cubic-bezier(.23,1,.32,1),background-color .2s}
+.ps-ctl::before{content:"";position:absolute;inset:-4px}
+:is(.pillar-screen,.matching-visual):hover .ps-ctl,.ps-ctl:focus-visible,.ps-ctl[data-state="play"]{opacity:1}
+.ps-ctl:hover{background:#e4e8ef}
+.ps-ctl:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media(hover:none){.ps-ctl{opacity:1}}
+@media(max-width:600px){.ps-ctl{right:29px;bottom:29px}}
+
+/* New deal (#/deals/new, .frm, measured on 2 Nov at 1440): a 784px form column and a 300px rail, 16px apart. Cards
+   carry a 15px title and 14px 18px of padding; fields are a 13px Medium label 6px over a 36px input, 16px apart. The
+   form column scrolls under a still rail, as the prototype's sticky .frm__rail does. */
+.ps-create .ps-frm{display:grid;grid-template-columns:minmax(0,784px) 300px;gap:16px;align-items:start;margin-top:20px}
+.ps-frm-col,.ps-frm-rail{display:flex;flex-direction:column;gap:16px}
+.ps-fcard{padding:14px 18px 16px}
+.ps-ftitle{display:block;font-size:15px;line-height:21.75px;font-weight:600;letter-spacing:-.15px;margin-bottom:14px}
+.ps-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;min-width:0}
+.ps-flabel{font-size:13px;line-height:18.85px;font-weight:500}
+.ps-flabel i{font-style:normal;color:#dc2626}
+.ps-flabel span{color:#586478;font-weight:400}
+.ps-fin,.ps-fsel{height:36px;border-color:#dce2ee;font-size:14px;padding:0 12px;white-space:nowrap;overflow:hidden}
+.ps-fin .ps-v{color:#7a8597}
+.ps-fin.set .ps-v,.ps-fsel.set .ps-v{color:#0f172a}
+.ps-fsel .ps-v{color:#7a8597;overflow:hidden;text-overflow:ellipsis}
+.ps-fin.focus,.ps-fsel.focus{border-color:#012758;box-shadow:0 0 0 3px rgba(1,39,88,.12)}
+.ps-pre{color:#586478}
+.ps-help{display:block;margin:-11px 0 16px;font-size:12px;line-height:17.4px;color:#586478}
+.ps-amt{width:260px}
+.ps-row{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.ps-tx{display:block;margin-bottom:6px}
+.ps-create .ps-seg{margin-bottom:16px}
+.ps-empty{color:#586478;font-size:13px;line-height:19.5px;margin-top:10px}
+.ps-big{font-size:26px;line-height:1.3;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ps-mpv-sub{font-size:12.5px;line-height:18px;color:#586478;margin-top:2px}
+.ps-bands{display:flex;gap:12px;margin-top:10px;font-size:12.5px}
+.ps-bands b{font-variant-numeric:tabular-nums}
+.ps-tips{padding:12px 14px;background:#f7f3ea;border-left:2px solid #b48b2b;border-radius:4px}
+.ps-tips b{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.ps-tips ul{padding-left:16px;margin:0;list-style:disc;font-size:12.5px;line-height:18.75px}
+.ps-tips li+li{margin-top:6px}
+.ps-ai{width:100%;justify-content:center;margin-top:12px;height:34px}
+.ps-create .ps-pop .ps-pi{padding-right:12px}
+
+/* Riverside's Matches tab (#/deal/riverside): Execution type and the row's Save to deal / Selected in place of
+   Outreach, the toast the send leaves (.toast, the action navy) and the send dialog (Send loan request, 510 wide) */
+.ps-matches .ps-th,.ps-matches .ps-tr{grid-template-columns:40px minmax(200px,1.4fr) 134px minmax(150px,1fr) minmax(190px,1.1fr) 150px}
+.ps-matches .ps-tr{height:60px}
+.ps-matches .ps-tools{height:56px;padding:0 18px}
+.ps-muted-r{margin-left:auto;color:#586478}
+.ps-acts{display:flex;align-items:center;justify-content:flex-end;gap:6px;overflow:visible!important;padding-right:10px!important}
+.ps-acts .ps-swap>*{justify-self:end}
+.ps-acts .ps-badge svg{margin-left:-2px}
+.ps-send{width:510px}
+.ps-send .ps-mttl b{line-height:24px}
+.ps-send .ps-mbd{padding:4px 24px 8px}
+.ps-to{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #d6dce8}
+.ps-to:last-child{border:0}
+.ps-to .ps-check{margin-top:2px}
+.ps-to b{font-weight:600}
+.ps-note-s{margin-right:auto;align-self:center;color:#586478;font-size:12.5px}
+.ps-toast{position:absolute;left:0;top:70px;z-index:4;display:flex;align-items:center;gap:14px;padding:10px 14px;right:0;margin-inline:auto;width:max-content;
+  background:#012758;color:#fff;border-radius:8px;font-weight:600;white-space:nowrap;box-shadow:0 10px 15px -3px rgba(19,35,57,.2);opacity:0;visibility:hidden}
+.ps-toast u{text-decoration:none;color:#9fc4f5;font-weight:500}
+
+/* The walkthrough player (2 Nov). It autoplays like the flows above; while it plays, a bronze line fills along the top
+   of the active chapter's tab. The pause / play / replay control and the full-screen button share the .ps-ctl white
+   square (no stroke, #e4e8ef on hover): control bottom-right, full screen top-right, both 10px inside the screen, shown on hover, keyboard focus and
+   touch, and the control also while paused or ended. */
+/* The film sits in a mat like the pillar screens (Tanya, 2 Nov): one step darker than the section's #eef1f6, as the
+   pillars' paper mat is one step darker than their white ground. The controls inherit the pillars' 33px inset. */
+.walk-screen{position:relative}
+.walk-tabs button{position:relative}
+.walk-tabs button::after{content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:var(--bronze);
+  transform:scaleX(var(--p,0));transform-origin:left;pointer-events:none}
+.screen-expand{position:absolute;top:33px;right:33px;z-index:5;width:36px;height:36px;display:grid;place-items:center;
+  background:#fff;border:0;color:var(--ink);cursor:pointer;box-shadow:0 4px 12px rgba(10,28,40,.12);
+  opacity:0;transition:opacity 200ms cubic-bezier(.23,1,.32,1),background-color .2s}
+.screen-expand::before{content:"";position:absolute;inset:-4px}
+.walk-screen:hover :is(.ps-ctl,.screen-expand),.screen-expand:focus-visible,
+.walk-stage[data-player="paused"] .ps-ctl,.walk-stage[data-player="ended"] .ps-ctl{opacity:1}
+.screen-expand:hover{background:#e4e8ef}
+.screen-expand:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media(hover:none){.screen-expand{opacity:1}}
+@media(max-width:600px){.screen-expand{top:29px;right:29px}}
+/* Full screen: the stage (tabs and screen) on the section's own ground, the screen as tall as the window allows */
+.walk-stage:fullscreen{background:#eef1f6;padding:40px;align-content:center;overflow:auto}
+.walk-stage:fullscreen .screen{aspect-ratio:auto;height:calc(100vh - 126px)}
+@media(max-width:850px){.walk-stage:fullscreen{padding:16px}.walk-stage:fullscreen .screen{height:calc(100vh - 246px)}}
