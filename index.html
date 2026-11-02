@@ -7742,8 +7742,10 @@
   :where(.app--borrower, .app--deal) .mdl__bd .hint { font-size: 12px; line-height: 1.3333; }  /* ramp:b */
   /* the opportunity record is longer than a picker, so it takes a wider
      shell and a taller body; the section headings replace the cards it used
-     to be built from, because a card inside a modal draws a box in a box */
-  .mdl--opp { max-width: 700px; }
+     to be built from, because a card inside a modal draws a box in a box.
+     650, not 700, matching Figma Dialog/record on Opportunities — record
+     (1121:3) [Tanya, 2 Nov] */
+  .mdl--opp { max-width: 650px; }
   /* The switch confirm. 672 is what the ruled comparison measures out to, not a
      round number picked for comfort - see .pswx. It sits between .mdl's 512 and
      .mdl--opp's 700, so the file already had a dialog wider than this one. */
