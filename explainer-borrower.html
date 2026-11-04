@@ -2364,7 +2364,14 @@
   .page { padding: 20px 24px 30px; }
 
   /* Breadcrumb — ui/breadcrumb.tsx: text-sm text-muted-foreground */
-  .crumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted-foreground); margin-bottom: 12px; }
+  .crumb { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); margin-bottom: 12px; }
+  /* 20, not the inherited 1.45 (20.3), 4 Nov [Tanya: "fix the heading badge
+     offset"]: the extra .3px put every heading under a crumb on a fractional
+     pixel. Lakeview's status badge measured 3.7 above its ink and 5.3 below
+     in the 18px inside its border; on a whole pixel, 4.0 and 5.0. The 1px
+     left is the font: 12/16 in the 20 box centres the cap height (4.6 and
+     4.6), d/h/l/t rise about .4 above it and the baseline snaps to a whole
+     pixel. The library Badge has the same box, so it stays. */
   .crumb a { color: var(--primary); text-decoration: none; font-weight: 500; }
   .crumb a:hover { text-decoration: underline; }
   .crumb .sep { color: var(--brand-border-300); }
