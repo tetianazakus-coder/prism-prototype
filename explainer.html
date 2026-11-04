@@ -928,7 +928,7 @@
   /* the amount and a checked closing's Verified badge share the first line,
      the badge at the right edge [Tanya, 25 Oct] */
   .bclose__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .bclose__top .badge { flex: none; line-height: 16px; }  /* 22 tall, badge.tsx's text-xs + py-0.5 + border (Figma draws it 20, border inside); the inherited 1.5 made it 23 */
+  .bclose__top .badge { flex: none; line-height: 16px; }  /* 20 tall since 4 Nov, the library's box (see .badge); was 22, badge.tsx's text-xs + py-0.5 + border; the inherited 1.5 made it 23 */
   .bclose__nm { font-size: 14px; line-height: 20px; font-weight: 500; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bclose__sub { font-size: 12px; line-height: 16px; color: var(--muted-foreground); margin-top: 2px; }
   .bclose__meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 10px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
@@ -942,7 +942,7 @@
      Add button and doesn't run into it [Tanya, 19 Oct] */
   .clorow:last-child { border-bottom: 1px solid var(--border); }
   .clorow b { font-weight: 600; }
-  .clorow b .badge { margin-left: 4px; vertical-align: 1px; line-height: 16px; }  /* 22 tall, as on the tile; it inherited 26 */
+  .clorow b .badge { margin-left: 4px; vertical-align: 1px; line-height: 16px; }  /* 20 tall since 4 Nov, as on the tile (was 22); it inherited 26 */
   .clorow .sub { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted-foreground); }
   .clorow__acts { display: flex; align-items: center; gap: 4px; flex: none; }
   .clorow .btn--ico { width: 32px; padding: 0; }
@@ -2386,7 +2386,7 @@
      leading — measured residual 0.1px. flex: none keeps the chip whole when
      a long title takes the rest of the row. */
   .head h1:has(.badge) { display: flex; align-items: center; gap: 10px; }
-  .head h1 .badge { flex: none; line-height: 1.45; }  /* 1.45 set: the h1's 32px would otherwise inherit into the chip */
+  .head h1 .badge { flex: none; line-height: 16px; }  /* set: the h1's 32px would otherwise inherit into the chip. 16 since 4 Nov, the library's 20 box (was 1.45, 23.4 tall) */
   /* the profile heading's verified tick, 12 Oct [Tanya: "make right icon
      bigger and move closer to the name"]: 14 is the card size, and on a 26
      heading it read as a footnote 14px off the name (the h1's 9 gap plus
@@ -2570,10 +2570,17 @@
   .inp[readonly] { background: color-mix(in srgb, var(--muted) 55%, #fff); color: var(--muted-foreground); cursor: default; box-shadow: none; }
 
   /* ---- Badge. ui/badge.tsx: rounded-full border px-2 py-0.5 text-xs font-medium ---- */
+  /* 20 tall, the Prism library's Badge (27:19: 12/16 text, padding 2/8, a
+     1px stroke INSIDE the box), 4 Nov [Tanya: "in figma components small
+     badges are 20px height, align prototype"]. badge.tsx draws 22, because a
+     CSS border adds to py-0.5; here the border takes 1 of the 2px padding
+     instead, so the box is the library's. The line height is set, not
+     inherited: before, a badge measured 21 in a table cell, 22 beside a
+     name, 23.4 in a heading or a message chip, depending on its parent. */
   .badge {
     display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-    border-radius: 9999px; border: 1px solid transparent; padding: 2px 8px;
-    font-size: 12px; font-weight: 500; white-space: nowrap; width: fit-content;
+    border-radius: 9999px; border: 1px solid transparent; padding: 1px 8px;
+    font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; width: fit-content;
   }
   /* NEVER pair with a tone-* class. This is 0-1-0 and sets no background, so
      .badge.tone-green at 0-2-0 beats it on both properties it does set - 27
@@ -3057,6 +3064,9 @@
   .cnt-link { color: var(--primary); font-weight: 600; text-decoration: none; font-variant-numeric: tabular-nums; }
   .cnt-link:hover { text-decoration: underline; }
   .rowacts { display: flex; gap: 6px; justify-content: flex-end; }
+  /* a status badge beside the row's buttons keeps its own 20, centred on
+     them; the row's stretch drew Riverside's "Selected" 32 tall, 4 Nov */
+  .rowacts > .badge { align-self: center; }
   /* why this row has nothing to press [Tanya, 5 Oct]. The actions cell on a
      status row was left empty, which is honest - there is no file, so there
      is nothing to open - but an empty cell is ambiguous between forbidden and
