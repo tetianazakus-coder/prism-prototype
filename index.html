@@ -798,6 +798,21 @@
      1137, 1280 still fits, and at 1360 the surplus pushes both columns to
      101 regardless. Measured at 1600, 1440, 1360, 1280 and 1180. */
   .bdocs .t td[data-l="Date"], .bdocs .t td[data-l="Version"] { min-width: 95px; }
+  /* When the card is too narrow for the table, the row's View / Download /
+     Replace fold into one kebab [Tanya, 4 Nov: "when space is limited (nav
+     sidebar open as here) - transfrom this 3 icon buttons into kebeb"]. The
+     card, not the window, decides: the rail open or folded moves the card's
+     width by 176px at the same window. 1188 is the table's min-content
+     width with the three icons, less the card's 18+18 padding (Round Rock, the widest: 1224 - 36 = 1188; Lakeview 1192, Mesa 1185), so the fold
+     happens exactly where the icons would start a horizontal scroll, and the
+     kebab buys back the 76px of the two extra buttons. Both forms are in the
+     markup; only one is ever displayed, so focus never lands on a hidden one. */
+  .bdocs > .card__ct { container: bdocs / inline-size; }
+  .bdocs .rowacts--fold { display: none; }
+  @container bdocs (max-width: 1188px) {
+    .bdocs .rowacts--wide { display: none; }
+    .bdocs .rowacts--fold { display: flex; }
+  }
   /* an abbreviation that explains itself on hover and focus. No dotted rule
      [Tanya, 4 Oct: "don't use that on prototype"]; none is set explicitly
      because some browsers draw one on abbr by default */
@@ -2336,7 +2351,12 @@
      disc is the expanded row's hover in miniature [Tanya, 25 Oct] */
   .app.rail-min .rail__end { padding-left: 4px; padding-right: 4px; }
   .app.rail-min .rail__acc { justify-content: center; width: 40px; height: 40px; padding: 4px; margin: 0 auto; }
-  .rail__acc .car { display: grid; place-items: center; flex: none; color: color-mix(in srgb, var(--sidebar-foreground) 60%, transparent); }
+  /* chevron-down, the dropdown cue, since 4 Nov (Tanya: "change this icon to
+     dropdown everywhere"); it was lucide chevrons-up-down, the shadcn
+     sidebar footer default. The menu opens above the button, so the chevron
+     turns up while it is open, as the Lenders facet carets turn. */
+  .rail__acc .car { display: grid; place-items: center; flex: none; color: color-mix(in srgb, var(--sidebar-foreground) 60%, transparent); transition: transform .12s; }
+  .rail__acc[aria-expanded="true"] .car { transform: rotate(180deg); }
   .app.rail-min .rail__acc .who, .app.rail-min .rail__acc .car { display: none; }
 
   .main { min-width: 0; background: var(--background); }
@@ -2955,6 +2975,27 @@
      it did nothing for the broker's Deals table. Dropping the 99% above
      removes the cause, so the per-table patch is no longer needed - the class
      stays on the markup as a hook, with no width of its own. */
+  /* ...until 4 Nov: Property and Last activity are one width [Tanya: "make
+     Property column width same as Last activiy"]. 248 is Last activity's width with
+     its line capped at 224 here (240 elsewhere, .bsub--1) plus 12 + 12 padding:
+     at 264, its uncapped width, the table scrolled 13px at 1600 with the rail
+     open, where it had fitted. A column
+     with a width keeps it under auto layout, so the slack goes to the five
+     columns between rather than to either edge; before, Property took 230 at
+     the floor and 339 at 1920 while Last activity sat at 256-323. Keyed on the
+     sort keys, so it holds whichever columns the view shows; not on Drafts,
+     whose "updated" column is Last saved, a bare date. min-width too:
+     where the table is tight, Property's own 230 floor (first-child) would
+     give way first while Last activity cannot (its line does not wrap), so
+     both floors are 248. The table's minimum grows by 18. */
+  /* Property 280 since later on 4 Nov [Tanya: "make it 280"]. To keep the
+     table inside the card at 1600 with the rail open (it scrolled 13px at
+     280 + 248), Last activity gives up 13: 235, its line capped at 211 [Tanya:
+     "do recommended"]. Measured on the seven sample lines, the same two are
+     cut at 211 as at 224 (234 and 279 wide); the next longest is 192. */
+  .tblwrap .t.t--loans:not(.t--drafts) th[data-bsort="name"] { width: 280px; min-width: 280px; }
+  .tblwrap .t.t--loans:not(.t--drafts) th[data-bsort="updated"] { width: 235px; min-width: 235px; }
+  .t--loans .bsub--1 { max-width: 211px; }
   /* When the window can't hold every column on one line, the widest secondary
      column gives way — financing wraps to two lines at a readable measure —
      and cell padding tightens. Never ellipsis: Agency (Fannie Mae) and
@@ -4535,10 +4576,9 @@
      and read as a third row rather than as the list's footer. The empty state
      keeps its inline justify-content:center — there is no list to align to. */
   .docnote { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin: 12px 0 4px; }
-  /* the same row, standing outside the cards rather than in one's foot
-     [4 Oct]. 16px is the gap the Documents cards already keep between
-     themselves, so the buttons read as the next thing down the page. */
-  .docnote--page { margin: 16px 0 0; }
+  /* .docnote--page, the same row standing outside the cards (4 Oct, 16px
+     below them), is retired: since 4 Nov the borrower's Upload documents sits
+     in the On file card's header, and it was the row's only user. */
   /* A contact request in flight. The countdown sits on the row because the
      product has no notification surface to carry it — row 25 [T]. */
   .rqcell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; }
@@ -8625,7 +8665,7 @@
                 title="Your profile and Sign out">
           <span class="av">BB</span>
           <span class="who"><b>Bruno Broker</b><span>Sandbox Capital Advisors</span></span>
-          <span class="car" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
+          <span class="car" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </button>
       </div>
     </div>
@@ -25947,7 +25987,7 @@ function renderLoans() {
     }).join("");
   }
 
-  const table = `<div class="tblwrap"><table class="t t--loans"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+  const table = `<div class="tblwrap"><table class="t t--loans${drafts ? " t--drafts" : ""}"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
   const emptyView = { active: ["No active deals", "Start a financing request; it becomes a deal once you submit it."],
     funded: ["No funded deals", "Deals that close are kept here."],
     dead: ["No dead deals", "Requests you withdraw are kept here."],
@@ -27509,6 +27549,20 @@ function renderLoanDraft(d) {
    live on the Sponsors & guarantors tab (loanSponsors, tracker row 3).
    Sample people, ownership and access [~]. */
 const BPARTS = {
+  /* Lakeview's three, 4 Nov [Tanya: "can you add 3 row to sponsors tab
+     example?"]: it is the deal the borrower explainer walks, and its tab held
+     the lead alone. One of each kind the table draws: an accepted co-sponsor
+     with all three items in motion, an accepted guarantor asked for her PFS
+     only, and a co-sponsor still invited. Ownership 20 + 10 leaves the lead 70
+     (BME_OWN). Received and accepted items surface on Documents as "Not
+     shared with you" rows, as Round Rock's do. Sample people [~]. */
+  "lakeview": [
+    { name: "Daniel Moreau", email: "daniel@moreaucapital.com", role: "Co-sponsor", st: "Accepted",
+      own: 20, access: "deal", items: [["PFS", "accepted"], ["SREO", "received"], ["Bio", "requested"]] },
+    { name: "Grace Lindholm", email: "grace.lindholm@outlook.com", role: "Guarantor", st: "Accepted",
+      own: null, access: "items", items: [["PFS", "received"]] },
+    { name: "Kevin Adeyemi", email: "kevin@adeyemiholdings.com", role: "Co-sponsor", st: "Invited",
+      own: 10, access: "items", items: [["PFS", "requested"], ["SREO", "requested"]], inv: { on: "29 Sep", exp: "13 Oct" } }],
   "round-rock": [
     { name: "Marcus Reyes", photo: "brokers/marcus-reyes.jpg" /* Unsplash photo-1507003211169-0a1dd7228f2d, 192px face crop; lives in brokers/ so it deploys with the rest */, email: "marcus@reyesholdings.com", role: "Co-sponsor", st: "Accepted",
       own: 30, access: "deal", items: [["PFS", "received"], ["SREO", "accepted"], ["Bio", "requested"]] },
@@ -27551,7 +27605,7 @@ const BPARTS = {
         note: "Rachel, Anjali needs your PFS, SREO and bio for Mesa, as on Canyon Ridge. Happy to talk it through first." } }]
 };
 const BME_ITEMS = { "round-rock": [["PFS", "accepted"], ["SREO", "accepted"], ["Bio", "received"]] };
-const BME_OWN = { "round-rock": 70, "canyon-ridge": 75 };
+const BME_OWN = { "round-rock": 70, "canyon-ridge": 75, "lakeview": 70 };
 /* library Avatar, 32px: photo when the person has one, else initials on muted */
 const bPartAv = (photo, name) => `<span class="bav">${photo ? `<img class="bav__img" src="${esc(photo)}" alt="">`
     : esc(name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase())}</span>`;
@@ -28729,6 +28783,16 @@ function loanDocs(d) {
      the profile row lists the deals, so a profile file on a deal names the
      profile. Matched on the filename, the same key bShared reads. */
   const fromProf = x => x.by === "you" && BPROF.pdocs.some(p => p.file === x.name);
+  /* the same actions folded into a kebab, shown only when the card is narrow
+     (.rowacts--fold, see the @container rule). Same order, same words as the
+     icons' tooltips, Replace only where the icon row has it. */
+  const mic = ic => ic.replace(/width="15" height="15"/, 'width="14" height="14"');
+  const foldActs = x => { const id = `bdoc:${d.id}:${x.id}`, open = S.cardMenu === id;
+    return `<div class="rowacts rowacts--fold"><button type="button" class="rowkebab" data-tip="More actions" data-kebab="${esc(id)}" aria-haspopup="menu" aria-expanded="${open}" aria-label="More actions for ${esc(x.name)}">${KEBAB}</button></div>
+      ${open ? `<div class="cardmenu" role="menu" aria-label="Document actions" draggable="false">
+        <button type="button" role="menuitem" data-inert="Opens the file. Not wired in the prototype.">${mic(EYEIC)}View</button>
+        <button type="button" role="menuitem" data-inert="Download is not wired in the prototype.">${mic(DLIC)}Download</button>
+        ${x.by === "you" && bLive(d) ? `<a role="menuitem" href="#/loan/${d.id}/upload/${x.id}">${mic(ULIC)}Replace</a>` : ""}</div>` : ""}`; };
   const fileRow = x => { const [as, vs] = bDocRule(x), own = x.own || "You";
     return `<tr><td class="nm-cell"><b>${esc(x.name)}</b><span>${esc(own)} · ${BDOC_ASSOC[as]}${fromProf(x) ? ` · <a class="bfromprof" href="#/profile/documents">From your profile</a>` : ""}</span></td><td data-l="Category">${esc(x.cat)}</td>
           ${/* who() resolves "not you" to the broker, which was right while
@@ -28738,7 +28802,7 @@ function loanDocs(d) {
           <td data-l="Uploaded by">${x.by === "you" ? "You" : esc(x.own || who(x))}</td><td data-l="Date">${esc(x.on)}</td><td data-l="Version">v${x.ver}</td>
           <td data-l="Visibility">${esc(bDocVis(own, vs))}</td>
           <td data-l="Status"><span class="badge ${BDOC_ST[x.st][1]}">${BDOC_ST[x.st][0]}</span></td>
-          <td class="actions-cell"><div class="rowacts">
+          <td class="actions-cell"><div class="rowacts rowacts--wide">
             <button class="rowkebab" type="button" data-tip="View" aria-label="View ${esc(x.name)}" data-inert="Opens the file. Not wired in the prototype.">${EYEIC}</button>
             <button class="rowkebab" type="button" data-tip="Download" aria-label="Download ${esc(x.name)}" data-inert="Download is not wired in the prototype.">${DLIC}</button>
             ${/* a row with no Replace is simply two actions long, flush right
@@ -28756,7 +28820,7 @@ function loanDocs(d) {
                   every row of the table; the icon column is read only by
                   someone scanning down, which is not what this cell is for. */""}
             ${x.by === "you" && bLive(d) ? `<a class="rowkebab" data-tip="Replace" aria-label="Replace ${esc(x.name)}" href="#/loan/${d.id}/upload/${x.id}">${ULIC}</a>` : ""}
-          </div></td></tr>`; };
+          </div>${foldActs(x)}</td></tr>`; };
   /* ANOTHER SPONSOR'S PERSONAL DOCUMENTS, as a status row with no file
      [tracker row 7: "Other sponsors' personal docs show as a status row
      ('PFS - received'), no file"]. The same three items the Sponsors &
@@ -28780,7 +28844,7 @@ function loanDocs(d) {
           <td data-l="Uploaded by">${esc(r.who)}</td><td data-l="Date"><span class="nil">—</span></td><td data-l="Version"><span class="nil">—</span></td>
           <td data-l="Visibility">${esc(bDocVis(r.who, "own"))}</td>
           <td data-l="Status"><span class="badge ${BITEM_ST[r.v][1]}">${BITEM_ST[r.v][0]}</span></td>
-          <td class="actions-cell"><span class="noact">Not shared with you</span></td></tr>`;
+          <td class="actions-cell"><span class="noact">${/* "Not shared", 4 Nov [Tanya: "'Not shared with you' - to 'Not shared'"]: "with you" said what the row's own shape already says - no filename, no View, no Download - and the short form leaves the narrow table more room. */""}Not shared</span></td></tr>`;
   const rows = have.map(fileRow).join("") + shared.map(sharedRow).join("");
   return `${needBlock}
     <div class="card bdocs">
@@ -28789,13 +28853,25 @@ function loanDocs(d) {
             checklist's "2 documents needed". Here the rows are already in
             front of you and the table is short, so the badge restated what
             the eye had: a number to reconcile rather than read. */""}
-      <div class="card__hd"><h2>On file</h2></div>
+      ${/* Upload documents sits in this header since 4 Nov [Tanya: "is it
+            better to put this 'Upload documents' button to the section header,
+            oposite to 'On file'?", then "do recommended"]. Outline sm, the
+            Borrower Profile list cards' "＋ Add" step; the Sponsors &
+            guarantors tab beside this one already heads its card with its add
+            action. See the note at the foot of this function for where it was. */""}
+      <div class="card__hd"><h2>On file</h2>${bLive(d) ? `<a class="btn btn--outline btn--sm" href="#/loan/${d.id}/upload/new">Upload documents</a>` : ""}</div>
       <div class="card__ct">${rows ? `<div class="tblwrap"><table class="t"><thead><tr><th>Document</th><th>Category</th><th>Uploaded by</th><th>Date</th><th>Version</th><th>Visibility</th><th>Status</th><th></th></tr></thead>
         <tbody>${rows}</tbody></table></div>`
         : `<div class="empty empty--sm"><b>No documents yet</b><p>What you upload is shared with your advisor only. Lenders see documents through your advisor.</p></div>`}
       </div>
     </div>
-    ${/* the action belongs to the page, not to the inventory [Tanya, 4 Oct].
+    ${/* MOVED 4 Nov: Upload documents is in the On file header now (see
+          there). Below the cards it fell under every file the borrower had,
+          and off the fold on a long list; the checklist rows above clear
+          themselves with their own upload icons, so this button is for files
+          nobody asked for, and those land in On file. The history follows.
+
+          the action belongs to the page, not to the inventory [Tanya, 4 Oct].
           It sat in the On file card's foot, which read as "do this to the
           table" - but Upload is how a borrower clears the checklist ABOVE it,
           not something done to the rows it was sitting under. Below both cards
@@ -28816,12 +28892,11 @@ function loanDocs(d) {
           was taps on a deal asking for several documents; what it cost was the
           clause. The checklist above is the queue that replaces it - each row
           opens the dialog with its own category already matched, and the
-          confirmation chains to the next with "Next document". */""}
-    ${bLive(d) ? `<div class="docnote docnote--page">
-      ${/* full size, not btn--sm [Tanya, 7 Oct]: this is the page's own action
-            under the card, not a control inside a card header, so it takes the
-            36px step the other page-level buttons take. */""}
-      <a class="btn btn--outline" href="#/loan/${d.id}/upload/new">Upload documents</a></div>` : ""}`;
+          confirmation chains to the next with "Next document".
+
+          It was full size, not btn--sm, from 7 Oct to 4 Nov [Tanya, 7 Oct]:
+          the page's own action under the card took the 36px step of the other
+          page-level buttons. In a card header it takes the sm step. */""}`;
 }
 
 /* 03.6 Upload flow [sheet]: one requested item at a time, from a task or a
