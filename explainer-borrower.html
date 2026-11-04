@@ -27604,9 +27604,15 @@ const BPARTS = {
      (BME_OWN). Received and accepted items surface on Documents as "Not
      shared with you" rows, as Round Rock's do. Sample people [~]. */
   "lakeview": [
-    { name: "Daniel Moreau", email: "daniel@moreaucapital.com", role: "Co-sponsor", st: "Accepted",
+    /* Daniel's and Grace's faces, 4 Nov [Tanya: "can you add stock images for
+       some of avatars?"]: Unsplash, 192px face crops (cropped by hand from
+       the full photo, the faces= crop left them small at 32) beside the broker
+       headshots in brokers/, so a deploy carries them. Kevin keeps initials:
+       the Overview card and the Sponsors table pass a photo only for an
+       Accepted row, and his invitation is still open. */
+    { name: "Daniel Moreau", photo: "brokers/daniel-moreau.jpg" /* Unsplash photo-1472099645785-5658abf4ff4e */, email: "daniel@moreaucapital.com", role: "Co-sponsor", st: "Accepted",
       own: 20, access: "deal", items: [["PFS", "accepted"], ["SREO", "received"], ["Bio", "requested"]] },
-    { name: "Grace Lindholm", email: "grace.lindholm@outlook.com", role: "Guarantor", st: "Accepted",
+    { name: "Grace Lindholm", photo: "brokers/grace-lindholm.jpg" /* Unsplash photo-1580489944761-15a19d654956 */, email: "grace.lindholm@outlook.com", role: "Guarantor", st: "Accepted",
       own: null, access: "items", items: [["PFS", "received"]] },
     { name: "Kevin Adeyemi", email: "kevin@adeyemiholdings.com", role: "Co-sponsor", st: "Invited",
       own: 10, access: "items", items: [["PFS", "requested"], ["SREO", "requested"]], inv: { on: "29 Sep", exp: "13 Oct" } }],
@@ -36010,6 +36016,12 @@ setInterval(() => {
 /* Borrower from the first frame, set the way the prototype's own role link
    sets it (the data-setrole branch), then routed. */
 S.role = "borrower"; S.bFresh = false; S.lFresh = false; S.bmsg = null; S.btab = "ov"; S.cardMenu = null;
+/* Priya with her face on, 4 Nov [Tanya: "can you add stock images for some
+   of avatars?"]: the state after Profile's Upload photo (data-bphoto), so
+   the rail's account button, the Overview people card and the Sponsors
+   table show her headshot. The prototype keeps her photo empty until Upload
+   is pressed; only the explainer starts with it. */
+BPROF.photo = BPROF_PHOTO;
 route();
 /* the labelled rail at any width, as in the broker explainer */
 S.navAuto = false; applyNav(false);
