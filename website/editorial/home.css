@@ -61,7 +61,8 @@
 .step-list>li:not(:last-child)::before{content:"";position:absolute;top:var(--mid);bottom:calc(var(--mid) * -1);left:calc(var(--s) * .7071 - .75px);width:1.5px;background:repeating-linear-gradient(180deg,var(--bronze) 0 12px,transparent 12px 17px,var(--bronze) 17px 19px,transparent 19px 24px);clip-path:inset(0 0 calc((1 - var(--p,1)) * 100%) 0)}
 /* The title follows its number at about a word space and a half, 16px (Tanya, 5 Nov: "move labels closer to numbers");
    the paragraph keeps 24px from the title through its own left padding. */
-.step-list>li{position:relative;display:grid;grid-template-columns:66px minmax(0,1fr) minmax(0,1fr);gap:8px 14px;align-items:baseline;padding-bottom:56px}
+/* 32px between steps, was 56 (Tanya, 5 Nov: "make smaller 3 vertical gaps between items here"); phones 28, was 40. */
+.step-list>li{position:relative;display:grid;grid-template-columns:66px minmax(0,1fr) minmax(0,1fr);gap:8px 14px;align-items:baseline;padding-bottom:32px}
 .step-list>li:last-child{padding-bottom:0}
 .step-list>li::after{content:"";position:absolute;z-index:1;top:var(--mid);left:calc(var(--s) * .2071);box-sizing:border-box;width:var(--s);height:var(--s);margin-top:calc(var(--s) / -2);border:1.2px solid var(--bronze);background:var(--bronze);transform:rotate(45deg);transition:background 300ms ease,opacity 300ms ease}
 /* The start diamond is 8.5px (Brokers' 12px flag, tip to tip), centred on the same line as the 8.27px nodes. */
@@ -190,7 +191,7 @@
 @media(max-width:600px){
   .role-card{padding:20px}
   .role-name{font-size:26px}
-  .step-list>li{padding-bottom:40px}
+  .step-list>li{padding-bottom:28px}
   .role-actions .button{width:100%}
 }
 @media(prefers-reduced-motion:reduce){.side-panel.tab-enter{animation:none}.role-card,.role-card::before,.role-arrow{transition:none}.role-card:is(:hover,:focus-visible),.role-card:is(:hover,:focus-visible) .role-arrow{transform:none}}
