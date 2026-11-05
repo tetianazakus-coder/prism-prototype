@@ -54,9 +54,11 @@
 /* Full cards: a label leads every list (Essential "Includes:", the others "Everything in X, plus:") so the three lists start
    level, and Pro's territory line sits under it. The label takes the Brokers walkthrough's selected step title ("Create deal",
    .walk-tabs button[aria-selected=true] b): DM Sans 15/700 in ink. Tanya, 5 Nov, tried the .eyebrow (uppercase bronze)
-   first, then "use this font" on "Create deal"; pricing-card-everything-in-lead-line-research. */
-.plan-includes{margin-top:22px;font:700 15px/1.6 var(--sans);color:var(--ink)}
-.plan-includes+.feature-list{margin-top:6px}
+   first, then "use this font" on "Create deal"; pricing-card-everything-in-lead-line-research. Then set in Figma (Pricing
+   241:2, Tanya, 5 Nov: "I updated this font weight ... and increased this padding below that titles slightly"): 600, not
+   700, and 8px to the list, not 6. */
+.plan-includes{margin-top:22px;font:600 15px/1.6 var(--sans);color:var(--ink)}
+.plan-includes+.feature-list{margin-top:8px}
 .plan-addon{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 /* "talk to us" is the comparison note's "Read the Broker Agreement" link (.compare-notes .inline-link): ink with the
    base .inline-link's 1px rule always under it, no hover change (Tanya, 5 Nov: "use this style for this link"). It had
