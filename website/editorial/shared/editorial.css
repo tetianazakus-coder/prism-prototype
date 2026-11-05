@@ -87,7 +87,19 @@ nav{font-size:14px;gap:25px}
 .plan .plan-top>.micro{letter-spacing:0;margin:0;line-height:1}
 .billing button{font-size:14px;min-height:44px}
 .billing small{font-size:11px}
+/* With motion, the toggle's navy fill is one span that slides to the pressed button (motion.js adds .sliding and
+   .billing-fill), and a plan price's changing digits roll in slots that clip them (.price-slot). Pricing motion review,
+   options 1 and 2 (Tanya, 5 Nov: "add recommended"). */
+.billing.sliding{position:relative;isolation:isolate}
+.billing.sliding button{position:relative;transition:color .3s}
+.billing.sliding button[aria-pressed=true]{background:transparent}
+.billing-fill{position:absolute;top:4px;bottom:4px;left:0;background:var(--navy);z-index:-1}
+.price-slot{display:inline-grid;overflow:clip;vertical-align:top}
+.price-slot>span{grid-area:1/1}
 .pricing-footnote{font-size:14px}
+/* The Broker Agreement link goes ink, like Pricing's own note link (.compare-notes .inline-link): in muted grey its 1px rule
+   (currentColor) read darker than its 14px strokes, though both were rgb(88,105,115) (Tanya, 5 Nov). */
+.pricing-footnote .inline-link{color:var(--ink)}
 table{font-size:13px}
 .faq-grid{grid-template-columns:4fr 8fr;gap:80px}
 .faq-items summary,.comparison>summary{font-size:17px;padding-block:23px}

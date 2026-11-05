@@ -1,12 +1,49 @@
 /* Pricing page (/pricing): only what it adds to ../shared/. Load order: base.css, editorial.css, this file, type.css. */
 
-/* Header: the Brokers hero grid with no photo; the doc's callout takes the visual column, set like a pull quote on
-   the bronze rule the plan cards use. */
-.price-head .hero-grid{align-items:end}
+/* Header: the Brokers hero grid with no photo; the doc's callout takes the visual column as a worked sum (Option A of
+   assets/website/pricing-hero-options/, after ClickUp and incident.io on Mobbin), centred on the heading. A small
+   bronze label over ruled rows, each a name on the left and a figure on the right; the figures sit in Bodoni on
+   tabular numerals so the amounts line up at the right edge. The total closes on the ink rule, its number in the
+   heading's bronze italic. It was set upright for a while (the italic 1 read as an I and its hairline + floated high:
+   "what alternative font for 10+", "do recommended"); with the + now small, raised and stroked, it went back to
+   italic (Tanya, 5 Nov: "make 10+ italic"). */
+.price-head .hero-grid{align-items:center}
 .price-head .hero-copy{padding-bottom:56px}
-.price-callout{margin:0 0 56px;border-top:1px solid var(--bronze);padding-top:26px;max-width:520px;justify-self:end}
-.price-callout p{font:400 clamp(26px,2.3vw,34px)/1.3 var(--serif);letter-spacing:-.02em;color:var(--ink)}
-.price-callout em{font-style:italic;color:var(--bronze)}
+/* The ledger sits in a white card: Option B of the card review (../../ledger-card-options/; Tanya, 5 Nov: "should we make it
+   inside a card?", then "build B on the pricing page"). It is the testimonials' .quote-card (editorial.css): the site's
+   white, a 1px hairline border, square corners, no shadow. The padding adds to the 500 max width, so the rows keep it;
+   inside the card the label's rule is a hairline, since the card edge does the bronze rule's job. */
+.ledger{justify-self:end;width:100%;max-width:564px;margin:0 0 56px;padding:28px 32px 26px;background:var(--white);border:1px solid var(--line)}
+.ledger-cap{font-size:12px;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:var(--bronze);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.ledger dl{margin:0}
+.ledger dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 24px;padding:15px 0 14px;border-bottom:1px solid var(--line)}
+.ledger dt{font-size:16px;line-height:1.4;color:var(--muted)}
+.ledger dt small{display:block;font-size:13px;color:var(--muted);opacity:.85;margin-top:2px}
+.ledger dd{margin:0;font:400 28px/1.1 var(--serif);letter-spacing:-.02em;color:var(--ink);font-variant-numeric:lining-nums tabular-nums;text-align:right}
+.ledger .total{border-bottom:0;border-top:1px solid var(--ink);margin-top:-1px;padding-top:18px}
+/* Balanced, so where the label wraps (1024, phone) it breaks as "That covers / Accelerator for", never leaving "for" alone. */
+.ledger .total dt{color:var(--ink);font-weight:500;text-wrap:balance}
+/* Option 2 of the total-row review (../../ledger-total-options/, Tanya, 5 Nov: "build this"): 10+ at 48 and years at 26
+   (40 and 22 on phone), so the total sits in the rows' scale and the ink rule does the work. */
+.ledger .total dd{font-size:26px}
+/* Then "10+ years" took the rows' figure style, Bodoni 28 (24 on phone) as $2,000,000, in the bronze italic (Tanya, 5 Nov:
+   "make '10+ years' same font as this [$2,000,000], but bronze color and italic"): the whole phrase is one size, so the
+   figure's own size and the negative margin that pulled years in no longer apply. */
+/* 32px, a step over the rows' 28 so the total leads (28 on phone, over their 24): "make it 32px". */
+.ledger .total dd{font-size:32px;font-style:italic;color:var(--bronze)}
+/* 10+ inherits the phrase's style. (At 48px it had a -.06em margin to pull years in: "move 10+ closer to 'years'",
+   "closer"; at one size the word space is right as it is.) */
+.ledger .total em{font:inherit;letter-spacing:inherit;color:inherit}
+/* With motion the total's ink rule is a span that draws from the left (motion.js workSum, Pricing motion review option 3);
+   it sits exactly on the border it replaces. */
+.motion .ledger .total{position:relative;border-top-color:transparent}
+.ledger-rule{position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--ink);transform-origin:left}
+/* The + placed as on Home's proof stats (base.css .proof strong>span): .7 of the figure, top-aligned, its ink level
+   with the digits' tops, 2px off them (Tanya, 5 Nov: "make '+' similar to this", the 10,000+ banks figure). It keeps
+   Bodoni's thin + ("leave prev thin +, but make in smaller and put to the top as on reference"), with a .03em stroke
+   toward the digits' weight ("make + visualy same weight as 10", then "slightly thinner", "thinner"). At the 48px
+   figure it was .5em lifted -.15em; at 28px .5em was 14px and sat 4px above the digits, so it went to .7em at 0. */
+.ledger .total em>span{font-size:.7em;line-height:1;vertical-align:top;position:relative;top:0;margin-left:2px;-webkit-text-stroke:.03em currentColor}
 
 /* Plans follow the header directly, so the section keeps only a short top padding, clear of the header's rule; the
    toggle sits right, over Pro. */
@@ -14,18 +51,28 @@
 .plans-head{justify-content:flex-end;margin-top:0}
 .plans-head .billing{margin-top:0}
 
-/* Full cards: "Everything in X, plus:" leads the list, and Pro's territory line sits under it. */
-.plan-includes{margin-top:22px;font-size:14px;line-height:1.6;color:var(--muted)}
+/* Full cards: a label leads every list (Essential "Includes:", the others "Everything in X, plus:") so the three lists start
+   level, and Pro's territory line sits under it. The label takes the Brokers walkthrough's selected step title ("Create deal",
+   .walk-tabs button[aria-selected=true] b): DM Sans 15/700 in ink. Tanya, 5 Nov, tried the .eyebrow (uppercase bronze)
+   first, then "use this font" on "Create deal"; pricing-card-everything-in-lead-line-research. */
+.plan-includes{margin-top:22px;font:700 15px/1.6 var(--sans);color:var(--ink)}
 .plan-includes+.feature-list{margin-top:6px}
 .plan-addon{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+/* "talk to us" is the comparison note's "Read the Broker Agreement" link (.compare-notes .inline-link): ink with the
+   base .inline-link's 1px rule always under it, no hover change (Tanya, 5 Nov: "use this style for this link"). It had
+   taken the Brokers "Compare all features" draw-in rule and bronze hover ("use same button as here", 08954e7). */
 .plan-addon .inline-link{color:var(--ink)}
 
-/* Comparison: one table, so the plan columns line up across groups. Each feature group is a disclosure, collapsed by
-   default with "See what's included" (Tony's ask, requirements doc Pricing intro); support and revenue share always show. */
+/* Comparison: one table, so the plan columns line up across groups. The four feature groups are plain headings, always
+   open: the doc asked for collapsed groups behind "See what's included" (Tony), Tanya overrode it 2 Nov ("all should be
+   expanded by default and not collapsible"); re-checked 5 Nov, pricing-comparison-collapsible-groups-research. */
 .compare table{table-layout:fixed;min-width:0}
 .compare thead th{font:400 24px/1.2 var(--serif);letter-spacing:-.02em;padding-bottom:16px;border-bottom:1px solid var(--ink)}
 .compare thead th:first-child{width:40%}
-.compare-group th{padding:22px 0;font-size:17px;font-weight:500;text-align:left}
+/* Group names at 600, a weight step over the 15/500 rows; 500 sat too close to them (Tanya, 5 Nov: "categories
+   subheaders text is not outstanding enough"; a Bodoni 26 version was tried and reverted for "previous option but
+   bigger weight"). */
+.compare-group th{padding:22px 0;font-size:17px;font-weight:600;text-align:left}
 .compare-always th,.compare-always td{border-bottom-color:var(--line)}
 .compare-always tr:first-child>*{border-top:1px solid var(--ink)}
 .compare-notes{margin-top:24px;display:grid;gap:8px;font-size:14px;color:var(--muted);max-width:760px}
@@ -33,13 +80,16 @@
 
 @media(max-width:850px){
   .price-head .hero-copy{padding-bottom:32px}
-  .price-callout{justify-self:start;margin-bottom:48px}
+  .ledger{justify-self:start;margin-bottom:48px}
+  .ledger dd{font-size:24px}
+  .ledger .total dd{font-size:28px}
   .plan-includes,.plan-addon{grid-column:1/-1}
   .plans-head{justify-content:flex-start}
 }
 
 /* Phones: no sideways scroll. Each feature row stacks its name over three labelled values. */
 @media(max-width:600px){
+  .ledger{margin:8px 0 48px;padding:22px 20px 20px}
   .compare table,.compare tbody,.compare tr,.compare th,.compare td{display:block}
   .compare thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
   .compare tbody[id] tr,.compare-always tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 12px;border-bottom:1px solid var(--line);padding:14px 0}
@@ -50,4 +100,18 @@
   .compare-always tr:first-child{border-top:1px solid var(--ink)}
   .compare-always tr:first-child>*{border-top:0}
   .compare-group th{font-size:16px;padding:18px 0}
+}
+
+/* Closing band: a paper card on the city at dusk (Option G of the closing band review, assets/website/final-cta-options/,
+   after Blue Apron and Programa on Mobbin; Tanya, 5 Nov: "use this option"). Navy at 55% over the photo keeps the card the
+   brightest thing in the band. final-city-dusk.jpg is hero-city-dusk.jpg at 1800px, quality 40, like Home's
+   final-multifamily.jpg: 340 KB instead of 925 KB. The card keeps .final-grid so motion.js still reveals its children
+   (.final-grid > *); its grid is reset to one centred column. The padding is the shared .section rule's. */
+.final.final-photo{background:linear-gradient(rgba(14,28,53,.55),rgba(14,28,53,.55)),url(../img/final-city-dusk.jpg) center/cover var(--navy)}
+.final .final-card{display:block;max-width:620px;margin:24px auto;padding:56px 48px;background:var(--paper);color:var(--ink);text-align:center}
+.final-card h2{font-size:clamp(40px,4vw,56px);margin:0 0 16px}
+.final-card p{margin:0 0 30px;font-size:16px;line-height:1.7;color:var(--muted)}
+.final-card .closing-actions{justify-content:center}
+@media(max-width:600px){
+  .final .final-card{margin:0;padding:40px 24px}
 }

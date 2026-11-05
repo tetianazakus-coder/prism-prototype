@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared/base.css?v=20261102a">
-  <link rel="stylesheet" href="../shared/editorial.css?v=20261105d">
-  <link rel="stylesheet" href="pricing.css?v=20261102d">
+  <link rel="stylesheet" href="../shared/editorial.css?v=20261105f">
+  <link rel="stylesheet" href="pricing.css?v=20261105y">
   <link rel="stylesheet" href="../shared/type.css?v=20261102c">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
   <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
@@ -21,7 +21,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
   <script src="../shared/site.js?v=20261102e" defer></script>
-  <script src="../shared/motion.js?v=20261105l" defer></script>
+  <script src="../shared/motion.js?v=20261105o" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -48,12 +48,21 @@
   <section class="hero price-head" aria-labelledby="hero-title">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="tiny-mark" aria-hidden="true"></span> Pricing</p>
         <h1 id="hero-title"><span>Simple plans</span><em>for independent brokers.</em></h1>
         <div class="hero-lower"><p class="hero-description">Start with 14 days of Accelerator, free. No card, no credits, cancel anytime.</p></div>
       </div>
-      <aside class="hero-visual price-callout" aria-label="Return on one closed deal">
-        <p>One $2M close at a 1% fee = <em>$20,000.</em> That covers Accelerator for more than 10 years.</p>
+      <!-- The doc's callout ("One $2M close at a 1% fee = $20,000. That covers Accelerator for more than 10 years.") set
+           as a worked sum: Option A of the header review, assets/website/pricing-hero-options/ (Tanya, 5 Nov: "build
+           option A on the pricing page"). The $1,908 row is the annual Accelerator price from the plan card and the
+           Brokers page ROI line; 10+ holds on annual billing only (20,000 / 1,908 = 10.5). -->
+      <aside class="hero-visual ledger" aria-label="What one closed deal pays for">
+        <p class="ledger-cap">One closed deal, worked through</p>
+        <dl>
+          <div><dt>One closed loan</dt><dd>$2,000,000</dd></div>
+          <div><dt>Your fee, at 1%</dt><dd>$20,000</dd></div>
+          <div><dt>Accelerator for a year<small>Billed annually, $159 a month</small></dt><dd>$1,908</dd></div>
+          <div class="total"><dt>That covers Accelerator for</dt><dd><em>10<span>+</span></em> years</dd></div>
+        </dl>
       </aside>
     </div>
   </section>
@@ -61,7 +70,7 @@
   <section id="plans" class="pricing section">
     <div class="wrap"><div class="section-heading plans-head"><div class="billing" role="group" aria-label="Billing period"><button data-billing="monthly" aria-pressed="false">Monthly</button><button data-billing="annual" aria-pressed="true">Annual <small>Save 20%</small></button></div></div>
       <div class="plans">
-        <article class="plan"><span class="plan-top">START HERE</span><h3>Essential</h3><p class="plan-for">For trying LenderPrism, or one deal at a time.</p><p class="price">$0</p><p class="price-note">Free plan</p><a class="button outline" href="https://lenderprism.com/signup?role=BROKER&amp;plan=essential_license">Start free <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><ul class="feature-list"><li>AI capital matching + CRM</li><li>1 active deal</li><li>3 contact reveals a month</li><li>Loan requests to up to 3 lenders</li><li>Community support</li></ul></article>
+        <article class="plan"><span class="plan-top">START HERE</span><h3>Essential</h3><p class="plan-for">For trying LenderPrism, or one deal at a time.</p><p class="price">$0</p><p class="price-note">Free plan</p><a class="button outline" href="https://lenderprism.com/signup?role=BROKER&amp;plan=essential_license">Start free <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><!-- [💡 rec] "Includes:" is ours, not the doc's: Essential gets a label like the other two so the lists start level. Pending Tony's OK on the copy. --><p class="plan-includes">Includes:</p><ul class="feature-list"><li>AI capital matching + CRM</li><li>1 active deal</li><li>3 contact reveals a month</li><li>Loan requests to up to 3 lenders</li><li>Community support</li></ul></article>
         <article class="plan featured"><span class="plan-top">MOST POPULAR<span class="micro">No card required</span></span><h3>Accelerator</h3><p class="plan-for">For active brokers running several deals.</p><p class="price"><span data-price="accelerator">$159</span><small>/month</small></p><p class="price-note" data-note="accelerator">$1,908 billed annually · $199 monthly</p><a class="button" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/broker">Start 14-day trial <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><p class="plan-includes">Everything in Essential, plus:</p><ul class="feature-list"><li>Unlimited active deals</li><li>Unlimited in-app outreach</li><li>Contact reveals with fair-use cap <span class="placeholder">[number]</span></li><li>Prospector research requests <span class="placeholder">[number]</span>/mo</li><li>Email support</li></ul></article>
         <article class="plan"><span class="plan-top">DEAL FLOW</span><h3>Pro</h3><p class="plan-for">For brokers who want leads and visibility.</p><p class="price"><span data-price="pro">$399</span><small>/month</small></p><p class="price-note" data-note="pro">$4,788 billed annually · $499 monthly</p><a class="button outline" href="https://lenderprism.com/signup?role=BROKER&amp;plan=pro_license&amp;billing=annual" data-billed>Start with Pro <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><p class="plan-includes">Everything in Accelerator, plus:</p><ul class="feature-list"><li>House-sourced borrower leads (success fee per agreement)</li><li>Lender Spotlight speaker series</li><li>Broker Spotlight + public listing on lenderprism.com</li><li>Team-prepared branded deal memo</li><li>Phone support</li></ul><p class="plan-addon">Territory exclusivity — <button class="inline-link" data-territory>talk to us</button></p></article>
       </div>
@@ -95,7 +104,8 @@
     </div></div>
   </section>
 
-  <section class="final dark section"><div class="wrap"><div class="final-grid"><h2>Try Accelerator <br>free for <em>14 days.</em></h2><div><div class="closing-actions"><a class="button light" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/broker">Start free trial</a><a class="text-link" href="https://calendly.com/tony_talamas/lenderprism-investorprism-demo-intro" target="_blank" rel="noopener">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span><span class="sr-only"> (opens in a new tab)</span></a></div></div></div></div></section>
+  <!-- [💡 rec] The terms line is the doc's Pricing §1 subline, repeated here by us (§7 has only the title and buttons). Pending Tony's OK on the copy. -->
+  <section class="final final-photo section"><div class="wrap"><div class="final-grid final-card"><h2>Try Accelerator <br><em>free for 14 days.</em></h2><p>No card, no credits, cancel anytime.</p><div class="closing-actions"><a class="button" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/broker">Start free trial</a><a class="text-link" href="https://calendly.com/tony_talamas/lenderprism-investorprism-demo-intro" target="_blank" rel="noopener">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span><span class="sr-only"> (opens in a new tab)</span></a></div></div></div></section>
 </main>
 
 <footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="../"><img src="../img/logo-mark.svg" width="29" height="34" alt=""><span>Lender<em>Prism</em></span></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span> <br><span class="placeholder">[Email address]</span></div><div><h2>Solutions</h2><a href="../brokers/">For Brokers</a><a href="../borrowers/">For Borrowers</a><a href="../lenders/">For Lenders</a><a href="../find-a-broker/">Find a broker</a><a href="../pricing/">Pricing</a></div><div><h2>Company</h2><a href="../about/">About</a><a href="../about/#contact">Contact</a><button data-unavailable="Broker Agreement">Broker Agreement</button><h2 class="platforms-label">Our platforms</h2><a href="../">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><p>Market notes and new lenders, <br>once a month.</p><form id="newsletter-form"><label class="sr-only" for="newsletter-email">Email for market notes</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><p class="disclaimer">LenderPrism is a commercial real estate financing platform and brokerage network. We are not a lender. Commercial-purpose financing only.</p></div></footer>

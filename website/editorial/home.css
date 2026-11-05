@@ -80,13 +80,23 @@
    Set as the Brokers walkthrough is (Tanya, 5 Nov: "align this section with the one we have in Broker"): ruled tabs
    with a Bodoni number, a 15px name and a 14px line, the open one under a 2px ink rule, and the screen in the same
    framed tray (#e4e8ef, 22px padding, 1px #c6cddb) with the same shadow, 40px from the list. The list is 280px, not
-   Brokers' 260, so the 222px "Explore broker plans" button fits the text column; 270px with a 28px gap from 1150px.
+   Brokers' 260; it was set so the 222px "Explore broker plans" button fit the text column, which now reads "Learn more"
+   like the other two (5 Nov); 270px with a 28px gap from 1150px.
    The frame is drawn once on the list, so it stays still while the screens cross-fade inside it.
    Switching (Tanya, 2 Nov: "smooth animation for tabs switching, not just instant switch"): the closing region folds
    shut as the opening one unfolds (grid rows 0fr to 1fr), the text fades in once the fold is under way, and the screens
    cross-fade in place with a short rise. */
 .sides{background:#eef1f6}
 .sides .wrap{container-type:inline-size}
+/* The intro line runs on one line: it needs 437px at 16px, so the shared 400px cap (.section-heading>p, components.css)
+   broke it before "works in." (Tanya, 5 Nov: "should we make this text one line?"). One line from about 800px up; below
+   that it wraps, balanced into two even lines. */
+.sides .section-heading>p{max-width:none;text-wrap:balance}
+/* The line sits on the title's last baseline ("of the deal."): aligned by box bottoms (align-items:end) it sat 1.8px under
+   it at 1440, its 27.2px line box deeper below the baseline than the title's 56px one (Tanya, 5 Nov: "align text on
+   bottom line with the title"). It holds from 601px, where the two sit side by
+   side, so it also replaces the shared top alignment at 601-850px (base.css); phones stack them. */
+.sides .section-heading{align-items:last baseline}
 .sides-list{--ease:cubic-bezier(.4,0,.2,1);--col:280px;--gap:40px;--frame:calc(100cqi - var(--col) - var(--gap));position:relative;min-height:calc((var(--frame) - 46px) * 10 / 16 + 46px);padding-right:calc(100% - var(--col))}
 .sides-list::after{content:"";position:absolute;top:0;right:0;width:var(--frame);height:calc((var(--frame) - 46px) * 10 / 16 + 46px);box-sizing:border-box;background:#e4e8ef;border:1px solid #c6cddb;pointer-events:none}
 .side-item{border-top:1px solid #c0c8d6}
@@ -119,7 +129,26 @@
 
 /* Who runs your deal: live Pro brokers from Find a broker; the "+N more" count is muted as on that page. */
 .person-card .more{color:var(--muted);white-space:nowrap}
-.people-more{margin-top:40px}
+/* "Find a broker" is the section's see-all link, in the heading's right column under the line, not on a row of its own
+   under the cards (Tanya, 5 Nov: "place Find a broker cta on the right side"). From 601px the heading is a grid: the
+   title spans both rows and the 1fr second row takes any height it has over the line, so the link stays right under the
+   line; phones stack all three. The link stays ink, not the line's muted grey it would inherit from .section-heading>p.
+   Tops level from 851px (option B of ../people-heading-alignment-options/; Tanya, 5 Nov: "Build B"): the shared end
+   alignment left the line 30px under the title's capitals at 1440, so the two sides start together instead, the line's
+   cap top on the title's. The title's cap top is .147em under its box (Bodoni Moda at 1.08), the line's 7.8px (DM Sans
+   16 at 1.7); both are per line, so the offset holds whether the title takes two lines or three. The link then ends
+   below the title's last line (20px at 1440, 2 at 1024), the trade taken over option A's bottoms level. */
+.people-more{margin-top:12px}
+.people-more .text-link{color:var(--ink)}
+@media(min-width:601px){
+  .people .section-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;row-gap:0}
+  .people .section-heading>h2{grid-row:1/3}
+  .people .section-heading>.people-more{grid-column:2}
+}
+@media(min-width:851px){
+  .people .section-heading{align-items:start}
+  .people .section-heading>p:not(.people-more){margin-top:calc(.147 * clamp(40px, 3.6vw, 52px) - 7.8px)}
+}
 .people-more .text-link{border:0;padding-block:8px}
 
 /* Testimonials: sample quotes and stock faces until Tony confirms real ones (2 Nov); the carousel styles come from editorial.css. */

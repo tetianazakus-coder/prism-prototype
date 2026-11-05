@@ -29,7 +29,10 @@
 .platform-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .platform-card{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:32px 36px 36px;background:var(--white);border:1px solid var(--line);border-top:2px solid var(--bronze)}
 .platform-card h3{font-size:clamp(32px,2.8vw,40px)}
-.platform-card>p:not(.eyebrow){font-size:16px;line-height:1.7;color:var(--muted);max-width:420px}
+/* No width cap: the card padding bounds the line (522px inside at 1440). The 420px cap broke InvestorPrism's "Where
+   syndicators showcase deals to accredited investors." (440px) before "investors." (Tanya, 5 Nov: "should we make one line
+   text here?"). One line from 1280px and with the cards stacked (601-850px); where it wraps, balanced into two even lines. */
+.platform-card>p:not(.eyebrow){font-size:16px;line-height:1.7;color:var(--muted);text-wrap:balance}
 .platform-card>:last-child{margin-top:auto}
 .platform-card .platform-here{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);padding-top:8px}
 .platform-card .text-link{border:0;padding-block:8px 0}
@@ -62,7 +65,13 @@
   .platform-pair:has(>:first-child:hover){grid-template-columns:1.5fr 1fr}
   .platform-pair:has(>:last-child:hover){grid-template-columns:1fr 1.5fr}
   .platform-pair>.platform-card{position:relative;transition:translate .8s cubic-bezier(.36,.33,0,1),opacity 1.2s cubic-bezier(.36,.33,0,1),border-color .3s cubic-bezier(.22,1,.36,1)}
-  .platform-pair>.platform-card:hover{translate:.25em -.25em}
+  /* The step is sideways only: Concrete's .25em lift set the hovered card's top and foot 4px off the other's, and the
+     two always share one height (Tanya, 5 Nov: "cards always should be one height"). */
+  .platform-pair>.platform-card:hover{translate:.25em 0}
+  /* The description's height, set in px by motion.js, follows the columns on their .8s curve: where the narrowed card's
+     text wraps to a second line mid-grow (1280-1440), the row eases 27px taller instead of jumping ("make smooth
+     transition for the height change"). */
+  .platform-card>p:not(.eyebrow):not(.platform-here){transition:height .8s cubic-bezier(.36,.33,0,1)}
   /* !important: the block reveal (motion.js) leaves its end state, opacity 1, inline on each card. */
   .platform-pair:has(>:hover)>:not(:hover){opacity:.5!important}
   /* The stack: the other layer hatched, as the Brokers hatch; the card's own layer (.own) filled by its <i>. Bronze
