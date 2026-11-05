@@ -11,7 +11,13 @@
    The walkthrough ("See a deal go from posted to quoted", 2 Nov) adds three more on one deal, played as one
    click-to-play film across its tabs: create (Riverside's facts go in and 15 lenders match), matches (one more lender
    saved, the loan request sent to four) and contacted (two replies logged).
-   The flows use only the prototype's own screens, enums and demo data; nothing in them is a shipped-product claim. */
+   The flows use only the prototype's own screens, enums and demo data; nothing in them is a shipped-product claim.
+   Home's "Built for every side of the deal" uses the same engine for its three side screens (Tanya, 5 Nov: "make nav
+   sidebar collapsed; make same interaction/animation logic for dropdown/status change as on broker page"): the
+   broker's Deals board, the borrower's My deals and the lender's Requests, rebuilt from the screenshots they replace
+   with the collapsed rail. A side plays when it opens (the open one first when the list is 75% down the viewport), as
+   one short story each: a status picked from the board's own select, an advisor taking a deal, a request arriving
+   and being saved. Their sample rows are the screenshots' sandbox data [~]. */
 (() => {
   'use strict';
   const crops = [...document.querySelectorAll('[data-screen]')];
@@ -41,11 +47,25 @@
     x: '<path d="M18 6 6 18M6 6l12 12"/>',
     upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>',
     kebab: '<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+    inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+    list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+    board: '<rect x="3" y="3" width="7" height="13" rx="1"/><rect x="14" y="3" width="7" height="9" rx="1"/>',
+    sliders: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'
   };
-  const rail = active => `<div class="ps-rail"><div class="ps-rail-top"><span class="ps-mark"></span></div><div class="ps-rail-menu">${
-    ['home', 'deals', 'lenders', 'opps', 'msg', 'alarm', 'book', 'users'].map(name =>
-      `<i class="${name === active ? 'on' : ''}${name === 'book' ? ' gap' : ''}">${svg(I[name])}</i>`).join('')}</div></div>`;
+  // The broker's menu by default; Home's borrower and lender screens pass their own. Home's screens also pass the
+  // person's initials, and their rail ends as the prototype's does: Help, Account and the avatar under a rule.
+  const rail = (active, menu = ['home', 'deals', 'lenders', 'opps', 'msg', 'alarm', 'book', 'users'], who) => `<div class="ps-rail"><div class="ps-rail-top"><span class="ps-mark"></span></div><div class="ps-rail-menu">${
+    menu.map(name =>
+      `<i class="${name === active ? 'on' : ''}${name === 'book' ? ' gap' : ''}">${svg(I[name])}</i>`).join('')}</div>${
+    who ? `<div class="ps-rail-foot"><i>${svg(I.help)}</i><i>${svg(I.card)}</i></div><div class="ps-rail-me"><span>${who}</span></div>` : ''}</div>`;
+  // Home's toolbar parts: the prototype's search field and multiselect trigger (.inp, .ms__btn).
+  const search = (placeholder, width) => `<span class="ps-search" style="width:${width}px">${svg(I.search, 15)}${placeholder}</span>`;
+  const ms = label => `<span class="ps-ms">${label} <span class="ps-any">Any</span><span class="ps-chev">${svg(I.chev, 15)}</span></span>`;
   const check = on => `<span class="ps-check${on ? ' on' : ''}">${svg(I.check, 12, 3)}</span>`;
   const plus = n => n ? `<span class="ps-plus">+${n}</span>` : '';
   const cursor = '<svg class="ps-cursor" viewBox="0 0 24 24"><path d="M4 2.5 19.5 13l-7 1.4 4.2 7.2-2.6 1.5-4.2-7.3L5 20.5z" fill="#0f172a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="ps-ripple"></span>';
@@ -54,9 +74,14 @@
     contact: ['Not yet contacted', '#b48b2b'], silent: ['Has not responded', '#586478'],
     review: ['Interested - under review', '#023e8a'], notfit: ['Not a fit', '#dc2626'], quoted: ['Quoted', '#479e28']
   };
-  const outreach = key => `<span class="ps-sel"><span class="ps-dot" style="background:${DISPOSITION[key][1]}"></span><span class="ps-st" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${DISPOSITION[key][0]}</span><span class="ps-chev">${svg(I.chev)}</span></span>`;
+  // The Deals board's stages, STAGES in the prototype (deals-prototype.html), with their tones as dot colours.
+  const STAGE = {
+    Leads: ['Leads', '#586478'], Screening: ['Screening', '#b48b2b'], Outreach: ['Outreach', '#023e8a'], Quoting: ['Quoting', '#023e8a'],
+    Processing: ['Processing', '#023e8a'], Funded: ['Funded', '#479e28'], Dead: ['Dead', '#dc2626'], 'On hold': ['On hold', '#586478']
+  };
+  const outreach = (key, labels = DISPOSITION) => `<span class="ps-sel"><span class="ps-dot" style="background:${labels[key][1]}"></span><span class="ps-st" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${labels[key][0]}</span><span class="ps-chev">${svg(I.chev)}</span></span>`;
   // The Outreach list a row's select opens; screens.js places it under the select.
-  const outreachPop = () => `<div class="ps-pop">${Object.entries(DISPOSITION).map(([v, [label, colour]]) =>
+  const outreachPop = (labels = DISPOSITION) => `<div class="ps-pop">${Object.entries(labels).map(([v, [label, colour]]) =>
     `<span class="ps-pi" data-v="${v}"><span class="ps-dot" style="background:${colour};width:8px;height:8px"></span>${label}<span class="ps-tick">${svg(I.check, 14)}</span></span>`).join('')}</div>`;
   // #/deal/riverside down to the lenders card: the deal screen, Matched lenders and Lenders contacted all open on it.
   const dealHead = () => `<div class="ps-crumb">Deals</div>
@@ -277,7 +302,99 @@
             <div class="ps-tr"><span>${check(false)}</span><span><span class="ps-nm"><b>Comerica Bank</b><span class="ps-badge ps-blue">Prospector</span></span><span class="ps-sub">Bank · FDIC cert 983 · 3 branches nearby</span></span><span class="ps-unset">No contacts yet</span><span>—</span><span class="ps-unset">No contact yet</span><span class="ps-kebab">${svg(I.kebab)}</span></div>
           </div>
           ${outreachPop()}
-        </div></div></div>`}
+        </div></div></div>`},
+    // Home's side screens, rebuilt from deals-prototype.html as it renders at 1280 with the rail collapsed (measured
+    // 5 Nov: #/deals as the broker, #/loans as the borrower, #/requests as the lender): the same structure, rows,
+    // sizes and colours, laid out 1242px wide (the rail and the 1194px view) so every column lands where the
+    // prototype's does. Tanya, 5 Nov: "use exact same ui as in prototype and figma, check paddings and colors".
+    // Home, brokers ("Run a pipeline like a large firm"): Foundry Flex is the row the story moves.
+    'home-deals': {width: 1242, fit: 600, html: () => {
+      const srt = (label, act) => `${label}<span class="ps-srt${act ? ' act' : ''}">⇅</span>`;
+      const row = (name, sub, amount, state, exec, n, accounts, stage, updated, attr = '') => `<div class="ps-tr" data-cur="${stage}" ${attr}><span><b>${name}</b><span class="ps-sub">${sub}</span></span><span class="ps-num">${amount}</span><span>${state}</span><span${exec === 'Not specified' ? ' class="ps-unset"' : ''}>${exec}</span><span><span class="ps-n" data-n>${n}</span><span class="ps-sub ps-acc" data-acc>${accounts}</span></span><span>${outreach(stage, STAGE)}</span><span>${updated}</span><span class="ps-acts"><span class="ps-btn sm">Find lenders</span><span class="ps-kebab">${svg(I.kebab)}</span></span><i class="ps-wash" style="background:#f6f1e6"></i></div>`;
+      return `<div class="ps-app ps-home ps-board">${rail('deals', undefined, 'BB')}<div class="ps-main"><div class="ps-scene" data-scene="board">
+        <div class="ps-head"><div class="ps-h1">Your deals</div><span class="ps-btn primary">＋ New deal</span></div>
+        <div class="ps-card" data-trim>
+          <div class="ps-bar">${search('Search deals', 340)}<span class="ps-seg ps-seg-icon" style="margin-left:auto"><span class="on">${svg(I.list, 15)}</span><span>${svg(I.board, 15)}</span></span><span class="ps-btn">${svg(I.gear, 15)}Settings</span></div>
+          <div class="ps-bar">${ms('State')}${ms('Property type')}${ms('Loan amount')}${ms('Execution type')}</div>
+          <div class="ps-th"><span>${srt('Deal')}</span><span>${srt('Amount')}</span><span>State</span><span>Execution type</span><span>${srt('Matches')}</span><span>${srt('Status')}</span><span>${srt('Updated', true)}</span><span></span></div>
+          ${row('Magnolia Court Multifamily Refinance', 'Multifamily', '$14.2M', 'South Carolina', 'Permanent | fixed-rate', 1, '1 account', 'Leads', '26 Aug')}
+          ${row('Harborview Student Housing Acquisition', 'Student housing', '$10.5M', 'Texas', 'Agency (Freddie Mac)', 4, '2 accounts', 'Leads', '25 Aug')}
+          ${row('Foundry Flex Industrial Purchase', 'Industrial', '$5.8M', 'North Carolina', 'Balance sheet debt', 4, '4 accounts', 'Screening', '24 Aug', 'data-reply="Outreach"')}
+          ${row('Lakeline Self-Storage Refinance', 'Self-storage', '$4.6M', 'Florida', 'Balance sheet debt', 1, '1 account', 'Screening', '11 Aug')}
+          ${row('Crescent Senior Living Acquisition', 'Senior housing', '$9.75M', 'Arizona', 'Agency (Fannie Mae)', 5, '3 accounts', 'Screening', '9 Aug')}
+          ${row('Pearl District Office Refinance', 'Office-multi tenant', '$7.2M', 'New York', 'Balance sheet debt', 1, '1 account', 'Leads', '6 Aug')}
+          ${row('Riverside Apartments Acquisition', 'Multifamily', '$4.5M', 'Texas', 'Agency (Fannie Mae)', 15, '8 accounts · 3 saved', 'Outreach', '4 Aug')}
+          ${row('Midtown Retail Permanent Debt', 'Retail-multi tenant', '$3.1M', 'Texas', 'Agency (Fannie Mae)', 5, '4 accounts · 1 saved', 'Quoting', '4 Aug')}
+          ${row('Northside Industrial Refinance', 'Industrial', '$6.4M', 'Georgia', 'Agency (Fannie Mae)', 6, '6 accounts · 2 saved', 'Quoting', '4 Aug')}
+          ${row('Gulf Coast Hotel Bridge Loan', 'Hotel/motel', '$8.25M', 'Florida', 'Not specified', 3, '3 accounts · 2 saved', 'Processing', '4 Aug')}
+          ${row('Old Town Mixed-Use Bridge', 'Mixed-use', '$5.4M', 'Texas', 'Bridge / short-term debt (<3 yrs)', 6, '5 accounts', 'Dead', '28 Jul')}
+        </div>
+        ${outreachPop(STAGE)}
+      </div></div></div>`;
+    }},
+    // Home, borrowers ("Financing with a person, not a portal"): My deals in the prototype's order. Elm Street is the
+    // deal an advisor takes on. Laid out 1338 wide, the prototype at 1376 (Tanya, 5 Nov: "for borrowers use same layout
+    // as on prototype"): the narrowest window where its whole table fits the card. Every side screen's table runs to
+    // the crop's bottom edge, as on Brokers (Tanya, 5 Nov: "fill table with the rows to the bottom"), so the
+    // prototype's seven deals are followed by six sample ones [~], and Active counts 13.
+    'home-borrower': {width: 1338, fit: 560, html: () => {
+      const srt = (label, act) => `${label}<span class="ps-srt${act ? ' act' : ''}">⇅</span>`;
+      const dot = colour => `<span class="ps-dot" style="background:${colour}"></span>`;
+      const row = (name, addr, amount, tx, advisor, stage, colour, quotes, out, act, day, attr = '') => `<div class="ps-tr" ${attr}><span><b>${name}</b><span class="ps-sub">${addr}</span></span><span><b class="ps-num">${amount}</b><span class="ps-sub ps-txn">${tx}</span></span><span>${advisor}</span><span class="ps-stage">${dot(colour)}<span>${stage}</span></span><span>${quotes}</span><span>${out}</span><span><span class="ps-act">${act}</span><span class="ps-sub ps-day">${day}</span></span><span class="ps-acts"><span class="ps-kebab">${svg(I.kebab)}</span></span><i class="ps-wash" style="background:#f6f1e6"></i></div>`;
+      const unset = text => `<span class="ps-unset">${text}</span>`, nil = '<span class="ps-nil">—</span>';
+      const swap = (before, after, key) => `<span class="ps-swap">${before}<span data-${key} style="opacity:0">${after}</span></span>`;
+      const gold = '#b48b2b', navy = '#023e8a';
+      return `<div class="ps-app ps-home ps-mydeals">${rail('deals', ['home', 'deals', 'user', 'users'], 'PN')}<div class="ps-main">
+        <div class="ps-head"><div><div class="ps-h1">My deals</div><p class="ps-lede">All your deals, advisor, status and action items in one place.</p></div><span class="ps-btn primary">＋ Start a new search</span></div>
+        <div class="ps-card" data-trim>
+          <div class="ps-bar"><span class="ps-seg"><span class="on">Active <em>13</em></span><span>Funded <em>1</em></span><span>Dead <em>1</em></span><span>Draft <em>1</em></span></span></div>
+          <div class="ps-bar">${search('Search deals', 260)}${ms('Stage')}<span class="ps-btn" style="margin-left:auto">${svg(I.gear, 15)}Settings</span></div>
+          <div class="ps-th"><span>${srt('Property')}</span><span>${srt('Loan request')}</span><span>Advisor</span><span>${srt('Stage')}</span><span>${srt('Quotes')}</span><span>${srt('Outstanding')}</span><span>${srt('Last activity', true)}</span><span></span></div>
+          ${row('Mesa self-storage refinance', '1450 W Main St, Mesa, AZ', '$4.1M', 'Refinance', 'Anjali Mehta', 'Lender outreach', navy, 3, '1 item', 'Quote added: Debt fund', '2 Oct')}
+          ${row('Round Rock apartments acquisition', '1800 N Mays St, Round Rock, TX', '$7.8M', 'Purchase', 'Jordan Ellis', 'Processing', '#479e28', 2, '4 items', 'Organizational documents requested', '22 Sep')}
+          ${row('Canyon Ridge apartments acquisition', '3300 E Speedway Blvd, Tucson, AZ', '$6.3M', 'Purchase', 'Anjali Mehta', 'Preparing lender memo', navy, nil, '2 items', 'Rent roll and T-12 requested', '21 Sep')}
+          ${row('Elm Street office refinance', '700 Elm St, Houston, TX', '$3.8M', 'Refinance', swap(unset('No advisor yet'), 'Jordan Ellis', 'adv'), swap('<span>Submitted to LenderPrism</span>', 'Preparing lender memo', 'stage'), gold, nil,
+            swap(unset('None'), '2 items', 'out'), swap('<span>Request submitted</span>', 'Rent roll and T-12 requested', 'act'), swap('<span>20 Sep</span>', '23 Sep', 'day'), 'data-take')}
+          ${row('Lakeview Flats refinance', '2201 S Lamar Blvd, Austin, TX', '$3.2M', 'Refinance', 'Jordan Ellis', 'Lender outreach', navy, 2, '2 items', 'Quote updated: Regional bank', '19 Sep')}
+          ${row('Pecan Street mixed-use acquisition', '118 E Pecan St, San Marcos, TX', '$5.6M', 'Purchase', unset('Pending · Maya Okafor'), 'Submitted to LenderPrism', gold, nil, '1 item', 'Sent to Maya Okafor', '17 Sep')}
+          ${row('Cedar Park industrial refinance', '901 Toro Grande Dr, Cedar Park, TX', '$2.4M', 'Refinance', unset('No advisor yet'), 'Submitted to LenderPrism', gold, nil, unset('None'), 'Jordan Ellis passed. The deal has no advisor', '15 Sep')}
+          ${row('Bluebonnet Plaza retail refinance', '4410 W Gate Blvd, Austin, TX', '$2.9M', 'Refinance', 'Anjali Mehta', 'Lender outreach', navy, 1, '3 items', 'Quote added: Life company', '12 Sep')}
+          ${row('Riverwalk hotel acquisition', '210 Losoya St, San Antonio, TX', '$9.4M', 'Purchase', 'Jordan Ellis', 'Preparing lender memo', navy, nil, '2 items', 'Operating statements requested', '10 Sep')}
+          ${row('Saguaro Ridge apartments refinance', '7550 E McDonald Dr, Scottsdale, AZ', '$5.1M', 'Refinance', 'Anjali Mehta', 'Processing', '#479e28', 3, '1 item', 'Appraisal ordered', '8 Sep')}
+          ${row('Gateway industrial acquisition', '5200 Gateway Blvd, El Paso, TX', '$3.6M', 'Purchase', unset('No advisor yet'), 'Submitted to LenderPrism', gold, nil, unset('None'), 'Request submitted', '5 Sep')}
+          ${row('Bayfront medical office refinance', '600 Shoreline Blvd, Corpus Christi, TX', '$4.7M', 'Refinance', 'Jordan Ellis', 'Lender outreach', navy, 1, '2 items', 'Quote added: Regional bank', '3 Sep')}
+          ${row('Sunset Ridge self-storage acquisition', '3900 W Sunset Rd, Las Vegas, NV', '$2.2M', 'Purchase', 'Anjali Mehta', 'Preparing lender memo', navy, nil, '3 items', 'Rent roll requested', '1 Sep')}
+        </div>
+      </div></div>`;
+    }},
+    // Home, lenders ("Deal flow that fits your box"): Requests in the prototype's order, with Westgate Commons, a
+    // sample request [~], waiting at height 0 above them; Northside and Ybor are already saved. Four sample requests
+    // [~] follow the prototype's eight so the table runs to the crop's bottom edge, and the counts take them in.
+    'home-requests': {width: 1242, fit: 600, html: () => {
+      const row = (name, sub, amount, tx, fin, by, firm, day, {fresh = false, saved = false, cls = ''} = {}) => `<div class="ps-tr ${cls}"><span>${check(false)}</span><span><span class="ps-bm${saved ? ' on' : ''}">${svg(I.bookmark, 15)}</span></span><span><span class="ps-nm"><b>${name}</b>${fresh ? '<span class="ps-udot"></span>' : ''}</span><span class="ps-sub">${sub}</span></span><span class="ps-num">${amount}</span><span>${tx}</span><span>${fin}</span><span><span class="ps-by">${by}</span><span class="ps-sub">${firm}</span></span><span>${day}</span><span><span class="ps-badge ps-blue">New</span></span><span></span><i class="ps-wash" style="background:#f6f1e6"></i></div>`;
+      const picked = '<strong>Picked you</strong> · Sandbox Capital Advisors';
+      return `<div class="ps-app ps-home ps-requests">${rail('inbox', ['home', 'inbox', 'msg'], 'LL')}<div class="ps-main">
+        <div class="ps-head"><div><div class="ps-h1">Requests</div><p class="ps-lede">Requests matched to your lending parameters.</p></div><span class="ps-btn">${svg(I.sliders)}Lending parameters</span></div>
+        <div class="ps-card" data-trim>
+          <div class="ps-bar"><span class="ps-seg"><span class="on">Needs decision <em data-need>12</em></span><span>Interested <em>3</em></span><span>Passed <em>3</em></span><span>Saved <em data-saved>3</em></span><span>All <em data-all>18</em></span></span></div>
+          <div class="ps-bar">${search('Search requests', 260)}${ms('Property type')}${ms('Type of financing')}${ms('State')}<span class="ps-ms">Picked for you <em>2</em></span></div>
+          <div class="ps-th"><span>${check(false)}</span><span>Request</span><span>Loan amount</span><span>Transaction</span><span>Financing</span><span>Submitted by</span><span>Received</span><span>Status</span><span></span></div>
+          ${row('Westgate Commons acquisition', 'Multifamily · Dallas, TX', '$7.4M', 'Purchase', 'Agency (Fannie Mae)', 'Jordan Ellis', 'Ellis Capital', '20 Oct', {fresh: true, cls: 'ps-new'})}
+          ${row('Peachtree Flats acquisition', 'Multifamily · Atlanta, GA', '$12.5M', 'Purchase', 'Agency (Freddie Mac)', 'Maya Okafor', 'Okafor Capital', '19 Oct', {fresh: true})}
+          ${row('Foundry Flex Industrial Purchase', 'Industrial · Charlotte, NC', '$5.8M', 'Purchase', 'Balance sheet debt', 'Bruno Broker', picked, '18 Oct', {fresh: true})}
+          ${row('Raleigh distribution center purchase', 'Industrial · Raleigh, NC', '$18.0M', 'Purchase', 'CMBS', 'Dev Anand', 'Anand Capital', '18 Oct', {fresh: true})}
+          ${row('Riverside Apartments Acquisition', 'Multifamily · Austin, TX', '$4.5M', 'Purchase', 'Agency (Fannie Mae)', 'Bruno Broker', picked, '17 Oct', {fresh: true})}
+          ${row('Fort Worth workforce housing acquisition', 'Multifamily · Fort Worth, TX', '$9.2M', 'Purchase', 'Agency (Fannie Mae)', 'Omar Haddad', 'Haddad Real Estate', '16 Oct')}
+          ${row('Lakeview Flats refinance', 'Multifamily · Austin, TX', '$3.2M', 'Refinance', 'Agency (Fannie Mae)', 'Jordan Ellis', 'Ellis Capital', '15 Oct')}
+          ${row('Northside Industrial Refinance', 'Industrial · Atlanta, GA', '$6.4M', 'Refinance', 'Agency (Fannie Mae)', 'Bruno Broker', 'Sandbox Capital Advisors', '14 Oct', {saved: true})}
+          ${row('Ybor mixed-use refinance', 'Mixed-use · Tampa, FL', '$6.75M', 'Refinance', 'Bridge / short-term debt (<3 yrs)', 'Luis Caraballo', 'Caraballo Advisors', '11 Oct', {saved: true})}
+          ${row('Cypress Creek self-storage refinance', 'Self-storage · Houston, TX', '$4.2M', 'Refinance', 'Balance sheet debt', 'Omar Haddad', 'Haddad Real Estate', '10 Oct')}
+          ${row('Belmont medical office acquisition', 'Office · Nashville, TN', '$8.6M', 'Purchase', 'CMBS', 'Maya Okafor', 'Okafor Capital', '9 Oct')}
+          ${row('Battery Wharf hotel refinance', 'Hotel/motel · Charleston, SC', '$11.3M', 'Refinance', 'Bridge / short-term debt (<3 yrs)', 'Dev Anand', 'Anand Capital', '8 Oct')}
+          ${row('Mill Creek apartments acquisition', 'Multifamily · Raleigh, NC', '$7.9M', 'Purchase', 'Agency (Freddie Mac)', 'Luis Caraballo', 'Caraballo Advisors', '7 Oct')}
+        </div>
+      </div><span class="ps-tip">Save</span></div>`;
+    }}
   };
 
   // Scale: the screen is drawn at prototype size and scaled to its crop, never below 0.45 so its 14px text stays near
@@ -433,9 +550,10 @@
   // The broker logs a lender's reply from its row's Outreach select, as in the prototype: the select opens its list
   // (sel__pop, measured on #/deal/riverside), the cursor picks the new disposition and the list closes on it. Where
   // the crop is short the scene scrolls so the open list is in view.
-  const reply = (screen, scene, row, first) => {
+  // Home's Deals board picks a stage the same way, from the board's own list (labels = STAGE).
+  const reply = (screen, scene, row, first, labels = DISPOSITION) => {
     const pop = scene.querySelector('.ps-pop'), sel = row.querySelector('.ps-sel'), key = row.dataset.reply;
-    const item = pop.querySelector(`[data-v="${key}"]`), [label, colour] = DISPOSITION[key];
+    const item = pop.querySelector(`[data-v="${key}"]`), [label, colour] = labels[key];
     const text = row.querySelector('.ps-st'), dot = row.querySelector('.ps-dot');
     const place = () => {
       const r = sel.getBoundingClientRect(), box = scene.getBoundingClientRect();
@@ -648,6 +766,67 @@
         .add(reply(screen, scene, quote, true), .6)
         .add(reply(screen, scene, interest), '+=.5')
         .add(leave(screen), '+=1.2');
+    },
+    // Home, brokers: the matching engine counts Foundry Flex's lenders up to four, then the broker opens its status
+    // and picks Outreach from the board's stages, as the Brokers deal flow logs a reply.
+    'home-deals'(screen) {
+      const q = s => screen.ui.querySelector(s), scene = q('[data-scene="board"]'), row = q('[data-reply]');
+      const n = row.querySelector('[data-n]'), accounts = row.querySelector('[data-acc]'), wash = row.querySelector('.ps-wash');
+      const count = {v: 0};
+      const show = () => { const v = Math.round(count.v); n.textContent = v; accounts.textContent = `${v} account${v === 1 ? '' : 's'}`; };
+      show();
+      return gsap.timeline({paused: true})
+        .add(follow(screen, n), .1)
+        .fromTo(wash, {opacity: 0}, {opacity: 1, duration: .3, immediateRender: false}, .2)
+        .to(count, {v: 4, duration: 1.1, ease: 'power1.inOut', onUpdate: show}, .3)
+        .to(wash, {opacity: 0, duration: .6}, 1.4)
+        .add(follow(screen, row.querySelector('.ps-sel')), 1.4)
+        .add(reply(screen, scene, row, true, STAGE), 1.5)
+        .add(leave(screen), '+=.3');
+    },
+    // Home, borrowers: no pointer, the advisor does the work. Jordan Ellis takes Elm Street, the stage moves on, and
+    // the documents asked for show as Outstanding and as the last activity.
+    'home-borrower'(screen) {
+      const row = screen.ui.querySelector('[data-take]'), wash = row.querySelector('.ps-wash'), dot = row.querySelector('.ps-stage .ps-dot');
+      const turn = key => { const to = row.querySelector(`[data-${key}]`); return swap(to.previousElementSibling, to); };
+      return gsap.timeline({paused: true})
+        .add(follow(screen, row.querySelector('[data-adv]')), .1)
+        .fromTo(wash, {opacity: 0}, {opacity: 1, duration: .3, immediateRender: false}, .2)
+        .add(turn('adv'), .5)
+        .add(turn('stage'), 1.2)
+        .to(dot, {backgroundColor: '#023e8a', duration: .25}, 1.45)
+        .fromTo(dot, {scale: 1}, {scale: 1.8, duration: .15, yoyo: true, repeat: 1}, 1.45)
+        .add(follow(screen, row.querySelector('[data-out]')), 1.7)
+        .add(turn('out'), 1.9)
+        .add(turn('act'), 2.3)
+        .add(turn('day'), 2.3)
+        .to(wash, {opacity: 0, duration: 1}, 3.1);
+    },
+    // Home, lenders: Westgate Commons arrives at the top of Requests and Needs decision and All count it; the lender
+    // saves it from its bookmark, as the Brokers lenders flow saves a lender: the pointer rests long enough for the
+    // prototype's "Save" tooltip (#tipbox, its data-tip on .bmkbtn), which hides the moment the button is used, and
+    // Saved counts it.
+    'home-requests'(screen) {
+      const q = s => screen.ui.querySelector(s), row = q('.ps-new'), bm = row.querySelector('.ps-bm'), tip = q('.ps-tip');
+      const placeTip = () => {
+        const a = q('.ps-app').getBoundingClientRect(), r = bm.getBoundingClientRect();
+        gsap.set(tip, {left: (r.left - a.left + r.width / 2) / screen.k - tip.offsetWidth / 2, top: (r.top - a.top) / screen.k - tip.offsetHeight - 7});
+      };
+      return gsap.timeline({paused: true})
+        .to(row, {height: 57, borderBottomWidth: 1, duration: .75, ease, onUpdate: () => trim(screen)}, .2)
+        .from([...row.children].filter(cell => !cell.matches('.ps-wash')), {opacity: 0, y: 10, duration: .5, stagger: .05, ease: 'power2.out'}, '<.3')
+        .fromTo(row.querySelector('.ps-wash'), {opacity: 1}, {opacity: 0, duration: 2.6, ease: 'power1.in'}, '<')
+        .add(recount(q('[data-need]'), 13, .4), '<')
+        .add(recount(q('[data-all]'), 19, .4), '<')
+        .add(point(screen, bm), 1.5)
+        .add(() => { bm.classList.add('hover'); placeTip(); }, '-=.15')
+        .fromTo(tip, {autoAlpha: 0}, {autoAlpha: 1, duration: .12, immediateRender: false}, '<')
+        .add(click(screen, bm), '+=.7')
+        .to(tip, {autoAlpha: 0, duration: .12}, '<')
+        .add(() => { bm.classList.add('on'); gsap.fromTo(bm, {scale: .6}, {scale: 1, duration: .4, ease: 'back.out(2.5)'}); }, '-=.45')
+        .add(recount(q('[data-saved]'), 4, .3), '<')
+        .add(() => bm.classList.remove('hover'), '+=.6')
+        .add(leave(screen), '<');
     }
   };
 
@@ -701,17 +880,18 @@
   // fills as it goes, the next tab takes over when a chapter ends, and the last one rests on its final frame. Picking
   // a tab plays that chapter. The frame's bottom-right control pauses, plays and replays from chapter 1 (WCAG 2.2.2),
   // and the film holds while out of view.
+  // A screen that plays again starts from a fresh drawing: the flows rewrite text and classes as they go.
+  const redraw = screen => {
+    screen.tl?.kill();
+    screen.tl = null;
+    screen.ui.innerHTML = screen.spec.html() + cursor;
+    screen.focus = 0;
+    fit(screen);
+  };
   const walkthrough = chapters => {
     const stage = chapters[0].crop.closest('.walk-stage'), view = stage.querySelector('.walk-screen');
     const tabs = [...stage.querySelectorAll('[role=tab]')];
     const selected = () => tabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
-    const redraw = screen => {
-      screen.tl?.kill();
-      screen.tl = null;
-      screen.ui.innerHTML = screen.spec.html() + cursor;
-      screen.focus = 0;
-      fit(screen);
-    };
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'ps-ctl';
@@ -759,9 +939,37 @@
       onToggle: ({isActive}) => { const tl = chapters[at].tl; if (tl && state === 'pause') isActive ? tl.play() : tl.pause(); }});
   };
 
+  // Home's sides (one open at a time, site.js's switcher): the opening side's screen is redrawn and plays once its
+  // cross-fade is under way (home.css); the closing one stops on its frame and fades out on it. The side open on load
+  // plays when the list is 75% down the viewport, as the flows above start. Each story runs about 5s and ends still.
+  const sidesPlayer = sides => {
+    const list = sides[0].crop.closest('[data-sides]');
+    let wait, started = false;
+    const of = button => sides.find(screen => screen.crop.closest('[role=region]')?.id === button.getAttribute('aria-controls'));
+    const play = screen => {
+      started = true;
+      sides.forEach(other => { if (other !== screen) { other.tl?.kill(); other.tl = null; } });
+      wait?.kill();
+      redraw(screen);
+      screen.tl = FLOWS[screen.crop.dataset.screen](screen);
+      wait = gsap.delayedCall(.45, () => screen.tl.play());
+    };
+    new MutationObserver(records => records.forEach(({target, oldValue}) => {
+      if (target.getAttribute('aria-expanded') !== 'true' || oldValue === 'true') return;
+      const screen = of(target);
+      if (screen) play(screen);
+    })).observe(list, {subtree: true, attributes: true, attributeFilter: ['aria-expanded'], attributeOldValue: true});
+    ScrollTrigger.create({trigger: list, start: 'top 75%', once: true, onEnter: () => gsap.delayedCall(.6, () => {
+      const open = list.querySelector('button[aria-expanded=true]'), screen = open && of(open);
+      if (!started && screen) play(screen);
+    })});
+  };
+
   const chapters = screens.filter(screen => screen.crop.closest('.walk-stage'));
+  const sides = screens.filter(screen => screen.crop.closest('[data-sides]'));
   document.fonts.ready.then(() => {
-    screens.filter(screen => !chapters.includes(screen)).forEach(screen => {
+    if (sides.length) sidesPlayer(sides);
+    screens.filter(screen => !chapters.includes(screen) && !sides.includes(screen)).forEach(screen => {
       const run = control(screen);
       ScrollTrigger.create({trigger: screen.crop, start: 'top 75%', once: true,
         onEnter: () => gsap.delayedCall(.6, () => { if (screen.state === 'pause') run(); })});

@@ -111,7 +111,11 @@
 .side-body>.button{margin-bottom:26px}
 .side-screen{position:absolute;z-index:1;top:23px;right:23px;width:calc(var(--frame) - 46px);margin:0;overflow:hidden;background:#eff3f8;box-shadow:0 20px 50px rgba(10,28,40,.22),0 3px 10px rgba(10,28,40,.08);opacity:0;transform:translateY(12px);transition:opacity 350ms ease,transform 350ms ease;pointer-events:none}
 .side-item:has([aria-expanded=true]) .side-screen{opacity:1;transform:none;transition:opacity 550ms ease 80ms,transform 650ms var(--ease) 80ms;pointer-events:auto}
-.side-screen>img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:left top;filter:saturate(.65) contrast(.94)}
+.side-crop{position:relative;aspect-ratio:16/10;overflow:hidden;background:#eff3f8;filter:saturate(.65) contrast(.94)}
+.side-crop>img{display:block;width:100%;height:100%;object-fit:cover;object-position:left top}
+/* With script the crop holds a live rebuild of its screen in place of the PNG (data-screen; brokers/screens.js and
+   screens.css, the Brokers page's engine): the collapsed rail, and a short story when the side opens. Tanya, 5 Nov:
+   "make nav sidebar collapsed; make same interaction/animation logic for dropdown/status change as on broker page". */
 
 /* Who runs your deal: live Pro brokers from Find a broker; the "+N more" count is muted as on that page. */
 .person-card .more{color:var(--muted);white-space:nowrap}
@@ -128,8 +132,9 @@
 /* The band sits over the warm multifamily photo (Option D of the closing band review, assets/website/closing-band-options/,
    after Acquired and Square on Mobbin; Tanya, 5 Nov: "build this"). Navy at 90% behind the heading, 66% at the right edge,
    so the heading and the line keep their contrast. final-multifamily.jpg is hero-multifamily-warm.jpg at 1800px, quality 40:
-   under the wash the loss does not show, and it is 370 KB instead of 1.1 MB. */
-.final{background:linear-gradient(90deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.78) 50%,rgba(14,28,53,.66) 100%),url(img/final-multifamily.jpg) center 60%/cover var(--navy);padding-top:96px;padding-bottom:110px}
+   under the wash the loss does not show, and it is 370 KB instead of 1.1 MB. The padding is the shared .section rule's,
+   96px at desktop and 58px on phone, as on Brokers (Tanya, 5 Nov: "ok, align"). */
+.final{background:linear-gradient(90deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.78) 50%,rgba(14,28,53,.66) 100%),url(img/final-multifamily.jpg) center 60%/cover var(--navy)}
 
 @media(max-width:1150px){
   .sides-list{--col:270px;--gap:28px}
@@ -143,7 +148,7 @@
   .role-cards{width:100%;max-width:640px}
   /* One column: the wash runs top to bottom, as the hero's does below 851px, so the full-width buttons never sit on the
      lighter right edge. */
-  .final{padding-top:72px;padding-bottom:80px;background-image:linear-gradient(180deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.8) 100%),url(img/final-multifamily.jpg)}
+  .final{background-image:linear-gradient(180deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.8) 100%),url(img/final-multifamily.jpg)}
   .steps-grid{grid-template-columns:1fr;gap:32px}
   .steps-head{position:static}
   .sides-list{min-height:0;padding-right:0}
@@ -151,7 +156,7 @@
   .side-panel{padding-left:0}
   .side-body>:is(p,.button){margin-left:45px}
   .side-screen{position:static;width:100%;margin-bottom:28px;padding:18px;background:#e4e8ef;border:1px solid #c6cddb;box-shadow:none;overflow:visible}
-  .side-screen>img{box-shadow:0 20px 50px rgba(10,28,40,.22),0 3px 10px rgba(10,28,40,.08)}
+  .side-crop{box-shadow:0 20px 50px rgba(10,28,40,.22),0 3px 10px rgba(10,28,40,.08)}
 }
 @media(max-width:600px){
   .role-card{padding:20px}

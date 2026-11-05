@@ -270,3 +270,106 @@
 .walk-stage:fullscreen{background:#eef1f6;padding:40px;align-content:center;overflow:auto}
 .walk-stage:fullscreen .screen{aspect-ratio:auto;height:calc(100vh - 126px)}
 @media(max-width:850px){.walk-stage:fullscreen{padding:16px}.walk-stage:fullscreen .screen{height:calc(100vh - 246px)}}
+
+/* Home's side screens: the broker's Deals board (#/deals), the borrower's My deals (#/loans) and the lender's Requests
+   (#/requests), measured in deals-prototype.html at 1280 with the rail collapsed (5 Nov; Tanya: "use exact same ui as
+   in prototype and figma, check paddings and colors"). The view pads 20px 24px; the head sits 18px over the card; the
+   card pads its toolbars 14px 18px and they stand 12px apart; fields and triggers are 36px on #dce2ee, buttons on
+   #bec8dc, each with the xs shadow; rows are 57px of 10px 8px cells (14px at the left edge), and wrap where the
+   prototype's do. */
+.ps-home .ps-main{padding:20px 24px 0}
+.ps-home .ps-scene{inset:20px 24px 0}
+.ps-home .ps-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:18px}
+.ps-home .ps-head .ps-lede{margin:6px 0 0;line-height:20.3px}
+.ps-board .ps-head{min-height:38px}
+.ps-home .ps-btn{height:36px;padding:0 16px;gap:8px;line-height:20px;box-shadow:0 1px 3px rgba(19,35,57,.08)}
+.ps-home .ps-btn.primary{box-shadow:none}
+.ps-home .ps-btn.sm{height:32px;padding:0 12px;gap:6px}
+.ps-home .ps-card{box-shadow:0 1px 2px rgba(19,35,57,.07)}
+.ps-home .ps-bar{display:flex;align-items:center;gap:12px;height:36px;margin:0 18px 12px}
+.ps-home .ps-bar:first-child{margin-top:14px}
+.ps-home .ps-seg{height:36px;padding:3px;gap:3px;border-radius:6px}
+.ps-home .ps-seg span{height:30px;padding:0 12px;gap:6px;border-radius:4px;font-size:13px;line-height:18.85px;font-weight:500}
+.ps-home .ps-seg span.on{box-shadow:0 1px 3px rgba(19,35,57,.08)}
+.ps-home .ps-seg em{font-weight:400}
+.ps-home .ps-seg-icon span{width:30px;padding:0;justify-content:center}
+.ps-search,.ps-ms{display:inline-flex;align-items:center;height:36px;border:1px solid #dce2ee;border-radius:6px;background:#fff;box-shadow:0 1px 3px rgba(19,35,57,.08);white-space:nowrap}
+.ps-search{gap:8px;padding:0 12px 0 11px;color:#586478}
+.ps-search svg{color:#586478}
+.ps-ms{gap:8px;padding:0 12px;font-weight:500}
+.ps-ms .ps-any,.ps-ms em{color:#586478;font-weight:400;font-style:normal;margin-left:-1px}
+.ps-ms .ps-chev{color:#586478;display:grid}
+.ps-home .ps-th>*{white-space:nowrap}
+.ps-home .ps-th>:first-child,.ps-home .ps-tr>:first-child{padding-left:14px}
+.ps-home .ps-tr{min-height:57px;line-height:normal}
+.ps-home .ps-tr>*{padding:10px 8px}
+.ps-home .ps-tr b{display:block;font-weight:600}
+/* The prototype's cells are table cells: a long value wraps (Old Town's "Bridge / short-term debt (<3 yrs)"), and
+   nothing ellipsizes but Submitted by's second line (.lrpickln). Second lines stay on one line, as there; a
+   sub-pixel overrun shows rather than turning into an ellipsis. */
+.ps-home .ps-tr>span{white-space:normal;overflow:visible;text-overflow:clip}
+.ps-home .ps-tr .ps-sub{white-space:nowrap;overflow:visible;text-overflow:clip}
+.ps-mydeals .ps-act{white-space:nowrap}
+.ps-home .ps-sub{font-size:13px;line-height:normal}
+.ps-srt{margin-left:4px;color:#bec8dc}
+.ps-srt.act{color:#0f172a}
+.ps-num{font-weight:700}
+/* figures sit on tabular numerals there (.num, .cnt-link) */
+.ps-num,.ps-n{font-variant-numeric:tabular-nums}
+.ps-nil{color:#586478}
+.ps-home .ps-acts{display:flex;align-items:center;justify-content:flex-start;gap:6px;overflow:visible}
+.ps-home .ps-kebab{width:32px;height:32px;border-radius:4px}
+.ps-home .ps-badge{height:20px;padding:0 8px;line-height:16px}
+.ps-home .ps-check{border-color:#dce2ee;box-shadow:0 1px 3px rgba(19,35,57,.08)}
+/* the prototype's collapsed rail ends on Help and Account, then the person under a rule */
+.ps-rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:4px;padding-bottom:11px}
+.ps-rail-foot i{width:32px;height:32px;border-radius:6px;display:grid;place-items:center;color:rgba(210,220,240,.78)}
+.ps-rail-me{width:100%;height:64px;border-top:1px solid #1a325a;display:grid;place-items:center}
+.ps-rail-me span{width:32px;height:32px;border-radius:50%;background:#142a52;color:#e2e8f8;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:0}
+
+/* Deals board: the prototype's 1144px table, Deal 256, Amount 81, State 108, Execution type 172, Matches 134,
+   Status 148, Updated 86, actions 159. Names wrap as they do there; the status select fits its value. */
+.ps-board .ps-th,.ps-board .ps-tr{grid-template-columns:256fr 81fr 108fr 172fr 134fr 148fr 86fr 159fr}
+.ps-board .ps-tr>:first-child{white-space:normal}
+.ps-board .ps-tr .ps-num{font-weight:600}
+.ps-board .ps-n{display:block;color:#012758;font-weight:600}
+.ps-board .ps-acc{font-size:12.5px}
+.ps-board .ps-tr .ps-sel{width:max-content;max-width:100%;height:36px;padding:0 8px 0 12px;gap:7px;border-color:#dce2ee;font-weight:500;box-shadow:0 1px 3px rgba(19,35,57,.08)}
+.ps-board .ps-tr .ps-sel .ps-dot{width:8px;height:8px}
+.ps-board .ps-tr .ps-sel .ps-chev{margin-left:1px;color:#586478}
+.ps-board .ps-pop{min-width:max-content}
+
+/* My deals: the prototype at 1376 with the rail collapsed, the narrowest window where its whole table fits the card
+   (1242 wide): Property 280, Loan request 120, Advisor 160, Stage 199, Quotes 82, Outstanding 116, Last activity 235,
+   actions 48. Every cell but Property stays on one line, and Last activity's line is capped at 211 with an ellipsis
+   (.bsub--1), as there. Its head and tabs are 14px. */
+/* Whatever the card has beyond 1242 (the row-edge fit can widen it) is shared equally by the five columns between
+   Property and Last activity, which keep their widths, as the prototype's auto layout does (its 4 Nov note: "the
+   slack goes to the five columns between"); actions stays pinned to the right edge. --s is one share: the row's
+   width less the 1240 the columns start from, over five. Tanya, 5 Nov: "make actions column pinned to the right" and
+   "distribute the columns evenly across the table to fill this gap". */
+.ps-mydeals .ps-th,.ps-mydeals .ps-tr{--s:max(0px,(100% - 1240px)/5);grid-template-columns:280px calc(120px + var(--s)) calc(160px + var(--s)) calc(199px + var(--s)) calc(82px + var(--s)) calc(116px + var(--s)) 235px 48px}
+.ps-mydeals .ps-tr>span:not(:first-child){white-space:nowrap}
+.ps-mydeals .ps-th{font-size:14px}
+.ps-mydeals .ps-seg span{font-size:14px;line-height:20.3px}
+.ps-mydeals .ps-sub{font-size:14px}
+.ps-mydeals .ps-txn,.ps-mydeals .ps-day{font-size:12px}
+.ps-mydeals .ps-act{display:block;max-width:211px;line-height:20px;overflow:hidden;text-overflow:ellipsis}
+.ps-stage{display:flex!important;align-items:center;gap:8px}
+.ps-stage .ps-dot{width:8px;height:8px}
+
+/* Requests: the prototype's 1145px table, check 38, bookmark 46, Request 305 (its head spans the bookmark), Loan
+   amount 100, Transaction 92, Financing 235, Submitted by 176, Received 75, Status 62, and the 16px column the row's
+   Pass and Interested slide into on hover. */
+.ps-requests .ps-th,.ps-requests .ps-tr{grid-template-columns:38fr 46fr 305fr 100fr 92fr 235fr 176fr 75fr 62fr 16fr}
+.ps-requests .ps-th>:nth-child(2){grid-column:span 2}
+.ps-requests .ps-tr>:nth-child(2){padding:10px 8px;overflow:visible}
+.ps-requests .ps-bm{width:30px;height:30px;display:grid;place-items:center;border-radius:4px;color:#586478}
+.ps-requests .ps-nm{display:flex;align-items:center;gap:6px}
+.ps-udot{width:6px;height:6px;border-radius:50%;background:#b48b2b;flex:none}
+.ps-requests .ps-by{display:block;line-height:20px}
+.ps-requests .ps-tr strong{font-weight:500;color:#0f172a}
+.ps-requests .ps-tr>:nth-child(7){overflow:hidden}
+.ps-requests .ps-tr>:nth-child(7) .ps-sub{overflow:hidden;text-overflow:ellipsis}
+.ps-requests .ps-bm.on{color:#b48b2b}
+.ps-requests .ps-new{min-height:0;height:0;border-bottom-width:0}

@@ -112,6 +112,10 @@ table{font-size:13px}
 .footer-grid h2{font-size:12px}
 .footer-brand>p,.newsletter>p,.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{font-size:14px}
 .footer-brand>.placeholder,.newsletter .micro,.footer-bottom,.disclaimer{font-size:12px}
+/* "Our platforms": the kind of capital in the placeholders' bronze, after the name with no dash (Tanya, 5 Nov: "make this
+   bronze color like here and remove the em dash", then "make it italic"). DM Sans's own italic, which every page now loads
+   (ital 1, wght 400), so the browser does not slant the upright. */
+.platform-kind{color:#806339;font-style:italic}
 .newsletter input,dialog input{font-size:16px}
 dialog>p:not(.eyebrow),dialog label{font-size:15px}
 @media(max-width:1150px){.header-inner{gap:24px}
