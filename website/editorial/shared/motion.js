@@ -36,11 +36,13 @@
   // Masked lines: each line of a title rises out of its own mask (110% to 0 over 1.05s, 0.06s apart) once the title is
   // 82% down, or on load after a delay for the hero. autoSplit re-splits on resize and carries the tween's progress over.
   // Each mask is padded .14em below so descenders are not clipped: Bodoni's g reaches .26em under the baseline and .08em,
-  // The Nest's padding, still cut its loop in "large" (Tanya, 26 Oct). aria 'none' leaves the lines
+  // The Nest's padding, still cut its loop in "large" (Tanya, 26 Oct). It is padded .1em each side too, cancelled by
+  // the margin, because an italic swash runs past its advance: the y of "Prism family" was cut (Tanya, 5 Nov: "fix font
+  // cut"); a heading in a flex row shrinks to its text, so the mask has no slack. aria 'none' leaves the lines
   // readable as they are: SplitText's own label runs a title's two lines together ("firm.Without").
   const lines = (title, delay) => {
     SplitText.create(title, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, onSplit(split) {
-      split.masks.forEach(mask => Object.assign(mask.style, {paddingBottom: '.14em', marginBottom: '-.14em'}));
+      split.masks.forEach(mask => Object.assign(mask.style, {padding: '0 .1em .14em', margin: '0 -.1em -.14em'}));
       return gsap.fromTo(split.lines, {yPercent: 110, opacity: 0}, {yPercent: 0, opacity: 1, duration: 1.05, ease, stagger: .06,
         delay: delay || 0, scrollTrigger: delay === undefined ? {trigger: title, start: 'top 82%', once: true} : undefined});
     }});
@@ -61,37 +63,189 @@
 
     // Blocks, each on its own trigger as The Nest wraps them. A container that holds a title reveals its other
     // children instead, so no title moves twice.
-    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .person-grid > li, .platform-pair > *, .feature-cards > *, .notify > *, .faq-grid > *, .final-grid > *')
+    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .feature-cards > *, .notify > *, .faq-grid > *, .final-grid > *')
       .flatMap(block => block.querySelector('h2') ? [...block.children] : block)
       .filter(block => block.tagName !== 'H2');
     const blocks = [...new Set(picked)];
     blocks.filter(block => !blocks.some(other => other !== block && other.contains(block))).forEach(block => reveal(block));
 
+    // Person cards, one by one, after Stellar Management's news photos (stellarmanagement.com, read from its bundle on
+    // 5 Nov 2026: xPercent -110 to 0, power1.out, 1.05s, once the card is 80% down the viewport). Here the photo slides
+    // inside its own frame, which clips it, so it never crosses the card beside it. Cards that arrive together play
+    // left to right, 0.16s apart; a card's name and lines rise as its photo lands (Tanya, 5 Nov: "add similar exit
+    // animation, one by one", then "make it smother like here"). A card without a photo (About's [Photo] frames) only
+    // rises. The hover zoom is CSS, in components.css.
+    const cards = gsap.utils.toArray('.person-grid > li');
+    if (cards.length) {
+      const photos = list => list.flatMap(card => [...card.querySelectorAll('.portrait > img')]);
+      const words = list => list.flatMap(card => [...card.children].filter(part => !part.classList.contains('portrait')));
+      gsap.set(photos(cards), {xPercent: -110});
+      gsap.set(words(cards), {opacity: 0, y: 22});
+      ScrollTrigger.batch(cards, {start: 'top 80%', once: true, onEnter: batch => batch.forEach((card, n) => {
+        gsap.to(photos([card]), {xPercent: 0, duration: 1.05, ease: 'power1.out', delay: n * .16, clearProps: 'transform'});
+        gsap.to(words([card]), {opacity: 1, y: 0, duration: .9, ease, delay: n * .16 + .2, stagger: .05, clearProps: 'transform'});
+      })});
+    }
+
+    // Platform cards' hover stack, after Concrete Management's portal (concretemanagement.ch/fr, its Portail
+    // onBtnMouseEnter / onBtnMouseLeave read from main.js on 5 Nov 2026). On hover a portrait box opens at the card's
+    // right: its clip runs from inset(90% 91% 92% 93%) to nothing, it turns from a tilt to straight and fades in, 1.8s
+    // expo.out. Where Concrete's box cycles photos, ours holds the deal's capital stack (components.css says why): the
+    // card's own layer, debt or equity by its eyebrow, fills from its floor over the same 1.8s, 0.15s in, and the two
+    // labels rise 0.1s apart (1.2s power4.out, Concrete's button values). It fills once per hover; a loop would read as
+    // loading. On leave it closes in 1.2s and tilts to a random ±15°. The grow and fade of the cards are CSS. Concrete
+    // shows it over 767px; here from 1100px, where the card's right is clear of its text.
+    const hoverCards = gsap.utils.toArray('.platform-pair > .platform-card');
+    const roomy = matchMedia('(min-width: 1100px) and (hover: hover) and (pointer: fine)');
+    if (hoverCards.length) {
+      const shut = 'inset(90% 91% 92% 93%)';
+      hoverCards.forEach(card => {
+        const kind = (card.querySelector('.eyebrow') || {textContent: ''}).textContent.trim().toLowerCase();
+        let box, fill, labels, play;
+        card.addEventListener('mouseenter', () => {
+          if (!roomy.matches) return;
+          if (!box) {
+            box = document.createElement('div');
+            box.className = 'platform-stack';
+            box.setAttribute('aria-hidden', 'true');
+            box.append(...[['eq', 'equity', 'Equity'], ['debt', 'debt', 'Debt']].map(([key, layer, word]) => {
+              const part = document.createElement('span');
+              part.className = key + (layer === kind ? ' own' : '');
+              if (layer === kind) part.append(document.createElement('i'));
+              part.append(Object.assign(document.createElement('b'), {textContent: word}));
+              return part;
+            }));
+            card.append(box);
+            fill = box.querySelector('i');
+            labels = [...box.querySelectorAll('b')];
+            gsap.set(box, {clipPath: shut, rotate: gsap.utils.random(-15, 15)});
+          }
+          gsap.killTweensOf([box, fill, ...labels].filter(Boolean));
+          play = gsap.timeline({defaults: {duration: 1.8, ease}})
+            .to(box, {clipPath: 'inset(0% 0% 0% 0%)', rotate: 0, opacity: 1})
+            .fromTo(labels, {yPercent: 140}, {yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: .1}, .3);
+          if (fill) play.fromTo(fill, {scaleY: 0}, {scaleY: 1}, .15);
+        });
+        card.addEventListener('mouseleave', () => {
+          if (!box) return;
+          gsap.to(box, {clipPath: shut, opacity: 0, rotate: gsap.utils.random(-15, 15), duration: 1.2, ease, onComplete: () => play && play.kill()});
+        });
+      });
+    }
+
+    // Testimonials ticker, after Casa Momo's reviews (casamomo.at, a Framer Ticker, measured 5 Nov 2026; Tanya, 5 Nov:
+    // "check how this section is animated [...] make the same"). The row drifts left at 40px/s without end, eases to a
+    // stop under a mouse, and can be dragged, coasting on release (speed decays 7.5% a frame: a 300px flick runs on ~245px here, ~270px there). Each word of a quote sits
+    // in its own mask, 100px low and tilted 8° on its bottom edge; a line's words rise together (1.3s expo.out) when the
+    // line reaches the bottom of the viewport, as Casa Momo's do, with no delay between words. editorial.css (.ticking)
+    // hides the arrows and lets cards keep their own height. Copies that fill the loop are hidden from assistive tech.
+    const track = document.querySelector('.quote-track');
+    if (track) {
+      const section = track.closest('.testimonials');
+      const originals = [...track.children];
+      section.classList.add('ticking');
+      const period = () => originals.length * (originals[0].offsetWidth + (parseFloat(getComputedStyle(track).columnGap) || 0));
+      for (let n = Math.ceil(Math.max(innerWidth, screen.width) / period()) + 1; n > 0; n--) originals.forEach(card => {
+        const copy = card.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        copy.inert = true;
+        track.append(copy);
+      });
+
+      // Words, grouped into lines by their page position, so the same line across every card rises on one trigger.
+      const rows = new Map();
+      track.querySelectorAll('.quote-card > p').forEach(quote => {
+        const split = SplitText.create(quote, {type: 'words', mask: 'words', aria: 'none'});
+        split.masks.forEach(mask => Object.assign(mask.style, {padding: '0 .06em .14em', margin: '0 -.06em -.14em'}));
+        gsap.set(split.words, {y: 100, rotation: 8, transformOrigin: '50% 100%'});
+        split.words.forEach((word, n) => {
+          const key = Math.round(split.masks[n].getBoundingClientRect().top + scrollY);
+          if (!rows.has(key)) rows.set(key, []);
+          rows.get(key).push(word);
+        });
+      });
+      rows.forEach(words => ScrollTrigger.create({trigger: words[0].parentElement, start: 'top bottom', once: true,
+        onEnter: () => gsap.to(words, {y: 0, rotation: 0, duration: 1.3, ease, overwrite: true})}));
+
+      // The drift, on gsap.ticker, only while the section is on screen or held.
+      const state = {speed: 1};
+      let offset = 0, coast = 0, span = period(), held = null, live = false;
+      addEventListener('resize', () => { span = period(); });
+      ScrollTrigger.create({trigger: section, start: 'top bottom', end: 'bottom top', onToggle: self => { live = self.isActive; }});
+      gsap.ticker.add((time, dt) => {
+        if (!live && !held) return;
+        if (!held) {
+          offset += (40 * state.speed + coast) * dt / 1000;
+          coast = Math.abs(coast) < 1 ? 0 : coast * Math.pow(.925, dt / 16.7);
+        }
+        track.style.transform = `translate3d(${-(((offset % span) + span) % span)}px,0,0)`;
+      });
+      const pause = stop => gsap.to(state, {speed: stop ? 0 : 1, duration: .5, ease: 'power2.out', overwrite: true});
+      track.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') pause(true); });
+      track.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') pause(false); });
+      track.addEventListener('pointerdown', e => {
+        if (e.button) return;
+        track.setPointerCapture(e.pointerId);
+        held = {x: e.clientX, t: performance.now(), v: 0};
+        coast = 0;
+        track.classList.add('held');
+      });
+      track.addEventListener('pointermove', e => {
+        if (!held) return;
+        const now = performance.now(), dx = e.clientX - held.x;
+        offset -= dx;
+        held.v = -dx / Math.max(1, now - held.t) * 1000;
+        held.x = e.clientX;
+        held.t = now;
+      });
+      const release = () => {
+        if (!held) return;
+        coast = performance.now() - held.t < 100 ? held.v : 0; // a hand that stopped before letting go does not throw
+        held = null;
+        track.classList.remove('held');
+      };
+      track.addEventListener('pointerup', release);
+      track.addEventListener('pointercancel', release);
+    }
+
     // Drafted: the economics bars draw from the left (0.45s power3.out, 0.07s apart) once the scale is 90% down.
     if (document.querySelector('.scale-bar')) gsap.fromTo('.scale-bar', {scaleX: 0, transformOrigin: 'left center'}, {scaleX: 1, duration: .45, ease: 'power3.out', stagger: .07,
       scrollTrigger: {trigger: '.economics-scale', start: 'top 90%', once: true}});
 
-    // Steps rail (Home, Option A of the steps review, Tanya 2 Nov): the bronze dash-dot line draws left to right as the
-    // list travels from 80% to 45% down the viewport, and each step wakes once the line reaches its diamond; the steps
-    // take no block reveal of their own. From 851px only, where the rail runs across four columns (home.css); below,
-    // and without motion, the rail stays fully drawn and every step awake.
-    const track = document.querySelector('.step-track');
-    if (track) gsap.matchMedia().add('(min-width: 851px)', () => {
-      const items = [...track.querySelectorAll('.step-list > li')];
-      const nodes = [...track.querySelectorAll('.step-node')];
-      // Where each diamond's centre sits along the line, 0 to 1: column starts are a gap past the quarters.
-      const at = node => (node.offsetLeft + node.offsetWidth / 2) / track.offsetWidth;
-      const draw = p => {
-        track.style.setProperty('--p', p);
-        nodes.forEach(node => node.classList.toggle('on', p >= at(node)));
-        items.forEach((item, n) => item.classList.toggle('on', n ? p >= at(nodes[n - 1]) : p > .02));
+    // Steps rail (Home, Tanya 5 Nov: "use animated vertical line as [...] on broker"): the bronze dash-dot line runs down
+    // the steps' left edge and draws with its head 55% down the viewport, as brokers/rail.js does; each step's diamond
+    // fills and its row wakes once the head reaches the diamond. home.css draws the line in one length per step, from its
+    // diamond (--mid) to the next, so each row carries its own progress.
+    // A row's number, title and paragraph split into masked lines, padded as lines() pads them, and rise (0.9s, 0.07s
+    // apart) the first time the head reaches its diamond; until then the rail and the hollow diamond show the step to
+    // come. Option D of the steps motion review, assets/website/steps-motion-options/ (Tanya, 5 Nov: "option D").
+    // autoSplit re-splits on resize; a row that has risen stays risen.
+    const steps = document.querySelector('.step-list');
+    if (steps) {
+      const rows = [...steps.children];
+      const parts = rows.map(() => []), risen = new Set();
+      rows.forEach((row, n) => [...row.children].forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, onSplit(split) {
+        split.masks.forEach(mask => Object.assign(mask.style, {padding: '0 .1em .14em', margin: '0 -.1em -.14em'}));
+        parts[n][k] = split.lines;
+        gsap.set(split.lines, {yPercent: risen.has(n) ? 0 : 110});
+      }})));
+      const draw = () => {
+        const box = steps.getBoundingClientRect(), mid = parseFloat(getComputedStyle(steps).getPropertyValue('--mid'));
+        const head = innerHeight * .55 - box.top;
+        rows.forEach((row, n) => {
+          const from = row.offsetTop + mid, on = head >= from;
+          row.style.setProperty('--p', Math.min(1, Math.max(0, (head - from) / row.offsetHeight)));
+          row.classList.toggle('on', on);
+          if (on && !risen.has(n)) {
+            risen.add(n);
+            gsap.to(parts[n].flat(), {yPercent: 0, duration: .9, ease, stagger: .07});
+          }
+        });
       };
-      track.classList.add('live');
-      draw(0);
-      const trigger = ScrollTrigger.create({trigger: track, start: 'top 80%', end: 'top 45%', onUpdate: self => draw(self.progress)});
-      draw(trigger.progress);
-      return () => { track.classList.remove('live'); track.style.removeProperty('--p'); items.concat(nodes).forEach(n => n.classList.remove('on')); };
-    });
+      steps.classList.add('live');
+      ScrollTrigger.create({trigger: steps, start: 'top bottom', end: 'bottom top', onUpdate: draw, onRefresh: draw});
+      draw();
+    }
 
     // Count-up, as on the Find and Cinematic options (Tanya, 29 Oct): each proof figure counts from 0 over 1.5s expo.out
     // as its block reveals. The digits are hidden from screen readers; an .sr-only twin carries the real figure.

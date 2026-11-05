@@ -26,8 +26,11 @@
 .capabilities-title{max-width:900px;margin:0 0 64px}
 .pillar{grid-template-columns:1fr 1fr;gap:70px;align-items:center;margin-bottom:64px;padding-top:40px;border-top:1px solid var(--line)}
 .pillar-copy,.matching .pillar-copy{grid-column:auto;max-width:500px;padding:0}
-.pillar-copy>.eyebrow{font-size:11px;margin-bottom:20px}
-.chapter-number{font-size:30px;border:0;padding:0}
+/* The pillar numbers are part of the label: the eyebrow's own DM Sans 12px / 600 / caps / 0.11em, 12px before the name, as
+   Home's .step-number since 4 Nov. They were 30px Bodoni (Tanya, 5 Nov: "make numbers here same font as labels", then
+   option C of ../../chapter-number-options/). The eyebrow drops from 30 to 16.2 tall, so each heading sits 13.8px higher. */
+.pillar-copy>.eyebrow{font-size:11px;margin-bottom:20px;gap:12px}
+.chapter-number{font:inherit;letter-spacing:inherit;border:0;padding:0}
 .pillar h3 em{color:var(--bronze)}
 .pillar-copy>p:not(.eyebrow){margin-top:20px}
 .pillar .feature-list{font-size:14px}
@@ -63,9 +66,12 @@
 .walkthrough .section-heading{align-items:last baseline}
 .walkthrough .section-heading>p{padding-bottom:0}
 .walk-stage{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;align-items:start}
+/* Step numbers use Bodoni Moda's tabular figures: proportional ones ran 26.4 / 29.2 / 28.5 wide in a 28px column, so "02"
+   overflowed and the gap to the title read 13.7 / 10.8 / 11.5. Tabular, every number is 29 = the column, and the gap is
+   exactly what is set (Tanya, 5 Nov: "make numbers look proper aligned", "gap 16px for 1440"). */
 .walk-tabs{display:flex;flex-direction:column;border:0}
-.walk-tabs button{display:grid;grid-template-columns:28px 1fr 14px;align-items:start;gap:12px;padding:22px 0;font-size:15px;border:0;border-top:1px solid #c0c8d6;background:transparent}
-.walk-tabs button>span:first-child{font:400 25px var(--serif);color:var(--bronze)}
+.walk-tabs button{display:grid;grid-template-columns:29px 1fr 14px;align-items:start;gap:16px;padding:22px 0;font-size:15px;border:0;border-top:1px solid #c0c8d6;background:transparent}
+.walk-tabs button>span:first-child{font:400 25px var(--serif);font-variant-numeric:tabular-nums;color:var(--bronze)}
 .walk-tabs button small{display:block;font:12px/1.6 var(--sans);margin-top:8px;color:var(--muted)}
 .walk-tabs button[aria-selected=true]{color:var(--ink);background:transparent;border-top:2px solid var(--ink);padding-top:21px}
 .walk-tabs button[aria-selected=true] b{font-weight:700}
@@ -123,7 +129,7 @@
 .matching-crop img{width:140%}
 .walk-stage{grid-template-columns:1fr;gap:24px}
 .walk-tabs{flex-direction:row}
-.walk-tabs button{grid-template-columns:25px 1fr;width:33.333%;padding:18px 12px;font-size:14px}
+.walk-tabs button{grid-template-columns:29px 1fr;gap:12px;width:33.333%;padding:18px 12px;font-size:14px}
 .walk-tabs button[aria-selected=true]{padding-top:17px}
 .walk-tabs button>span:last-child{display:none}
 .walk-screen{grid-column:1;grid-row:2}

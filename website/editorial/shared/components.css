@@ -13,6 +13,13 @@
 /* A frame holding a photo drops the dashed "to confirm" border; absolute keeps a non-square photo (Tony's 853×1067 stand-in) from stretching the square. */
 .portrait{position:relative;overflow:hidden}
 .portrait:has(>img){border:0}
+/* With motion the photo slides in from the left (motion.js), over the paper, as Stellar's does; the beige stays as the
+   loading fill on a static page. */
+.motion .portrait:has(>img){background:transparent}
+/* Hover zoom, Stellar's image-scale: the photo grows to 1.05 over 0.6s inside its frame, on a fine pointer only (Tanya,
+   5 Nov: "add same zoom in animation"). It uses the scale property, so it never fights the slide's transform. */
+.portrait>img{transition:scale .6s}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.person-card:hover .portrait>img{scale:1.05}}
 .person-card h3{font-size:clamp(24px,2vw,28px);line-height:1.2}
 .person-card h3 .placeholder{font-size:inherit}
 .person-role{font-size:14px;line-height:1.5;color:var(--muted)}
@@ -26,6 +33,50 @@
 .platform-card>:last-child{margin-top:auto}
 .platform-card .platform-here{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);padding-top:8px}
 .platform-card .text-link{border:0;padding-block:8px 0}
+/* Here and there (Option A of the Prism family review, assets/website/platforms-options/; Tanya, 5 Nov: "build A"): the
+   card for the site you are on is navy, its rule, eyebrow and diamond in the home hero's light bronze, as a pin on a
+   map; the sister stays on paper and the whole card is its link (the text link stretched over it), with an ink border
+   on hover and the focus ring round the card. Keyed off the content, so Home and About need no new class. */
+.platform-card:has(.platform-here){background:var(--ink);border-color:var(--ink);border-top-color:#c2a98a;color:var(--paper)}
+.platform-card:has(.platform-here) .eyebrow{color:#c2a98a}
+.platform-card:has(.platform-here)>p:not(.eyebrow){color:#c9cfda}
+.platform-card:has(.platform-here) .platform-here{color:var(--paper)}
+.platform-card:has(.platform-here) .tiny-mark{background:#c2a98a}
+.platform-card:has(>a){position:relative;transition:border-color .3s cubic-bezier(.22,1,.36,1)}
+.platform-card>a::after{content:'';position:absolute;inset:0}
+.platform-card:has(>a):hover{border-color:var(--ink)}
+.platform-card:has(>a):hover .text-link span{transform:translateX(4px)}
+.platform-card:has(>a:focus-visible){outline:2px solid var(--bronze);outline-offset:3px}
+.platform-card>a:focus-visible{outline:0}
+/* Hover, after Concrete Management's portal panels (concretemanagement.ch/fr, read 5 Nov 2026; Tanya, 5 Nov: "animate
+   those 2 cards similar to this", then "I meant the hover state animation only"). Their values: the hovered panel
+   grows to 1.5 shares and steps .25em up and right over .8s on their curve, the other recedes; under 767px nothing.
+   Here the other card fades to .5 (theirs dims a photo to .2, ours would take the text with it). Where Concrete
+   opens a card of photos, ours opens the deal's capital stack, equity over debt, and fills the card's own layer: the
+   KB draws the two platforms as the two layers of one deal (investor-prism-product-overview.md, ~$28M debt and ~$12M
+   equity on a $40M deal; the 70 / 30 is that picture, not a figure, so no number shows). Tanya, 5 Nov: "what does
+   make sence to use instaed of images?", then "do recommended". The stack is built and played by motion.js. Side by
+   side, fine pointer and no reduced motion only. */
+@media(min-width:851px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .platform-pair{transition:grid-template-columns .8s cubic-bezier(.36,.33,0,1)}
+  .platform-pair:has(>:first-child:hover){grid-template-columns:1.5fr 1fr}
+  .platform-pair:has(>:last-child:hover){grid-template-columns:1fr 1.5fr}
+  .platform-pair>.platform-card{position:relative;transition:translate .8s cubic-bezier(.36,.33,0,1),opacity 1.2s cubic-bezier(.36,.33,0,1),border-color .3s cubic-bezier(.22,1,.36,1)}
+  .platform-pair>.platform-card:hover{translate:.25em -.25em}
+  /* !important: the block reveal (motion.js) leaves its end state, opacity 1, inline on each card. */
+  .platform-pair:has(>:hover)>:not(:hover){opacity:.5!important}
+  /* The stack: the other layer hatched, as the Brokers hatch; the card's own layer (.own) filled by its <i>. Bronze
+     on paper; on the navy card the home hero's light bronze, its label in ink. */
+  .platform-pair>.platform-card{--stack-line:#c9b597;--stack-hatch:#e3d7c3;--stack-label:#7A6040;--stack-fill:#7A6040;--stack-own:var(--white)}
+  .platform-pair>.platform-card:has(.platform-here){--stack-line:rgba(194,169,138,.45);--stack-hatch:rgba(194,169,138,.28);--stack-label:#c2a98a;--stack-fill:#c2a98a;--stack-own:var(--ink)}
+  .platform-stack{position:absolute;top:50%;right:36px;display:flex;flex-direction:column;gap:4px;width:144px;aspect-ratio:2/3;translate:0 -50%;pointer-events:none}
+  .platform-stack>span{position:relative;display:flex;align-items:flex-end;padding:10px 12px;overflow:hidden;border:1px solid var(--stack-line);background:repeating-linear-gradient(135deg,var(--stack-hatch) 0 1px,transparent 1px 7px);color:var(--stack-label);font-size:12px;font-weight:600;letter-spacing:.1em;line-height:1;text-transform:uppercase}
+  .platform-stack>.eq{flex:30}
+  .platform-stack>.debt{flex:70}
+  .platform-stack>.own{border-color:var(--stack-fill);color:var(--stack-own)}
+  .platform-stack i{position:absolute;inset:0;background:var(--stack-fill);transform-origin:50% 100%}
+  .platform-stack b{position:relative;font-weight:inherit}
+}
 
 
 /* One-column hero with no visual (Borrowers and Lenders under a status badge, About). */

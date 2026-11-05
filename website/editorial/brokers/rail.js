@@ -38,11 +38,13 @@
   function build() {
     svg.replaceChildren(); path = null;
     if (innerWidth < 1024) return;
-    // The flag sits on chapter 01's number; the line runs only through the numbered sequence.
-    const num = pillars[0].querySelector('.chapter-number');
+    // The flag sits on chapter 01's floor line, as the 02 and 03 diamonds sit on theirs; the line runs only
+    // through the numbered sequence. It sat on 01's number while that was a 30px Bodoni numeral; once the
+    // number became a 12px label (3c0223f), 01's top rule was the one floor line with no mark (Tanya, 5 Nov:
+    // "should we place diamond for the first item next to top divider?", then "go").
     const left = pos(pillars[0]).x;
     const gap = Math.min(32, left * .6);
-    const start = { x: left - gap, y: pos(num).y + num.offsetHeight / 2 };
+    const start = { x: left - gap, y: floor(pillars[0]) };
     const pts = [start], marks = [];
     pillars.slice(1).forEach(p => {
       const x = pos(p).x - gap, y = floor(p);          // the pillar's border-top is the floor line

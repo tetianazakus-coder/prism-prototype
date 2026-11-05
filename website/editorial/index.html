@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared/base.css?v=20261102a">
-  <link rel="stylesheet" href="shared/editorial.css?v=20261102c">
-  <link rel="stylesheet" href="shared/components.css?v=20261102f">
-  <link rel="stylesheet" href="home.css?v=20261102i">
+  <link rel="stylesheet" href="shared/editorial.css?v=20261105a">
+  <link rel="stylesheet" href="shared/components.css?v=20261105g">
+  <link rel="stylesheet" href="home.css?v=20261105k">
   <link rel="stylesheet" href="shared/type.css?v=20261102c">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
   <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
@@ -22,7 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
   <script src="shared/site.js?v=20261102g" defer></script>
-  <script src="shared/motion.js?v=20261102g" defer></script>
+  <script src="shared/motion.js?v=20261105l" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -74,15 +74,14 @@
   </section>
   <section class="steps section" aria-labelledby="steps-title">
     <div class="wrap">
-      <div class="section-heading"><h2 id="steps-title">One submission. The right lenders. <br><em>Real people the whole way.</em></h2></div>
-      <div class="step-track">
-        <span class="step-rail" aria-hidden="true"><span class="step-line"></span><i class="step-flag" style="--i:0"></i><i class="step-node" style="--i:1"></i><i class="step-node" style="--i:2"></i><i class="step-node" style="--i:3"></i></span>
+      <div class="steps-grid">
+        <div class="steps-head"><h2 id="steps-title">One submission. The right lenders. <br><em>Real people the whole way.</em></h2></div>
         <ol class="step-list">
-        <li><span class="step-number" aria-hidden="true">01</span><h3>Submit once.</h3><p>Property type, loan size, location and timeline. No reformatting for every lender.</p></li>
-        <li><span class="step-number" aria-hidden="true">02</span><h3>A broker takes it on.</h3><p>A LenderPrism broker reviews the deal and confirms fit before anything goes out.</p></li>
-        <li><span class="step-number" aria-hidden="true">03</span><h3>Packaged and matched.</h3><p>Our team packages the deal to institutional standard and matches it by asset, size and geography.</p></li>
-        <li><span class="step-number" aria-hidden="true">04</span><h3>Quotes side by side.</h3><p>Lenders compete. Terms come back in one place, and your broker works them to close.</p></li>
-      </ol>
+          <li><span class="step-number" aria-hidden="true">01</span><h3>Submit once.</h3><p>Property type, loan size, location and timeline. No reformatting for every lender.</p></li>
+          <li><span class="step-number" aria-hidden="true">02</span><h3>A broker takes it on.</h3><p>A LenderPrism broker reviews the deal and confirms fit before anything goes out.</p></li>
+          <li><span class="step-number" aria-hidden="true">03</span><h3>Packaged and matched.</h3><p>Our team packages the deal to institutional standard and matches it by asset, size and geography.</p></li>
+          <li><span class="step-number" aria-hidden="true">04</span><h3>Quotes side by side.</h3><p>Lenders compete. Terms come back in one place, and your broker works them to close.</p></li>
+        </ol>
       </div>
     </div>
   </section>
@@ -94,19 +93,20 @@
            its click when the panel carries a picture (Mobbin: Fibery, Reducto, Intercom; text-only sites show columns).
            One side open at a time, each a disclosure button over its region, as Ploy's accordion; closed regions are
            inert, not hidden, so they can fold shut and the screens can cross-fade (Tanya, 2 Nov: "smooth animation"). The open side's screen
-           stands beside the list from 851px and inside the region below. No 01-03 numerals: the steps above own them.
+           stands beside the list from 851px and inside the region below. Numbered 01-03 as the Brokers walkthrough is
+           (Tanya, 5 Nov: "align this section with the one we have in Broker"); until then the steps above owned them.
            The intro line is our draft, not the structure doc's. [💡 rec] -->
       <div class="sides-list" data-sides>
         <div class="side-item">
-          <h3><button type="button" id="side-0" aria-expanded="true" aria-controls="side-panel-0"><span class="side-for">For brokers</span><span class="side-lead">Run a pipeline like a large firm.</span></button></h3>
+          <h3><button type="button" id="side-0" aria-expanded="true" aria-controls="side-panel-0"><span class="side-num" aria-hidden="true">01</span><span class="side-for">For brokers</span><span class="side-lead">Run a pipeline like a large firm.</span></button></h3>
           <div class="side-panel" id="side-panel-0" role="region" aria-labelledby="side-0"><div class="side-body"><p>House-sourced leads in your territory, a matching engine across 11,500+ lenders, and an execution desk that packages and chases quotes.</p><a class="button" href="pricing/">Explore broker plans <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><figure class="side-screen"><img src="img/hero-deals-board.png" width="1680" height="886" alt="The LenderPrism Deals board: a filterable table of the broker's deals with amount, state, execution type, lender matches and status"></figure></div></div>
         </div>
         <div class="side-item">
-          <h3><button type="button" id="side-1" aria-expanded="false" aria-controls="side-panel-1"><span class="side-for">For borrowers</span><span class="side-lead">Financing with a person, not a portal.</span></button></h3>
+          <h3><button type="button" id="side-1" aria-expanded="false" aria-controls="side-panel-1"><span class="side-num" aria-hidden="true">02</span><span class="side-for">For borrowers</span><span class="side-lead">Financing with a person, not a portal.</span></button></h3>
           <div class="side-panel" id="side-panel-1" role="region" aria-labelledby="side-1" inert><div class="side-body"><p>A vetted broker reviews your deal, takes it to lenders who actually lend on it, and brings back competing quotes. Free for borrowers.</p><a class="button" href="borrowers/">Learn more<span class="sr-only"> about LenderPrism for borrowers</span> <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><figure class="side-screen"><img src="img/hero-borrower-deals.png" width="1552" height="750" alt="LenderPrism My deals: the borrower's deals in one table, with loan request, advisor, stage, quotes, outstanding items and last activity"></figure></div></div>
         </div>
         <div class="side-item">
-          <h3><button type="button" id="side-2" aria-expanded="false" aria-controls="side-panel-2"><span class="side-for">For lenders</span><span class="side-lead">Deal flow that fits your box.</span></button></h3>
+          <h3><button type="button" id="side-2" aria-expanded="false" aria-controls="side-panel-2"><span class="side-num" aria-hidden="true">03</span><span class="side-for">For lenders</span><span class="side-lead">Deal flow that fits your box.</span></button></h3>
           <div class="side-panel" id="side-panel-2" role="region" aria-labelledby="side-2" inert><div class="side-body"><p>Set your lending parameters once; packaged, pre-screened deals arrive by email. Pass in one click on the rest.</p><a class="button" href="lenders/">Learn more<span class="sr-only"> about LenderPrism for lenders</span> <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a><figure class="side-screen"><img src="img/hero-lender-requests.png" width="1552" height="892" alt="LenderPrism Requests: the loan requests matched to the lender's parameters, with filters for property type, type of financing and state"></figure></div></div>
         </div>
       </div>

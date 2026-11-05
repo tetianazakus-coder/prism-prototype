@@ -285,6 +285,14 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
 .quote-card .byline img{width:48px;height:48px;border-radius:50%;object-fit:cover}
 .quote-card .byline b{display:block;font-weight:500;color:var(--ink)}
 .quote-note{font-size:12px;line-height:1.7;color:var(--muted);max-width:560px;margin-top:22px}
+/* Ticker, after Casa Momo's reviews (motion.js adds .ticking; Tanya, 5 Nov: "check how this section is animated [...]
+   make the same"). The row drifts on its own and is dragged by hand, so the arrows go; cards keep their own height,
+   top-aligned, as Casa Momo's do. Without motion none of this applies and the native carousel above stays. */
+.testimonials.ticking .quote-arrows{display:none}
+.testimonials.ticking .quote-track{overflow:visible;scroll-snap-type:none;align-items:flex-start;touch-action:pan-y;user-select:none;cursor:grab}
+.testimonials.ticking .quote-track.held{cursor:grabbing}
+.testimonials.ticking .quote-card{min-height:0}
+.testimonials.ticking .quote-card img{-webkit-user-drag:none}
 @media(max-width:600px){.quote-head{margin-bottom:28px}
 .quote-card{padding:26px;min-height:300px}
 .quote-card>p{font-size:18px}}
