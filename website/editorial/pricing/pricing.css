@@ -51,6 +51,12 @@
 .plans-head{justify-content:flex-end;margin-top:0}
 .plans-head .billing{margin-top:0}
 
+/* Card labels (START HERE, MOST POPULAR, DEAL FLOW) take the Brokers chapter label ("01 Deal flow", .pillar-copy>.eyebrow):
+   DM Sans 12 at 600, .11em tracking, gold text #7A6040; size and line height already matched. The "No card required" note
+   in the Accelerator label keeps its own muted 400 (Tanya, 5 Nov: "apply this style for the 3 headers"). */
+.plan-top{font-weight:600;letter-spacing:.11em;color:#7A6040}
+.plan-top>.micro{font-weight:400;color:var(--muted)}
+
 /* Full cards: a label leads every list (Essential "Includes:", the others "Everything in X, plus:") so the three lists start
    level, and Pro's territory line sits under it. The label takes the Brokers walkthrough's selected step title ("Create deal",
    .walk-tabs button[aria-selected=true] b): DM Sans 15/700 in ink. Tanya, 5 Nov, tried the .eyebrow (uppercase bronze)
@@ -60,6 +66,15 @@
 .plan-includes{margin-top:22px;font:600 15px/1.6 var(--sans);color:var(--ink)}
 .plan-includes+.feature-list{margin-top:8px}
 .plan-addon{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+/* The territory rule closes Pro's last row, so the list drops its 10px bottom margin: "Phone support" sat 5px high between
+   its two rules (12px over the line box, 22px under); now 11/11 like every other row (Tanya, 5 Nov). */
+.plan .feature-list:has(+.plan-addon){margin-bottom:0}
+/* The territory line is a row of its own: a 1.6 line of the list's clamp(16px,1.2vw,17px) type around its 14px text,
+   centred between its rule and the foot of the cards, with 18px each side, 7px more than the feature rows' 11 (63.2px at
+   1440 against their 49.2); the Pro card's bottom padding is the row's lower 18px (Tanya, 5 Nov: "center aligned as well",
+   "same item height as here", then "increase this section height"). */
+.plan-addon{padding-top:18px;line-height:calc(1.6 * clamp(16px, 1.2vw, 17px))}
+.plan:has(.plan-addon){padding-bottom:18px}
 /* "talk to us" is the comparison note's "Read the Broker Agreement" link (.compare-notes .inline-link): ink with the
    base .inline-link's 1px rule always under it, no hover change (Tanya, 5 Nov: "use this style for this link"). It had
    taken the Brokers "Compare all features" draw-in rule and bronze hover ("use same button as here", 08954e7). */
@@ -77,7 +92,9 @@
 .compare-group th{padding:22px 0;font-size:17px;font-weight:600;text-align:left}
 .compare-always th,.compare-always td{border-bottom-color:var(--line)}
 .compare-always tr:first-child>*{border-top:1px solid var(--ink)}
-.compare-notes{margin-top:24px;display:grid;gap:8px;font-size:14px;color:var(--muted);max-width:760px}
+/* One note, both sentences in one paragraph with the Agreement link closing it, across the table's full width (Tanya, 5 Nov:
+   "combine them into one line, you can keep 2 sentences"; it was two stacked notes, then split to opposite sides). */
+.compare-notes{margin-top:24px;font-size:14px;color:var(--muted)}
 .compare-notes .inline-link{color:var(--ink)}
 
 @media(max-width:850px){
@@ -92,6 +109,7 @@
 /* Phones: no sideways scroll. Each feature row stacks its name over three labelled values. */
 @media(max-width:600px){
   .ledger{margin:8px 0 48px;padding:22px 20px 20px}
+  .plan:has(.plan-addon){padding-bottom:18px!important} /* phone cards set padding with !important (editorial.css) */
   .compare table,.compare tbody,.compare tr,.compare th,.compare td{display:block}
   .compare thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
   .compare tbody[id] tr,.compare-always tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 12px;border-bottom:1px solid var(--line);padding:14px 0}
