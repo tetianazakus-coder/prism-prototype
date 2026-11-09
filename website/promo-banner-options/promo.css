@@ -103,8 +103,23 @@ html[data-promo=off] .promo-strip,html.promo-dismissed .promo-strip{display:none
    form's 18px with the navy accent. */
 #promo-form input[type=radio]{display:inline-block;flex:0 0 18px;width:18px;height:18px;min-height:0;margin:0;padding:0;border:0;accent-color:var(--navy)}
 #promo-form textarea{display:block;width:100%;margin-top:7px;padding:12px;border:1px solid #bfc2bd;background:var(--white);color:var(--ink);font:inherit;font-size:16px;border-radius:0;resize:vertical}
-#promo-status{margin:0;font-size:14px;color:var(--muted)}
+#promo-status{flex-basis:100%;margin:0;font-size:14px;color:var(--muted)}
 #promo-status:empty{display:none}
+/* The send button pins to the foot of the dialog while the form scrolls (Tanya, 9 Nov: "should the footer with cta be
+   fixed?", then "build it"): the form is 727px, so the button sat 36 to 79px below the fold at 1366x768 and 1280x720,
+   and 134 to 294px on phones. Sticky, not fixed: the dialog drops its bottom padding and the row carries it, full bleed
+   on the paper. A hairline shows above the row only while there is form below the fold (.is-more, promo.js). The status
+   line sits in the row, so a message never lands under a pinned button.
+   Then Tanya, 9 Nov: "it looks weird", on the row carrying the dialog's 44px under the button: a 114px band that read as
+   the end of the form. Mobbin, 24 web screens over two searches: the seven dialogs that pin their actions (Salesforce,
+   Zillow, HoneyBook, Base44, Fresha, Eventbrite, Okta) keep the bar compact, 16 to 20px around the button, and put the
+   button on the right, so the bar reads as the dialog's actions, not as more form. The row now takes 16px over and 20px
+   under the button, the button on the right. */
+#promo-dialog{--dp-x:44px;padding-bottom:0}
+#promo-form .form-actions{position:sticky;bottom:0;z-index:1;justify-content:flex-end;margin:-2px calc(-1 * var(--dp-x)) 0;padding:16px var(--dp-x) 20px;background:var(--paper);box-shadow:0 -1px 0 transparent;transition:box-shadow .15s}
+#promo-dialog.is-more .form-actions{box-shadow:0 -1px 0 var(--line)}
+@media(max-width:600px){#promo-dialog{--dp-x:24px}}
+@media(prefers-reduced-motion:reduce){#promo-form .form-actions{transition:none}}
 
 @media(max-width:850px){
   .promo-c .promo-inner{grid-template-columns:1fr}
