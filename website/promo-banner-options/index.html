@@ -130,16 +130,20 @@
 .rv-label{font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#c2a98a;margin-right:8px;white-space:nowrap}
 .rv-groups{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
 .rv button{appearance:none;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
-.rv-g{padding:10px 12px 11px;color:#9aa6bb;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
-.rv-g b{font:400 17px/1 'Bodoni Moda',Georgia,serif;color:#c2a98a;margin-right:6px}
-.rv-g[aria-selected=true]{color:#f6f3ed;border-bottom-color:#c2a98a}
-.rv-g:hover{color:#f6f3ed}
+/* Selected placement: paper text, its letter in pale gold, a 2px gold rule drawn inside the tab (an inset shadow, so the
+   row's overflow cannot clip it); the others muted. .rv .rv-g outranks the .rv button reset. */
+.rv .rv-g{padding:10px 12px 12px;color:#8693a8;white-space:nowrap}
+.rv .rv-g b{font:400 17px/1 'Bodoni Moda',Georgia,serif;color:#7d7262;margin-right:6px}
+.rv .rv-g[aria-selected=true]{color:#fffdf9;font-weight:500;box-shadow:inset 0 -2px 0 #d6b472}
+.rv .rv-g[aria-selected=true] b{color:#e9cf96}
+.rv .rv-g:hover{color:#f6f3ed}
+.rv .rv-g:hover b{color:#c2a98a}
 .rv-min{flex:0 0 auto;width:36px;height:36px;color:#9aa6bb;font-size:18px}
 .rv-min:hover{color:#f6f3ed}
 .rv-vs{display:flex;gap:6px;padding:10px 12px 12px;overflow-x:auto;scrollbar-width:none}
-.rv-v{flex:0 0 auto;padding:8px 12px;border:1px solid #2a3a58;color:#dce2ec;white-space:nowrap}
-.rv-v:hover{border-color:#c2a98a}
-.rv-v[aria-pressed=true]{background:#e9d6ae;border-color:#e9d6ae;color:#0e1c35}
+.rv .rv-v{flex:0 0 auto;padding:8px 12px;border:1px solid #2a3a58;color:#dce2ec;white-space:nowrap}
+.rv .rv-v:hover{border-color:#c2a98a}
+.rv .rv-v[aria-pressed=true]{background:#e9d6ae;border-color:#e9d6ae;color:#0e1c35}
 .rv :focus-visible{outline:2px solid #e9cf96;outline-offset:2px}
 .rv.is-min .rv-vs,.rv.is-min .rv-groups{display:none}
 .rv.is-min{width:auto}
