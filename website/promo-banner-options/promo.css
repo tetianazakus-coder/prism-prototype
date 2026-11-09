@@ -11,8 +11,10 @@ html[data-option=a] .promo-a,html[data-option=b] .promo-b,html[data-option=c] .p
 html[data-option=d] .promo-d{display:flex}
 html[data-promo=off] .promo,html.promo-dismissed .promo{display:none!important}
 
-/* Shared parts: the trust strip's 6px bronze diamond as the offer's mark, and a plain × at 44px for touch. */
-.promo-mark{display:inline-block;flex:0 0 6px;width:6px;height:6px;background:currentColor;transform:rotate(45deg);vertical-align:.2em;margin-right:12px}
+/* Shared parts: the trust strip's 6px bronze diamond as the offer's mark, and a plain × at 44px for touch. The diamond
+   centres on the capitals (Tanya, 9 Nov: "align the diamond icon visualy with text"): DM Sans caps stand .70em, so
+   their middle is .35em over the baseline, less half the 6px box; .2em left it .6px high at 16px, .9 at 14. */
+.promo-mark{display:inline-block;flex:0 0 6px;width:6px;height:6px;background:currentColor;transform:rotate(45deg);vertical-align:calc(.35em - 3px);margin-right:12px}
 .promo-x{flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;font-size:24px;line-height:1;color:inherit;opacity:.7;cursor:pointer}
 .promo-x:hover,.promo-x:focus-visible{opacity:1}
 .promo-link{font:inherit;font-weight:500;color:inherit;border-bottom:1px solid currentColor;padding:0 0 2px;cursor:pointer;white-space:nowrap}

@@ -1,4 +1,5 @@
-/* Gold explorations from the Figma boards (Website file, page "Announcement bar", 9 Nov), as html[data-v] on top of
+/* Gold explorations from the Figma boards (Website file, page "Announcement bar", 9 Nov; aligned again with Tanya's
+   board edits the same evening: "also update banner variants on prototype, alight with figma"), as html[data-v] on top of
    promo.css. Gradients are the Figma ones: the smooth foil (six stops, held gold 42-60%), a soft 16% sheen, a bright
    gold for type on navy, a deep gold for type on paper, and an edge gold for borders. Buttons stay flat. */
 :root{
@@ -12,19 +13,20 @@
 .promo-tag{display:none;padding:3px 10px;margin-right:16px;font-size:12px;font-weight:600;line-height:18px;letter-spacing:.08em;text-transform:uppercase;vertical-align:.1em}
 
 /* B · 2 Gold foil */
-html[data-v=foil] .promo-b .promo-inner{background:var(--g-sheen),var(--g-foil);border:1px solid #b08a4e}
+html[data-v=foil] .promo-b .promo-inner{background:linear-gradient(90deg,rgba(255,255,255,0) 12%,rgba(255,255,255,.1) 32%,rgba(255,255,255,0) 52%),var(--g-foil);border:1px solid #b08a4e}
 html[data-v=foil] .promo-b .promo-mark{display:none}
 html[data-v=foil] .promo-b .promo-tag{display:inline-block;background:var(--navy);color:#e9cf96}
 html[data-v=foil] .promo-b .button{background:var(--navy);border-color:var(--navy);color:var(--white)}
 html[data-v=foil] .promo-b .button:hover{background:#213459}
 
-/* B · 3 Gold outline: navy strip, gold name and tag, outlined button */
-html[data-v=outline] .promo-b .promo-inner{background:linear-gradient(90deg,rgba(184,137,63,.22),rgba(184,137,63,0) 22%),var(--navy);border:1px solid;border-image:var(--g-edge) 1;color:#dce2ec;padding-block:14px}
+/* B · 3 Gold outline: navy strip, gold name and tag, a paper outline button (Figma 405:14 since 9 Nov). The strip's
+   gold is Figma's mid #c9a15e, not the C card's #d6b472. */
+html[data-v=outline] .promo-b .promo-inner{--g-strip:linear-gradient(90deg,#f3dda8,#c9a15e 50%,#f0d9a6);background:linear-gradient(90deg,rgba(184,137,63,.22),rgba(184,137,63,0) 22%),var(--navy);border:1px solid;border-image:var(--g-strip) 1;color:#dce2ec;padding-block:14px}
 html[data-v=outline] .promo-b .promo-mark{display:none}
-html[data-v=outline] .promo-b .promo-tag{display:inline-block;background:var(--g-bright);color:var(--navy)}
-html[data-v=outline] .promo-b p b{background:var(--g-bright);-webkit-background-clip:text;background-clip:text;color:transparent}
-html[data-v=outline] .promo-b .button{background:transparent;border-color:#c2a98a;color:#f0ddb0}
-html[data-v=outline] .promo-b .button:hover{background:rgba(194,169,138,.14)}
+html[data-v=outline] .promo-b .promo-tag{display:inline-block;background:var(--g-strip);color:var(--navy)}
+html[data-v=outline] .promo-b p b{background:var(--g-strip);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-v=outline] .promo-b .button{background:transparent;border-color:var(--white);color:var(--white)}
+html[data-v=outline] .promo-b .button:hover{background:rgba(255,253,249,.12)}
 html[data-v=outline] .promo-b .promo-x{color:#c9d0dc}
 
 /* B · 4 Gold ticket and B · 5 Gold rule replace the strip's markup */
@@ -58,25 +60,28 @@ html[data-v=foil] .promo-c h2 em{color:#7a6040}
 /* C · Navy, gold type */
 html[data-v=navy] .promo-c .promo-inner{background:var(--navy);border:1px solid;border-image:var(--g-edge) 1}
 html[data-v=navy] .promo-c h2{background:var(--g-bright);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-html[data-v=navy] .promo-c h2 em{-webkit-text-fill-color:#c2a98a}
+html[data-v=navy] .promo-c h2 em{-webkit-text-fill-color:#fff}
 html[data-v=navy] .promo-c .promo-tab{background:var(--g-bright);border-color:transparent;color:var(--navy)}
 html[data-v=navy] .promo-c .button{background:var(--white);border-color:var(--white);color:var(--navy)}
 html[data-v=navy] .promo-c .button:hover{background:#e4d6c0}
 html[data-v=navy] .promo-c .promo-x{color:#c9d0dc}
 /* C · Gold edge */
 html[data-v=edge] .promo-c .promo-inner{border:2px solid;border-image:var(--g-edge) 1}
-html[data-v=edge] .promo-c .pct{background:var(--g-deep);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-v=edge] .promo-c h2 em{color:var(--navy)}
+html[data-v=edge] .promo-c .pct{background:linear-gradient(90deg,#a9803f,#c9a15e 50%,#9c7436);-webkit-background-clip:text;background-clip:text;color:transparent}
 html[data-v=edge] .promo-c .promo-tab{background:var(--g-bright);border-color:transparent;color:var(--navy)}
 
 /* E · Gold accents */
-html[data-v=accents] .promo-e .promo-num b{background:linear-gradient(125deg,#f3dda8,#d6b472 45%,#f0d9a6);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-v=accents] .promo-e .promo-num b{background:linear-gradient(125deg,#f3dda8,#d6b472 45%,#f0d9a6);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.08em;margin-right:-.08em}
+/* The clip ends at the box, and -.05em tracking pushes the % past it: .08em of padding, taken back in the margin, keeps
+   the glyph whole without moving the layout. */
 html[data-v=accents] .promo-e .promo-num i{color:#d6b472}
 html[data-v=accents] .promo-e h2>em{color:#e2c68f}
 html[data-v=accents] .promo-e .promo-inner>.eyebrow{color:#e9cf96}
-html[data-v=accents] .promo-e .promo-num{border-right-color:rgba(214,180,114,.6)}
-html[data-v=accents] .promo-e .promo-inner::before{border-color:rgba(214,180,114,.55)}
-html[data-v=accents] .promo-e .promo-inner::after{background:linear-gradient(#e2c08a,#e2c08a) 0 0/7px 7px no-repeat,linear-gradient(#e2c08a,#e2c08a) 100% 0/7px 7px no-repeat,linear-gradient(#e2c08a,#e2c08a) 0 100%/7px 7px no-repeat,linear-gradient(#e2c08a,#e2c08a) 100% 100%/7px 7px no-repeat}
-html[data-v=accents] .promo-e .promo-seats{border-top-color:rgba(214,180,114,.3)}
+html[data-v=accents] .promo-e .promo-num{border-right-color:rgba(219,190,127,.45)}
+html[data-v=accents] .promo-e .promo-inner::before{border-image:linear-gradient(90deg,rgba(201,161,94,.35),rgba(235,211,160,.35) 50%,rgba(184,137,63,.35)) 1}
+html[data-v=accents] .promo-e .promo-inner::after{background:linear-gradient(#c9a15e,#c9a15e) 0 0/7px 7px no-repeat,linear-gradient(#b8893f,#b8893f) 100% 0/7px 7px no-repeat,linear-gradient(#c9a15e,#c9a15e) 0 100%/7px 7px no-repeat,linear-gradient(#b8893f,#b8893f) 100% 100%/7px 7px no-repeat}
+html[data-v=accents] .promo-e .promo-seats{border-top:1px solid;border-image:linear-gradient(90deg,rgba(201,161,94,.2),rgba(235,211,160,.2) 50%,rgba(184,137,63,.2)) 1}
 html[data-v=accents] .promo-e .promo-seats i{border-color:#d6b472}
 /* E · Gold foil band */
 html[data-v=foil] .promo-e{color:var(--navy);background:linear-gradient(90deg,transparent calc(100% - 1px),rgba(14,28,53,.06) 1px) 0 0/120px 100%,var(--g-sheen),var(--g-foil)}
