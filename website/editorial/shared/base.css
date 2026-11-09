@@ -50,9 +50,12 @@ h1 em,h2 em{font-weight:400;color:var(--bronze)}
 /* Navigation */
 .site-header{position:sticky;top:0;z-index:20;background:rgba(246,243,237,.97);border-bottom:1px solid var(--line)}
 .header-inner{max-width:1772px;margin:auto;padding:20px var(--gutter);display:flex;align-items:center;gap:48px}
-.brand{display:flex;align-items:center;gap:10px;white-space:nowrap;font-size:23px;letter-spacing:-.9px;font-weight:700;line-height:1}
+.brand{display:flex;flex-shrink:0;align-items:center;gap:10px;white-space:nowrap;font-size:23px;letter-spacing:-.9px;font-weight:700;line-height:1}
 .brand em{font-weight:400}
-.brand img{flex-shrink:0}
+/* New brand logo, 9 Nov (Logo/Vector/LenderPrism/SVG, "LenderPrism logo - main"): the whole lockup as one image, sign
+   and wordmark as drawn, 30px tall (its cap height 17.8px, the old 23px wordmark's was 16.6). The font rules on
+   .brand above no longer draw anything: the lockup carries its own lettering. Tanya, 9 Nov: "update prototype and figma with new logo". */
+.brand img{flex-shrink:0;height:30px;width:auto}
 nav{display:flex;align-items:center;gap:30px;width:100%;font-size:12px}
 nav>a,nav>details{white-space:nowrap}
 nav>a:not(.button):hover{color:var(--bronze)}
@@ -255,7 +258,7 @@ h1{font-size:62px;margin-top:23px}
 html{scroll-padding-top:85px}
 .section{padding-block:56px}
 .header-inner{padding-block:16px}
-.brand img{width:24px;height:28px}
+.brand img{height:26px}
 .brand{font-size:21px}
 .hero-grid{display:block;padding-top:33px}
 .hero-copy>.eyebrow{font-size:8px;max-width:100%;letter-spacing:.08em;white-space:normal}

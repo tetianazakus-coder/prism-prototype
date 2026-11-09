@@ -14,7 +14,8 @@
 .ps-app{position:relative;display:flex;height:100%;background:#eff3f8;overflow:hidden}
 .ps-rail{flex:0 0 48px;background:#08142d;display:flex;flex-direction:column;align-items:center}
 .ps-rail-top{width:100%;height:57px;display:grid;place-items:center;border-bottom:1px solid #1a325a}
-.ps-mark{width:30px;height:34px;background:#fff;-webkit-mask:url(../img/logo-mark.svg) center/contain no-repeat;mask:url(../img/logo-mark.svg) center/contain no-repeat}
+/* The rail's mark is the new prism sign (9 Nov), white as the product rail draws it. */
+.ps-mark{width:34px;height:28px;background:#fff;-webkit-mask:url(../img/logo-sign.svg) center/contain no-repeat;mask:url(../img/logo-sign.svg) center/contain no-repeat}
 .ps-rail-menu{display:flex;flex-direction:column;gap:4px;padding-top:11px}
 .ps-rail-menu i{width:32px;height:32px;border-radius:6px;display:grid;place-items:center;color:rgba(210,220,240,.78)}
 .ps-rail-menu i.on{background:#142a52;color:#fff}

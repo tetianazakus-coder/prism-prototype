@@ -35,7 +35,8 @@
 .role-card:is(:hover,:focus-visible) .role-arrow{background:var(--bronze);color:var(--white);transform:translate(2px,-2px)}
 @media(hover:hover){.role-cards:has(.role-card:hover) .role-card:not(:hover){opacity:.8}}
 .role-call{margin-top:10px;font-size:15px;color:#c9d0dc}
-.role-call .placeholder{color:#d9bf98}
+.role-call a{color:#d9bf98;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;transition:color 150ms ease}
+.role-call a:hover{color:#f0e2cc}
 
 /* How the desk works: the heading beside the steps (Option B of the steps layout review, Tanya, 5 Nov: "build opt B",
    after "how to improve this layout?"). The heading takes 5 of 12 columns and stays in place under the header while
