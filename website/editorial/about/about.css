@@ -1,29 +1,113 @@
 /* About (/about): only what it adds to ../shared/. Load order: base.css, editorial.css, components.css, this file,
    type.css. */
 
+/* Hero on a photo, option E of ../../about-hero-options/ (Tanya, 9 Nov): Home's treatment (.home-hero, home.css), the
+   building under a navy overlay, 95% behind the copy and lighter on the right, the headline in paper with its italic in
+   the navy bands' light bronze. Descendant em for the same reason as Home's: motion.js wraps the headline's lines. The
+   copy keeps its place, at Home's photo hero padding, 88px above and below (56 on phones; option E had 96 and 64).
+   The headline drops the 24px margin it keeps for an eyebrow above it: About has none, so the copy sat 120px under
+   the band's top and 96 over its foot (Tanya, 9 Nov: "check top/bottom paddings on each section"). Our story follows
+   on the same navy, so a hairline splits the two. */
+.about-hero{position:relative;isolation:isolate;background:var(--navy);color:var(--paper)}
+.about-hero .hero-backdrop{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.about-hero .hero-backdrop>img{width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(.6)}
+/* With motion the photo is 170% of the hero, crop anchored at its foot, and motion.js slides it up by the extra 70% as
+   the hero scrolls off: the first frame shows the top of that box, the last its foot, the same two crops object-position
+   40% and 100% gave. Transform, not object-position, so the drift is composited. */
+.motion .about-hero .hero-backdrop>img{height:170%;object-position:center 100%;will-change:transform}
+.about-hero .hero-backdrop::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,28,53,.95) 0%,rgba(14,28,53,.86) 45%,rgba(14,28,53,.5) 100%)}
+.about-hero h1{color:var(--paper)}
+.about-hero h1 em{color:#c2a98a}
+.about-hero .hero-description{color:#c9d0dc}
+.about-hero .hero-grid{padding-block:88px}
+.about-hero h1:first-child{margin-top:0}
+.about-hero .hero-copy{padding-bottom:0}
+.about-hero+.story{border-top:1px solid #23324f}
+
 /* Our story: title left, Tony's paragraphs right, in the FAQ's 4:8 grid, on the navy band the Brokers problem section
-   uses (2 Nov), so the page opens paper, navy, paper as Brokers does. Until his text arrives the column holds the
-   doc's placeholder in a dashed frame. */
+   uses (2 Nov), so the page opens paper, navy, paper as Brokers does. Since 9 Nov the column holds his note (below);
+   its last paragraph is still the doc's placeholder in a dashed frame. The text column and the contact form run to the
+   wrap's right edge, as the FAQ items do in the same grid and every card row on this page does (1328 at 1440); a 720px
+   cap stopped both 37px short (8 Nov). */
+/* Titles close on the bronze italic every other page's titles carry (Tanya, 8 Nov: "build 1-4"). The doc's labels are
+   two or three words, so the italic word stays on the title's line, as in the territory dialog (#inquiry-dialog h2 em,
+   editorial.css); set as a block like Home's, it stood alone: "The" over "team". */
+main h2 em{display:inline}
+
 .story-grid,.contact-grid{display:grid;grid-template-columns:4fr 8fr;gap:80px;align-items:start}
-.story-body{max-width:720px}
-.story-body>p{font-size:18px;line-height:1.75}
+.story-body>p{font-size:18px;line-height:1.75;color:#d6dbe5}
 .story-body>p+p{margin-top:20px}
-.story-body>p.placeholder{padding:28px 32px;border:1px dashed #5a6a88;color:#d9bf98}
+.story-body>p.placeholder{padding:20px 24px;border:1px dashed #5a6a88;color:#d9bf98;font-size:16px}
+/* Tony's note (option F of ../../about-hero-options/, Tanya, 9 Nov: "build F"), as founder-led About pages set theirs
+   (KÖPPEN, Kalstore, Daylight, incident.io on Mobbin): the title and his portrait share the left column, the letter
+   takes the right and closes on his name, typeset in the navy bands' light bronze italic, over his role.
+   Option E of the layout review (Tanya, 9 Nov: "think how to improve layout here", "ok, build"): the portrait alone
+   fills the left column, 4:5, and the title stands over the letter, so the photo starts level with the title. The
+   letter runs to the wrap's right edge, as the FAQ items and the contact form do (Tanya, 9 Nov: "make text wider, to
+   the right margin"; a 40em cap for 61 to 62 characters a line left 117px of the column empty), so at 1440 it ends
+   44px above the photo's foot. .story-side stays in the markup, so the reading order (title, portrait, letter) and
+   motion.js's reveal list are unchanged; display:contents lets its title and portrait take grid areas of their own. */
+.story-side{display:contents}
+.story-grid{grid-template-areas:"pic title" "pic body";grid-template-rows:auto 1fr;row-gap:32px}
+.story-side>h2{grid-area:title;margin:0}
+.story-portrait{grid-area:pic;margin:0}
+.story-portrait>img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+.story-body{grid-area:body}
+/* Tony's portrait moves as the team's photos do (Tanya, 9 Nov): the frame clips the slide-in (motion.js), and on a fine
+   pointer the photo grows to 1.05 over 0.6s, the person cards' zoom (components.css), on the scale property so it never
+   fights the slide's transform. */
+.story-portrait{overflow:hidden}
+.story-portrait>img{transition:scale .6s}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.story-portrait:hover>img{scale:1.05}}
+.story-body>.story-sign{position:relative;display:flex;flex-direction:column;gap:4px;margin-top:36px;padding-top:24px;border-top:1px solid #33425f}
+.story-sign b{display:block;font:italic 400 36px/1.1 var(--serif);letter-spacing:-.02em;color:#c2a98a}
+/* The signature arrives last (Tanya, 9 Nov: "build recommended"): motion.js moves the hairline onto .sign-rule, which draws
+   from the left as the Pricing ledger's rule does, and wraps the name in .sign-mask, padded as the title masks are so the
+   italic swash and the descender are not clipped while it rises. Without motion the border and the plain name stand. */
+.motion .story-sign:has(>.sign-rule){border-top-color:transparent}
+.sign-rule{position:absolute;top:-1px;left:0;right:0;height:1px;background:#33425f;transform-origin:left}
+.sign-mask{display:block;overflow:hidden;padding:0 .22em .14em;margin:0 -.22em -.14em}
+.story-sign span{font-size:14px;line-height:1.5;color:#9aa6bb}
+
+/* What we believe: three numbered beliefs across the row, the number beside the title in Home's 24px serif, 16px apart,
+   and the line under the title. Home's steps rail ran over them on 9 Nov, laid across (Tanya: "make similar to this,
+   but use horizontal layout"), then out to the wrap's edge (Option A of ../../beliefs-options/), stacked beside the
+   heading (Option B, reverted), back to ending on the last diamond, and went the same morning (Tanya: "remove this"):
+   beliefs are not steps, and a line joining them read as a sequence. Phones stack the three. */
+/* Then each belief became a card, the Pricing ledger's (Tanya, 9 Nov: "can we make this as a cards? like here"): white,
+   the 1px line border, 28/32/26 padding; the number heads the card over a hairline as the ledger's caption does, the
+   title and line follow. The three cards stretch to the tallest. */
+.belief-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:0;padding:0;list-style:none}
+.belief-list>li{display:flex;flex-direction:column;padding:28px 32px 26px;background:var(--white);border:1px solid var(--line)}
+.belief-number{display:block;position:relative;font:400 24px/1.25 var(--serif);color:#7a6040;font-variant-numeric:tabular-nums;padding-bottom:15px}
+/* The hairline is drawn, not a border, so motion.js can draw it from the left by --rule (0 to 1); without motion it stands. */
+.belief-number::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line);transform-origin:left;transform:scaleX(var(--rule,1))}
+.belief-list h3{font-size:24px;line-height:1.25;margin-top:20px}
+.belief-list p{margin-top:10px;font-size:16px;line-height:1.7;color:var(--muted)}
 
 .team{background:var(--white)}
+/* The capital markets team alone since 9 Nov (Tony's card went: he is in Our story), so three columns, not four with
+   one empty; phones keep the shared two. */
+@media(min-width:851px){.team .person-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 /* Contact: the doc's form beside the phone, email and reply time. Fields at the inquiry dialog's values. */
 .contact{background:#eef1f6}
 .contact-intro{display:flex;flex-direction:column;gap:16px}
 .contact-intro>p{font-size:16px;line-height:1.7;color:var(--muted)}
 .contact-lines{display:flex;flex-direction:column;gap:6px}
-.contact-lines .placeholder{font-size:17px}
-.contact-form{display:grid;gap:22px;max-width:720px}
+.contact-lines :is(.placeholder,.sample){font-size:17px}
+.contact-lines a.sample{color:var(--ink)}
+/* The footer's phone and email, filled on About only (9 Nov); editorial.css sizes only the [placeholder] spans. Moves to
+   editorial.css when the other seven footers fill. */
+.footer-brand>a.sample{font-size:14px}
+.contact-form{display:grid;gap:22px}
 .contact-form .form-row{gap:22px 20px}
 .contact-form label,.radio-group legend{display:block;font-size:15px;font-weight:500}
 .contact-form input:not([type=radio]),.contact-form textarea{display:block;width:100%;margin-top:8px;padding:12px 14px;min-height:48px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);color:var(--ink);font:inherit;font-size:16px;font-weight:400}
 .contact-form textarea{resize:vertical;min-height:132px}
-.contact-form :is(input,textarea):focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+/* Focus: the site's bronze ring, drawn 2px and close to the box as the Get notified field does (.notify-form,
+   components.css), not the ink ring this form had alone; the radios keep the site-wide ring (base.css). */
+.contact-form :is(input:not([type=radio]),textarea):focus-visible{outline:2px solid #b59159;outline-offset:2px}
 /* "I am a": four fixed answers, so radios; a segmented control only switches views. */
 .radio-group{display:flex;flex-wrap:wrap;gap:12px 28px;margin:0;padding:0;border:0}
 .radio-group legend{width:100%;margin-bottom:12px;padding:0}
@@ -33,4 +117,5 @@
 #contact-status{font-size:15px;color:var(--muted);min-height:1.5em}
 
 @media(max-width:1150px){.story-grid,.contact-grid{gap:48px}}
-@media(max-width:850px){.story-grid,.contact-grid{grid-template-columns:1fr;gap:32px}}
+@media(max-width:850px){.belief-list{grid-template-columns:1fr;gap:16px}.belief-list>li{padding:24px 24px 22px}}
+@media(max-width:850px){.about-hero .hero-grid{padding-block:56px}.about-hero .hero-backdrop::after{background:linear-gradient(180deg,rgba(14,28,53,.94) 0%,rgba(14,28,53,.82) 100%)}.story-grid,.contact-grid{grid-template-columns:1fr;gap:32px}.story-grid{grid-template-areas:"title" "pic" "body";grid-template-rows:none;row-gap:28px}.story-portrait{max-width:240px}}

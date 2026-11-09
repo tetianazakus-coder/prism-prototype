@@ -21,13 +21,31 @@
 .filter-foot button:hover{color:var(--bronze)}
 .find-count{margin-left:auto;font-size:15px;color:var(--muted)}
 
-/* Broker card: the person card with types, states served and the connect button. */
+/* Broker card: the person card with types, property locations and the connect button. */
 .broker-card{gap:8px}
+/* Every card in a row is the same height and its parts sit level (Tanya, 9 Nov: "all cards should be same height"):
+   each card takes six rows of the directory grid as a subgrid, one per part (photo, name, town, types, locations,
+   button), so the longest part in a row sets that row for all four, and the Connect buttons and the locations rule
+   line up. A list that wraps to two lines, Jordan Pike's "North Carolina, South Carolina +1 more" at 1440, now lowers
+   only the space under the others. Without subgrid the cards stay as they were. */
+/* Rows stand 40px apart, the filters' gap above the first row; columns keep the person grid's 24 (Tanya, 9 Nov: "should
+   we make vertical gaps between cards bigger ... like here", the filters to the photos). At 24 a card's outlined button
+   sat as close to the next card's photo as to its own. The grid's row gap is the cards' own 8 and each card adds 32
+   below, cancelled under the last row: a 40px grid gap with an 8px subgrid gap made Chrome pad the town line by 11px.
+   Phones keep the person grid's 32 between stacked cards (8 + 24). */
+.broker-grid{row-gap:8px;margin-bottom:-32px}
+.broker-card{margin-bottom:32px}
+@supports (grid-template-rows:subgrid){
+  .broker-card{display:grid;grid-template-rows:subgrid;grid-row:span 6;align-content:start}
+}
 .broker-card>.portrait{background:#ece7de;border:0;overflow:hidden}
 .broker-types{font-size:15px;line-height:1.6;color:var(--ink)}
 .broker-types>span{color:var(--muted);white-space:nowrap}
-.broker-states{display:flex;flex-direction:column;gap:2px;margin-top:6px;padding-top:12px;border-top:1px solid var(--line);font-size:15px}
-.broker-states>span{font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7A6040}
+/* Locations cut at two, as the types line cuts at three: "Arizona, Nevada +1 more", the rest muted after them.
+   The full list stays in data-states for the filter. */
+.broker-states{margin-top:6px;padding-top:12px;border-top:1px solid var(--line);font-size:15px}
+.broker-states>span:first-child{display:block;margin-bottom:2px;font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7A6040}
+.broker-states>.more{color:var(--muted);white-space:nowrap}
 .broker-card>.button{margin-top:16px;justify-content:space-between}
 .broker-card[hidden]{display:none}
 
@@ -35,10 +53,8 @@
 .find-empty[hidden]{display:none}
 .find-empty p{font:400 clamp(26px,2.2vw,32px)/1.25 var(--serif);letter-spacing:-.02em;max-width:620px}
 
-.find-banner{padding-block:40px}
-.find-banner p{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 40px;font:400 clamp(28px,2.6vw,38px)/1.2 var(--serif);letter-spacing:-.02em}
-.find-banner .text-link{font-family:var(--sans);letter-spacing:0;color:var(--paper)}
-.find-banner .text-link:hover{color:#c2a98a}
+/* Closing band for brokers: the shared centred band on the glass facade (.final-centred, .band-glass-facade,
+   components.css). */
 
 @media(max-width:1150px){.broker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){
@@ -48,6 +64,7 @@
   .filter-toggle .chev{margin-left:auto}
   .filter-pop{width:100%}
   .find-count{margin-left:0}
-  .broker-grid{grid-template-columns:1fr;max-width:420px}
+  .broker-grid{grid-template-columns:1fr;max-width:420px;row-gap:8px;margin-bottom:-24px}
+  .broker-card{margin-bottom:24px}
   .find-empty{padding:28px 24px}
 }

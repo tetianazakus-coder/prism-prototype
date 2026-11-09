@@ -162,6 +162,16 @@
     gsap.fromTo(band, {backgroundPositionY: '0%'}, {backgroundPositionY: '100%', ease: 'none',
       scrollTrigger: {trigger: band, start: 'top bottom', end: 'bottom top', scrub: true}});
   });
+  // About's hero takes the same drift (Tanya, 9 Nov: "same animation as here", the Home closing band; "only about", so
+  // Home's hero stays still). Its photo is an <img> under object-fit: cover, so about.css makes it 170% of the hero
+  // and anchors its crop at the bottom; the transform then slides it up by the extra 70% while the hero scrolls off,
+  // start at the top since the hero sits under the header on load. A first version moved object-position with a hard
+  // scrub, which repaints the 2400px photo on every wheel tick and stepped (Tanya: "make animation smoother"); the
+  // transform is composited and scrub: 1 lets the photo catch up over a second, both ways. About 310px at 1440.
+  document.querySelectorAll('.about-hero .hero-backdrop > img').forEach(photo => {
+    gsap.fromTo(photo, {yPercent: 0}, {yPercent: -70 / 170 * 100, ease: 'none',
+      scrollTrigger: {trigger: photo.closest('.about-hero'), start: 'top top', end: 'bottom top', scrub: 1}});
+  });
 
   document.fonts.ready.then(() => {
     placeToggles();
@@ -180,9 +190,9 @@
 
     // Blocks, each on its own trigger as The Nest wraps them. A container that holds a title reveals its other
     // children instead, so no title moves twice.
-    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .feature-cards > *, .notify > *, .faq-grid > *, .final-grid > *')
+    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *')
       .flatMap(block => block.querySelector('h2') ? [...block.children] : block)
-      .filter(block => block.tagName !== 'H2');
+      .filter(block => block.tagName !== 'H2' && !block.matches('.story-portrait'));
     const blocks = [...new Set(picked)];
     blocks.filter(block => !blocks.some(other => other !== block && other.contains(block))).forEach(block => reveal(block));
 
@@ -203,6 +213,38 @@
         gsap.to(words([card]), {opacity: 1, y: 0, duration: .9, ease, delay: n * .16 + .2, stagger: .05, clearProps: 'transform'});
       })});
     }
+
+    // Tony's portrait in Our story (About) moves as the team's photos do (Tanya, 9 Nov: "animate Tony photo same as
+    // others in The team section"): it slides in from the left inside its own frame, xPercent -110 to 0, power1.out,
+    // 1.05s, once the frame is 80% down the viewport, instead of rising with the column; the reveal list above skips it.
+    // The hover zoom is CSS, in about.css.
+    gsap.utils.toArray('.story-portrait > img').forEach(photo => {
+      gsap.set(photo, {xPercent: -110});
+      ScrollTrigger.create({trigger: photo.parentElement, start: 'top 80%', once: true,
+        onEnter: () => gsap.to(photo, {xPercent: 0, duration: 1.05, ease: 'power1.out', clearProps: 'transform'})});
+    });
+
+    // Story signature (About; Tanya, 9 Nov: "build recommended"): the letter's close arrives last. Once the sign-off is
+    // 85% down the viewport the hairline over the name draws from the left (0.6s power3.out, the Pricing ledger's rule),
+    // the name rises out of its mask as titles do (110% to 0, 1.05s) 0.25s in, and the role fades up 0.1s after that.
+    // The name is one line at every width, so a plain masking span does what SplitText does for titles; about.css pads
+    // it the same way. The hairline moves from the border onto .sign-rule (about.css), so without motion the border stands.
+    document.querySelectorAll('.story-sign').forEach(sign => {
+      const name = sign.querySelector('b'), role = sign.querySelector('span');
+      if (!name) return;
+      const rule = document.createElement('span');
+      rule.className = 'sign-rule';
+      rule.setAttribute('aria-hidden', 'true');
+      sign.prepend(rule);
+      const mask = document.createElement('span');
+      mask.className = 'sign-mask';
+      name.before(mask);
+      mask.append(name);
+      const play = gsap.timeline({defaults: {ease}, scrollTrigger: {trigger: sign, start: 'top 85%', once: true}});
+      play.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out'}, 0);
+      play.fromTo(name, {yPercent: 110, opacity: 0}, {yPercent: 0, opacity: 1, duration: 1.05, clearProps: 'transform'}, .25);
+      if (role) play.fromTo(role, {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: .7, clearProps: 'transform'}, .35);
+    });
 
     // Platform cards' hover stack, after Concrete Management's portal (concretemanagement.ch/fr, its Portail
     // onBtnMouseEnter / onBtnMouseLeave read from main.js on 5 Nov 2026). On hover a portrait box opens at the card's
@@ -399,6 +441,34 @@
       steps.classList.add('live');
       ScrollTrigger.create({trigger: steps, start: 'top bottom', end: 'bottom top', onUpdate: draw, onRefresh: draw});
       draw();
+    }
+
+    // Beliefs (About): each belief is a card since 9 Nov (the Pricing ledger's), and each card arrives in three beats
+    // (Tanya, 9 Nov: "how do you recommend to animate those cards?", then "go"): the card rises 22px and fades in (0.9s),
+    // cards that arrive together play left to right 0.16s apart as the team's cards do; 0.2s in, the hairline under the
+    // number draws from the left (0.6s power3.out, the ledger's rule; about.css scales .belief-number::after by --rule);
+    // 0.5s in, the number, title and line rise out of their masks (0.9s, 0.07s apart). Each card triggers on its own once
+    // it is 80% down the viewport (ScrollTrigger.batch), so on phones, where the three stack, the third plays as it comes
+    // into view rather than off-screen with the first. Before cards, Home's rail ran over the beliefs, drawn with the
+    // scroll, and went the same morning (Tanya: "remove this"). autoSplit re-splits on resize; a card that has risen
+    // stays risen. Lenders' and Borrowers' What's coming cards are the same card (components.css .feature-card, 9 Nov:
+    // "make same cards for lenders and borowers sections") and arrive the same way; the reveal list above skips them.
+    const beliefs = gsap.utils.toArray('.belief-list > li, .feature-cards > li');
+    if (beliefs.length) {
+      const parts = beliefs.map(() => []), risen = new Set();
+      beliefs.forEach((card, n) => [...card.children].forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, onSplit(split) {
+        split.masks.forEach(mask => Object.assign(mask.style, {padding: '0 .22em .14em', margin: '0 -.22em -.14em'}));
+        parts[n][k] = split.lines;
+        gsap.set(split.lines, {yPercent: risen.has(n) ? 0 : 110});
+      }})));
+      gsap.set(beliefs, {opacity: 0, y: 22, '--rule': 0});
+      ScrollTrigger.batch(beliefs, {start: 'top 80%', once: true, onEnter: batch => batch.forEach((card, n) => {
+        const i = beliefs.indexOf(card), at = n * .16;
+        risen.add(i);
+        gsap.to(card, {opacity: 1, y: 0, duration: .9, ease, delay: at, clearProps: 'opacity,transform'});
+        gsap.to(card, {'--rule': 1, duration: .6, ease: 'power3.out', delay: at + .2});
+        gsap.to(parts[i].flat(), {yPercent: 0, duration: .9, ease, stagger: .07, delay: at + .5});
+      })});
     }
 
     // Count-up, as on the Find and Cinematic options (Tanya, 29 Oct): each proof figure counts from 0 over 1.5s expo.out
