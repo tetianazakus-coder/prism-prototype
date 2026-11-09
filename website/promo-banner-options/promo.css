@@ -97,7 +97,11 @@ html[data-promo=off] .promo-strip,html.promo-dismissed .promo-strip{display:none
 #promo-form .form-row{gap:18px 20px}
 #promo-form fieldset{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
 #promo-form legend{width:100%;padding:0;margin-bottom:8px;font-size:15px}
-#promo-form fieldset label{display:inline-flex;align-items:center;gap:8px;min-height:32px}
+#promo-form fieldset label{display:inline-flex;align-items:center;gap:8px;min-height:32px;white-space:nowrap}
+/* base.css's dialog input (block, 100% wide, 44px tall, a border) reached the radios too: each took its label's width, so
+   "Not sure yet" drew a 56px circle and broke over three lines (Tanya, 9 Nov: "fix this"). The radios take the About
+   form's 18px with the navy accent. */
+#promo-form input[type=radio]{display:inline-block;flex:0 0 18px;width:18px;height:18px;min-height:0;margin:0;padding:0;border:0;accent-color:var(--navy)}
 #promo-form textarea{display:block;width:100%;margin-top:7px;padding:12px;border:1px solid #bfc2bd;background:var(--white);color:var(--ink);font:inherit;font-size:16px;border-radius:0;resize:vertical}
 #promo-status{margin:0;font-size:14px;color:var(--muted)}
 #promo-status:empty{display:none}
