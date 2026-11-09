@@ -1,0 +1,131 @@
+/* Holiday special banner: five placements of one offer, Tony's copy (Slack, Thursday 5 Nov, "Promo copy - bullet
+   point #1"): "Black Friday / Christmas / New Year 2027 Special - up to 60% off for the first 50 users. Contact us for
+   details." His words throughout; the hyphen is set as the site's em dash, and C, D and E split the sentence over two
+   lines without changing a word. Every variant is dismissible (the task: "dismissible top-banner variants"), and all
+   of them answer to one switch, html[data-promo], which is Chris's one click (see promo.js). Nothing on the page is
+   positioned against a banner, so switching it off or dismissing it leaves no gap and moves nothing but the content
+   under it. "Contact us for details" opens a form, never an address (Tony: "I don't want to advertise my email to
+   avoid spam"). */
+.promo{display:none}
+html[data-option=a] .promo-a,html[data-option=b] .promo-b,html[data-option=c] .promo-c,html[data-option=e] .promo-e{display:block}
+html[data-option=d] .promo-d{display:flex}
+html[data-promo=off] .promo,html.promo-dismissed .promo{display:none!important}
+
+/* Shared parts: the trust strip's 6px bronze diamond as the offer's mark, and a plain × at 44px for touch. */
+.promo-mark{display:inline-block;flex:0 0 6px;width:6px;height:6px;background:currentColor;transform:rotate(45deg);vertical-align:.2em;margin-right:12px}
+.promo-x{flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;font-size:24px;line-height:1;color:inherit;opacity:.7;cursor:pointer}
+.promo-x:hover,.promo-x:focus-visible{opacity:1}
+.promo-link{font:inherit;font-weight:500;color:inherit;border-bottom:1px solid currentColor;padding:0 0 2px;cursor:pointer;white-space:nowrap}
+
+/* A. Announcement bar, above the header on every page. Navy as the footer band, the paper text, gold for the mark and
+   the link as on the dark closing bands. It scrolls away; the sticky header below it stays. After HoneyBook and Uxcel. */
+.promo-a{background:var(--navy);color:var(--paper)}
+.promo-a .promo-inner{display:flex;align-items:center;justify-content:center;gap:16px;max-width:1772px;margin:auto;padding:4px 8px 4px var(--gutter);min-height:48px}
+.promo-a p{margin:0;flex:1;text-align:center;font-size:14px;line-height:1.5}
+.promo-a .promo-mark,.promo-a .promo-link{color:#c2a98a}
+.promo-a .promo-link:hover{color:var(--white)}
+
+/* B. Strip above the plans, the width of the plan grid, on Pricing only: the place Tony named ("a banner above the
+   pricing details"). Bronze tint on the paper, the copy on one line at 1440, an outline button at the right. After
+   Uxcel's strip and Base44's offer bar. */
+.promo-b{margin-bottom:28px}
+.promo-b .promo-inner{display:flex;align-items:center;gap:24px;padding:12px 8px 12px 24px;background:#efe6d8;border-top:1px solid var(--bronze)}
+.promo-b p{margin:0;flex:1;font-size:16px;line-height:1.5}
+.promo-b .promo-mark{color:var(--bronze)}
+.promo-b .button{flex:0 0 auto}
+
+/* C. Offer card, centred over the toggle and the plans. A white card on the paper with a tab label straddling its top
+   rule; the offer in Bodoni, the occasion under it, one button. After Bloom's Welcome Offer card. */
+.promo-c{position:relative;max-width:820px;margin:0 auto 44px}
+.promo-c .promo-inner{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px 40px;padding:34px 64px 30px 40px;background:var(--white);border:1px solid var(--line)}
+.promo-c .promo-tab{position:absolute;left:40px;top:0;transform:translateY(-50%);padding:5px 12px;background:var(--paper);border:1px solid var(--bronze);font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7a6040}
+.promo-c h2{margin:0;font-size:36px;line-height:1.1;letter-spacing:-.02em}
+.promo-c h2 em{display:block}
+.promo-c p{margin:8px 0 0;font-size:15px;color:var(--muted)}
+.promo-c .promo-x{position:absolute;top:8px;right:8px}
+
+/* D. On the plans themselves: a pill over the grid names the occasion, and the two paid cards carry a tinted strip at
+   the top, inside the card's own padding, with the offer and the contact link, as Perplexity's LIMITED TIME strips do; Xero sets its offer as a pill above the
+   grid. Essential is free and carries nothing. */
+.promo-d{justify-content:center;margin-bottom:28px}
+.promo-d .promo-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 2px 2px 18px;border:1px solid var(--bronze);border-radius:999px;background:var(--white);font-size:14px;font-weight:500;color:#7a6040}
+.promo-d .promo-pill .promo-x{width:36px;height:36px;font-size:20px}
+.promo-strip{display:none;align-items:center;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;margin:0 0 22px;padding:10px 14px;background:#efe6d8;font-size:14px;line-height:1.4;color:var(--ink)}
+.plan.featured .promo-strip{background:#e2d5c1}
+html[data-option=d] .promo-strip{display:flex}
+html[data-promo=off] .promo-strip,html.promo-dismissed .promo-strip{display:none!important}
+.promo-strip b{font-weight:600}
+
+/* E. A navy band of its own between the hero and the plans, the register of the site's closing bands. Since 9 Nov
+   (Tanya: "make this banner look more interesting, bg and layout", after Mobbin): the discount is the picture, as
+   SOTF's "30% OFF" is, a 176px Bodoni "60%" with "Up to" over it and "off" in gold italic; a bronze hairline; then the
+   occasion, "for the first 50 users." and the button under them (Tanya, 9 Nov: "put CTA below the text"); along the foot of the frame, the 50 places as a row of 50 outline diamonds,
+   the trust strip's mark, like a perforated ticket (none filled: nothing says how many are taken) [💡 rec]. The ground: the hero's 120px grid lines, an amber-gold glow behind
+   the numeral (Tanya, 9 Nov: "make light behind the 60% gold color, now it looks wanished"; then "gradient behind
+   the 60% should be 20% opacity", the Figma layer's 20%, so its stops .55/.3/.12 run at a fifth here), and a thin gold frame with corner ticks, as Intercom frames its startup offer. Tony's words unchanged; the
+   h2 is display:contents so its two halves sit in the grid and still read as one sentence. */
+.promo-e{position:relative;overflow:hidden;color:var(--paper);padding-block:36px;background:radial-gradient(32% 78% at 22% 55%,rgba(226,160,64,.11),rgba(214,140,52,.06) 30%,rgba(200,120,40,.024) 55%,transparent 78%),linear-gradient(90deg,transparent calc(100% - 1px),rgba(246,243,237,.06) 1px) 0 0/120px 100%,var(--navy)}
+.promo-e .promo-inner{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"num eye" "num users" "num btn" "seats seats";align-items:center;column-gap:56px;padding:44px 56px 30px}
+.promo-e .promo-inner::before{content:"";position:absolute;inset:0;border:1px solid rgba(194,169,138,.35);pointer-events:none}
+.promo-e .promo-inner::after{content:"";position:absolute;inset:-3px;pointer-events:none;background:linear-gradient(#c2a98a,#c2a98a) 0 0/7px 7px no-repeat,linear-gradient(#c2a98a,#c2a98a) 100% 0/7px 7px no-repeat,linear-gradient(#c2a98a,#c2a98a) 0 100%/7px 7px no-repeat,linear-gradient(#c2a98a,#c2a98a) 100% 100%/7px 7px no-repeat}
+.promo-e .promo-inner>.eyebrow{grid-area:eye;align-self:end;color:#c2a98a;font-size:12px;margin:0 0 14px}
+.promo-e h2{display:contents}
+.promo-e .promo-num{grid-area:num;align-self:stretch;display:grid;grid-template-columns:auto auto;align-content:center;align-items:end;column-gap:14px;padding-right:56px;border-right:1px solid rgba(194,169,138,.45);color:var(--paper);font-weight:400}
+.promo-e .promo-num small{grid-column:1/-1;font-size:30px;line-height:1;letter-spacing:-.01em;margin:0 0 6px 6px}
+.promo-e .promo-num b{font-weight:400;font-size:176px;line-height:.86;letter-spacing:-.05em}
+.promo-e .promo-num i{font-size:64px;line-height:1;color:#c2a98a;padding-bottom:14px}
+.promo-e h2>em{grid-area:users;display:block;font-family:var(--serif);font-size:44px;line-height:1.05;letter-spacing:-.025em;color:#c2a98a}
+.promo-e .promo-seats{grid-area:seats;display:flex;justify-content:space-between;margin-top:34px;padding-top:24px;border-top:1px solid rgba(194,169,138,.2)}
+.promo-e .promo-seats i{flex:0 0 7px;width:7px;height:7px;border:1px solid #c2a98a;transform:rotate(45deg);opacity:.85}
+.promo-e .promo-inner>.button{grid-area:btn;justify-self:start;align-self:start;margin-top:28px}
+.promo-e .promo-x{position:absolute;top:6px;right:6px}
+@media(max-width:1200px){
+  .promo-e .promo-inner{column-gap:44px}
+  .promo-e .promo-num{padding-right:44px}
+  .promo-e .promo-num b{font-size:136px}
+  .promo-e .promo-num i{font-size:50px;padding-bottom:10px}
+  .promo-e .promo-num small{font-size:26px}
+  .promo-e h2>em{font-size:38px}
+}
+
+/* The contact form behind every "Contact us for details". */
+#promo-dialog h2 em{display:inline}
+#promo-form{display:grid;gap:18px;margin-top:24px}
+#promo-form label{margin:0}
+#promo-form .form-row{gap:18px 20px}
+#promo-form fieldset{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
+#promo-form legend{width:100%;padding:0;margin-bottom:8px;font-size:15px}
+#promo-form fieldset label{display:inline-flex;align-items:center;gap:8px;min-height:32px}
+#promo-form textarea{display:block;width:100%;margin-top:7px;padding:12px;border:1px solid #bfc2bd;background:var(--white);color:var(--ink);font:inherit;font-size:16px;border-radius:0;resize:vertical}
+#promo-status{margin:0;font-size:14px;color:var(--muted)}
+#promo-status:empty{display:none}
+
+@media(max-width:850px){
+  .promo-c .promo-inner{grid-template-columns:1fr}
+  .promo-e .promo-inner{grid-template-columns:minmax(0,1fr);grid-template-areas:"eye" "num" "users" "btn" "seats";padding:36px 32px 26px}
+  .promo-e .promo-num{border-right:0;padding-right:0;justify-self:start}
+  .promo-c .promo-inner{padding:34px 48px 28px 24px}
+  .promo-c .promo-tab{left:24px}
+  .promo-c h2{font-size:30px}
+  .promo-c .button{justify-self:start}
+  .promo-e h2>em{margin-top:10px}
+}
+@media(max-width:600px){
+  .promo-a .promo-inner{align-items:flex-start;padding-left:16px}
+  .promo-a p{text-align:left;padding-top:10px}
+  .promo-b .promo-inner{position:relative;flex-wrap:wrap;gap:12px;padding:14px 52px 18px 18px}
+  .promo-b p{flex-basis:100%;font-size:15px}
+  .promo-b .promo-x{position:absolute;top:2px;right:2px}
+  /* C's tab label runs two lines here, so it steps inside the card as an eyebrow over the offer. */
+  .promo-c .promo-inner{padding-top:22px}
+  .promo-c .promo-tab{position:static;transform:none;justify-self:start;margin-right:28px}
+  .promo-d .promo-pill{font-size:13px;text-align:left;padding-left:14px}
+  .promo-strip{grid-column:1/-1;margin:0 0 18px}
+  .promo-e{padding-block:24px}
+  .promo-e .promo-inner{padding:30px 22px}
+  .promo-e .promo-num b{font-size:120px}
+  .promo-e .promo-num i{font-size:46px;padding-bottom:8px}
+  .promo-e .promo-num small{font-size:24px}
+  .promo-e h2>em{font-size:32px}
+  .promo-e .promo-seats{display:grid;grid-template-columns:repeat(10,7px);justify-content:space-between;row-gap:12px}
+}

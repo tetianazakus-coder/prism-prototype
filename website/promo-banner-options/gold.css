@@ -1,0 +1,101 @@
+/* Gold explorations from the Figma boards (Website file, page "Announcement bar", 9 Nov), as html[data-v] on top of
+   promo.css. Gradients are the Figma ones: the smooth foil (six stops, held gold 42-60%), a soft 16% sheen, a bright
+   gold for type on navy, a deep gold for type on paper, and an edge gold for borders. Buttons stay flat. */
+:root{
+  --g-foil:linear-gradient(90deg,#f4e8cd 0%,#f0dfbb 20%,#ead4a6 42%,#ead4a6 60%,#f0dfbb 80%,#f5ebd4 100%);
+  --g-sheen:linear-gradient(90deg,rgba(255,255,255,0) 12%,rgba(255,255,255,.16) 32%,rgba(255,255,255,0) 52%);
+  --g-bright:linear-gradient(100deg,#f3dda8,#d6b472 45%,#f0d9a6);
+  --g-deep:linear-gradient(90deg,#a9803f,#d2ac63 50%,#9c7436);
+  --g-edge:linear-gradient(90deg,#c9a15e,#ebd3a0 50%,#b8893f);
+}
+.gold-clip,.promo-c .pct{-webkit-background-clip:text;background-clip:text}
+.promo-tag{display:none;padding:3px 10px;margin-right:16px;font-size:12px;font-weight:600;line-height:18px;letter-spacing:.08em;text-transform:uppercase;vertical-align:.1em}
+
+/* B · 2 Gold foil */
+html[data-v=foil] .promo-b .promo-inner{background:var(--g-sheen),var(--g-foil);border:1px solid #b08a4e}
+html[data-v=foil] .promo-b .promo-mark{display:none}
+html[data-v=foil] .promo-b .promo-tag{display:inline-block;background:var(--navy);color:#e9cf96}
+html[data-v=foil] .promo-b .button{background:var(--navy);border-color:var(--navy);color:var(--white)}
+html[data-v=foil] .promo-b .button:hover{background:#213459}
+
+/* B · 3 Gold outline: navy strip, gold name and tag, outlined button */
+html[data-v=outline] .promo-b .promo-inner{background:linear-gradient(90deg,rgba(184,137,63,.22),rgba(184,137,63,0) 22%),var(--navy);border:1px solid;border-image:var(--g-edge) 1;color:#dce2ec;padding-block:14px}
+html[data-v=outline] .promo-b .promo-mark{display:none}
+html[data-v=outline] .promo-b .promo-tag{display:inline-block;background:var(--g-bright);color:var(--navy)}
+html[data-v=outline] .promo-b p b{background:var(--g-bright);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-v=outline] .promo-b .button{background:transparent;border-color:#c2a98a;color:#f0ddb0}
+html[data-v=outline] .promo-b .button:hover{background:rgba(194,169,138,.14)}
+html[data-v=outline] .promo-b .promo-x{color:#c9d0dc}
+
+/* B · 4 Gold ticket and B · 5 Gold rule replace the strip's markup */
+html[data-option=b][data-v=ticket] .promo-b,html[data-option=b][data-v=rule] .promo-b{display:none}
+html[data-option=b][data-v=ticket] .promo-bt,html[data-option=b][data-v=rule] .promo-br{display:block}
+.promo-bt,.promo-br{margin-bottom:28px}
+.promo-bt .promo-inner{display:flex;align-items:center;background:var(--white);border:1px solid #b08a4e}
+.bt-stub{align-self:stretch;flex:0 0 188px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 24px;background:linear-gradient(115deg,#f6e9cb,#e2c285 55%,#c9a15e);border-right:1px dashed rgba(14,28,53,.45);color:var(--navy)}
+.bt-stub small{font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;line-height:16px}
+.bt-stub b{font:400 40px/1.15 var(--serif);letter-spacing:-.02em;white-space:nowrap}
+.bt-stub i{font-size:26px}
+.bt-offer{flex:1;min-width:0;padding:20px 24px 20px 32px}
+.bt-offer p{margin:0;font-size:16px;line-height:24px;color:var(--muted)}
+.bt-offer .bt-name{font-size:18px;line-height:26px;font-weight:700;color:var(--ink)}
+.promo-bt .button{flex:0 0 auto}
+.promo-bt .promo-x{margin:0 8px 0 16px}
+.promo-br .promo-inner{position:relative;display:flex;align-items:center;gap:20px;padding:15px 8px 14px 24px;background:var(--white);border:1px solid var(--line)}
+.promo-br .promo-inner::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:3px;background:var(--g-deep)}
+.br-num{padding-right:20px;border-right:1px solid var(--line)}
+.br-num small{display:block;font-size:11px;font-weight:600;line-height:14px;letter-spacing:.11em;text-transform:uppercase;color:#7a6040}
+.br-num b{display:block;font:400 40px/42px var(--serif);letter-spacing:-.02em;background:var(--g-deep);-webkit-background-clip:text;background-clip:text;color:transparent}
+.br-offer{flex:1;min-width:0}
+.br-eyebrow{display:block;font-size:12px;font-weight:600;line-height:18px;letter-spacing:.11em;text-transform:uppercase;color:#7a6040}
+.br-offer p{margin:2px 0 0;font-size:16px;line-height:24px}
+.promo-br .button{flex:0 0 auto}
+
+/* C · Gold foil */
+html[data-v=foil] .promo-c .promo-inner{background:var(--g-sheen),var(--g-foil);border-color:#b08a4e}
+html[data-v=foil] .promo-c .promo-tab{background:var(--navy);border-color:var(--navy);color:#e9cf96}
+html[data-v=foil] .promo-c h2 em{color:#7a6040}
+/* C · Navy, gold type */
+html[data-v=navy] .promo-c .promo-inner{background:var(--navy);border:1px solid;border-image:var(--g-edge) 1}
+html[data-v=navy] .promo-c h2{background:var(--g-bright);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+html[data-v=navy] .promo-c h2 em{-webkit-text-fill-color:#c2a98a}
+html[data-v=navy] .promo-c .promo-tab{background:var(--g-bright);border-color:transparent;color:var(--navy)}
+html[data-v=navy] .promo-c .button{background:var(--white);border-color:var(--white);color:var(--navy)}
+html[data-v=navy] .promo-c .button:hover{background:#e4d6c0}
+html[data-v=navy] .promo-c .promo-x{color:#c9d0dc}
+/* C · Gold edge */
+html[data-v=edge] .promo-c .promo-inner{border:2px solid;border-image:var(--g-edge) 1}
+html[data-v=edge] .promo-c .pct{background:var(--g-deep);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-v=edge] .promo-c .promo-tab{background:var(--g-bright);border-color:transparent;color:var(--navy)}
+
+/* E · Gold accents */
+html[data-v=accents] .promo-e .promo-num b{background:linear-gradient(125deg,#f3dda8,#d6b472 45%,#f0d9a6);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-v=accents] .promo-e .promo-num i{color:#d6b472}
+html[data-v=accents] .promo-e h2>em{color:#e2c68f}
+html[data-v=accents] .promo-e .promo-inner>.eyebrow{color:#e9cf96}
+html[data-v=accents] .promo-e .promo-num{border-right-color:rgba(214,180,114,.6)}
+html[data-v=accents] .promo-e .promo-inner::before{border-color:rgba(214,180,114,.55)}
+html[data-v=accents] .promo-e .promo-inner::after{background:linear-gradient(#e2c08a,#e2c08a) 0 0/7px 7px no-repeat,linear-gradient(#e2c08a,#e2c08a) 100% 0/7px 7px no-repeat,linear-gradient(#e2c08a,#e2c08a) 0 100%/7px 7px no-repeat,linear-gradient(#e2c08a,#e2c08a) 100% 100%/7px 7px no-repeat}
+html[data-v=accents] .promo-e .promo-seats{border-top-color:rgba(214,180,114,.3)}
+html[data-v=accents] .promo-e .promo-seats i{border-color:#d6b472}
+/* E · Gold foil band */
+html[data-v=foil] .promo-e{color:var(--navy);background:linear-gradient(90deg,transparent calc(100% - 1px),rgba(14,28,53,.06) 1px) 0 0/120px 100%,var(--g-sheen),var(--g-foil)}
+html[data-v=foil] .promo-e .promo-num{color:var(--navy);border-right-color:rgba(122,96,64,.45)}
+html[data-v=foil] .promo-e .promo-num i,html[data-v=foil] .promo-e h2>em,html[data-v=foil] .promo-e .promo-inner>.eyebrow{color:#7a6040}
+html[data-v=foil] .promo-e .promo-inner::before{border-color:rgba(122,96,64,.35)}
+html[data-v=foil] .promo-e .promo-inner::after{background:linear-gradient(#7a6040,#7a6040) 0 0/7px 7px no-repeat,linear-gradient(#7a6040,#7a6040) 100% 0/7px 7px no-repeat,linear-gradient(#7a6040,#7a6040) 0 100%/7px 7px no-repeat,linear-gradient(#7a6040,#7a6040) 100% 100%/7px 7px no-repeat}
+html[data-v=foil] .promo-e .promo-seats{border-top-color:rgba(122,96,64,.2)}
+html[data-v=foil] .promo-e .promo-seats i{border-color:#7a6040}
+html[data-v=foil] .promo-e .button.light{background:var(--navy);border-color:var(--navy);color:var(--white)}
+html[data-v=foil] .promo-e .button.light:hover{background:#213459}
+
+@media(max-width:600px){
+  .promo-bt .promo-inner,.promo-br .promo-inner{flex-wrap:wrap}
+  .bt-stub{flex-basis:100%;border-right:0;border-bottom:1px dashed rgba(14,28,53,.45)}
+  .bt-offer{flex-basis:100%;padding:16px 18px 8px}
+  .promo-bt .button{margin:0 0 16px 18px}
+  .promo-bt .promo-x,.promo-br .promo-x{position:absolute;top:2px;right:2px}
+  .promo-bt .promo-inner{position:relative}
+  .br-offer{flex-basis:calc(100% - 120px)}
+  .promo-br .promo-inner{padding-right:48px}
+}
