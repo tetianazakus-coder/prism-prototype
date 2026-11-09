@@ -265,6 +265,32 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
 #navigation>a:not(.button)::before,.solutions>summary::before{content:"";position:absolute;inset:-8px -12px;z-index:-1;background:rgba(14,28,53,.06);transform:scale(0);transition:transform 200ms cubic-bezier(.4,0,.2,1);pointer-events:none}
 #navigation>a:not(.button):hover::before,.solutions>summary:hover::before,.solutions[open]>summary::before{transform:none}
 /* The header "Start free trial" became a link on 2 Nov, so the nav link hover (this tint pill, and brokers.css bronze text) skips .button: it keeps the primary button hover, navy lift, white text (Tanya, 2 Nov: "for primary buttons use this hover state"). */}
+/* Current page (Tanya, 9 Nov: "should we show selected state for item, to see in which page we are?", then "yes"; then
+   "search for tabs ui in mobbin, think how to improve it", then "go"). Every page marks its own nav link
+   aria-current="page"; this draws it. The first pass, a 1px text underline and a bronze edge plus gold title in the menu,
+   read as a link (this site underlines its links) and as two marks for one fact. After Flodesk, Xero and GetYourGuide on
+   Mobbin: in the bar the current item, Pricing or About, or Solutions on For Brokers, Borrowers, Lenders and Find a broker,
+   takes a 2px bar the width of the item, chevron included, set on the header's bottom rule like a tab. Every item
+   is centred in the 80px header row, so 39px below its centre is the rule whatever its own height; the hover tint pill
+   stays, a fill for hover and a line for here. In the menu, as on GetYourGuide and ZARA, a dot only: the trust strip's
+   6px bronze diamond in the gutter before the title, which keeps its ink (the bar already says where you are; Dribbble
+   and Later mark nothing in such menus). In the phone drawer, with no header rule beside the items, the diamond marks
+   the top-level item too. */
+@media(min-width:851px){#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current=page])>summary::after{content:"";position:absolute;left:0;right:0;top:calc(50% + 39px);height:2px;background:var(--bronze);pointer-events:none}}
+/* Bronze bar, label at 500 (Tanya, 9 Nov: "make underline bronze and selected item text semibold or bold (think what will
+   look better)"). 500 is the site's UI emphasis (menu titles, buttons); 600 outweighed all but the logo. A heavier
+   label is wider, 500 by about .15px a letter, so -.01em gives the width back and Pricing and About never move from
+   page to page (at 600 they moved about 3px, and -.024em to hold it crowds 14px text). Then 600 (Tanya, 9 Nov: "make
+   selected bolder, contrast isn't enough"): rendered beside the rest at 14px, -.024em reads clean, not crowded, and
+   keeps Pricing and About within .2px; 700 needed -.03em, still moved .7px and outweighed the logo. */
+#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current=page])>summary{font-weight:600;letter-spacing:-.024em}
+/* The open menu stacks above the nav: the links after Solutions are positioned (the hover pill above), so at z-index
+   auto they painted over it, Pricing's or About's current bar showing through the panel (Tanya, 9 Nov: "fix this bug"). */
+.solutions-menu{z-index:1}
+.solutions-menu a[aria-current=page] b{position:relative}
+.solutions-menu a[aria-current=page] b::before{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}
+@media(max-width:850px){#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current=page])>summary{position:relative}
+#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current=page])>summary::after{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}}
 /* the newsletter's submit ↗ nudges like every other arrow (Tanya, 29 Oct) */
 .newsletter form button{transition:transform 150ms cubic-bezier(.4,0,.2,1)}
 .newsletter form button:is(:hover,:focus-visible){transform:translateX(4px)}
