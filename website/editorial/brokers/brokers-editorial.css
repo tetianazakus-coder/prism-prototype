@@ -6,13 +6,26 @@
 .pillar h3{font-size:clamp(29px,2.6vw,35px);text-wrap:balance}
 .small-label{font-size:11px;letter-spacing:.11em}
 .demo{font-size:12px;line-height:1.6}
-.quiet-photo figcaption{position:absolute;left:0;bottom:0;padding:22px 32px 0 0;background:var(--paper);font-size:11px;line-height:1.75;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
-.quiet-photo figcaption>span{display:block;white-space:nowrap}
+/* Hero caption under the product window (Tony, Figma comment on the hero screen, Nov 2026: "Add a short caption that
+   connects it to the service"). It replaces the caps corner notch, unused since the window went on the photo. The
+   caption takes the strip's small text and sits under the photo inside the figure: on desktop the photo gives up the
+   caption's height, so the hero and the strip below keep theirs; stacked (850 and under) the photo keeps its height
+   and the caption adds below it. Its paper ground hides the window's overflow and shadow under the photo. Two classes,
+   so it beats type.css's old notch size, which loads later. The photo's 480px floor moves to the figure, caption
+   included: on the photo it made the hero 21px taller at 1150-1300 (Tanya, 10 Nov: "build"). */
+.hero-visual.quiet-photo{min-height:480px}
+.hero-visual.quiet-photo>img{flex:1 1 0;height:auto;min-height:0}
+.hero-visual.quiet-photo>figcaption{position:relative;z-index:2;flex:none;padding:12px 0 0;background:var(--paper);font-size:14px;line-height:1.5;letter-spacing:0;text-transform:none;color:var(--muted)}
+@media(max-width:850px){.hero-visual.quiet-photo{height:auto;min-height:0}
+.hero-visual.quiet-photo>img{flex:none;height:370px}}
+@media(max-width:600px){.hero-visual.quiet-photo>img{height:320px}}
 .hero-bottom{grid-column:1/-1;gap:24px;padding:26px 0;font-size:12px;letter-spacing:0}
 .hero-bottom>span{display:flex;gap:12px;align-items:center}
 .hero-bottom b{font:italic 19px var(--serif);color:var(--bronze)}
 .hero-bottom>a{font-size:11px;color:var(--muted);gap:6px}
 .hero-bottom>a span{font-size:14px}
+/* Hero line 500px, not the site's 490: Tony's line (multifamily and commercial brokers) then fills both lines, 499 and 443px at 1440 (Tanya, 10 Nov: "make text slighly longer, to fill 2 lines, 500px text width"). Phones and tablets keep editorial.css's widths. */
+@media(min-width:851px){.hero-description{max-width:500px}}
 .proof small{font-size:12px}
 /* A consistent reading rhythm; one composition per capability. */
 .problem-grid{gap:80px;padding-block:0}
@@ -65,6 +78,14 @@
    the pricing heading's partner is the billing toggle, not text. */
 .walkthrough .section-heading{align-items:last baseline}
 .walkthrough .section-heading>p{padding-bottom:0}
+/* Below 1000 the lede goes under the title, as on phones (Tanya, 10 Nov: "build recommended"). Tony's longer lede
+   (3 lines at its 360px cap) squeezed the title beside it to 3 lines from 960 down and 4 at 851 and 768; from about 970
+   up the title keeps 2 lines beside it. Stacked, the title keeps the full width and the lede stops at 560px, two lines
+   of about 60 characters; at 100% it ran one line of 115 at 999. */
+@media(max-width:999px){
+  .walkthrough .section-heading{display:block}
+  .walkthrough .section-heading>p{margin-top:18px;max-width:560px}
+}
 .walk-stage{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;align-items:start}
 /* Step numbers use Bodoni Moda's tabular figures: proportional ones ran 26.4 / 29.2 / 28.5 wide in a 28px column, so "02"
    overflowed and the gap to the title read 13.7 / 10.8 / 11.5. Tabular, every number is 29 = the column, and the gap is
@@ -259,3 +280,16 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
 .pricing>.wrap>.pricing-footnote:has(~.pricing-more){grid-column:1;text-align:left;margin-top:32px}
 .pricing>.wrap>.pricing-more{grid-column:2;margin-top:32px}}
 @media(max-width:600px){.pricing-more{text-align:left}}
+
+/* Closing band on a photo (Tanya, 11 Nov: "should we add some image in bg, as we have for borrower and lender?", then
+   "build recommended"). Brokers was the one page that still closed on flat navy; Home, Pricing, Borrowers, Lenders and
+   Find a broker all close on a photo. The band keeps its split, heading left and copy right, so it takes Home's wash:
+   navy at 90% under the heading, 66% at the right edge, top to bottom on one column below 851px. A first photo, a
+   bright window grid rising up a tower, left the right column hard to read (Tanya: "the text here is non redable
+   enoght", pointing at Borrowers' city at dusk and Lenders' tower as the readable ones), so the photo is a dark one,
+   picked from Unsplash's free-licence results by measured brightness and contrast: Tsuyoshi Kozu's residential
+   high-rise at night, scattered lit windows (https://unsplash.com/photos/-tWeIAQS5f4), apartment towers being the
+   brokers' asset class. 1800px, quality 40, as the other closing photos are; no other page shows it. motion.js drifts
+   it as it does every .final band on a photo. */
+.final{background:linear-gradient(90deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.78) 50%,rgba(14,28,53,.66) 100%),url(../img/final-apartments-night.jpg) center/cover var(--navy)}
+@media(max-width:850px){.final{background-image:linear-gradient(180deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.8) 100%),url(../img/final-apartments-night.jpg)}}

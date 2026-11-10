@@ -56,6 +56,8 @@
 .steps-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:start}
 .steps-head{position:sticky;top:120px}
 .steps-head h2{font-size:clamp(36px,3.2vw,46px)}
+/* The italic half starts 6px under the roman half, as in the Figma heading (Tanya, 9 Nov: "make vertical gap here 6px"). */
+.steps-head h2 em{display:block;margin-top:6px}
 .step-list{--mid:15px;--s:8.27px;position:relative;margin:0;padding:0;list-style:none}
 /* The line runs in one length per step, each from its diamond to the next one, so it ends on the last diamond
    (Tanya, 5 Nov: "remove this line part", the run past 04). */
@@ -75,6 +77,18 @@
 .step-number{padding-left:36px;font:400 24px/1.25 var(--serif);color:#7A6040;font-variant-numeric:tabular-nums}
 .step-list h3{font-size:24px;line-height:1.25}
 .step-list p{font-size:16px;line-height:1.7;color:var(--muted)}
+/* Figma Home columns, desktop three-column layout only (Tanya, 9 Nov: "on prototype - align text on this section with
+   figma"; again 10 Nov). The list takes 736 of 1216 beside a 448 heading (32 apart, was 5fr/7fr and 64); in each step the
+   number sits at 32, the title at 72 and the line at 422 (318 / 314 wide at 1440). The steps share one grid through subgrid,
+   so the title column is never narrower than the longest title (max-content): no title wraps and every line starts at the
+   same x. */
+@media(min-width:1151px){
+  .steps-grid{grid-template-columns:minmax(0,448fr) minmax(0,736fr);gap:32px}
+  .step-list{display:grid;grid-template-columns:58px minmax(max-content,318fr) minmax(0,332fr);column-gap:14px}
+  .step-list>li{grid-column:1/-1;grid-template-columns:subgrid}
+  .step-number{padding-left:32px}
+  .step-list>li>p{padding-left:18px}
+}
 
 /* One deal, three sides (Option B, 2 Nov): a list of the three sides, one open at a time, and the open side's product
    screen beside it, pinned to the list so it swaps without moving the list. Below 851px the screen drops into the open
@@ -94,6 +108,13 @@
    broke it before "works in." (Tanya, 5 Nov: "should we make this text one line?"). One line from about 800px up; below
    that it wraps, balanced into two even lines. */
 .sides .section-heading>p{max-width:none;text-wrap:balance}
+/* Tony's sentence (10 Nov) runs 127 characters: at full width it made two 70-character lines across 800px; 520px keeps
+   it at two lines of about 64. The heading keeps its own width (two lines, "Three different roles." whole): squeezed by
+   the 520px line it broke into 3 lines at 1000 and 5 at 800, so where the two no longer fit side by side the line wraps
+   under the heading instead, at no less than 320px. */
+.sides .section-heading{flex-wrap:wrap;row-gap:20px}
+.sides .section-heading>h2{flex:none}
+.sides .section-heading>p{flex:1 1 320px;max-width:520px}
 /* The line sits on the title's last baseline ("of the deal."): aligned by box bottoms (align-items:end) it sat 1.8px under
    it at 1440, its 27.2px line box deeper below the baseline than the title's 56px one (Tanya, 5 Nov: "align text on
    bottom line with the title"). It holds from 601px, where the two sit side by

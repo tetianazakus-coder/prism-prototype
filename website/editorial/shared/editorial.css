@@ -124,6 +124,11 @@ table{font-size:13px}
 .footer-grid h2{font-size:12px}
 .footer-brand>p,.newsletter>p,.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{font-size:14px}
 .footer-brand>.placeholder,.newsletter .micro,.footer-bottom,.disclaimer{font-size:12px}
+/* the newsletter line on one line wherever its column holds it; from 860 to 1230 the four-column footer leaves it 188-260px for a 269px line, so it breaks into two even lines rather than leaving "updates" alone (Tony, Figma comment: "Lender insights and LenderPrism updates"; Tanya, 11 Nov: "make it one line") */
+.newsletter>p{text-wrap:balance}
+/* the form 16px under that line, and nothing under the form until the status line has something to say (Tanya, 11 Nov, Brokers - 1440 in Figma: "I updated paddings here, make same in prototype"); it was 25px (20 on phones) and the empty status kept a 10px margin. 601-850 keeps the form beside the copy with no top margin (base.css). */
+@media(min-width:851px),(max-width:600px){.newsletter form{margin-top:16px}}
+.newsletter .micro:empty{margin-top:0}
 /* "Our platforms": the kind of capital in the placeholders' bronze, after the name with no dash (Tanya, 5 Nov: "make this
    bronze color like here and remove the em dash", then "make it italic"). DM Sans's own italic, which every page now loads
    (ital 1, wght 400), so the browser does not slant the upright. */

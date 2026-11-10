@@ -1,4 +1,4 @@
-// Find a broker filters: three multiselects built from the cards' data, each with the Select all + Clear footer (the
+// Find a broker filters: a search by name and three multiselects built from the cards' data, each with the Select all + Clear footer (the
 // default on every multiselect since 22 Oct). Within a filter any ticked value matches; across filters every filter
 // must match; an empty filter matches all. Without script every card shows and the filters stay closed.
 (() => {
@@ -7,6 +7,12 @@
   const cards = $$('.broker-card');
   const filters = $$('.filter');
   const values = (card, key) => card.dataset[key].split('|');
+  // Search by name (10 Nov): matches from the start of any word in the card's name ("pi" finds Jordan Pike, "jordan p"
+  // too; "son" does not find Hasson), ignoring case, accents and extra spaces, and narrows
+  // the grid together with the filters. The field's own clear button (the x in a search input) fires "input" too.
+  const search = document.querySelector('.find-search input');
+  const fold = text => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  search.addEventListener('input', () => apply());
 
   filters.forEach(filter => {
     const key = filter.dataset.filter;
@@ -22,9 +28,11 @@
       filter.querySelector('.filter-count').textContent = n ? ` · ${n}` : '';
       filter.classList.toggle('active', n > 0);
     });
+    const query = fold(search.value);
     let shown = 0;
     cards.forEach(card => {
-      const match = Object.entries(picked).every(([key, list]) => !list.length || values(card, key).some(value => list.includes(value)));
+      const match = Object.entries(picked).every(([key, list]) => !list.length || values(card, key).some(value => list.includes(value)))
+        && (!query || (' ' + fold(card.querySelector('h3').textContent)).includes(' ' + query));
       card.hidden = !match;
       if (match) shown++;
     });

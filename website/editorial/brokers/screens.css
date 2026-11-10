@@ -14,8 +14,10 @@
 .ps-app{position:relative;display:flex;height:100%;background:#eff3f8;overflow:hidden}
 .ps-rail{flex:0 0 48px;background:#08142d;display:flex;flex-direction:column;align-items:center}
 .ps-rail-top{width:100%;height:57px;display:grid;place-items:center;border-bottom:1px solid #1a325a}
-/* The rail's mark is the new prism sign (9 Nov), white as the product rail draws it. */
-.ps-mark{width:34px;height:28px;background:#fff;-webkit-mask:url(../img/logo-sign.svg) center/contain no-repeat;mask:url(../img/logo-sign.svg) center/contain no-repeat}
+/* The rail's mark is the new prism sign (9 Nov), white as the product rail draws it. 26.4 x 22 as the product's
+   collapsed rail (deals-prototype .rail__mark, measured 11 Nov); it was 34 x 28, 27% bigger (Tanya, 11 Nov: "check if
+   logo size in website images/animations and logo proportions is the same as on real app"). */
+.ps-mark{width:26.4px;height:22px;background:#fff;-webkit-mask:url(../img/logo-sign.svg) center/contain no-repeat;mask:url(../img/logo-sign.svg) center/contain no-repeat}
 .ps-rail-menu{display:flex;flex-direction:column;gap:4px;padding-top:11px}
 .ps-rail-menu i{width:32px;height:32px;border-radius:6px;display:grid;place-items:center;color:rgba(210,220,240,.78)}
 .ps-rail-menu i.on{background:#142a52;color:#fff}
