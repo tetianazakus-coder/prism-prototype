@@ -376,3 +376,50 @@
 .ps-requests .ps-tr>:nth-child(7) .ps-sub{overflow:hidden;text-overflow:ellipsis}
 .ps-requests .ps-bm.on{color:#b48b2b}
 .ps-requests .ps-new{min-height:0;height:0;border-bottom-width:0}
+
+/* Brokers, pillar 03: the borrower's advisor directory (#/brokers as the borrower), measured on the prototype at 1280
+   with the rail collapsed, 12 Nov: head 20/24 in, card 14/18 padding, a 36px bar, a 3-column grid with 16px gaps,
+   cards 18px in with a 44px photo, the multiselect list 4px under its trigger. Drawn 1300 wide since 13 Nov, the
+   prototype's own grid rule (auto-fill, 276px min) giving its four columns and the bar one row. Each card is a .ps-tr for the pointer's helpers, so the
+   row rules that table screens share are undone here. */
+.ps-advisors .ps-main{padding:0}
+.ps-advisors .ps-scene{inset:20px 24px 0}
+.ps-advisors .ps-head{margin-bottom:18px}
+.ps-advisors .ps-card{box-shadow:0 1px 2px rgba(19,35,57,.07);overflow:visible}
+.ps-advisors .ps-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;height:auto;margin:14px 18px 12px}
+.ps-advisors .ps-ms .ps-chip,.ps-advisors .ps-ms .ps-msx{display:none}
+.ps-advisors .ps-ms.focus{border-color:#012758}
+.ps-advisors .ps-ms.set .ps-any,.ps-advisors .ps-ms.set .ps-chev{display:none}
+.ps-advisors .ps-ms.set .ps-chip{display:inline-flex;align-items:center;height:20px;padding:0 8px;border:1px solid #bec8dc;border-radius:9999px;font-size:12px;font-weight:500;line-height:16px}
+.ps-advisors .ps-ms.set .ps-msx{display:grid;color:#586478;margin-left:-2px}
+/* "Clear all" is the bar's last item, the prototype's .msbar .clrall (a bare button: 1px 6px, 13px, 500, primary) */
+.ps-clear{display:none;padding:1px 6px;color:#012758;font-size:13px;font-weight:500;line-height:18.85px}
+.ps-agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(276px,1fr));gap:16px;margin:0 18px 18px}
+.ps-advisors .ps-tr.ps-acard{display:flex;flex-direction:column;align-items:stretch;padding:18px;border:1px solid #bec8dc;border-radius:12px;background:#fff;box-shadow:0 1px 2px rgba(19,35,57,.07);overflow:hidden;transition:border-color .2s}
+.ps-advisors .ps-tr.ps-acard>*{padding:0;white-space:normal}
+.ps-advisors .ps-acard.hover{border-color:#012758}
+.ps-bav{width:44px;height:44px;border-radius:50%;overflow:hidden;background:#d6dce8}
+.ps-bav img{display:block;width:100%;height:100%;object-fit:cover}
+.ps-aname{display:flex;align-items:center;margin-top:10px;font-size:16px;line-height:23.2px}
+.ps-aname b{font-weight:700}
+.ps-vtick{display:inline-flex;margin-left:5px;color:#b48b2b}
+.ps-aplace{color:#586478;line-height:20px}
+.ps-about{margin-top:6px;color:#586478;line-height:20px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.ps-facet{margin-top:8px}
+.ps-fsec{margin-bottom:6px;color:#586478;font-size:12px;font-weight:600;line-height:17.4px}
+.ps-pills{display:flex;flex-wrap:wrap;gap:0 3px}
+.ps-pill{padding:1px 7px;border:1px solid #bec8dc;border-radius:9999px;background:#fff;color:#586478;font-size:12px;line-height:17.4px;white-space:nowrap}
+.ps-pill.more{border-style:dashed}
+/* scoped like the card's own >* reset, which otherwise took the 16px (cards ran 360 to the prototype's 376) */
+.ps-advisors .ps-acard>.ps-go{margin-top:auto;padding-top:16px;color:#012758;font-weight:600;line-height:20.3px}
+.ps-go.hover span{text-decoration:underline}
+.ps-msp{padding:4px;box-shadow:0 4px 6px -1px rgba(19,35,57,.1),0 2px 4px -2px rgba(19,35,57,.08)}
+.ps-msfind{display:flex;align-items:center;gap:8px;height:41px;margin:-4px -4px 4px;padding:0 12px;border-bottom:1px solid #dce2ee;color:#586478;font-size:13px}
+.ps-msfind.set{color:#0f172a}
+.ps-mslist{max-height:260px;overflow:hidden}
+.ps-msi{display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border-radius:4px;white-space:nowrap}
+.ps-msi .ps-check{border-color:#dce2ee;box-shadow:0 1px 3px rgba(19,35,57,.08)}
+.ps-msi.hover{background:#d2dcf0;color:#012758}
+.ps-msfoot{display:flex;justify-content:space-between;height:30px;padding:2px 4px 0;color:#012758;font-weight:500}
+.ps-msfoot span{padding:4px;line-height:20px}
+.ps-msfoot .off{opacity:.5}

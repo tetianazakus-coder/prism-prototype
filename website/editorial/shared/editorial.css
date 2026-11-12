@@ -40,6 +40,8 @@ nav{font-size:14px;gap:25px}
 .hero h1>em{display:block;font:italic 400 1em/1.04 var(--serif);letter-spacing:-.035em;color:var(--bronze);white-space:normal;max-width:none;margin-top:8px}
 .hero-lower{margin-top:26px}
 .hero-description{max-width:490px;font-size:18px;line-height:1.65;margin:0}
+/* Lenders: each sentence of Tony's subheadline on its own line, as in Figma Lenders - 1440 (Tanya, 12 Nov: "align prototype with figma"). */
+@media(min-width:851px){.hero-description.is-wide{max-width:500px}}
 .hero-actions{display:grid;grid-template-columns:max-content max-content;align-items:center;justify-content:start;gap:0 24px;margin-top:28px}
 .hero-actions>.button{grid-column:1;grid-row:1}
 .hero-actions>.text-link{grid-column:2;grid-row:1;margin:0;border:0;padding-block:13px}
@@ -170,7 +172,8 @@ nav>a:nth-last-of-type(1){margin-left:auto}
 .plan h3,.plan-for{grid-column:1}
 .plan-for{min-height:0}
 .price{grid-column:2;grid-row:2/4;align-self:center}
-.price-note{min-height:0;margin-top:20px}
+/* Two lines reserved, as the 40px minimum does on desktop, so switching the billing toggle to Monthly ("Billed monthly", one line) does not pull the card up 21px under the thumb (Tanya, 12 Nov: "build"). */
+.price-note{min-height:42px;margin-top:20px}
 .price small{display:block;text-align:right}
 .plan>.button{font-size:15px}
 .faq-grid{grid-template-columns:1fr;gap:36px}
@@ -241,10 +244,6 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
    used to stack 17+17 under the name row and collapse to 17 between the lists. Name and email are short and stay paired.
    States and asset classes are lists that grow, and the map prefills States, so they keep the full width. The button and
    the calendar link share one row, as in the closing section, with the status line under them. */
-#inquiry-dialog h2 em{display:inline}
-#territory-form{display:grid;gap:18px;margin-top:28px}
-#territory-form label{margin:0}
-#territory-form .form-row{gap:18px 20px}
 .form-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 28px;margin-top:10px}
 .form-actions .text-link{margin:0;display:inline-flex;border:0;font-size:14px;gap:8px}
 #inquiry-status{margin:0}

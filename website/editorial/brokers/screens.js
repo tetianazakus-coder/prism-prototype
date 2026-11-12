@@ -8,6 +8,8 @@
    - deal: the broker logs each lender's reply from its Outreach dropdown, then Request execution support opens the prototype's request page
      and three needs are ticked; the page then scrolls to the documents it will ask for, and the cursor rests on Send
      request
+   - advisors (12 Nov, pillar 03, in place of leads): the borrower's directory narrows to advisors who work Texas and
+     the pointer rests on View profile
    The walkthrough ("See a deal go from posted to quoted", 2 Nov) adds three more on one deal, played as one
    click-to-play film across its tabs: create (Riverside's facts go in and 15 lenders match), matches (one more lender
    saved, the loan request sent to four) and contacted (two replies logged).
@@ -21,6 +23,8 @@
 (() => {
   'use strict';
   const crops = [...document.querySelectorAll('[data-screen]')];
+  // Photos in a screen resolve from this script's folder, so Brokers, /lp/broker and Home all reach img/.
+  const IMG = new URL('../img/', document.currentScript?.src || location.href).href;
   if (!crops.length) return;
   const animate = document.documentElement.classList.contains('motion') && window.gsap && window.ScrollTrigger;
 
@@ -109,7 +113,7 @@
       const fact = (k, v) => `<div class="ps-fact"><span>${k}</span><span>${v}</span></div>`;
       return `<div class="ps-app ps-opps">${rail('opps')}<div class="ps-main">
         <div class="ps-h1">Opportunities</div>
-        <p class="ps-lede">Routed to you by territory and asset class. Accept or decline within 24 hours, or it passes to the next broker.</p>
+        <p class="ps-lede">Routed to you by property type and market. Accept or decline within 24 hours, or it passes to the next broker.</p>
         <div class="ps-card" data-trim><div class="ps-card-head"><b>All opportunities</b><span class="ps-due" data-due>1 needs your response</span></div>
           <div class="ps-th"><span>Amount</span><span>Property type</span><span>Location</span><span>Time remaining</span><span>Status</span><span></span></div>
           ${row('$2.75M', 'Multifamily', 'Refinance', 'Dallas, TX',
@@ -394,11 +398,60 @@
           ${row('Mill Creek apartments acquisition', 'Multifamily · Raleigh, NC', '$7.9M', 'Purchase', 'Agency (Freddie Mac)', 'Luis Caraballo', 'Caraballo Advisors', '7 Oct')}
         </div>
       </div><span class="ps-tip">Save</span></div>`;
+    }},
+    // Brokers, pillar 03 "Broker support & promotion" (Tanya, 12 Nov: "build E, but keep current logic for frame sizes
+    // and animations"): the borrower's side of the broker profile, #/brokers as the borrower ("Choose your financing
+    // advisor"), rebuilt 1:1 from the prototype with the rail collapsed (Tanya, 13 Nov: "make it 1:1 as on prototype,
+    // same layout and photos"): drawn 1300 wide, the prototype at 1338, where its auto-fill grid runs four columns and
+    // the filter bar one row. The twelve advisors are the prototype's first twelve, in its order, with its own clamped
+    // bios and pill budgets; every name and photo is the prototype's demo data [~]. The whole page shows in the crop
+    // (12 Nov: "show full page ... as for other 2 sections"), so this screen alone may scale to 0.35 (min), under the
+    // 0.45 the table screens keep. The card holds no data-trim: fit() does not snap to a row of tall cards, and a card
+    // cut by the bottom edge stays, as a page scrolling on.
+    advisors: {width: 1300, fit: 600, min: .35, html: () => {
+      const tick = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 14.6 5l3.5-.3.4 3.5 2.6 2.4-1.9 3 .9 3.4-3.4.9-1.7 3-3.1-1.3-3.1 1.3-1.7-3-3.4-.9.9-3.4-1.9-3L5.5 8.2 5.9 4.7 9.4 5z"/><path d="m9 12 2 2 4-4"/></svg>';
+      const facet = (label, [shown, more]) => `<div class="ps-facet"><div class="ps-fsec">${label}</div><div class="ps-pills">${
+        shown.map(x => `<span class="ps-pill">${x}</span>`).join('')}${more ? `<span class="ps-pill more">+${more}</span>` : ''}</div></div>`;
+      // name, photo, verified, place, bio, property types, execution types, property locations, works Texas
+      const ADVISORS = [
+        ['Jordan Ellis', 'jordan-ellis', 1, 'Magnolia, TX', 'Twelve years placing agency and bridge debt on Texas multifamily. I work every request myself, from the first call to closing.', [['Multifamily', 'Industrial'], 4], [['Agency (Fannie Mae)'], 2], [['Texas', 'Oklahoma', 'Louisiana'], 2], 1],
+        ['Maya Okafor', 'maya-okafor', 1, 'Dallas, TX', 'Value-add multifamily and hospitality across the Southwest. Balance-sheet and CMBS executions, with life-company relationships for stabilised assets.', [['Multifamily', 'Industrial'], 6], [['CMBS', 'Balance sheet debt'], 2], [['Texas', 'Arizona', 'New Mexico'], 2], 1],
+        ['Luis Caraballo', 'luis-caraballo', 0, 'Tampa, FL', 'Southeast industrial and multifamily. Former bank lender, so the package a credit committee wants is the package I build.', [['Multifamily', 'Industrial'], 5], [['Balance sheet debt'], 2], [['Florida', 'Georgia', 'Alabama'], 1], 0],
+        ['Anjali Mehta', 'anjali-mehta', 1, 'Phoenix, AZ', 'Multifamily and self storage across the desert Southwest. Agency first, bridge when the story needs it.', [['Multifamily'], 5], [['Agency (Freddie Mac)'], 3], [['Arizona', 'Nevada'], 3], 1],
+        ['Marcus Webb', 'marcus-webb', 1, 'Atlanta, GA', 'Two decades on Southeast office and retail. I take the deals other brokers call hard, and I tell you early when one is.', [['Office-multi tenant'], 6], [['Bridge / short-term debt (<3 yrs)'], 3], [['Georgia', 'Florida'], 4], 0],
+        ['Elena Vasquez', 'elena-vasquez', 1, 'Denver, CO', 'Mountain West multifamily and industrial, including ground-up. Small enough to answer the phone, connected enough to place the debt.', [['Multifamily', 'Industrial'], 5], [['Construction loans'], 3], [['Colorado', 'Utah', 'Wyoming'], 2], 0],
+        ['Dev Anand', 'dev-anand', 1, 'Chicago, IL', 'Midwest industrial, from last-mile infill to a million square feet. Life companies and debt funds, and I know which one wants your asset.', [['Industrial'], 6], [['Permanent | fixed-rate'], 2], [['Illinois', 'Indiana'], 4], 0],
+        ['Nina Brandt', 'nina-brandt', 1, 'Seattle, WA', 'Pacific Northwest multifamily and hospitality. Heavy on construction takeouts and assets coming off a bridge.', [['Multifamily', 'Hotel/motel'], 4], [['Construction loans'], 2], [['Washington', 'Oregon', 'Idaho'], 1], 0],
+        ['Omar Haddad', 'omar-haddad', 0, 'Houston, TX', 'Gulf Coast industrial and retail. I work the smaller end of the market that the national shops will not return a call on.', [['Industrial'], 5], [['Hard / private money'], 2], [['Texas', 'Louisiana'], 2], 1],
+        ['Claire Boone', 'claire-boone', 1, 'Nashville, TN', 'Tennessee Valley multifamily and storage. Former agency underwriter; I size the deal the way the lender will before you see a term sheet.', [['Multifamily'], 6], [['FHA/HUD'], 2], [['Tennessee', 'Kentucky'], 3], 0],
+        ['Tomas Lindqvist', 'tomas-lindqvist', 0, 'Minneapolis, MN', 'Upper Midwest industrial and storage, secondary and tertiary markets. Regional banks and credit unions, where the relationship still moves the rate.', [['Industrial', 'Self-storage'], 4], [['Balance sheet debt'], 2], [['Minnesota', 'North Dakota'], 4], 0],
+        ['Rachel Osei', 'rachel-osei', 1, 'Charlotte, NC', 'Carolinas and Virginia, most asset classes. Fifteen lender relationships I actually use, not a list I inherited.', [['Multifamily'], 8], [['Balance sheet debt', 'CMBS'], 2], [['North Carolina'], 4], 0]
+      ];
+      // The Property location list as it opens (A to Z, eight in view), and the two that "Te" and "Tex" leave.
+      const STATES = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware'];
+      // The name sits in its own span: GSAP measures a hidden checkbox by moving it and puts it back before its next
+      // element sibling, so beside bare text the box landed after the name.
+      const state = (name, later) => `<span class="ps-msi" data-st="${name}"${later ? ' style="display:none"' : ''}>${check(false)}<span>${name}</span></span>`;
+      return `<div class="ps-app ps-advisors">${rail('users', ['home', 'deals', 'user', 'users'], 'PN')}<div class="ps-main"><div class="ps-scene" data-scene>
+        <div class="ps-head"><div class="ps-h1">Choose your financing advisor</div><p class="ps-lede">Your financing advisor structures your request, finds lenders and guides it to closing.</p></div>
+        <div class="ps-card">
+          <div class="ps-bar">${search('Search advisors', 260)}${ms('Property type')}<span class="ps-ms" data-geo>Property location <span class="ps-any">Any</span><span class="ps-chip">Texas</span><span class="ps-chev">${svg(I.chev, 15)}</span><span class="ps-msx">${svg(I.x, 14)}</span></span>${ms('Advisor location')}${ms('Execution type')}<span class="ps-clear" data-clear>Clear all</span></div>
+          <div class="ps-agrid">${ADVISORS.map(([name, photo, verified, place, bio, types, fins, geos, tx]) => `<div class="ps-tr ps-acard" data-tx="${tx}">
+            <div class="ps-bav"><img src="${IMG}advisors/${photo}.jpg" alt=""></div>
+            <div class="ps-aname"><b>${name}</b>${verified ? `<span class="ps-vtick">${tick}</span>` : ''}</div><div class="ps-aplace">${place}</div>
+            <div class="ps-about">${bio}</div>
+            ${facet('Property type', types)}${facet('Execution type', fins)}${facet('Property location', geos)}
+            <div class="ps-go"${name === 'Jordan Ellis' ? ' data-go' : ''}><span>View profile →</span></div></div>`).join('')}</div>
+        </div>
+        <div class="ps-pop ps-msp" data-pop><span class="ps-msfind" data-find>${svg(I.search, 14)}<span class="ps-v">Search states…</span></span>
+          <div class="ps-mslist">${STATES.map(name => state(name)).join('')}${state('Tennessee', true)}${state('Texas', true)}</div>
+          <div class="ps-msfoot"><span>Select all</span><span class="off">Clear</span></div></div>
+      </div></div></div>`;
     }}
   };
 
   // Scale: the screen is drawn at prototype size and scaled to its crop, never below 0.45 so its 14px text stays near
-  // 6px. Where that floor leaves the screen wider than the crop, the view pans to whatever the flow is acting on.
+  // 6px (a spec's min lowers that floor for its own screen). Where that floor leaves the screen wider than the crop, the view pans to whatever the flow is acting on.
   // Then the scale is nudged so the crop's bottom edge falls on a row boundary of the screen's table: no cut row and
   // no white strip under the last whole one (Tanya, 29 Oct). It scales down to take in the cut row, and up to end on
   // the last whole one only where down would pass the 0.45 floor; a screen pushed wider than its crop pans as before. A re-wrap of the text above the table moves the rows, so it measures again, up to
@@ -414,13 +467,14 @@
       if (window.gsap) gsap.set(ui, {scale: k, x});
       else ui.style.transform = `translateX(${x}px) scale(${k})`;
     };
-    let k = Math.max(.45, Math.min(w / spec.width, h / spec.fit));
+    const min = spec.min ?? .45;
+    let k = Math.max(min, Math.min(w / spec.width, h / spec.fit));
     scale(k);
     for (let i = 0; i < 3; i++) {
       const {last, cut} = rowEdges(screen);
       if (!cut) break;
       const up = last ? h / last : 0, down = h / cut;
-      const next = down >= .45 ? down : up;
+      const next = down >= min ? down : up;
       if (!next || Math.abs(next - k) < 1e-4) break;
       scale(k = next);
     }
@@ -827,6 +881,72 @@
         .add(recount(q('[data-saved]'), 4, .3), '<')
         .add(() => bm.classList.remove('hover'), '+=.6')
         .add(leave(screen), '<');
+    },
+    // Brokers, pillar 03: a borrower looks for an advisor who works Texas, as the prototype's directory does it. The
+    // cursor opens Property location (ms__pop: search, list, Select all and Clear), types "Tex" into its search and
+    // ticks Texas; the trigger shows the Texas badge and its clear, and the cards that do not work Texas drop out
+    // while the rest move up, 12 to 4 as in the prototype: Luis Caraballo leaves the first row, Anjali Mehta slides
+    // into his place and Omar Haddad comes up from the third row to end it. The pointer ends on Jordan Ellis's View profile. "Clear all" joins
+    // the filter bar after Execution type, as the prototype's .clrall does (Tanya, 13 Nov: "align 'Clear all' position
+    // with app prototype"), so the grid does not move and the page stays put (12 Nov: "don't scroll page down when
+    // filter selected").
+    advisors(screen) {
+      const q = s => screen.ui.querySelector(s), qa = s => [...screen.ui.querySelectorAll(s)];
+      const scene = q('[data-scene]'), trigger = q('[data-geo]'), pop = q('[data-pop]'), find = q('[data-find]');
+      const states = qa('[data-st]'), texas = q('[data-st="Texas"]'), box = texas.querySelector('.ps-check'), go = q('[data-go]');
+      const place = () => {
+        const s = scene.getBoundingClientRect(), r = trigger.getBoundingClientRect();
+        Object.assign(pop.style, {left: (r.left - s.left) / screen.k + 'px', top: (r.bottom - s.top) / screen.k + 4 + 'px', width: r.width / screen.k + 'px'});
+      };
+      // The search narrows the list as it is typed: nothing typed shows A to Z, "T" and "Te" leave Tennessee and Texas.
+      const text = 'Tex', typed = {n: 0}, value = find.querySelector('.ps-v');
+      const search = gsap.to(typed, {n: text.length, duration: .5, ease: 'none', onStart: () => find.classList.add('set'), onUpdate: () => {
+        const part = text.slice(0, Math.round(typed.n)).toLowerCase();
+        value.textContent = part ? text.slice(0, part.length) : 'Search states…';
+        states.forEach(item => {
+          const name = item.dataset.st;
+          item.style.display = (part ? name.toLowerCase().startsWith(part) : !['Tennessee', 'Texas'].includes(name)) ? '' : 'none';
+        });
+      }});
+      const cards = qa('.ps-acard'), out = cards.filter(card => card.dataset.tx === '0'), keep = cards.filter(card => card.dataset.tx === '1');
+      // The cards that stay move to where the narrower grid puts them (a FLIP: measure, drop the others, measure again,
+      // animate the difference).
+      const narrow = () => gsap.timeline()
+        .to(out, {opacity: 0, scale: .97, duration: .3, ease: 'power1.in'})
+        .add(() => {
+          const before = new Map(keep.map(card => [card, card.getBoundingClientRect()]));
+          out.forEach(card => { card.dataset.out = ''; card.style.display = 'none'; });
+          keep.forEach(card => {
+            const a = before.get(card), b = card.getBoundingClientRect();
+            // one that stays in its row slides along it; one that changes row fades up in its new place, so no card
+            // crosses the others diagonally
+            if (Math.abs(a.top - b.top) < 1) gsap.fromTo(card, {x: (a.left - b.left) / screen.k}, {x: 0, duration: .7, ease});
+            else gsap.fromTo(card, {opacity: 0, y: 8}, {opacity: 1, y: 0, duration: .45, delay: .25, ease: 'power2.out'});
+          });
+        });
+      return gsap.timeline({paused: true})
+        .add(follow(screen, trigger), .2)
+        .add(point(screen, trigger), .4)
+        .add(click(screen, trigger))
+        .add(() => { place(); trigger.classList.add('focus'); }, '-=.4')
+        .fromTo(pop, {autoAlpha: 0, y: -4}, {autoAlpha: 1, y: 0, duration: .18, immediateRender: false}, '<')
+        .add(travel(screen, find), '+=.3')
+        .add(click(screen, find))
+        .add(() => find.classList.add('focus'), '-=.3')
+        .add(search, '+=.1')
+        .add(travel(screen, box), '+=.35')
+        .add(() => texas.classList.add('hover'), '-=.2')
+        .add(click(screen, box))
+        .add(() => { tickBox(box); trigger.classList.add('set'); }, '-=.3')
+        .fromTo(q('[data-clear]'), {display: 'inline-block', autoAlpha: 0}, {autoAlpha: 1, duration: .25, immediateRender: false}, '<')
+        .to(pop, {autoAlpha: 0, duration: .15}, '+=.5')
+        .add(() => trigger.classList.remove('focus'), '<')
+        .add(narrow(), '+=.15')
+        .add(follow(screen, go), '+=.9')
+        .add(travel(screen, go), '<')
+        .add(() => { go.classList.add('hover'); go.closest('.ps-acard').classList.add('hover'); }, '-=.15')
+        .add(click(screen, go), '+=.5')
+        .add(leave(screen), '+=.6');
     }
   };
 

@@ -58,27 +58,13 @@
 .plan-top>.micro{font-weight:400;color:var(--muted)}
 
 /* Full cards: a label leads every list (Essential "Includes:", the others "Everything in X, plus:") so the three lists start
-   level, and Pro's territory line sits under it. The label takes the Brokers walkthrough's selected step title ("Create deal",
+   level. The label takes the Brokers walkthrough's selected step title ("Create deal",
    .walk-tabs button[aria-selected=true] b): DM Sans 15/700 in ink. Tanya, 5 Nov, tried the .eyebrow (uppercase bronze)
    first, then "use this font" on "Create deal"; pricing-card-everything-in-lead-line-research. Then set in Figma (Pricing
    241:2, Tanya, 5 Nov: "I updated this font weight ... and increased this padding below that titles slightly"): 600, not
    700, and 8px to the list, not 6. */
 .plan-includes{margin-top:22px;font:600 15px/1.6 var(--sans);color:var(--ink)}
 .plan-includes+.feature-list{margin-top:8px}
-.plan-addon{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
-/* The territory rule closes Pro's last row, so the list drops its 10px bottom margin: "Phone support" sat 5px high between
-   its two rules (12px over the line box, 22px under); now 11/11 like every other row (Tanya, 5 Nov). */
-.plan .feature-list:has(+.plan-addon){margin-bottom:0}
-/* The territory line is a row of its own: a 1.6 line of the list's clamp(16px,1.2vw,17px) type around its 14px text,
-   centred between its rule and the foot of the cards, with 18px each side, 7px more than the feature rows' 11 (63.2px at
-   1440 against their 49.2); the Pro card's bottom padding is the row's lower 18px (Tanya, 5 Nov: "center aligned as well",
-   "same item height as here", then "increase this section height"). */
-.plan-addon{padding-top:18px;line-height:calc(1.6 * clamp(16px, 1.2vw, 17px))}
-.plan:has(.plan-addon){padding-bottom:18px}
-/* "talk to us" is the comparison note's "Read the Broker Agreement" link (.compare-notes .inline-link): ink with the
-   base .inline-link's 1px rule always under it, no hover change (Tanya, 5 Nov: "use this style for this link"). It had
-   taken the Brokers "Compare all features" draw-in rule and bronze hover ("use same button as here", 08954e7). */
-.plan-addon .inline-link{color:var(--ink)}
 
 /* Comparison: one table, so the plan columns line up across groups. The four feature groups are plain headings, always
    open: the doc asked for collapsed groups behind "See what's included" (Tony), Tanya overrode it 2 Nov ("all should be

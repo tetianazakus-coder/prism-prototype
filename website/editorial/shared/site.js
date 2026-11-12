@@ -1,6 +1,6 @@
-/* Behaviour every Editorial page shares: dialogs and the preview notice, the territory inquiry, the header menu and
+/* Behaviour every Editorial page shares: dialogs and the preview notice, the header menu and
    Solutions dropdown, the billing toggle, the inquiry and newsletter forms, tabs, and the testimonial carousel. Split on
-   2 Nov from brokers/brokers.js, which keeps the walkthrough and the territory map; openDialog is shared with it as
+   2 Nov from brokers/brokers.js, which keeps the walkthrough; openDialog is shared with it as
    LenderPrism.openDialog. Load it before the page's own script. */
 (() => {
   'use strict';
@@ -37,7 +37,6 @@
   // call opens the team's discovery-call calendar, the one the live site links.
   // Destinations with no page yet (Broker Agreement) still open the notice.
   $$('[data-unavailable]').forEach(button => button.addEventListener('click', () => notice(button.dataset.unavailable, 'This destination is part of the new website structure and is not included in this local preview. Its approved page or URL must be connected before launch.')));
-  $$('[data-territory]').forEach(button => button.addEventListener('click', () => openDialog($('#inquiry-dialog'))));
 
   // Header menu and Solutions dropdown. The /lp/broker header has neither (no top nav on the ad landing).
   const menu = $('#navigation');
@@ -73,19 +72,26 @@
     });
     Object.entries(rates[billing]).forEach(([plan, price]) => {
       $(`[data-price="${plan}"]`).textContent = `$${price}`;
-      $(`[data-note="${plan}"]`).textContent = billing === 'annual'
-        ? `$${(price * 12).toLocaleString('en-US')} billed annually · $${rates.monthly[plan]} monthly`
-        : `Billed monthly · $${rates.annual[plan]}/month on annual billing`;
+      $(`[data-note="${plan}"]`).innerHTML = billing === 'annual'
+        ? `When billed annually and paid in full<br>$${(price * 12).toLocaleString('en-US')} a year`
+        : `Billed monthly`;
     });
     $('#billing-announcement').textContent = `${billing === 'annual' ? 'Annual' : 'Monthly'} billing. Accelerator $${rates[billing].accelerator} per month. Pro $${rates[billing].pro} per month.`;
   }));
 
+  // Brokers' ROI section: Accelerator or Pro against the same $50,000 fee (Tony, Figma comment: "Can we alternate or toggle
+  // between Accelerator and Pro?"; Tanya, 12 Nov: "buils opt A"). The section's data-plan picks which words show
+  // (brokers-editorial.css); this sets it, the pressed state, the figure's label and a line for screen readers.
+  const roiPlans = {accelerator: ['Accelerator', '1,908', 26], pro: ['Pro', '4,788', 10]};
+  $$('[data-roi]').forEach(section => section.querySelectorAll('[data-roi-plan]').forEach(button => button.addEventListener('click', () => {
+    const [name, cost, years] = roiPlans[button.dataset.roiPlan];
+    section.dataset.plan = button.dataset.roiPlan;
+    section.querySelectorAll('[data-roi-plan]').forEach(control => control.setAttribute('aria-pressed', String(control === button)));
+    section.querySelector('.economics-scale').setAttribute('aria-label', `Illustrative gross origination fee of 50,000 dollars compared with annual ${name} cost of ${cost} dollars`);
+    section.querySelector('[data-roi-status]').textContent = `${name}: $${cost} a year. One closed deal covers about ${years} years.`;
+  })));
+
   // Local preview only: no network, browser storage, or pretend submission success.
-  $('#territory-form')?.addEventListener('submit', event => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    $('#inquiry-status').textContent = `Inquiry ready for review: ${data.get('states')} · ${data.get('assets')}. Not sent. Delivery is not connected in this preview. Book a call to discuss your territory.`;
-  });
   $('#contact-form')?.addEventListener('submit', event => {
     event.preventDefault();
     $('#contact-status').textContent = 'Message ready for review. Not sent. Delivery is not connected in this preview.';
@@ -143,10 +149,19 @@
   window.LenderPrism = {openDialog};
 })();
 
-(() => {
-  const track = document.querySelector('.quote-track');
-  if (!track) return;
-  const [prev, next] = document.querySelectorAll('.quote-arrows button');
+// Home's three content stages, from Tony's Figma comments (about 6 Nov). 1, at launch: the approach band alone. 2, once
+// there are closed deals to post: the closed transactions join it. 3, once there are testimonials too: the testimonials
+// join, and the approach band, there only "until we have testimonials and tombstones", goes. Each band lists the states
+// it shows in (data-states); the markup is stage 1, and ?stage=2 or ?stage=3 in the address previews the others.
+// This runs before motion.js measures anything.
+const homeStage = new URLSearchParams(location.search).get('stage');
+if (homeStage) document.querySelectorAll('[data-states]').forEach(band => {
+  band.hidden = !band.dataset.states.split(' ').includes(homeStage);
+});
+
+// Arrow carousels (testimonials; Home's closed transactions), each with the arrows in its own section.
+document.querySelectorAll('.quote-track').forEach(track => {
+  const [prev, next] = track.closest('section').querySelectorAll('.quote-arrows button');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const step = () => track.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap);
   const sync = () => {
@@ -158,4 +173,4 @@
   track.addEventListener('scroll', sync, {passive: true});
   addEventListener('resize', sync);
   sync();
-})();
+});

@@ -78,6 +78,12 @@
    the pricing heading's partner is the billing toggle, not text. */
 .walkthrough .section-heading{align-items:last baseline}
 .walkthrough .section-heading>p{padding-bottom:0}
+/* Pricing: Tony's statement (5 Nov) sits under the title, both left of the billing toggle, which keeps the heading's
+   bottom edge. The lede takes the walkthrough lede's type, 16 on 1.7 muted. Its cap is 660px, not the walkthrough's 560:
+   the 57-word lede ran 5 lines at 560 and runs 4 at 660, last line about 530px, so the section is 27px shorter (Tanya,
+   12 Nov: "we can increase the width of this text, to reduce the height"). At 640 the last line nearly fills and a font
+   change could tip it back to 5. Under 1150 the space left of the toggle is about 624px, so 1000 keeps 5 lines. */
+.pricing-intro>p{font-size:16px;line-height:1.7;color:var(--muted);max-width:660px;margin-top:24px}
 /* Below 1000 the lede goes under the title, as on phones (Tanya, 10 Nov: "build recommended"). Tony's longer lede
    (3 lines at its 360px cap) squeezed the title beside it to 3 lines from 960 down and 4 at 851 and 768; from about 970
    up the title keeps 2 lines beside it. Stacked, the title keeps the full width and the lede stops at 560px, two lines
@@ -117,8 +123,6 @@
 .walk-panel[hidden]{display:block!important;visibility:hidden;opacity:0;transform:translateY(12px);transition:opacity 350ms ease,transform 350ms ease,visibility 0s 350ms}
 .territory-grid{grid-template-columns:5fr 7fr;gap:64px}
 .territory-grid>div>p:not(.micro){max-width:440px}
-.map-heading,.territory-map figcaption,.map-legend{font-size:11px}
-.territory-map figcaption .map-legend{margin-top:0}
 /* legend replaces "Illustrative map · no live availability" in the caption row (Tanya, 26 Oct) */
 .testimonial-placeholder{border-width:0 0 1px;padding:20px 0;min-height:0}
 .testimonial-placeholder small{font-size:12px}
@@ -132,7 +136,26 @@
 .economics-scale{margin-top:30px}
 .scale-row{margin-bottom:22px}
 .scale-bar{display:block;height:24px;background:var(--ink)}
-.scale-row.cost .scale-bar{width:9.54%;background:var(--bronze)}
+.scale-row.cost .scale-bar{width:3.82%;background:var(--bronze)} /* 1,908 / 50,000: one year of Accelerator against a $5M × 1% fee (Tony, Nov 2026) */
+/* Accelerator or Pro (Tony, Figma comment on "Accelerator / annual": "Can we alternate or toggle between Accelerator and
+   Pro?"; Option A of ../../roi-plan-options/, Tanya, 12 Nov: "buils opt A"). The section's data-plan, set by site.js, shows
+   one of each data-show pair: the heading's last line, the eyebrow, the price and the bar's label. The bar slides from
+   3.82% to 9.58% of the fee bar (4,788 / 50,000). The switch is the site's .billing control in the place of "Billed
+   annually"; under 1150 the column is too narrow for it beside "ACCELERATOR / ANNUAL" (the eyebrow wrapped and the
+   section grew 26px on a change), so it takes its own row under the price, and the full width on phones. */
+.roi [data-show]{display:none}
+.roi[data-plan=accelerator] [data-show=accelerator],.roi[data-plan=pro] [data-show=pro]{display:revert}
+.annual-cost strong b{font:inherit;letter-spacing:inherit}
+.roi[data-plan=pro] .scale-row.cost .scale-bar{width:9.58%}
+.scale-row.cost .scale-bar{transition:width .6s cubic-bezier(.4,0,.2,1)}
+@media(prefers-reduced-motion:reduce){.scale-row.cost .scale-bar{transition:none}}
+.roi .plan-switch{margin:0;align-self:end}
+.roi .plan-switch button{min-width:118px}
+@media(max-width:1150px){.roi .annual-cost{flex-direction:column;align-items:flex-start;gap:16px}
+.roi .plan-switch{align-self:flex-start}}
+@media(max-width:600px){.roi .annual-cost{align-items:stretch}
+.roi .plan-switch{width:100%;align-self:stretch}
+.roi .plan-switch button{min-width:0;flex:1 1 0}}
 .scale-label{display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--muted);margin-top:9px}
 .scale-label b{font-weight:500;color:var(--ink)}
 .economics-scale figcaption{font:italic 24px/1.4 var(--serif);padding-top:8px}
@@ -198,8 +221,6 @@
 .territory-grid>div>p:not(.micro){max-width:100%}
 .territory-grid .micro{font-size:12px}
 .territory-map{padding-top:10px}
-.map-heading,.territory-map figcaption,.map-legend{font-size:10px}
-.territory-map figcaption{flex-direction:column;gap:7px}
 .testimonial-placeholder>p{font-size:25px}
 .roi-grid{padding-top:0}
 .roi-comparison{margin:0}
@@ -228,47 +249,64 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
    request. Same frame as the matching screen; crops chosen so the key controls stay inside. */
 .pillar-screen{background:var(--paper);padding:22px;align-self:center;border:1px solid var(--line);min-width:0}
 .screen-crop{position:relative;height:307px;margin-top:22px;overflow:hidden;border-block:1px solid var(--line)}
-.screen-crop img{position:absolute;top:0;max-width:none}
+/* >img: the fallback only, never the live screen's own images (its advisor photos took these rules until 13 Nov) */
+.screen-crop>img{position:absolute;top:0;max-width:none}
 /* Anchored at the window's top-left corner (Tanya, 26 Oct: "don't cut top and left edges of images"), so only the
    right and bottom run off. The matching screen moves to the same anchor. */
-.screen-crop img,.matching-crop img{left:0;top:0}
-.leads .screen-crop img{width:150%}
-.deal .screen-crop img{width:110%}
+.screen-crop>img,.matching-crop img{left:0;top:0}
+/* Fallback crops, shown only if screens.js never runs. Leads left the pillars 12 Nov; Lender matching (01) and the
+   advisor directory (03) take their screens. */
+.lenders .screen-crop>img,.advisors .screen-crop>img{width:150%}
+.deal .screen-crop>img{width:110%}
 .matching-crop img{width:150%}
 @media(max-width:850px){.pillar-screen{max-width:100%}
 .screen-crop{height:302px}}
 @media(max-width:600px){.pillar-screen{padding:18px}
 .screen-crop{height:252px}
-.leads .screen-crop img,.matching-crop img{width:190%;left:0}
-.deal .screen-crop img{width:150%;left:0}}
-/* Interactive territory map (Tanya, 26 Oct: "make map in option 1 iteractive, as in other options"). The inline map is
-   Cinematic's; its state picker and status line were dropped as not in the requirements ("remove it then"). Hover lifts
-   a state to a lighter slate, the selected state and the territory CTA take the heading's gold (Tanya: "use gold color
-   for CTA and selected map item"), keyboard focus draws a paper outline. */
+.lenders .screen-crop>img,.advisors .screen-crop>img,.matching-crop img{width:190%;left:0}
+.deal .screen-crop>img{width:150%;left:0}}
+/* The map band, since 12 Nov (Tony, Figma comment on it: "Keep the map. Remove all the copy in this entire section. It is
+   no longer part of our strategy."). The map is a picture now: one navy for every state, no legend, no hover, nothing to
+   click; the territory inquiry it fed is gone. Under it, after a rule (his "---------"), who is encouraged to join: his
+   sentence on the 5fr side, the property types on the 7fr side, as the grid above splits. The types flow as one wrapped
+   line with no rules between them, and the band sits on 72px instead of 96 (variant B of the Figma study; Tanya, 12 Nov:
+   "suggest a few variants how to make this section height smaller", then "I selected this option"): 958 to 785 at 1440. */
+@media(min-width:851px){.territory.section{padding-block:72px}}
 .territory-map svg{display:block;width:100%;height:auto;margin:20px 0}
-@media(min-width:601px){.territory-map{padding-top:0}
-.territory-map svg{margin-top:0}}
-.territory-map svg path{cursor:pointer;transition:fill .2s ease}
-/* Open territory shows before any click (Tanya, 2 Nov: "show by default some available states marked on map"): twelve
-   states carry class="available" (Maine and Iowa went back to taken, "remove available from here", "remove from Iowa"; Wyoming, Texas, Missouri and South Dakota joined, "add available for Wyoming", "and for Texas", "and for Missouri", "and for South Dakota"), and the rest read as taken. The set is illustrative, not real availability [~].
-   Open states are hatched in thin gold over the navy (the map SVG's #map-open pattern), not filled: ten solid gold
-   blocks outweighed the "Check my territory" button and read as sand (Tanya, 2 Nov: "do you like how this gold color
-   looks for available?", then "go" on the hatch). Solid gold stays for the picked state alone, as for the CTA. Hover
-   keeps each state in its family: taken lifts to slate, open to a brighter hatch on a lifted ground (#map-open-hover). */
-.territory-map svg path.available{fill:url(#map-open)}
-@media(hover:hover){.territory-map svg path:hover{fill:#455a82}
-.territory-map svg path.available:hover{fill:url(#map-open-hover)}}
-.territory-map svg path.selected,.territory-map svg path.selected:hover{fill:#c2a98a}
-.map-legend i.available{background:repeating-linear-gradient(-45deg,#c2a98a 0 1.5px,#2a3d60 1.5px 3.5px)}
-.territory .button.light{background:#c2a98a;border-color:#c2a98a;color:var(--ink)}
-.territory .button.light:hover{background:#d3bea2;border-color:#d3bea2}
-.territory-map svg path:focus{outline:none}
-.territory-map svg path:focus-visible{stroke:var(--paper);stroke-width:2.5}
-/* Hover label, built by brokers.js: a paper tag 14px above the pointer, the state's name and then its status. */
-.territory-map{position:relative}
-.map-tip{position:absolute;z-index:2;transform:translate(-50%,calc(-100% - 14px));pointer-events:none;white-space:nowrap;background:var(--paper);color:var(--ink);font:500 13px/1.3 var(--sans);padding:6px 10px;box-shadow:0 6px 18px rgba(4,10,24,.35)}
-.map-tip span{margin-left:8px;font-weight:400;color:#5d6578}
-@media(max-width:560px){.territory-map svg{margin:15px 0}}
+/* Beside the copy the map is as tall as the copy, heading top to the last paragraph's foot, so the copy sets the row's
+   height and the map no longer adds to it (Tanya, 12 Nov: "make map smaller, same height as text block"). Taken out of
+   flow, the figure stretches to the row; the svg takes its height and its width from the viewBox, left-aligned with the
+   list below. Where the column is too narrow for that width, max-width caps it and the map centres in the row. */
+@media(min-width:601px){.territory-map{position:relative;align-self:stretch;margin:0;padding-top:0}
+.territory-map svg{position:absolute;top:0;left:auto;right:0;height:100%;width:auto;max-width:calc(100% * 975 / 939);margin:0;translate:1.846% 0}}
+/* The right column ends on the page's right margin, as every other band's does, and starts on the map's coast (Tanya,
+   12 Nov: "should we move this section more to the right?", then "do recommended"). The map's viewBox has 18 empty
+   units each side of the drawing (18–957 of 975), so the svg may run 975/939 of the column and moves 18/975 = 1.846%
+   of its width right: the drawing then spans the column, California on its left line and Maine on the margin. Above
+   1180 the two rows split 579 : 573, and 573 is the drawing's width at the copy's height at 1440 (372), so the map
+   still matches the copy and the coast, the diamonds and the note share one edge, 755, near the 752–760 the other
+   bands' right columns start on. The lead keeps the 480 it had, three lines. Narrower, the map fits its column and the
+   rows keep 5fr / 7fr. */
+@media(min-width:1181px){.territory .territory-grid,.territory .join-grid{grid-template-columns:579fr 573fr}
+.join-grid>p{max-width:480px}}
+/* The last paragraph's bottom margin would hang 29px of air under the copy and stretch the map past its foot. */
+.territory-grid>div>p:not(.micro):last-child{margin-bottom:0}
+.territory-grid>div>p:not(.micro):has(+p){margin-bottom:0}
+.territory-grid>div>p:not(.micro)+p{margin-top:16px}
+.join-grid{display:grid;grid-template-columns:5fr 7fr;gap:64px;margin-top:40px;padding-top:32px;border-top:1px solid var(--dark-line)}
+.join-grid p{margin:0;color:#b6bfcf;font-size:16px;line-height:1.7}
+.join-list{display:flex;flex-wrap:wrap;gap:10px 28px;margin:0;padding:0;list-style:none}
+.join-list li{display:block;position:relative;padding:0 0 0 20px;color:var(--paper);font-size:clamp(16px,1.2vw,17px);line-height:1.6}
+/* The plan cards' and pillars' bullet, a 6px square turned 45deg, in the gold the band's italic takes on navy. */
+.join-list li::before{content:'';position:absolute;left:1px;top:calc(.8em - 3px);width:6px;height:6px;transform:rotate(45deg);background:#c2a98a}
+.join-list+p{margin-top:16px}
+/* Under 1180 the 7fr side is too narrow, so the sentence sits over the list and the list takes the full width. */
+@media(max-width:1180px){.join-grid{grid-template-columns:1fr;gap:24px}
+.join-grid>p{max-width:640px}}
+/* On phones the flowing line wrapped unevenly (Hotel and Office shared a line, the rest stood alone), so each type
+   takes its own line there, still without rules. */
+@media(max-width:600px){.join-grid{gap:20px}
+.join-list{flex-direction:column}}
 /* "Compare all features ↗" under the plan footnote, centred with it above 600px; it opens /pricing#compare (2 Nov). */
 .pricing-more{text-align:center;margin-top:20px}
 /* "Compare all features" uses the hero and closing "Book a call" link: no rule at rest; a 1px line drawn from the left over 250ms on hover and keyboard focus, bronze text on hover (Tanya, 2 Nov: "reuse same ui as here") */
@@ -293,3 +331,23 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
    it as it does every .final band on a photo. */
 .final{background:linear-gradient(90deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.78) 50%,rgba(14,28,53,.66) 100%),url(../img/final-apartments-night.jpg) center/cover var(--navy)}
 @media(max-width:850px){.final{background-image:linear-gradient(180deg,rgba(14,28,53,.9) 0%,rgba(14,28,53,.8) 100%),url(../img/final-apartments-night.jpg)}}
+/* Benefits under the navy band (Tony, Figma comment #24, 5 Nov). Four columns ruled off as the proof strip under the
+   hero is: a hairline above, hairlines between, the first column flush left. Lead-ins in the serif, the rest in the
+   band's body grey. 2 x 2 at 1250 and under (four columns ran the lead-ins to
+   three lines up to 1160), one column at 600 and under
+   (Tanya, 13 Nov: "build"). */
+.benefits{display:grid;grid-template-columns:repeat(4,1fr);margin:72px 0 0;padding:34px 0 0;list-style:none;border-top:1px solid var(--dark-line)}
+.benefits>li{margin:0;padding:0 32px;border-right:1px solid var(--dark-line)}
+.benefits>li:first-child{padding-left:0}
+.benefits>li:last-child{padding-right:0;border-right:0}
+.benefits strong{display:block;font:400 24px/1.2 var(--serif);letter-spacing:-.02em;color:var(--paper);text-wrap:balance}
+.benefits p{margin:10px 0 0;font-size:14px;line-height:1.6;color:#b6bfcf;text-wrap:pretty}
+@media(max-width:1250px){.benefits{grid-template-columns:1fr 1fr;margin-top:56px;padding-top:0}
+.benefits>li,.benefits>li:first-child,.benefits>li:last-child{padding:26px 24px 26px 0;border:0}
+.benefits>li:nth-child(even){padding-left:24px;padding-right:0}
+.benefits>li:nth-child(odd){border-right:1px solid var(--dark-line)}
+.benefits>li:nth-child(-n+2){border-bottom:1px solid var(--dark-line)}
+.benefits strong{font-size:22px}}
+@media(max-width:600px){.benefits{grid-template-columns:1fr;margin-top:44px}
+.benefits>li,.benefits>li:nth-child(n){padding:22px 0;border:0;border-bottom:1px solid var(--dark-line)}
+.benefits>li:last-child{border-bottom:0}}

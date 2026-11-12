@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="shared/editorial.css?v=20261111b">
   <link rel="stylesheet" href="shared/components.css?v=20261108a">
   <link rel="stylesheet" href="brokers/screens.css?v=20261111a">
-  <link rel="stylesheet" href="home.css?v=20261110c">
+  <link rel="stylesheet" href="home.css?v=20261113a">
   <link rel="stylesheet" href="shared/type.css?v=20261102c">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
   <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
@@ -22,8 +22,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
-  <script src="shared/site.js?v=20261102g" defer></script>
-  <script src="shared/motion.js?v=20261109g" defer></script>
+  <script src="shared/site.js?v=20261113a" defer></script>
+  <script src="shared/motion.js?v=20261112homeb" defer></script>
   <script src="brokers/screens.js?v=20261105e" defer></script>
 </head>
 <body>
@@ -71,12 +71,55 @@
       </div>
     </div>
   </section>
-  <section class="proof wrap" aria-label="LenderPrism network facts">
-    <div><strong>10,000<span>+</span></strong><p>Banks &amp; credit unions</p></div>
-    <div><strong>1,500<span>+</span></strong><p>Non-bank lenders</p></div>
-    <div><strong>90,000<span>+</span></strong><p>U.S. lender locations</p></div>
-    <div><strong class="unconfirmed">[N]</strong><p>Brokers on the platform</p></div>
+  <!-- Tony, Figma comment on this row: "Instead of the data in this row, replace with 1st Line: Debt and equity for the
+       purchase, refinance or development of multifamily and commercial real estate 2nd Line: Fixed-Rate Permanent | Bridge |
+       Preferred Equity | Mezz | Construction | And much more". His words, unchanged. The four figures it replaces (10,000+
+       banks & credit unions, 1,500+ non-bank lenders, 90,000+ U.S. lender locations, [N] brokers) go. Layout, ours [rec]:
+       the Brokers word-stat row set in motion, "stacked marquee" with the lead in DM Sans 18 (option 1, setting 4 of
+       assets/website/proof-strip-options/lead.html; research in home-facts-strip-research.md). Line 1 centred, "Debt and
+       equity" at 500; under a hairline the types run right to left in ruled Bodoni cells, easing to a stop on hover or
+       keyboard focus. No pause button (Tanya, 12 Nov: "remve this"); reduced motion stops it entirely. "and much more" closes the still row and is kept for screen readers while the row moves, where
+       on screen it would loop back into the list. Without script or with reduced motion the row stands still and wraps.
+       Tanya, 12 Nov: "build this". -->
+  <section class="facts wrap" aria-label="What we finance">
+    <p class="facts-lead"><strong>Debt and equity</strong> for the purchase, refinance or development of multifamily and commercial real estate</p>
+    <div class="facts-body">
+      <div class="facts-rail"><div class="facts-track"><ul aria-label="Financing types"><li>Fixed-Rate Permanent</li><li>Bridge</li><li>Preferred Equity</li><li>Mezz</li><li>Construction</li><li class="more">and much more</li></ul></div></div>
+    </div>
   </section>
+  <!-- The marquee: repeat the five types until one copy is wider than the rail, clone that copy once (hidden from screen
+       readers) and slide the pair by half its width, so the loop never shows a seam. The speed comes from the copy's
+       width, 32px a second at every screen size (was 45; Tanya, 12 Nov: "make animation smother"). Driven by the Web
+       Animations API on a composited layer, so hover can ease the playback rate to 0 and back over about half a second
+       instead of stopping dead. Drag (Tanya, 12 Nov: "add drag and drop"): the row follows the pointer or finger
+       sideways, then glides on and slows with the release speed, and resumes when the pointer leaves; vertical swipes
+       still scroll the page (touch-action: pan-y). Run after the fonts load, since Bodoni sets the widths. -->
+  <script>(()=>{const f=document.querySelector('.facts');if(!f||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    const run=()=>{const rail=f.querySelector('.facts-rail'),t=f.querySelector('.facts-track'),u=t.querySelector('ul');
+      const hide=el=>{el.setAttribute('aria-hidden','true');el.removeAttribute('aria-label');return el;};
+      f.classList.add('moving');
+      const base=[...u.children].filter(li=>!li.classList.contains('more'));
+      for(let n=0;n<4&&u.scrollWidth<rail.clientWidth+200;n++)base.forEach(li=>u.append(hide(li.cloneNode(true))));
+      t.append(hide(u.cloneNode(true)));
+      const a=t.animate([{transform:'translate3d(0,0,0)'},{transform:'translate3d(-50%,0,0)'}],{duration:u.scrollWidth/32*1000,iterations:Infinity});
+      // hover or focus inside eases the rate toward 0, leaving eases it back to 1
+      let goal=1,raf=0;const ease=()=>{const r=a.playbackRate+(goal-a.playbackRate)*.12;a.playbackRate=Math.abs(goal-r)<.01?goal:r;raf=a.playbackRate===goal?0:requestAnimationFrame(ease);};
+      const to=g=>{goal=g;raf||(raf=requestAnimationFrame(ease));};
+      f.addEventListener('pointerenter',()=>to(0));f.addEventListener('pointerleave',()=>{if(!drag)to(1);});
+      f.addEventListener('focusin',()=>to(0));f.addEventListener('focusout',()=>to(1));
+      // drag: currentTime is the row's position, 1000/32 ms per px; wrap it into one loop so it never runs out
+      const D=a.effect.getTiming().duration,K=1000/32,wrap=ms=>((ms%D)+D)%D;let drag=null,vel=0,glide=0;
+      rail.addEventListener('pointerdown',e=>{if(e.button!==0)return;cancelAnimationFrame(glide);
+        drag={x:e.clientX,t:a.currentTime,lx:e.clientX,lt:performance.now()};vel=0;f.classList.add('held');rail.setPointerCapture(e.pointerId);to(0);});
+      rail.addEventListener('pointermove',e=>{if(!drag)return;a.currentTime=wrap(drag.t-(e.clientX-drag.x)*K);
+        const now=performance.now();vel=(e.clientX-drag.lx)/Math.max(1,now-drag.lt);drag.lx=e.clientX;drag.lt=now;});
+      const drop=e=>{if(!drag)return;drag=null;f.classList.remove('held');
+        let last=performance.now();const step=now=>{const dt=now-last;last=now;vel*=Math.pow(.94,dt/16);
+          a.currentTime=wrap(a.currentTime-vel*dt*K);
+          if(Math.abs(vel)>.02)glide=requestAnimationFrame(step);else if(e.pointerType!=='mouse'||!f.matches(':hover'))to(1);};
+        glide=requestAnimationFrame(step);};
+      rail.addEventListener('pointerup',drop);rail.addEventListener('pointercancel',drop);};
+    document.fonts?document.fonts.ready.then(run):run();})();</script>
   <section class="steps section" aria-labelledby="steps-title">
     <div class="wrap">
       <div class="steps-grid">
@@ -137,10 +180,42 @@
       </ul>
     </div>
   </section>
-  <!-- Hidden at launch if Tony has no confirmed quotes (doc §6). The three quotes, names and faces are SAMPLE content (class "sample";
-       the 26 Oct option B copy and the Brokers page's stock portraits) so the section can be reviewed filled (Tanya, 2 Nov: "add some examples
-       of content instead just empty placeholders"). Replace or remove before launch. -->
-  <section class="testimonials section" data-publication-placeholder aria-labelledby="quotes-title">
+  <!-- Tony, Figma comment on "What industry pros say" (about 6 Nov): "Until we have testimonials and tombstones, let's add a
+       section with this content". His copy, word for word. Stages 1 and 2 only: it goes once testimonials arrive. Three principles, not numbered: the steps band above already
+       counts 01-04, and this band says how the work is done, not in what order. -->
+  <section class="approach section" data-states="1 2" aria-labelledby="approach-title">
+    <div class="wrap">
+      <div class="section-heading"><h2 id="approach-title">A more deliberate approach <br><em>to commercial real estate financing.</em></h2></div>
+      <ul class="approach-list">
+        <li><h3>Start with the transaction.</h3><p>Understand the property, borrower, business plan, and timing.</p></li>
+        <li><h3>Research with purpose.</h3><p>Focus lender outreach on relevant financing criteria.</p></li>
+        <li><h3>Keep people involved.</h3><p>Use experienced judgment to evaluate options and coordinate next steps.</p></li>
+      </ul>
+    </div>
+  </section>
+  <!-- Tony, Figma comment (about 6 Nov): "I also want a separate section below this showing closed transactions. But also
+       hidden until we have something to post. I will want it to be a scrolling carousel. Title: Successfully Closed
+       Transactions. Template will be Loan Amount / Property Type / City, State / Purchase | Refinance | Construction /
+       Product (i.e Bridge loan, Fannie Mae, CMBS loan)". Shipped hidden (stage 2 shows it, ?stage=2; shared/site.js). The six
+       tombstones are SAMPLE content (class "sample"). It drifts as the testimonials do (shared/motion.js); without motion
+       it is the arrow carousel. -->
+  <section class="closings section" data-publication-placeholder data-states="2 3" hidden aria-labelledby="closings-title">
+    <div class="wrap"><div class="quote-head"><div><h2 id="closings-title">Successfully closed <br><em>transactions</em></h2></div><div class="quote-arrows"><button type="button" data-step="-1" aria-label="Previous transaction"><svg class="arrow" viewBox="0 -1638.4 2048 1638.4" aria-hidden="true" focusable="false"><path d="M 492-876 H 568 Q 509-758 479.5-710.5 Q 450-663 373-567 H 1968 V-466 H 373 Q 477-358 571-157 H 493 Q 364-301 271-375.5 Q 178-450 79-498 V-543 Q 166-580 263-656 Q 360-732 492-876Z"/></svg></button><button type="button" data-step="1" aria-label="Next transaction"><svg class="arrow" viewBox="0 -1638.4 2048 1638.4" aria-hidden="true" focusable="false"><path d="M 1555-876 Q 1688-731 1785-655.5 Q 1882-580 1968-543 V-498 Q 1869-450 1776-375.5 Q 1683-301 1554-157 H 1477 Q 1571-358 1674-466 H 79 V-567 H 1674 Q 1598-664 1568-711 Q 1538-758 1479-876Z"/></svg></button></div></div>
+      <ul class="quote-track" aria-label="Closed transactions">
+        <li class="closing-card sample"><p class="eyebrow">Refinance</p><p class="closing-amount">$8,500,000</p><dl><div><dt>Property type</dt><dd>Multifamily</dd></div><div><dt>Product</dt><dd>Fannie Mae</dd></div><div><dt>Location</dt><dd>Houston, TX</dd></div></dl></li>
+        <li class="closing-card sample"><p class="eyebrow">Purchase</p><p class="closing-amount">$4,200,000</p><dl><div><dt>Property type</dt><dd>Retail</dd></div><div><dt>Product</dt><dd>Bridge loan</dd></div><div><dt>Location</dt><dd>Tampa, FL</dd></div></dl></li>
+        <li class="closing-card sample"><p class="eyebrow">Construction</p><p class="closing-amount">$21,000,000</p><dl><div><dt>Property type</dt><dd>Build to rent</dd></div><div><dt>Product</dt><dd>Construction loan</dd></div><div><dt>Location</dt><dd>Phoenix, AZ</dd></div></dl></li>
+        <li class="closing-card sample"><p class="eyebrow">Refinance</p><p class="closing-amount">$12,750,000</p><dl><div><dt>Property type</dt><dd>Office</dd></div><div><dt>Product</dt><dd>CMBS loan</dd></div><div><dt>Location</dt><dd>Charlotte, NC</dd></div></dl></li>
+        <li class="closing-card sample"><p class="eyebrow">Purchase</p><p class="closing-amount">$6,300,000</p><dl><div><dt>Property type</dt><dd>Self storage</dd></div><div><dt>Product</dt><dd>Bridge loan</dd></div><div><dt>Location</dt><dd>Atlanta, GA</dd></div></dl></li>
+        <li class="closing-card sample"><p class="eyebrow">Refinance</p><p class="closing-amount">$15,400,000</p><dl><div><dt>Property type</dt><dd>Multifamily</dd></div><div><dt>Product</dt><dd>Freddie Mac</dd></div><div><dt>Location</dt><dd>Denver, CO</dd></div></dl></li>
+      </ul>
+    </div>
+  </section>
+  <!-- Built and hidden until there are closed deals (Tony, Figma comment on the heading, about 6 Nov: "Let's build this section
+       but keep it hidden for now until we have some closed deals"); stage 3 shows it, ?stage=3 (shared/site.js). The three quotes, names and
+       faces are SAMPLE content (class "sample"; the 26 Oct option B copy and the Brokers page's stock portraits) so the section
+       can be reviewed filled (Tanya, 2 Nov: "add some examples of content instead just empty placeholders"). -->
+  <section class="testimonials section" data-publication-placeholder data-states="3" hidden aria-labelledby="quotes-title">
     <div class="wrap"><div class="quote-head"><div><h2 id="quotes-title">What industry <br><em>pros say</em></h2></div><div class="quote-arrows"><button type="button" data-step="-1" aria-label="Previous testimonial"><svg class="arrow" viewBox="0 -1638.4 2048 1638.4" aria-hidden="true" focusable="false"><path d="M 492-876 H 568 Q 509-758 479.5-710.5 Q 450-663 373-567 H 1968 V-466 H 373 Q 477-358 571-157 H 493 Q 364-301 271-375.5 Q 178-450 79-498 V-543 Q 166-580 263-656 Q 360-732 492-876Z"/></svg></button><button type="button" data-step="1" aria-label="Next testimonial"><svg class="arrow" viewBox="0 -1638.4 2048 1638.4" aria-hidden="true" focusable="false"><path d="M 1555-876 Q 1688-731 1785-655.5 Q 1882-580 1968-543 V-498 Q 1869-450 1776-375.5 Q 1683-301 1554-157 H 1477 Q 1571-358 1674-466 H 79 V-567 H 1674 Q 1598-664 1568-711 Q 1538-758 1479-876Z"/></svg></button></div></div>
       <ul class="quote-track" aria-label="Testimonials">
         <li class="quote-card sample"><p>“Three of my last five closings started as LenderPrism leads in my own county. The borrowers arrived with the property, the loan amount and the timeline already filled in, so the first call was about structure, not paperwork.”</p><div class="byline"><img src="img/testimonials/ruiz-sq.jpg" width="48" height="48" alt="" loading="lazy"><span><b>Elena Ruiz</b>Ruiz Commercial Finance · Phoenix</span></div></li>
@@ -161,8 +236,7 @@
   <section class="final dark section"><div class="wrap"><div class="final-grid"><h2>Let's move your <br>next deal <em>forward.</em></h2><div><p>Tell us who you are and we'll show you the fastest way in.</p><div class="closing-actions role-actions"><a class="button light" href="brokers/">I'm a broker</a><a class="button ghost" href="borrowers/">I'm a borrower</a><a class="button ghost" href="lenders/">I'm a lender</a></div></div></div></div></section>
 </main>
 
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="./"><img src="img/logo-main.svg" width="177" height="30" alt="LenderPrism"></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span> <br><span class="placeholder">[Email address]</span></div><div><h2>Solutions</h2><a href="brokers/">For Brokers</a><a href="borrowers/">For Borrowers</a><a href="lenders/">For Lenders</a><a href="find-a-broker/">Find a broker</a><a href="pricing/">Pricing</a></div><div><h2>Company</h2><a href="about/">About</a><a href="about/#contact">Contact</a><button data-unavailable="Broker Agreement">Broker Agreement</button><h2 class="platforms-label">Our platforms</h2><a href="./">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><!-- Tony, Figma comment on "Market notes and new lenders, once a month.", Nov 2026: "Replace these two lines with "Lender insights and LenderPrism updates"". Set word for word on one line (Tanya, 11 Nov: "make it one line"); from 860 to 1230 the four-column footer is narrower than the line and it breaks into two even lines (editorial.css). The field's hidden label follows. --><p>Lender insights and LenderPrism updates</p><form id="newsletter-form"><label class="sr-only" for="newsletter-email">Email for lender insights and LenderPrism updates</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><!-- Tony, Figma comment on the footer line, Nov 2026: "Replace footer with 'LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.'" Set word for word; the old "We are not a lender. Commercial-purpose financing only." goes with it. --><p class="disclaimer">LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.</p></div></footer>
-<dialog id="inquiry-dialog" aria-labelledby="inquiry-title"><button class="dialog-close" data-close aria-label="Close territory inquiry">×</button><p class="eyebrow">PRO / TERRITORY INQUIRY</p><h2 id="inquiry-title">Let's talk <em>territory.</em></h2><p>Tell us where you want to build your business.</p><form id="territory-form"><div class="form-row"><label>Full name<input name="name" autocomplete="name" required></label><label>Work email<input name="email" type="email" autocomplete="email" required></label></div><label>States<input name="states" placeholder="e.g. Texas, Florida" required></label><label>Asset classes<input name="assets" placeholder="e.g. Multifamily, Industrial" required></label><div class="form-actions"><button class="button" type="submit">Review inquiry</button><a class="text-link" href="https://calendly.com/tony_talamas/work-with-lenderprism" target="_blank" rel="noopener">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></div><p id="inquiry-status" role="status"></p></form></dialog>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="./"><img src="img/logo-main.svg" width="177" height="30" alt="LenderPrism"></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span><!-- Tony, Figma comment on "[Email address]", Nov 2026: "E-mail: I prefer a form field to avoid spam". No address is published; Company > Contact leads to the form on About. --></div><div><h2>Solutions</h2><a href="brokers/">For Brokers</a><a href="borrowers/">For Borrowers</a><a href="lenders/">For Lenders</a><a href="find-a-broker/">Find a broker</a><a href="pricing/">Pricing</a></div><div><h2>Company</h2><a href="about/">About</a><a href="about/#contact">Contact</a><button data-unavailable="Broker Agreement">Broker Agreement</button><h2 class="platforms-label">Our platforms</h2><a href="./">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><!-- Tony, Figma comment on "Market notes and new lenders, once a month.", Nov 2026: "Replace these two lines with "Lender insights and LenderPrism updates"". Set word for word on one line (Tanya, 11 Nov: "make it one line"); from 860 to 1230 the four-column footer is narrower than the line and it breaks into two even lines (editorial.css). The field's hidden label follows. --><p>Lender insights and LenderPrism updates</p><form id="newsletter-form"><label class="sr-only" for="newsletter-email">Email for lender insights and LenderPrism updates</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><!-- Tony, Figma comment on the footer line, Nov 2026: "Replace footer with 'LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.'" Set word for word; the old "We are not a lender. Commercial-purpose financing only." goes with it. --><p class="disclaimer">LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.</p></div></footer>
 <dialog id="notice-dialog" aria-labelledby="notice-title"><button class="dialog-close" data-close aria-label="Close notice">×</button><p class="eyebrow">LENDERPRISM / DESIGN PREVIEW</p><h2 id="notice-title"></h2><p id="notice-body"></p><button class="text-link" data-close>Back to the page <span aria-hidden="true">↙</span></button></dialog>
 </body>
 </html>

@@ -38,6 +38,39 @@
 .role-call a{color:#d9bf98;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;transition:color 150ms ease}
 .role-call a:hover{color:#f0e2cc}
 
+/* Facts strip under the hero (Tony's two lines, 12 Nov; markup comment in index.html): the Brokers word-stat row's type,
+   measured off Brokers at 1440 (Bodoni 26, -0.04em; 32px cells between hairlines), with the lead in DM Sans 18, the hero
+   description's size. Still by default: the types wrap centred and "and much more" closes them. With script and motion
+   the inline script adds .moving: one line, faded at both edges, sliding by half the doubled track (Web Animations API,
+   in index.html). */
+.facts{border-top:1px solid var(--line);padding-block:28px 34px}
+.facts-lead{max-width:none;margin:0 0 22px;text-align:center;text-wrap:balance;font-size:18px;line-height:1.5;color:#586973}
+.facts-lead strong{font-weight:500;color:var(--ink)}
+.facts-body{position:relative;padding-top:22px;border-top:1px solid var(--line)}
+.facts ul{display:flex;flex-wrap:wrap;justify-content:center;row-gap:10px;margin:0;padding:0;list-style:none}
+.facts li{padding-inline:24px;border-right:1px solid var(--line);font:400 26px/1.2 var(--serif);letter-spacing:-.04em;color:var(--ink);white-space:nowrap}
+.facts li:nth-last-child(2){border-right:0}
+.facts li.more{display:flex;align-items:center;border:0;font:italic 400 15px/1.2 var(--sans);letter-spacing:0;color:var(--muted)}
+/* the rail clips, so it carries 10px of padding top and bottom, cancelled by negative margins: Bodoni's descenders
+   ("g" in Bridge) run past the 1.2 line box and were cut (Tanya, 12 Nov: "fix cuted text") */
+.facts.moving .facts-rail{padding-block:10px;margin-block:-10px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+.facts.moving .facts-track{display:flex;width:max-content;will-change:transform}
+/* drag: grab cursor, no text selection while dragging, vertical swipes left to the page */
+.facts.moving .facts-rail{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.facts.moving.held .facts-rail{cursor:grabbing}
+.facts.moving ul{flex-wrap:nowrap;justify-content:flex-start}
+.facts.moving li,.facts.moving li:nth-last-child(2){padding-inline:32px;border-right:1px solid var(--line)}
+/* while moving, "and much more" leaves the screen but not the list: it would loop straight back into "Fixed-Rate Permanent" */
+.facts.moving li.more{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:700px){
+.facts{padding-block:24px 26px}
+.facts-lead{margin-bottom:20px;font-size:16px}
+.facts-body{padding-top:20px}
+.facts li{padding-inline:16px;font-size:23px}
+.facts.moving li,.facts.moving li:nth-last-child(2){padding-inline:20px}
+.facts.moving ul:first-child li:first-child{padding-left:0}
+.facts.moving .facts-rail{-webkit-mask-image:linear-gradient(90deg,#000,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000,#000 calc(100% - 40px),transparent)}}
+
 /* How the desk works: the heading beside the steps (Option B of the steps layout review, Tanya, 5 Nov: "build opt B",
    after "how to improve this layout?"). The heading takes 5 of 12 columns and stays in place under the header while
    the four steps pass on the right, so the heading row is no longer half empty.
@@ -174,8 +207,42 @@
 }
 .people-more .text-link{border:0;padding-block:8px}
 
-/* Testimonials: sample quotes and stock faces until Tony confirms real ones (2 Nov); the carousel styles come from editorial.css. */
+/* Testimonials: sample quotes and stock faces until Tony confirms real ones (2 Nov); the carousel styles come from editorial.css.
+   Hidden until there are closed deals (Tony, about 6 Nov), after the closed transactions. */
 .testimonials{background:var(--white)}
+
+/* A more deliberate approach (Tony's copy, about 6 Nov): stands in for the testimonials until there are closed deals. White,
+   as the testimonials band it replaces was, between People and the Prism family on paper. Three principles in a row under
+   one rule each, no numbers (the steps band counts); one column under 851px. */
+.approach{background:var(--white)}
+.approach-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px;margin:0;padding:0;list-style:none}
+/* The rule is drawn, not a border, so motion.js can draw it from the left by --rule (0 to 1), as About's beliefs do;
+   without motion it stands. 29px = the old 1px border + 28. */
+.approach-list>li{position:relative;padding-top:29px}
+.approach-list>li::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line);transform-origin:left;transform:scaleX(var(--rule,1))}
+.approach-list h3{font-size:clamp(26px,2.2vw,30px);line-height:1.2}
+.approach-list p{margin-top:14px;font-size:16px;line-height:1.7;color:var(--muted);max-width:340px}
+@media(max-width:850px){.approach-list{grid-template-columns:1fr;gap:28px}
+.approach-list>li{padding-top:25px}}
+
+/* Successfully closed transactions (Tony, about 6 Nov): his tombstone template, the advisor profile's tiles in the site's
+   type. Purpose as the eyebrow, the loan amount in Bodoni as the headline a tombstone advertises, then property type,
+   product and place as ruled rows. Hidden until there are deals to post (?stage=2 shows it). The carousel is the
+   testimonials' (editorial.css): arrows without motion, the drifting ticker with it (motion.js adds .ticking). */
+/* Blue-grey, the Sides band's tone: in stage 2 it sits between the white approach band and the paper Prism family, in
+   stage 3 between the paper People band and the white testimonials, so paper or white would sit beside its own tone. */
+.closings{overflow-x:clip;background:#eef1f6}
+.closing-card{flex:0 0 min(360px,78vw);scroll-snap-align:start;display:flex;flex-direction:column;padding:32px;background:var(--white);border:1px solid var(--line)}
+.closing-card>.eyebrow{margin:0;color:var(--bronze)}
+.closing-amount{margin-top:14px;font:400 clamp(38px,3.2vw,44px)/1.1 var(--serif);color:var(--ink);letter-spacing:-.01em}
+.closing-card dl{margin:28px 0 0}
+.closing-card dl>div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.5}
+.closing-card dt{color:var(--muted)}
+.closing-card dd{margin:0;color:var(--ink);text-align:right}
+.closings.ticking .quote-arrows{display:none}
+.closings.ticking .quote-track{overflow:visible;scroll-snap-type:none;align-items:flex-start;touch-action:pan-y;user-select:none;cursor:grab}
+.closings.ticking .quote-track.held{cursor:grabbing}
+@media(max-width:600px){.closing-card{padding:26px}}
 
 /* Final: three role buttons, the broker one primary (the paying audience), the other two outlined on navy. */
 .role-actions{gap:12px}

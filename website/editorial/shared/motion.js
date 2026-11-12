@@ -53,7 +53,7 @@
   // The Pricing header's ledger works its sum in reading order (Option 3 of the Pricing motion review,
   // assets/website/pricing-motion-options/; Tanya, 5 Nov: "add recommended"). The cap, then each row rises as the one
   // above lands (0.7s, 0.35s apart), its figure counting from 0 over 1.1s; the ink rule over the total draws from the
-  // left (0.6s power3.out) and "10+ years" lands last, under 3s in all. As in the proof count-up below, the counting
+  // left (0.6s power3.out) and "26+ years" lands last, under 3s in all. As in the proof count-up below, the counting
   // digits are hidden from screen readers and an .sr-only twin in the same dd carries the real figure.
   const workSum = (ledger, delay) => {
     const total = ledger.querySelector('.total');
@@ -95,7 +95,7 @@
   // before), so $159 to $199 rolls only the 5 and the 9. The line under each price fades across. When the roll lands
   // the price is plain text again. The navy fill slides to the pressed button (0.45s) instead of switching in one frame;
   // editorial.css (.billing.sliding) moves the fill off the buttons onto it. #billing-announcement already tells screen
-  // readers the new prices.
+  // readers the new prices. Brokers' ROI plan switch (Accelerator or Pro) is a .billing too, so its fill slides the same way.
   const prices = gsap.utils.toArray('[data-price]');
   const notes = gsap.utils.toArray('[data-note]');
   const shown = new Map();
@@ -145,7 +145,7 @@
       const on = group.querySelector('[aria-pressed=true]');
       if (on) gsap.to(fill, {x: on.offsetLeft, width: on.offsetWidth, duration, ease});
     };
-    group.addEventListener('click', event => { if (event.target.closest('[data-billing]')) place(.45); });
+    group.addEventListener('click', event => { if (event.target.closest('[data-billing], [data-roi-plan]')) place(.45); });
     return place;
   });
   const placeToggles = () => toggles.forEach(place => place(0));
@@ -190,7 +190,7 @@
 
     // Blocks, each on its own trigger as The Nest wraps them. A container that holds a title reveals its other
     // children instead, so no title moves twice.
-    const picked = gsap.utils.toArray('.proof > div, .problem-body, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *')
+    const picked = gsap.utils.toArray('.proof > div, .problem-body, .benefits > li, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *')
       .flatMap(block => block.querySelector('h2') ? [...block.children] : block)
       .filter(block => block.tagName !== 'H2' && !block.matches('.story-portrait'));
     const blocks = [...new Set(picked)];
@@ -335,9 +335,11 @@
     // in its own mask, 100px low and tilted 8° on its bottom edge; a line's words rise together (1.3s expo.out) when the
     // line reaches the bottom of the viewport, as Casa Momo's do, with no delay between words. editorial.css (.ticking)
     // hides the arrows and lets cards keep their own height. Copies that fill the loop are hidden from assistive tech.
-    const track = document.querySelector('.quote-track');
-    if (track) {
-      const section = track.closest('.testimonials');
+    // Home's closed transactions drift the same way (Tony: "I will want it to be a scrolling carousel"); a track in a
+    // hidden section is skipped, since it has no width to loop on.
+    document.querySelectorAll('.quote-track').forEach(track => {
+      if (track.closest('[hidden]')) return;
+      const section = track.closest('section');
       const originals = [...track.children];
       section.classList.add('ticking');
       const period = () => originals.length * (originals[0].offsetWidth + (parseFloat(getComputedStyle(track).columnGap) || 0));
@@ -402,7 +404,7 @@
       };
       track.addEventListener('pointerup', release);
       track.addEventListener('pointercancel', release);
-    }
+    });
 
     // Drafted: the economics bars draw from the left (0.45s power3.out, 0.07s apart) once the scale is 90% down.
     if (document.querySelector('.scale-bar')) gsap.fromTo('.scale-bar', {scaleX: 0, transformOrigin: 'left center'}, {scaleX: 1, duration: .45, ease: 'power3.out', stagger: .07,
@@ -453,7 +455,9 @@
     // scroll, and went the same morning (Tanya: "remove this"). autoSplit re-splits on resize; a card that has risen
     // stays risen. Lenders' and Borrowers' What's coming cards are the same card (components.css .feature-card, 9 Nov:
     // "make same cards for lenders and borowers sections") and arrive the same way; the reveal list above skips them.
-    const beliefs = gsap.utils.toArray('.belief-list > li, .feature-cards > li');
+    // Home's three principles (A more deliberate approach) arrive the same way, their rule drawn over the title
+    // (Tanya, 12 Nov: "how to animate this section?", then "yes" to the beliefs beat).
+    const beliefs = gsap.utils.toArray('.belief-list > li, .feature-cards > li, .approach-list > li');
     if (beliefs.length) {
       const parts = beliefs.map(() => []), risen = new Set();
       beliefs.forEach((card, n) => [...card.children].forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, onSplit(split) {

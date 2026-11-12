@@ -12,7 +12,15 @@
 .filter-toggle[aria-expanded=true] .chev{transform:rotate(180deg)}
 .filter-count{color:#7A6040}
 .filter-pop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;width:300px;background:var(--white);border:1px solid var(--line);box-shadow:0 18px 40px rgba(14,28,53,.12)}
-.filter-options{display:grid;max-height:300px;overflow:auto;padding:8px 0}
+.filter-options{display:grid;max-height:300px;overflow:auto;overscroll-behavior:contain;padding:8px 0}
+/* The lists scroll inside the panel with a scrollbar that stays drawn (Tanya, 12 Nov: "add scroll inside dropdown menus"):
+   macOS hides overlay scrollbars until the list moves, so a list cut at 300px gave no sign there was more. A styled
+   ::-webkit-scrollbar is always drawn in Chrome and Safari; Firefox takes the thin standard one. The page does not
+   scroll on when the list reaches its end. */
+.filter-options::-webkit-scrollbar{width:10px}
+.filter-options::-webkit-scrollbar-thumb{background:#cfc6b6;border:3px solid var(--white);border-radius:5px}
+.filter-options::-webkit-scrollbar-thumb:hover{background:#b9ab95}
+@supports not selector(::-webkit-scrollbar){.filter-options{scrollbar-width:thin;scrollbar-color:#cfc6b6 transparent}}
 .filter-options label{display:flex;align-items:flex-start;gap:12px;padding:9px 16px;font-size:15px;line-height:1.4;cursor:pointer}
 .filter-options label:hover{background:#f3efe7}
 .filter-options input{flex:0 0 16px;width:16px;height:16px;margin:2px 0 0;accent-color:var(--navy)}
@@ -20,6 +28,26 @@
 .filter-foot button{font-size:15px;font-weight:500;color:var(--ink);padding:4px 0}
 .filter-foot button:hover{color:var(--bronze)}
 .find-count{margin-left:auto;font-size:15px;color:var(--muted)}
+/* Property state (12 Nov): the filter buttons' single-select. The button reads "Property state" until a state is picked,
+   then the state, its border ink as an active filter's. The panel tops its list with a search field on the row's rule;
+   rows are the checkbox rows' 15px with no box, the picked one Medium with a navy tick at the right, the one the arrows
+   reach tinted as on hover. */
+.find-state-search{position:relative;display:flex;align-items:center;color:var(--muted);border-bottom:1px solid var(--line)}
+.find-state-search svg{position:absolute;left:16px;pointer-events:none}
+.find-state-search input{width:100%;min-height:44px;padding:10px 16px 10px 42px;border:0;background:none;font-size:15px;line-height:24px;color:var(--ink)}
+.find-state-search input::placeholder{color:var(--muted);opacity:1}
+.find-state-search input:focus{outline:none}
+.find-state-search:focus-within{color:var(--ink)}
+.state-options{margin:0;list-style:none}
+.state-options li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 16px;font-size:15px;line-height:1.4;cursor:pointer}
+.state-options li:hover,.state-options li.is-active{background:#f3efe7}
+.state-options li[hidden]{display:none}
+.state-options .tick{flex:none;color:var(--navy);visibility:hidden}
+.state-options li[aria-selected=true]{font-weight:500}
+.state-options li[aria-selected=true] .tick{visibility:visible}
+.state-options .state-all{margin-bottom:8px;box-shadow:0 1px 0 var(--line)}
+.state-none{padding:17px 16px;font-size:15px;color:var(--muted)}
+.state-none[hidden]{display:none}
 /* Search by name: a field the filters' height and border, first in the row as in the app's lists (10 Nov), 286px wide
    (Tanya, 10 Nov). From 1007px it shares the filters' line, the count still pushed right; below 1007 there is no room, so it takes the first line at
    full width above the filters, as on phones. 16px text from 600 down keeps iOS from zooming the page on focus. */
@@ -61,6 +89,13 @@
 .broker-states>.more{color:var(--muted);white-space:nowrap}
 .broker-card>.button{margin-top:16px;justify-content:space-between}
 .broker-card[hidden]{display:none}
+/* The divider between the picked state's brokers and the rest: a full-width eyebrow on a rule, 40px over the next row
+   as the rows stand apart; the cards' own 32px bottom margin is the space above it. */
+.find-divider{grid-column:1/-1;padding:12px 0 32px;border-top:1px solid var(--line);font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7A6040}
+.find-divider[hidden]{display:none}
+/* Show more: centred under the grid, 48px below the last row. */
+.find-more{display:flex;justify-content:center;margin-top:48px}
+.find-more[hidden]{display:none}
 
 .find-empty{display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding:48px;background:var(--white);border:1px dashed #b9ab95}
 .find-empty[hidden]{display:none}
@@ -73,6 +108,7 @@
 @media(max-width:600px){
   .filters{padding:20px 0 28px}
   .filter,.filter-toggle{width:100%}
+  .find-state-search input{font-size:16px}
   .filter-toggle{justify-content:space-between}
   .filter-toggle .chev{margin-left:auto}
   .filter-pop{width:100%}
