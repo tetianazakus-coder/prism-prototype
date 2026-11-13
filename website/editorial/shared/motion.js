@@ -63,11 +63,16 @@
     if (total) total.prepend(rule);
     const play = gsap.timeline({delay, defaults: {ease}});
     play.fromTo(ledger.querySelector('.ledger-cap'), {opacity: 0, y: 14}, {opacity: 1, y: 0, duration: .6, clearProps: 'transform'}, 0);
-    ledger.querySelectorAll('dl > div').forEach((row, n) => {
-      const at = .25 + n * .35 + (row === total ? .25 : 0);
-      if (row === total) play.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out'}, at - .25);
+    // Pricing's total is a block since 13 Nov ("Your fee covers", then a row per plan): its lead-in and rows rise in
+    // turn after the rule draws. A one-row total (a dl > div.total) plays as before.
+    const steps = [...ledger.querySelectorAll('dl > div, .ledger-sub')];
+    const first = steps.find(step => total && total.contains(step));
+    steps.forEach((row, n) => {
+      const at = .25 + n * .35 + (total && total.contains(row) ? .25 : 0);
+      if (row === first) play.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out'}, at - .25);
       play.fromTo(row, {opacity: 0, y: 14}, {opacity: 1, y: 0, duration: .7, clearProps: 'transform'}, at);
       const dd = row.querySelector('dd');
+      if (!dd) return;
       let figure = dd.querySelector('em');
       if (!figure) {
         figure = document.createElement('span');

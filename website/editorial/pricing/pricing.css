@@ -9,12 +9,20 @@
    italic (Tanya, 5 Nov: "make 10+ italic"). */
 .price-head .hero-grid{align-items:center}
 .price-head .hero-copy{padding-bottom:56px}
+/* Tony's hero copy (13 Nov, Option B of the "Pricing Hero Copy" preview): one description paragraph (two at first,
+   joined again the same day: "I would like to combine it like this"); the trial line 22px below, in ink at 15px and
+   500, so it reads as the offer, as the ledger's ink rows do beside it [rec]. Its hairline went the same day: with it
+   the column read as a second ledger, and colour and weight already set the line apart (Tanya, 13 Nov: "do recommended"). */
+.price-head .hero-note{max-width:490px;margin:22px 0 0;font-size:15px;line-height:1.5;font-weight:500;color:var(--ink)}
 /* The ledger sits in a white card: Option B of the card review (../../ledger-card-options/; Tanya, 5 Nov: "should we make it
    inside a card?", then "build B on the pricing page"). It is the testimonials' .quote-card (editorial.css): the site's
    white, a 1px hairline border, square corners, no shadow. The padding adds to the 500 max width, so the rows keep it;
    inside the card the label's rule is a hairline, since the card edge does the bronze rule's job. */
 .ledger{justify-self:end;width:100%;max-width:564px;margin:0 0 56px;padding:28px 32px 26px;background:var(--white);border:1px solid var(--line)}
-.ledger-cap{font-size:12px;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:var(--bronze);padding-bottom:14px;border-bottom:1px solid var(--line)}
+/* No rule under the caption since 13 Nov: the card's top edge frames it, and a hairline there doubled the edge. It sits
+   2px over the first row, as "On annual billing, your fee covers" sits over the plan rows [rec] (Tanya, 13 Nov: "to many
+   dividers here, what dividers we can remove?", then "do recommended"). */
+.ledger-cap{font-size:12px;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:var(--bronze);padding-bottom:2px}
 .ledger dl{margin:0}
 .ledger dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 24px;padding:15px 0 14px;border-bottom:1px solid var(--line)}
 .ledger dt{font-size:16px;line-height:1.4;color:var(--muted)}
@@ -44,6 +52,18 @@
    toward the digits' weight ("make + visualy same weight as 10", then "slightly thinner", "thinner"). At the 48px
    figure it was .5em lifted -.15em; at 28px .5em was 14px and sat 4px above the digits, so it went to .7em at 0. */
 .ledger .total em>span{font-size:.7em;line-height:1;vertical-align:top;position:relative;top:0;margin-left:2px;-webkit-text-stroke:.03em currentColor}
+/* Pro joins Accelerator in the total (Tony: "Also show the match for Pro"; Option O, Tanya, 13 Nov: "build
+   recommended"). The total is now a block under the ink rule: a lead-in (styled below), then a row per plan. The rules above style the rows as they styled the one total row: plan name in ink at 500, years in
+   the bronze italic at 32. The plan's yearly price sits under its name at 14, so the years are the row's one figure
+   and every large figure lines up on the right. The years hold on annual billing only, so the lead-in says so ("On
+   annual billing, your fee covers"); a footnote row said it at first and went (Tanya, 13 Nov: "apply"). */
+.ledger .total{padding-top:16px}
+/* The lead-in takes the card caption's label style, DM Sans 12 at 600, .095em tracking, capitals, bronze (Tanya, 13 Nov:
+   "lets use this label style", with a screenshot of it set like "One closed deal, worked through"). */
+.ledger-sub{margin:0;padding-bottom:2px;font-size:12px;line-height:1.4;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:var(--bronze)}
+.ledger .total dl>div{align-items:center}
+.ledger .total dl>div:last-child{border-bottom:0}
+.ledger .total dt small{font-size:14px;font-weight:400;opacity:1;margin-top:3px}
 
 /* Plans follow the header directly, so the section keeps only a short top padding, clear of the header's rule; the
    toggle sits right, over Pro. */
@@ -51,11 +71,8 @@
 .plans-head{justify-content:flex-end;margin-top:0}
 .plans-head .billing{margin-top:0}
 
-/* Card labels (START HERE, MOST POPULAR, DEAL FLOW) take the Brokers chapter label ("01 Deal flow", .pillar-copy>.eyebrow):
-   DM Sans 12 at 600, .11em tracking, gold text #7A6040; size and line height already matched. The "No card required" note
-   in the Accelerator label keeps its own muted 400 (Tanya, 5 Nov: "apply this style for the 3 headers"). */
-.plan-top{font-weight:600;letter-spacing:.11em;color:#7A6040}
-.plan-top>.micro{font-weight:400;color:var(--muted)}
+/* Card labels (START HERE, MOST POPULAR, DEAL FLOW): the rule moved to shared/editorial.css on 13 Nov so the Brokers and LP
+   plan cards carry it too. */
 
 /* Full cards: a label leads every list (Essential "Includes:", the others "Everything in X, plus:") so the three lists start
    level. The label takes the Brokers walkthrough's selected step title ("Create deal",
@@ -94,6 +111,7 @@
 
 /* Phones: no sideways scroll. Each feature row stacks its name over three labelled values. */
 @media(max-width:600px){
+  .price-head .hero-note{font-size:14px}
   .ledger{margin:8px 0 48px;padding:22px 20px 20px}
   .plan:has(.plan-addon){padding-bottom:18px!important} /* phone cards set padding with !important (editorial.css) */
   .compare table,.compare tbody,.compare tr,.compare th,.compare td{display:block}

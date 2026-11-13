@@ -10102,7 +10102,7 @@ const S = {
      borrower, the invitation for one who arrived on a broker's link. bInvFrom
      keeps that one invitation visible on a first-session Home, which is the
      only reason the row exists. */
-  authInv: null, authLogin: false, bvNext: null, bInvFrom: null,
+  authInv: null, authLogin: false, authNext: null, bvNext: null, bInvFrom: null,
   auth: { first: "", last: "", email: "", pass: "", pass2: "", company: "", phone: "" },
   view: "list",
   q: "", sort: "updated", propFilter: new Set(), finFilter: new Set(), locFilter: new Set(), amtFilter: new Set(), open: null, msExpand: new Set(),
@@ -21353,7 +21353,7 @@ function renderAuth() {
   if (S.authMode === "join") return renderJoinAuth();
   const login = S.authMode === "login";
   const foot = login
-    ? `<div class="auth__foot">New to LenderPrism? <a href="#/auth/signup">Sign up</a></div>`
+    ? `<div class="auth__foot">New to LenderPrism? <a href="#/auth/signup${S.authRole ? "/" + S.authRole : ""}">Sign up</a></div>`
     : `<div class="auth__foot">Already have an account? <a href="#/auth/login">Log in</a></div>`;
   if (login) {
     return authShell(`
@@ -31840,11 +31840,20 @@ function route() {
     S.route = "pjoin"; S.cos = true;
     render(); return;
   }
-  const ma = h.match(/^\/auth(?:\/(signup|login|trial|verify))?(?:\/(borrower|broker|lender))?(?:\/(verified|expired))?\/?$/);
+  /* ?next= on Log in, 13 Nov: the website's "Update your lending parameters"
+     (Lenders, under Get notified) opens #/auth/login/lender?next=/parameters,
+     and the lender lands on the form after logging in (Tony and Christian, Figma
+     comment on the link: "A lender without a session goes to login first. After
+     login they land directly on their lending parameters page"). Only an
+     in-app path is taken - one slash, then letters, digits and hyphens - so a
+     link can never send someone off the product after login [rec]; anything
+     else is dropped and the log-in page still opens. */
+  const ma = h.match(/^\/auth(?:\/(signup|login|trial|verify))?(?:\/(borrower|broker|lender))?(?:\/(verified|expired))?\/?(?:\?next=([^&#]*))?$/);
   if (ma) {
     S.route = "auth"; S.dealId = null;
     S.authMode = ma[1] || "signup";
     S.authRole = S.authMode === "trial" ? "broker" : (ma[2] || null);
+    S.authNext = S.authMode === "login" && /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(ma[4] || "") ? ma[4] : null;
     if (S.authMode === "verify") S.bverify = ma[3] === "expired" ? "error" : (ma[3] || "sent");
     S.authErr = null;
     S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
@@ -32297,7 +32306,14 @@ document.addEventListener("click", e => {
     return;
   }
   if (e.target.closest("#authSubmit")) authSubmit();
-  else if (e.target.closest("#authLogin")) location.hash = "#/home";
+  else if (e.target.closest("#authLogin")) {
+    /* a role in the address is the account logging in: #/auth/login/lender
+       signs in as a returning lender, with parameters saved. ?next= is taken
+       only for a lender - the one page a link sends there today is theirs;
+       anyone else lands on Home, as every log-in did before [rec]. */
+    if (S.authRole === "lender") { S.role = "lender"; S.lFresh = false; S.lpd = null; S.lsetupX = false; }
+    location.hash = "#" + (S.authNext && isL() ? S.authNext : "/home");
+  }
 });
 document.addEventListener("input", e => {
   const bif = e.target.closest("[data-binvf]");

@@ -87,6 +87,12 @@ nav{font-size:14px;gap:25px}
    to the right side here, oposite to 'MOST POPULAR'"). The doc gives it as that card's button microcopy (Pricing §3). Sentence case, no full stop (Tanya: "remove dot after required"), untracked, line-height 1 so the row stays its 16px and the card's rows stay level with its neighbours. */
 .plan-top{align-items:baseline;gap:12px}
 .plan .plan-top>.micro{letter-spacing:0;margin:0;line-height:1}
+/* Card labels (START HERE, MOST POPULAR, DEAL FLOW) take the Brokers chapter label ("01 Deal flow", .pillar-copy>.eyebrow):
+   DM Sans 12 at 600, .11em tracking, gold text #7A6040. The "No card required" note in the Accelerator label keeps its own
+   muted 400 (Tanya, 5 Nov, on Pricing: "apply this style for the 3 headers"). Set on Pricing only until 13 Nov, when the
+   Brokers and LP cards still showed the muted base label (Tanya: "Broker page align text slyle with price page"). */
+.plan-top{font-weight:600;letter-spacing:.11em;color:#7A6040}
+.plan-top>.micro{font-weight:400;color:var(--muted)}
 .billing button{font-size:14px;min-height:44px}
 .billing small{font-size:11px}
 /* With motion, the toggle's navy fill is one span that slides to the pressed button (motion.js adds .sliding and
@@ -101,7 +107,8 @@ nav{font-size:14px;gap:25px}
 .pricing-footnote{font-size:14px}
 /* The Broker Agreement link goes ink, like Pricing's own note link (.compare-notes .inline-link): in muted grey its 1px rule
    (currentColor) read darker than its 14px strokes, though both were rgb(88,105,115) (Tanya, 5 Nov). */
-.pricing-footnote .inline-link{color:var(--ink)}
+/* The FAQ's Calendly link in an answer takes the same ink (Tony's FAQ, 13 Nov). */
+.pricing-footnote .inline-link,.faq-items .inline-link{color:var(--ink)}
 table{font-size:13px}
 .faq-grid{grid-template-columns:4fr 8fr;gap:80px}
 .faq-items summary,.comparison>summary{font-size:17px;padding-block:23px}

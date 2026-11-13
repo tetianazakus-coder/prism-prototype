@@ -299,7 +299,6 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
 .join-list li{display:block;position:relative;padding:0 0 0 20px;color:var(--paper);font-size:clamp(16px,1.2vw,17px);line-height:1.6}
 /* The plan cards' and pillars' bullet, a 6px square turned 45deg, in the gold the band's italic takes on navy. */
 .join-list li::before{content:'';position:absolute;left:1px;top:calc(.8em - 3px);width:6px;height:6px;transform:rotate(45deg);background:#c2a98a}
-.join-list+p{margin-top:16px}
 /* Under 1180 the 7fr side is too narrow, so the sentence sits over the list and the list takes the full width. */
 @media(max-width:1180px){.join-grid{grid-template-columns:1fr;gap:24px}
 .join-grid>p{max-width:640px}}
