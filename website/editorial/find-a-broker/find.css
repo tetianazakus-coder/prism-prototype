@@ -2,6 +2,11 @@
    components.css, this file, type.css. */
 
 .find-head .hero-copy{padding-bottom:48px}
+/* The headline on one line (14 Nov, index.html records the request): "Find a" and the italic "financing advisor." run
+   inline from 851px, where the pair fits the column at every width; narrower, they stack as every hero's two lines do.
+   Descendant selectors, not >: with motion on, SplitText wraps each line in a div, so the em is no longer the h1's child
+   and editorial.css's display:block would break the line again. */
+@media(min-width:851px){.find-head h1 span,.find-head h1 em{display:inline}}
 .directory{padding-top:0;border-top:1px solid var(--line)}
 
 /* Filters: three multiselect buttons in a row; each opens a checkbox list over the grid with its footer. */
@@ -93,6 +98,8 @@
    as the rows stand apart; the cards' own 32px bottom margin is the space above it. */
 .find-divider{grid-column:1/-1;padding:12px 0 32px;border-top:1px solid var(--line);font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7A6040}
 .find-divider[hidden]{display:none}
+/* No advisor in the picked state: the empty state's card leads the grid, full width, 40px over the divider. */
+.find-none{grid-column:1/-1;margin-bottom:40px}
 /* Show more: centred under the grid, 48px below the last row. */
 .find-more{display:flex;justify-content:center;margin-top:48px}
 .find-more[hidden]{display:none}
@@ -103,6 +110,24 @@
 
 /* Closing band for brokers: the shared centred band on the glass facade (.final-centred, .band-glass-facade,
    components.css). */
+
+/* Connect via LenderPrism: the advisor's short form in a dialog (index.html records the request). The shared sectioned
+   dialog (base.css) at 640 wide; the name takes the italic bronze line as every heading accent does; the four required
+   fields pair as the inquiry form's did, the optional deal note and the consent take the full width, the consent closing the
+   body just above Connect (Tanya, 14 Nov: "can we move it to the content section?"; it is our line, not in the
+   requirements). */
+.connect-dialog{width:min(640px,calc(100% - 32px))}
+.connect-dialog h2{margin:18px 0 0;font-size:40px;line-height:1.08}
+.connect-dialog .connect-lede{margin:14px 0 0}
+.connect-form .form-row{gap:0 20px}
+.connect-form label{margin:14px 0 0}
+.connect-optional{margin-left:6px;color:var(--muted);font-weight:400}
+.connect-form textarea{display:block;width:100%;margin-top:7px;padding:12px;min-height:88px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);color:var(--ink);font:inherit;font-size:16px;resize:vertical}
+.connect-form :is(input,textarea):focus-visible{outline:2px solid #b59159;outline-offset:2px}
+.connect-consent{margin:16px 0 0;font-size:13px;line-height:1.6;color:var(--muted)}
+.connect-consent a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.connect-done .dialog-bd p{font-size:15px;line-height:1.7;color:var(--muted);margin:16px 0 0}
+.connect-done b{color:var(--ink);font-weight:500}
 
 @media(max-width:1150px){.broker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){
@@ -117,4 +142,5 @@
   .broker-grid{grid-template-columns:1fr;max-width:420px;row-gap:8px;margin-bottom:-24px}
   .broker-card{margin-bottom:24px}
   .find-empty{padding:28px 24px}
+  .connect-dialog h2{font-size:32px}
 }

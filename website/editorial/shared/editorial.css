@@ -349,3 +349,14 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
 @media(max-width:600px){.quote-head{margin-bottom:28px}
 .quote-card{padding:26px;min-height:300px}
 .quote-card>p{font-size:18px}}
+/* Info button on a comparison row (Pricing, /lp/broker; Tanya, 13 Nov: "build proposed"): a 16px icon after the label
+   opens the row's definition in a small card under it, on hover with a mouse and on click or tap; site.js toggles it and closes it on
+   Escape or a click elsewhere, and points the card's notch at the icon (--notch). The card holds no links and lets clicks
+   through, as on desktop it covers the next row's icon. Pricing's phone table opens it inline (pricing.css). */
+.tip-wrap{position:relative;display:inline-block;vertical-align:-2px;margin-left:6px}
+.tip{display:inline-grid;place-items:center;width:22px;height:22px;margin:-3px;padding:0;color:var(--muted);border-radius:50%}
+.tip svg{display:block;width:16px;height:16px}
+.tip:hover,.tip[aria-expanded="true"]{color:var(--ink)}
+.tip:focus-visible{outline:2px solid var(--bronze);outline-offset:1px}
+.tip-pop{position:absolute;z-index:5;left:-12px;top:calc(100% + 10px);width:min(300px,calc(100vw - 48px));padding:14px 16px;background:var(--white);border:1px solid var(--line);box-shadow:0 8px 24px rgba(14,28,53,.1);font-size:14px;line-height:1.5;font-weight:400;letter-spacing:0;color:var(--ink);text-align:left;white-space:normal;pointer-events:none}
+.tip-pop::before{content:"";position:absolute;left:var(--notch,16px);top:-6px;width:10px;height:10px;background:var(--white);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}

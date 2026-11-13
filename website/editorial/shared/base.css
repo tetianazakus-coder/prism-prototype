@@ -169,6 +169,21 @@ dialog h2{font-size:49px;margin:22px 0}
 dialog>p:not(.eyebrow){font-size:13px;color:var(--muted);margin-block:14px}
 dialog>.text-link{display:block;margin-top:20px}
 .dialog-close{position:absolute;right:14px;top:10px;font-size:29px;line-height:1;width:44px;height:44px}
+/* Sectioned dialog, after the product's Modal/Sectioned (Prism library 227:40; prototype .mdl, capped as .mdl--q) for any
+   dialog with a form or an action to take (Tanya, 14 Nov: "find pattern for modal and reuse it, especially cta in footer
+   + scroll content inside modal"). Three sections: the header (eyebrow, title, lede), the body, and the footer, ruled off
+   in the site's hairline, with the action at its right. The dialog keeps the flat one's 90dvh cap, and only the body
+   scrolls, so the title and the action never leave the screen.
+   The 44px inset moves off the shell onto each section so the rule runs edge to edge; the header keeps 72 on the right,
+   clear of the close. A dialog with more than one step wraps each in .dialog-step. The flat dialog stays for notices. */
+dialog.dialog-sectioned{padding:0;overflow:hidden}
+dialog.dialog-sectioned[open]{display:flex;flex-direction:column}
+.dialog-sectioned>.dialog-step{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+.dialog-sectioned>.dialog-step[hidden]{display:none}
+.dialog-hd{padding:44px 72px 0 44px}
+.dialog-bd{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding:4px 44px 32px}
+.dialog-ft{display:flex;align-items:center;justify-content:flex-end;gap:14px 28px;padding:20px 44px;border-top:1px solid #d3d1c7}
+.dialog-ft>.button{flex:none}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 dialog label{font-size:11px;display:block;margin:17px 0}
 dialog input{display:block;width:100%;border:1px solid #bfc2bd;background:var(--white);padding:12px;color:var(--ink);margin-top:7px;min-height:44px;border-radius:0;font-size:13px}
@@ -329,6 +344,10 @@ h2{font-size:48px}
 .site-footer{padding-top:45px}
 dialog{padding:32px 24px}
 dialog h2{font-size:46px}
+.dialog-hd{padding:32px 56px 0 24px}
+.dialog-bd{padding:4px 24px 24px}
+.dialog-ft{flex-wrap:wrap;padding:16px 24px 20px}
+.dialog-ft>.button{flex:1 1 100%;justify-content:center}
 .form-row{grid-template-columns:1fr;gap:0}
 .form-row label:first-child{margin-bottom:0}}
 @media(max-width:360px){:root{--gutter:20px}

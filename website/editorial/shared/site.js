@@ -91,11 +91,32 @@
     section.querySelector('[data-roi-status]').textContent = `${name}: $${cost} a year. One closed deal covers about ${years} years.`;
   })));
 
-  // Local preview only: no network, browser storage, or pretend submission success.
-  $('#contact-form')?.addEventListener('submit', event => {
-    event.preventDefault();
-    $('#contact-status').textContent = 'Message ready for review. Not sent. Delivery is not connected in this preview.';
-  });
+  // Local preview only: no network, browser storage, or pretend submission success. A real submit says it was not sent;
+  // ?contact=sent and ?contact=failed show the two outcomes delivery will need, for review (about.css, 14 Nov).
+  const contactForm = $('#contact-form');
+  if (contactForm) {
+    const contactStatus = $('#contact-status'), contactSent = $('#contact-sent');
+    const showSent = sent => { contactForm.hidden = sent; contactSent.hidden = !sent; };
+    contactForm.addEventListener('submit', event => {
+      event.preventDefault();
+      contactStatus.classList.remove('is-error');
+      contactStatus.textContent = 'Message ready for review. Not sent. Delivery is not connected in this preview.';
+    });
+    $('#contact-again').addEventListener('click', () => {
+      contactForm.reset(); contactStatus.classList.remove('is-error'); contactStatus.textContent = '';
+      showSent(false); contactForm.querySelector('input').focus();
+    });
+    const contactPreview = new URLSearchParams(location.search).get('contact');
+    if (contactPreview === 'sent') showSent(true);
+    if (contactPreview === 'failed') {
+      const sample = {name: 'Jordan Ellis', email: 'jordan@example.com', message: 'I have a 48-unit multifamily refinance in Austin and would like to talk about lender fit.'};
+      Object.entries(sample).forEach(([name, value]) => { contactForm.elements[name].value = value; });
+      contactForm.querySelector('input[value="broker"]').checked = true;
+      const phone = Object.assign(document.createElement('a'), {href: 'tel:+17136791890', textContent: '(713) 679-1890'});
+      contactStatus.classList.add('is-error');
+      contactStatus.replaceChildren('Your message did not send. Try again, or call ', phone, '.');
+    }
+  }
   $('#newsletter-form').addEventListener('submit', event => {
     event.preventDefault();
     $('#newsletter-status').textContent = 'Not subscribed. Newsletter delivery is not connected in this preview.';
@@ -173,4 +194,56 @@ document.querySelectorAll('.quote-track').forEach(track => {
   track.addEventListener('scroll', sync, {passive: true});
   addEventListener('resize', sync);
   sync();
+});
+
+// A link to one FAQ question opens it: the comparison's "see FAQ" (Pricing, /lp/broker) points at #faq-execution, a
+// details further down the same page. The scroll is the browser's, or Lenis's with motion on; opening the details first
+// keeps its answer in view when the scroll lands. A page loaded with that hash opens it too.
+const openTarget = hash => {
+  const target = hash.length > 1 && document.getElementById(decodeURIComponent(hash.slice(1)));
+  if (target && target.tagName === 'DETAILS') target.open = true;
+};
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[href^="#"]');
+  if (link) openTarget(link.hash);
+});
+openTarget(location.hash);
+
+// Info buttons on comparison rows (Pricing, /lp/broker): a mouse pointing at the icon shows the row's definition and
+// leaving it hides it (Tanya, 13 Nov: "show tooltips on hover"); a click or tap pins it open and closes any other, so
+// phones and the keyboard get it too. A second click, a click elsewhere or Escape closes it, Escape returning focus to the
+// button. The card's notch points at the icon wherever the card sits (beside it on desktop, under the label on a phone).
+const tips = [...document.querySelectorAll('.tip')];
+const setTip = (button, open) => {
+  const pop = document.getElementById(button.getAttribute('aria-controls'));
+  button.setAttribute('aria-expanded', String(open));
+  pop.hidden = !open;
+  if (!open) delete button.dataset.pinned;
+  if (open) {
+    const b = button.getBoundingClientRect(), p = pop.getBoundingClientRect();
+    pop.style.setProperty('--notch', `${Math.round(b.left + b.width / 2 - p.left - 6)}px`);
+  }
+};
+tips.forEach(button => {
+  button.addEventListener('pointerenter', event => {
+    if (event.pointerType !== 'mouse' || button.getAttribute('aria-expanded') === 'true') return;
+    tips.forEach(other => other !== button && setTip(other, false));
+    setTip(button, true);
+  });
+  button.addEventListener('pointerleave', event => {
+    if (event.pointerType === 'mouse' && !button.dataset.pinned) setTip(button, false);
+  });
+  button.addEventListener('click', () => {
+    const pin = !button.dataset.pinned;
+    tips.forEach(other => other !== button && setTip(other, false));
+    setTip(button, pin);
+    if (pin) button.dataset.pinned = '1';
+  });
+});
+document.addEventListener('click', event => {
+  if (!event.target.closest('.tip')) tips.forEach(button => setTip(button, false));
+});
+document.addEventListener('keydown', event => {
+  const open = event.key === 'Escape' && tips.find(button => button.getAttribute('aria-expanded') === 'true');
+  if (open) { setTip(open, false); open.focus(); }
 });

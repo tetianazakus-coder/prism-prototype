@@ -465,7 +465,11 @@
     const beliefs = gsap.utils.toArray('.belief-list > li, .feature-cards > li, .approach-list > li');
     if (beliefs.length) {
       const parts = beliefs.map(() => []), risen = new Set();
-      beliefs.forEach((card, n) => [...card.children].forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, onSplit(split) {
+      // Lines break where the browser breaks them, hyphens included: SplitText splits words at spaces only, so it kept
+      // "follow-through" whole and pushed it to the next line, which ran About's first belief to five lines with motion
+      // and four without, "assignment." alone on the last (Tony's copy, 13 Nov). The zero-width split after a space or
+      // a hyphen keeps every character; the extra spaces it leaves collapse in the line's text.
+      beliefs.forEach((card, n) => [...card.children].forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, wordDelimiter: /(?<=\s)|(?<=-)/, onSplit(split) {
         split.masks.forEach(mask => Object.assign(mask.style, {padding: '0 .22em .14em', margin: '0 -.22em -.14em'}));
         parts[n][k] = split.lines;
         gsap.set(split.lines, {yPercent: risen.has(n) ? 0 : 110});

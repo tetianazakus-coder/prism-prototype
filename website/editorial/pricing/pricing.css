@@ -98,7 +98,7 @@
 /* One note, both sentences in one paragraph with the Agreement link closing it, across the table's full width (Tanya, 5 Nov:
    "combine them into one line, you can keep 2 sentences"; it was two stacked notes, then split to opposite sides). */
 .compare-notes{margin-top:24px;font-size:14px;color:var(--muted)}
-.compare-notes .inline-link{color:var(--ink)}
+.compare-notes .inline-link,.compare td .inline-link{color:var(--ink)}
 
 @media(max-width:850px){
   .price-head .hero-copy{padding-bottom:32px}
@@ -124,6 +124,10 @@
   .compare-always tr:first-child{border-top:1px solid var(--ink)}
   .compare-always tr:first-child>*{border-top:0}
   .compare-group th{font-size:16px;padding:18px 0}
+  /* A row's definition (editorial.css .tip) opens inline under its label, pushing the row's numbers down rather than
+     covering them; the wrapper stays inline so the icon keeps to the label's line. */
+  .compare th .tip-wrap{position:static;display:inline}
+  .compare th .tip-pop{position:relative;display:block;left:auto;top:auto;width:auto;margin:12px 0 4px;box-shadow:none}
 }
 
 /* Closing band: a paper card on the city at dusk (Option G of the closing band review, assets/website/final-cta-options/,
@@ -132,10 +136,16 @@
    final-multifamily.jpg: 340 KB instead of 925 KB. The card keeps .final-grid so motion.js still reveals its children
    (.final-grid > *); its grid is reset to one centred column. The padding is the shared .section rule's. */
 .final.final-photo{background:linear-gradient(rgba(14,28,53,.55),rgba(14,28,53,.55)),url(../img/final-city-dusk.jpg) center/cover var(--navy)}
-.final .final-card{display:block;max-width:620px;margin:24px auto;padding:56px 48px;background:var(--paper);color:var(--ink);text-align:center}
+.final .final-card{display:block;max-width:680px;margin:0 auto;padding:56px 48px;background:var(--paper);color:var(--ink);text-align:center}
 .final-card h2{font-size:clamp(40px,4vw,56px);margin:0 0 16px}
 .final-card p{margin:0 0 30px;font-size:16px;line-height:1.7;color:var(--muted)}
-.final-card .closing-actions{justify-content:center}
+.final-card .closing-actions{justify-content:center;padding-bottom:0}
+.final-card p.micro{margin:16px 0 0;font-size:14px;line-height:1.5}
 @media(max-width:600px){
   .final .final-card{margin:0;padding:40px 24px}
+  .final-card h2{font-size:38px}
 }
+/* Under 472 "Put the right resources" no longer fits one line, so the italic runs inline and "behind" is set roman: the title
+   wraps by itself to "Put the right / resources behind / your business."; at 34px under 380 "resources behind" still fits. */
+@media(max-width:472px){.final-card h2 em{display:inline}.final-card h2 em .b{font-style:normal;color:var(--ink)}}
+@media(max-width:380px){.final-card h2{font-size:34px}}

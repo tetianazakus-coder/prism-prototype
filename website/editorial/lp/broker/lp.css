@@ -2,3 +2,9 @@
 .lp-actions{margin-left:auto;display:flex;align-items:center;gap:28px}
 .lp-actions .nav-phone{display:block;margin:0}
 @media(max-width:600px){.lp-actions .nav-phone{display:none}}
+/* The note under the comparison comes from /pricing (Tony's sentence, P3 13 Nov), its links in ink, as Pricing sets them
+   (.compare-notes .inline-link). His second line moved onto the rows as info buttons on 13 Nov (editorial.css .tip). */
+.comparison .inline-link{color:var(--ink)}
+/* On a phone the comparison scrolls sideways, so a row's definition (editorial.css .tip) starts at the label's left edge
+   rather than the icon's, inside the visible width. */
+@media(max-width:600px){.comparison th:has(.tip){position:relative}.comparison .tip-wrap{position:static}.comparison .tip-pop{left:0;top:calc(100% - 6px)}}

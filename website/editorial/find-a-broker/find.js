@@ -81,6 +81,12 @@
   stateField.addEventListener('keydown', event => { if (event.key === 'Escape') { openState(false); stateToggle.focus(); } });
   const divider = document.createElement('li');
   divider.className = 'find-divider';
+  // No advisor in the picked state (most states while the directory is small): the empty state's own card and button lead the
+  // grid, naming the state, so the visitor still has a next step before the advisors in other states [rec].
+  const none = document.createElement('li');
+  none.className = 'find-empty find-none';
+  const empty = document.querySelector('.find-empty'); // taken before the copy joins the grid, which comes first in the page
+  none.innerHTML = empty.innerHTML;
   const PAGE = 12;
   let limit = PAGE;
   const more = document.querySelector('.find-more');
@@ -107,9 +113,11 @@
     const local = state ? matched.filter(card => values(card, 'states').includes(state)) : matched;
     const rest = state ? matched.filter(card => !local.includes(card)) : [];
     // Order: the state's brokers, the divider when others follow, the others; cards the filters drop go last, hidden.
-    const order = [...local, ...(state && rest.length ? [divider] : []), ...rest, ...cards.filter(card => !matched.includes(card))];
+    const order = [none, ...local, ...(state && rest.length ? [divider] : []), ...rest, ...cards.filter(card => !matched.includes(card))];
     order.forEach(node => grid.append(node));
-    divider.textContent = local.length ? 'Brokers in other states' : `No brokers work in ${state} yet. Brokers in other states`;
+    none.hidden = !(state && !local.length && rest.length);
+    none.querySelector('p').textContent = `No advisors work in ${state} yet. Submit your deal and we'll match you with one.`;
+    divider.textContent = 'Advisors in other states';
     divider.hidden = !(state && rest.length) || local.length + rest.length === 0;
     let n = 0;
     cards.forEach(card => { card.hidden = true; });
@@ -117,10 +125,10 @@
     if (rest.length && local.length >= limit) divider.hidden = true;
     more.hidden = matched.length <= limit;
     const shown = matched.length;
-    document.querySelector('.find-empty').hidden = shown > 0;
+    empty.hidden = shown > 0;
     document.querySelector('.find-count').textContent = state
-      ? `${local.length} in ${state} · ${shown} ${shown === 1 ? 'broker' : 'brokers'}`
-      : `${shown} ${shown === 1 ? 'broker' : 'brokers'}`;
+      ? `${local.length} in ${state} · ${shown} ${shown === 1 ? 'advisor' : 'advisors'}`
+      : `${shown} ${shown === 1 ? 'advisor' : 'advisors'}`;
   }
 
   const close = (filter, focus = false) => {
@@ -148,4 +156,28 @@
     if (!stateField.contains(event.target)) openState(false);
   });
   apply();
+
+  // Connect via LenderPrism opens the advisor's short form (index.html records the request); the card's link to
+  // borrower sign-up is the path without script. Preview: submitting sends nothing and the confirmation says so.
+  const connect = document.getElementById('connect-dialog');
+  const connectForm = document.getElementById('connect-form');
+  const ask = connect.querySelector('.connect-ask'), done = connect.querySelector('.connect-done');
+  const fill = (key, text) => $$(`[data-connect="${key}"]`, connect).forEach(node => { node.textContent = text; });
+  grid.addEventListener('click', event => {
+    const link = event.target.closest('.broker-card .button');
+    if (!link) return;
+    event.preventDefault();
+    const card = link.closest('.broker-card'), name = card.querySelector('h3').textContent.trim();
+    fill('name', name); fill('first', name.split(' ')[0]);
+    connectForm.elements.advisor.value = card.dataset.broker;
+    if (window.LenderPrism) window.LenderPrism.openDialog(connect); else connect.showModal();
+    ask.querySelector('.dialog-bd').scrollTop = 0; // a reopened form starts at its first field
+  });
+  connectForm.addEventListener('submit', event => {
+    event.preventDefault();
+    fill('email', connectForm.elements.email.value.trim());
+    ask.hidden = true; done.hidden = false;
+    done.querySelector('h2').focus();
+  });
+  connect.addEventListener('close', () => { connectForm.reset(); ask.hidden = false; done.hidden = true; });
 })();
