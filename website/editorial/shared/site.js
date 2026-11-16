@@ -35,7 +35,8 @@
   // territory "Lock-In Your License" opens plan=pro_license); the form pre-selects the plan and skips its role step. Pro
   // also passes billing=annual while Annual is selected (the form reads only "annual"; monthly is its default). Book a
   // call opens the team's discovery-call calendar, the one the live site links.
-  // Destinations with no page yet (Broker Agreement) still open the notice.
+  // Destinations with no page yet open the notice. None is left since 16 Nov: the Broker Agreement links went, as Tony does not
+  // want the agreement public (question 258); a new placeholder takes data-unavailable="<name>".
   $$('[data-unavailable]').forEach(button => button.addEventListener('click', () => notice(button.dataset.unavailable, 'This destination is part of the new website structure and is not included in this local preview. Its approved page or URL must be connected before launch.')));
 
   // Header menu and Solutions dropdown. The /lp/broker header has neither (no top nav on the ad landing).
@@ -117,6 +118,9 @@
       contactStatus.replaceChildren('Your message did not send. Try again, or call ', phone, '.');
     }
   }
+  // Every sign-up form says where it was sent from, so one list can be split by page as well as by role (Tony, Figma
+  // thread on the Borrowers launch band, about 12 Nov: one sign-up form, role asked throughout) [rec].
+  $$('.signup input[name=source]').forEach(input => { input.value = `${location.pathname} ${input.value}`; });
   $('#newsletter-form').addEventListener('submit', event => {
     event.preventDefault();
     $('#newsletter-status').textContent = 'Not subscribed. Newsletter delivery is not connected in this preview.';

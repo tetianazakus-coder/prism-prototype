@@ -160,7 +160,13 @@
 }
 @media(max-width:600px){
   .section-heading>p{margin-top:18px;max-width:100%}
-  .person-grid{gap:32px 16px}
+  /* Person card on phones (Tanya, 16 Nov, "Advisor cards" approved on the 375px check) [rec]: two to a row left 158px a
+     card on Home, and one to a row with a full-width photo took a screen per advisor on Find an advisor. Both now run
+     one to a row with a 96px photo beside the name, place and line. */
+  .person-grid{grid-template-columns:1fr;gap:28px}
+  .person-card{display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:16px;row-gap:4px;align-content:start}
+  .person-card>.portrait{grid-row:1/span 3;align-self:start;margin-bottom:0}
+  .person-card>:not(.portrait){grid-column:2}
   .person-card h3{font-size:22px}
   .platform-card{padding:26px 24px 28px}
   .notify-form{flex-direction:column}

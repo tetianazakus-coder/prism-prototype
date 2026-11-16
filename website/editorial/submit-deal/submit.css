@@ -1,0 +1,303 @@
+/* Submit your deal: the borrower request form in two steps, and its thank-you view (15 Nov; index.html carries the
+   request). Loaded after components.css and before type.css. The form's fields take About's contact form values
+   (15px Medium labels, 16px text in 48px white boxes, the bronze focus ring), so the two forms read as one. */
+
+/* Head: the site's text hero, smaller, as the form is the page. Two lines at every width. */
+.submit-head .hero-grid{padding-top:44px}
+.submit-head .hero-copy{padding-bottom:36px}
+.submit-head h1{font-size:clamp(44px,4.2vw,60px);margin-top:0}
+.submit-head .hero-lower{margin-top:20px}
+
+/* Form on the left in a white card, the trust list beside it from 851px. */
+.submit{display:grid;grid-template-columns:minmax(0,680px) minmax(0,1fr);gap:0 72px;align-items:start;padding-bottom:110px}
+.submit[hidden],.done[hidden],.submit-head[hidden],.account[hidden],.ready[hidden]{display:none}
+.deal-form{background:var(--white);border:1px solid var(--line);padding:36px 40px 40px}
+.deal-progress{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin-bottom:28px}
+.deal-count{grid-column:2;justify-self:end}
+.deal-bar{grid-column:1/-1}
+.deal-count{font-size:14px;color:var(--muted)}
+.deal-count b{font-weight:500;color:var(--ink)}
+.deal-bar{height:2px;background:var(--line)}
+.deal-bar i{display:block;height:100%;width:50%;background:var(--bronze);transition:width .35s cubic-bezier(.23,1,.32,1)}
+.deal-step{display:grid;gap:24px}
+.deal-step[hidden]{display:none}
+.deal-step>h2{font-size:34px;line-height:1.1;letter-spacing:-.02em}
+.deal-step>h2:focus{outline:none}
+.deal-form .form-row{gap:24px 20px}
+
+/* Fields. A fieldset is a field too: its legend is the label. */
+.field{display:block;min-width:0;margin:0;padding:0;border:0}
+.field>label,.field>legend,.field-label{display:block;padding:0;font-size:15px;line-height:1.5;font-weight:500}
+.field-note{margin-left:6px;font-weight:400;color:var(--muted)}
+.field input:not([type=radio],[type=checkbox]),.field textarea{display:block;width:100%;margin-top:8px;padding:12px 14px;min-height:48px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);color:var(--ink);font:inherit;font-size:16px;font-weight:400}
+.field textarea{resize:vertical;min-height:96px}
+.field ::placeholder{color:#8a949b;opacity:1}
+.field :is(input:not([type=radio],[type=checkbox]),textarea):focus-visible{outline:2px solid #b59159;outline-offset:2px}
+/* Browser autofill: Chrome paints filled fields its own light blue with !important, which no background rule can beat (Tanya, 16 Nov: "why filled state is blue here", then "fix"). An inset shadow the field's colour covers it, and the text keeps the ink. */
+.field input:-webkit-autofill,.email-fix-form input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px var(--white) inset;box-shadow:0 0 0 1000px var(--white) inset;-webkit-text-fill-color:var(--ink);caret-color:var(--ink)}
+.field-hint{margin-top:6px;font-size:14px;line-height:1.5;color:var(--muted)}
+/* Errors: the red of About's failed-send line (6.6:1 on white), under the field, with the box's border in the same red. */
+.field-error{margin-top:8px;font-size:14px;line-height:1.5;font-weight:500;color:#9b2c2c}
+.field-error[hidden]{display:none}
+.field.has-error :is(input:not([type=radio],[type=checkbox]),textarea,.select-toggle){border-color:#9b2c2c}
+
+/* Phone: the country code is a native select the height of the field, so a phone opens its own picker. */
+.phone-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;margin-top:8px}
+.phone-row select{min-height:48px;max-width:9.5em;padding:12px 34px 12px 14px;border:1px solid #bfc2bd;border-radius:0;background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' fill='none' stroke='%230e1c35' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;color:var(--ink);font:inherit;font-size:16px;appearance:none;-webkit-appearance:none;text-overflow:ellipsis}
+.phone-row select:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+.field .phone-row input{margin-top:0}
+/* Step 2's note that the contact details are kept, and the line a failed send leaves above the buttons. */
+.deal-saved{margin-top:-12px;font-size:14px;line-height:1.5;color:var(--muted)}
+.deal-fail{padding:12px 14px;border:1px solid #9b2c2c;background:#fbf3f1;font-size:15px;line-height:1.5;font-weight:500;color:#9b2c2c}
+.deal-fail[hidden]{display:none}
+.button[aria-busy=true]{opacity:.72;cursor:progress}
+.button[aria-busy=true] .arrow{visibility:hidden}
+
+/* Chips: native radios and checkboxes drawn as 44px boxes, so the keyboard and screen readers get the real control.
+   The input covers its chip, unseen; the span is the face. Picked is the site's navy, as the billing toggle's is. */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.chip{position:relative;display:inline-flex}
+.chip[hidden]{display:none}
+.chip input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.chip>span,button.chip{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;border:1px solid #bfc2bd;background:var(--white);font-size:15px;line-height:1.35;text-align:center;transition:background .15s,border-color .15s,color .15s}
+.chip:hover>span,button.chip:hover{border-color:var(--ink)}
+.chip input:checked+span,button.chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.chip input:focus-visible+span,button.chip:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+/* Purchase or refinance: two large buttons across the field. */
+.chips.pair{display:grid;grid-template-columns:1fr 1fr}
+.chips.pair .chip>span{width:100%;min-height:56px;font-size:16px;font-weight:500}
+.chip.wide{flex:1 1 100%}
+.chip.wide>span{width:100%}
+/* "Show all 17" opens more chips here; it is a button, so no link underline (Tanya, 16 Nov, as the password "Show"). */
+.chip-more{min-height:44px;padding:9px 4px;font-size:15px;font-weight:500;text-decoration:none}
+.chip-more:hover{color:var(--bronze)}
+
+/* Searchable select: Find a broker's Property state picker (find.css), as a form field the width of its column.
+   A button reading the pick, then a panel with a search over a list; a tick marks the pick. */
+.select{position:relative;margin-top:8px}
+.select[hidden]{display:none}
+.other-type{margin-top:12px}
+.select-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:48px;padding:12px 14px;border:1px solid #bfc2bd;background:var(--white);font-size:16px;text-align:left;color:var(--ink)}
+.select-toggle.is-empty .select-value{color:#8a949b}
+.select-toggle:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+.select-toggle[aria-expanded=true] .chev{transform:rotate(180deg)}
+.select-toggle .chev{flex:none}
+.select-pop{position:absolute;z-index:20;top:calc(100% + 6px);left:0;right:0;background:var(--white);border:1px solid var(--line);box-shadow:0 18px 40px rgba(14,28,53,.12)}
+.select-pop[hidden]{display:none}
+.select-search{position:relative;display:flex;align-items:center;color:var(--muted);border-bottom:1px solid var(--line)}
+.select-search svg{position:absolute;left:16px;pointer-events:none}
+.field .select-search input{width:100%;min-height:44px;margin:0;padding:10px 16px 10px 42px;border:0;background:none;font-size:16px;line-height:24px;color:var(--ink)}
+.field .select-search input:focus-visible{outline:none}
+.select-search:focus-within{color:var(--ink)}
+.select-options{display:grid;max-height:264px;overflow:auto;overscroll-behavior:contain;margin:0;padding:8px 0;list-style:none}
+.select-options::-webkit-scrollbar{width:10px}
+.select-options::-webkit-scrollbar-thumb{background:#cfc6b6;border:3px solid var(--white);border-radius:5px}
+@supports not selector(::-webkit-scrollbar){.select-options{scrollbar-width:thin;scrollbar-color:#cfc6b6 transparent}}
+.select-options li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:9px 16px;font-size:15px;line-height:1.4;cursor:pointer}
+.select-options li:hover,.select-options li.is-active{background:#f3efe7}
+.select-options li[hidden]{display:none}
+.select-options .tick{flex:none;color:var(--navy);visibility:hidden}
+.select-options li[aria-selected=true]{font-weight:500}
+.select-options li[aria-selected=true] .tick{visibility:visible}
+.select-none{padding:17px 16px;font-size:15px;color:var(--muted)}
+.select-none[hidden]{display:none}
+
+.deal-consent{font-size:13px;line-height:1.6;color:var(--muted)}
+.deal-consent a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.deal-actions{display:flex;align-items:center;justify-content:flex-end;gap:16px 28px;margin-top:4px}
+.deal-actions .button{font-size:15px}
+/* Back, top left of the progress row: a button, so no link underline (as "Show" and "Show all 17"). The 44px target
+   overhangs the row by 11px each way on the count's 22px line, so the row keeps the count's height and step 2 starts where step 1 does. */
+.deal-back{grid-column:1;grid-row:1;display:inline-flex;align-items:center;gap:8px;margin:-11px 0;padding:11px 4px 11px 0;min-height:44px;font-size:15px;line-height:22px;font-weight:500;color:var(--ink)}
+.deal-back[hidden]{display:none}
+/* The footer Back, beside the main button from 601px, is the site's outline button (secondary; Tanya, 16 Nov: "make back
+   button in footer secondary"). .deal-back loads after editorial.css, so the button's size is restated here, 52px tall as Find my matched lenders (its arrow line makes it 52, not 50). The pinned
+   phone bar keeps the one button. */
+.deal-actions .deal-back{margin:0 auto 0 0;padding:13px 20px;min-height:52px;gap:10px;justify-content:center}
+.deal-back:hover{color:var(--bronze)}
+.deal-back:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+
+/* Trust list: the site's bronze diamonds (trust strip), stacked beside the form. */
+.deal-trust{position:sticky;top:120px;padding-top:36px}
+.deal-trust ul{display:grid;gap:16px;margin:0}
+.deal-trust li{display:flex;align-items:flex-start;gap:12px;font-size:17px;line-height:1.5}
+.deal-trust li::before{content:'';flex:0 0 6px;height:6px;margin-top:.6em;background:var(--bronze);transform:rotate(45deg)}
+
+/* Thank-you view. Only the matches card and the account card are drawn as cards, and both act. */
+.done{padding-block:64px 110px}
+.done>h1{margin-top:0;font:400 clamp(44px,4.2vw,60px)/1.06 var(--serif);letter-spacing:-.035em;max-width:900px;overflow-wrap:anywhere}
+.done>h1:focus{outline:none}
+.done>h1 em{display:inline;font-style:italic;color:var(--bronze)}
+.done-lede{margin-top:20px;max-width:560px;font-size:18px;line-height:1.65;color:#52616b}
+.done-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;margin-top:44px;max-width:1080px}
+.match-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:32px;background:var(--navy);color:var(--paper);text-align:left;border:1px solid var(--navy);transition:background .2s,transform .2s}
+.match-card:hover{background:#213459;transform:translateY(-2px)}
+.match-count{font:400 84px/1 var(--serif);letter-spacing:-.03em;color:#c2a98a}
+.match-label{font-size:18px;line-height:1.4}
+/* Tertiary actions: text buttons, no underline, as Show and Change (Tanya, 16 Nov: "remove underline here, make it tertiary buttons"). */
+.match-go{display:inline-flex;align-items:center;gap:14px;margin-top:auto;padding-top:28px;font-size:15px;font-weight:500;text-decoration:none}
+.match-go .arrow{width:14px;height:14px;fill:currentColor}
+/* The sample rows inside the count card, from 851px (index.html says why). Spans, as a button holds phrasing content only; the
+   name and the range share a line, the type sits under them, so the rows fit the 246px column at 851. */
+.match-peek{display:grid;align-self:stretch;margin-top:28px;border-top:1px solid var(--dark-line);-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent)}
+.match-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:12px 0;border-bottom:1px solid var(--dark-line);font-size:15px;line-height:1.4}
+.match-card .match-name{justify-self:start}
+.match-card .match-range{color:var(--paper)}
+.match-card .match-type{grid-column:1/-1;font-size:14px;color:#a9b3c6}
+.account-card{display:flex;flex-direction:column;padding:32px;background:var(--white);border:1px solid var(--line)}
+.account-card h2{font-size:30px;line-height:1.15;letter-spacing:-.02em}
+.account-card p{margin-top:12px;font-size:16px;line-height:1.65;color:var(--muted)}
+.account-card b{font-weight:500;color:var(--ink);overflow-wrap:anywhere}
+.account-email{display:grid;gap:2px;padding:12px 14px;border:1px solid var(--line);background:var(--paper)}
+.account-card .account-email{margin-top:20px}
+.account-email span{font-size:13px;line-height:1.4}
+.account-card .button{margin-top:20px;font-size:15px}
+.account-card .account-also{font-size:14px}
+/* The card's own account form, from 851px (task doc, "Account card — desktop": the email filled in, only a password, one
+   tap). The card's paragraph style would reach the hint, the error and the terms line; they keep the form's sizes. */
+.account-quick{display:grid;gap:20px;margin-top:20px}
+.account-card .account-quick :is(.account-email,.button){margin-top:0}
+.account-card .account-quick .field-hint{margin-top:6px;font-size:14px;line-height:1.5}
+.account-card .account-quick .field-error{margin-top:8px;font-size:14px;line-height:1.5;color:#9b2c2c}
+.account-card .account-quick .deal-consent{margin-top:-8px;font-size:13px;line-height:1.6}
+/* Ranked actions (index.html, the note on .account-email): the filled button, the outlined other way, both the card's
+   width; a muted line for later; "Change" inside the email box, a button that changes the field, so no underline, as Show. */
+.account-card .account-email{grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center}
+.account-email>:not(.email-change){grid-column:1}
+.email-change{grid-column:2;grid-row:1/3;min-height:44px;padding:0 4px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:none}
+.email-change:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+.account-card :is(.account-quick,.account-narrow) .button{width:100%;justify-content:center;gap:14px}
+.account-card .account-narrow .button.outline{margin-top:12px}
+.account-card .account-quick>.button.outline{margin-top:-8px}
+.account-card .account-quick .email-fix-form{margin-top:-12px}
+.account-card :is(.account-later,.account-resend){margin-top:12px;font-size:15px;line-height:1.5}
+:is(.account-later,.account-resend) .inline-link{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:500;color:var(--ink);border:0;text-decoration:none}
+.account-narrow{display:none}
+/* The phone card confirms the matches email sent on submit; with no matches yet (?state=nomatch) nothing has gone out,
+   so the waiting copy shows and Send again goes (index.html). */
+.wait-copy{display:none}
+.done.nomatch .sent-copy{display:none}
+.done.nomatch .wait-copy{display:inline}
+/* No matches yet: plain text where the count card stood, so nothing reads as a button. */
+.match-none[hidden],.match-card[hidden],.account-exists[hidden],.email-fix-form[hidden]{display:none}
+.match-none{align-self:center}
+.match-none h2{font-size:30px;line-height:1.15;letter-spacing:-.02em}
+.match-none p{margin-top:12px;font-size:16px;line-height:1.65;color:var(--muted)}
+/* An email that already has an account: the log-in card replaces both variants and the correction row. */
+.done.has-account :is(.account-wide,.account-narrow){display:none}
+.email-fix-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}
+.email-fix-form input{min-height:48px;padding:12px 14px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);font:inherit;font-size:16px;color:var(--ink)}
+.email-fix-form input:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+.email-fix-form input[aria-invalid]{border-color:#9b2c2c}
+.account-card .email-fix-form .button{margin-top:0;width:auto}
+.email-fix-form .field-error{grid-column:1/-1;margin-top:0}
+.account-card .done-status{min-height:24px;margin-top:12px;font-size:15px;font-weight:500;color:#2e5b3a}
+.done-status:empty{display:none}
+.done-next{margin-top:56px;max-width:560px}
+.done-next h2{font-size:30px;line-height:1.15;letter-spacing:-.02em}
+.done-next ol{display:grid;gap:10px;margin:18px 0 0;padding:0;list-style:none;counter-reset:next}
+.done-next li{display:flex;gap:14px;font-size:17px;line-height:1.55;counter-increment:next}
+.done-next li::before{content:counter(next) '.';flex:0 0 1.2em;color:var(--bronze);font-variant-numeric:tabular-nums}
+.done-share{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;margin-top:28px}
+.share-status{font-size:15px;font-weight:500;color:#2e5b3a;overflow-wrap:anywhere}
+.done-share .inline-link{min-height:44px;font-size:15px;font-weight:500;border:0;text-decoration:underline;text-underline-offset:3px}
+
+/* Account step and its end state: the thank-you view's head over one narrow form. */
+.account,.ready{padding-block:64px 110px}
+.account>h1,.ready>h1{margin-top:0;font:400 clamp(44px,4.2vw,60px)/1.06 var(--serif);letter-spacing:-.035em;max-width:900px;overflow-wrap:anywhere}
+.account>h1:focus,.ready>h1:focus{outline:none}
+.account>h1 em,.ready>h1 em{display:inline;font-style:italic;color:var(--bronze)}
+.account-form{display:grid;gap:24px;max-width:480px;margin-top:40px;padding:36px 40px 40px;background:var(--white);border:1px solid var(--line)}
+/* The form and, beside it, the matches it opens (index.html, the note on .account-body). */
+/* Two cards side by side, as on the thank-you view: its grid, 24px apart, the matches panel the count card's width (Tanya,
+   16 Nov, "should we reuse this pattern for this page?", then "yes"); both stand as tall as the taller. The panel stands
+   on the left, where the count card does (Tanya, 16 Nov: "switch cards like this"). Only the boxes swap: the form stays
+   first in the page, so phones show it first and a screen reader reaches it first; the panel holds nothing to tab to. */
+.account-body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;max-width:1080px;margin-top:40px}
+.account-body>.account-matches{order:-1}
+.account-body>.account-form{align-content:start;max-width:none;margin-top:0}
+/* The matches beside the form are the thank-you count card as a panel (index.html says why): navy, as tall as the form,
+   the dialog's rows in the card's two-line layout, name and range over the type. */
+.account-matches{display:flex;flex-direction:column;align-self:stretch;padding:32px;background:var(--navy);color:var(--paper);border:1px solid var(--navy)}
+.account-matches h2{display:flex;flex-direction:column;gap:6px;margin:0;font:inherit;letter-spacing:0}
+.account-matches .match-list{margin-top:28px;border-top-color:var(--dark-line)}
+.account-matches .match-list li{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name range" "type type";gap:2px 16px;padding:12px 0;border-bottom-color:var(--dark-line)}
+.account-matches .match-name{grid-area:name;justify-self:start}
+.account-matches .match-range{grid-area:range}
+.account-matches .match-type{grid-area:type;font-size:14px;color:#a9b3c6}
+.account-matches p.match-rest{color:#a9b3c6}
+.account-matches[hidden]{display:none}
+.pass{position:relative;margin-top:8px}
+.field .pass input{margin-top:0;padding-right:76px}
+/* a button that changes the field, not a link: no underline (Tanya, 16 Nov, password-visibility-toggle-research.md) */
+.pass-show{position:absolute;right:2px;top:2px;bottom:2px;min-width:64px;padding:0 14px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:none}
+.pass-show:focus-visible{outline:2px solid #b59159;outline-offset:-2px}
+.account-actions .button{width:100%;justify-content:center;gap:14px;font-size:15px}
+.account-alt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;margin-top:-12px}
+/* The two text buttons under "Create account": no underline, and Back sits right under the sign-in link, each still a 44px target (Tanya, 16 Nov: "remove bottom line from these buttons, make vertical gap between them smaller"). Back has since moved to the top of the step (below). */
+.account-form .inline-link{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:500;border:0;text-decoration:none}
+/* Back above the account step's heading: step 2's .deal-back, its 44px target overlapping the padding, 20px clear of the heading. */
+.account>.deal-back{margin:-11px 0 9px}
+.ready-go{margin-top:36px}
+.ready-go .button{font-size:15px}
+.ready-note{margin-top:20px;max-width:560px;font-size:15px;line-height:1.6;color:var(--muted)}
+
+/* Matches preview: name blurred, type and range readable. */
+.match-dialog{width:min(640px,calc(100% - 32px))}
+.match-dialog h2{margin:18px 0 0;font-size:40px;line-height:1.08}
+.match-list{margin:20px 0 0;border-top:1px solid var(--line)}
+.match-list li{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) 7.5em;align-items:center;gap:8px 20px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.4}
+.match-name{font-weight:500;filter:blur(6px);user-select:none}
+.match-type{color:var(--muted)}
+.match-range{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+:is(.match-dialog,.account-matches) .match-rest{margin:16px 0 0;font-size:15px;line-height:1.6;color:var(--muted)}
+
+@media(max-width:1100px){.submit{gap:0 44px}}
+/* The account card's phone variant also shows on a touch device with no hover, whatever its width: the platform is
+   not ready for phones and tablets (task doc: "Device detection picks the account card variant") [rec: a media query,
+   not user-agent sniffing]. Both variants offer both paths. */
+@media(hover:none) and (pointer:coarse){.account-wide{display:none}.account-narrow{display:block}.match-peek{display:none}}
+@media(max-width:850px){
+  .submit{grid-template-columns:1fr;padding-bottom:72px}
+  .deal-trust{position:static;padding-top:28px}
+  .deal-trust ul{grid-template-columns:1fr 1fr;gap:12px 24px}
+  .deal-trust li{font-size:16px}
+  .done,.account,.ready{padding-block:44px 72px}
+  .done-grid{grid-template-columns:1fr;margin-top:32px}
+  .account-body{grid-template-columns:minmax(0,560px)}
+  .account-body>.account-matches{order:0}
+  .account-wide{display:none}
+  .account-narrow{display:block}
+  .match-count{font-size:64px}
+  .match-peek{display:none}
+}
+/* Phones: no card, so the fields take the full column; chips two to a row; the action stays at the foot of the screen. */
+@media(max-width:600px){
+  .submit-head .hero-grid{padding-top:28px}
+  .submit-head .hero-copy{padding-bottom:28px}
+  .submit-head h1{font-size:clamp(36px,10.2vw,44px)}
+  .deal-form{padding:0;border:0;background:none}
+  .deal-step>h2{font-size:30px}
+  .deal-form .form-row{grid-template-columns:1fr;gap:24px}
+  .chips{display:grid;grid-template-columns:1fr 1fr}
+  .chip>span,button.chip{width:100%;padding-inline:10px}
+  .chip.wide,.chip-more{grid-column:1/-1}
+  .chip-more{justify-self:start}
+  .deal-actions{position:sticky;bottom:0;z-index:5;margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter) calc(12px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line);box-shadow:0 1px 0 var(--paper)}
+  /* The paper-coloured shadow is not decoration: at a fractional screen scale (1.25, 1.5, 1.78, 2.25, 2.5) Chrome draws a dark 1-device-pixel seam along the sticky bar's right and bottom edges, which read as a navy box around the button (Tanya, 16 Nov: "remove it", "it looks like container now"). The shadow covers it; measured headless, none left at any of those scales. */
+  .deal-actions .button{flex:1 1 auto;justify-content:center;gap:14px}
+  .deal-actions .deal-back{display:none}
+  .deal-trust ul{grid-template-columns:1fr}
+  .match-card,.account-card,.account-matches{padding:24px}
+  .account-form{padding:0;border:0;background:none;margin-top:28px}
+  .email-fix-form{grid-template-columns:1fr}
+  .ready-go .button{width:100%;justify-content:center}
+  .account-card .button{width:100%;justify-content:center}
+  .match-dialog h2{font-size:32px}
+  .account-body{margin-top:28px}
+  .match-list li{grid-template-columns:1fr 7.5em}
+  .match-name{grid-column:1/-1}
+}
+/* Account step on phones: "Create account and see my matches" broke over two lines at 375; less room beside the
+   label keeps it on one (Tanya, 16 Nov, 375px check). */
+@media(max-width:600px){.account-actions .button{gap:12px;padding-inline:16px}}

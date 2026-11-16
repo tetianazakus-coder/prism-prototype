@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Submit your commercial real estate deal in two short steps. A vetted LenderPrism financing advisor reviews it and calls you within 24 hours.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Submit your deal — LenderPrism</title>
+  <link rel="icon" href="../img/logo-sign.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css?v=20261114md">
+  <link rel="stylesheet" href="../shared/editorial.css?v=20261116ic">
+  <link rel="stylesheet" href="../shared/components.css?v=20261116t">
+  <link rel="stylesheet" href="submit.css?v=20261116sw">
+  <link rel="stylesheet" href="../shared/type.css?v=20261102c">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
+  <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
+  <script src="../shared/site.js?v=20261116su" defer></script>
+  <script src="submit.js?v=20261116ae" defer></script>
+  <script src="../shared/motion.js?v=20261116sb" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- The form opens from For Borrowers, so that entry is marked; "Submit a deal" left the menu on 16 Nov (Tanya: "do recommended"). aria-current="true", not "page": this page is not the Borrowers page. -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="../" aria-label="LenderPrism home"><img src="../img/logo-main.svg" width="177" height="30" alt=""></a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Menu"><svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <nav id="navigation" aria-label="Main navigation">
+      <details class="solutions"><summary>Solutions <svg class="chev" width="8" height="5" viewBox="0 0 8 5" aria-hidden="true"><path d="M1 1l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="solutions-menu">
+        <a href="../brokers/"><b>For Brokers</b><span>Leads, lender matching and an execution desk</span></a>
+        <a href="../borrowers/" aria-current="true"><b>For Borrowers</b><span>A vetted advisor on your deal within 24 hours</span></a>
+        <a href="../lenders/"><b>For Lenders</b><span>Only deals that fit your box</span></a>
+        <a href="../find-a-broker/"><b>Find an advisor</b><span>Advisors by market and property type</span></a>
+      </div></details>
+      <a href="../pricing/">Pricing</a><a href="../about/">About</a>
+      <span class="nav-phone placeholder">[Phone number]</span>
+      <a href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/login">Log in</a>
+      <a class="button small" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/broker">Start free trial</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Borrower request form and its thank-you view, from the task doc "Design Task — Borrower Form: Fewer Fields, Easier
+       Inputs, Working Thank-you Page" (Google Doc, read 15 Nov; Tanya, 15 Nov: "create a plan, what should be build", then
+       her choices: the website prototype and Figma, the conflicts fixed and flagged, the form and thank-you first). One
+       form on its own page, as Christian's /post-deal?role=borrower will be (12 Nov), cut from three steps and eleven
+       fields to two steps and eight required answers plus an optional comment; City is gone, as the doc says (needs
+       Tony's OK). Four points differ from the doc, each [rec] and asked in stakeholder-questions:
+       1. and 2. Superseded 16 Nov (Tanya, on the doc read against the screens: "so recommended"): one Full name field
+          and the doc's four loan amount ranges, as the doc says. Questions 269 and 270 stay open with Tony, who may
+          still ask for two name fields or a figure; the greeting uses the first word of the name [~].
+       3. Borrower copy says "advisor" (doc: "broker"), Tony's wording of 15 Oct and 11 Nov.
+       4. Phones get a button that stays at the foot of the screen (doc: each step fits one phone screen); step 2's
+          controls run to about 800px.
+       The button is never greyed out: an empty or wrong answer gets a line under its field, and the first one takes
+       focus. A consent line stands on step 1, as Next is where the doc saves the lead [rec]. Nothing is sent or stored
+       in this prototype. ?view=deal and ?view=done open step 2 and the thank-you view with sample answers.
+       16 Nov, second pass (Tanya: "make a plan to add what missing", approved, after the doc was read against the build):
+       step 1 takes the doc's title, "Contact"; the phone gets a country code, +1 first ("US default + country code");
+       step 2 says the contact details are saved [rec, wording waits on question 273]; both buttons show a busy label,
+       and a failed send keeps the answers; the account step and its end state are new views (?view=account,
+       ?view=ready); ?state=errors, loading, fail, nomatch and exists show the other states. -->
+  <section class="hero text-hero submit-head" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title"><span>Submit your deal</span><em>in two short steps.</em></h1>
+        <div class="hero-lower"><p class="hero-description">A vetted LenderPrism financing advisor reviews it and calls you within 24 hours.</p></div>
+      </div>
+    </div>
+  </section>
+  <div class="wrap submit" id="request">
+    <form class="deal-form" novalidate aria-labelledby="hero-title">
+      <!-- Back sits on the progress row, top left, where the reader lands after Next; "Step 2 of 2" sits right on both steps,
+           so it does not jump. It was at the foot of step 2, 558px below the fold at 1440 (Tanya, 16 Nov: "back button
+           should be on top of the screen, search for patterns", then "go"; website-submit-deal-back-placement-research) [rec].
+           The chevron is the nav's Solutions chevron, pointing left. From 601px a second Back sits beside Find my matched
+           lenders, as the site's outline (secondary) button with the word only (Tanya, 16 Nov, on the Figma frame: "use this"), where a reader who has filled the step looks for it; phones keep the pinned bar to the one button, with the
+           top Back and the phone's own back (Tanya, 16 Nov: "or should the back button be in the footer?", then "do
+           recommended") [rec]. -->
+      <div class="deal-progress">
+        <button class="deal-back" type="button" hidden><svg class="chev" width="5" height="8" viewBox="0 0 5 8" aria-hidden="true" focusable="false"><path d="M4 1L1 4l3 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+        <p class="deal-count">Step <b data-step-now>1</b> of 2</p>
+        <div class="deal-bar" role="progressbar" aria-label="Form progress" aria-valuemin="0" aria-valuemax="2" aria-valuenow="1"><i></i></div>
+      </div>
+
+      <div class="deal-step" data-step="1">
+        <h2 tabindex="-1">Contact</h2>
+        <!-- One Full name field (task doc: "Merge into one Full name field", "autocomplete name"; Tanya, 16 Nov). -->
+        <div class="field" data-field="full_name"><label for="f-name">Full name</label><input id="f-name" name="full_name" autocomplete="name" autocapitalize="words" spellcheck="false" aria-describedby="e-full_name"><p class="field-error" id="e-full_name" hidden></p></div>
+        <div class="field" data-field="email"><label for="f-email">Email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" aria-describedby="e-email"><p class="field-error" id="e-email" hidden></p></div>
+        <!-- Country code (task doc: "US default + country code"): a native select, so phones get their own picker. Ten digits take the US shape under +1 only. The list of codes is our pick [~]. -->
+        <div class="field" data-field="phone"><label for="f-phone">Phone</label><div class="phone-row"><select name="phone_code" aria-label="Country code" autocomplete="tel-country-code"><option value="+1" selected>US +1</option><option value="+1">Canada +1</option><option value="+52">Mexico +52</option><option value="+44">UK +44</option><option value="+61">Australia +61</option><option value="+55">Brazil +55</option><option value="+86">China +86</option><option value="+33">France +33</option><option value="+49">Germany +49</option><option value="+91">India +91</option><option value="+972">Israel +972</option><option value="+81">Japan +81</option><option value="+971">UAE +971</option></select><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 123-4567" aria-describedby="e-phone"></div><p class="field-error" id="e-phone" hidden></p></div>
+        <!-- Consent, after the Connect dialog's line on Find a broker [rec]: Next is where the lead is saved, so the borrower agrees to the call before it. Not in the task doc. -->
+        <p class="deal-consent">By continuing, you agree that LenderPrism shares these details with a LenderPrism financing advisor, who may call, text or email you about your financing. <a href="https://lenderprism.com/privacy">Privacy Policy</a></p>
+        <!-- A failed send (?state=fail): the answers stay, and the same button tries again. --><p class="deal-fail" role="alert" hidden>We couldn’t send that. Your answers are still here. Check your connection and try again.</p>
+        <div class="deal-actions"><button class="button" type="submit" data-busy="Saving…">Next — Deal details <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button></div>
+      </div>
+
+      <div class="deal-step" data-step="2" hidden>
+        <h2 tabindex="-1">Your deal</h2>
+        <!-- Task doc, "Save the lead on step 1": the borrower is told so, since a call may follow even if they stop here [rec]. Who gets that lead is question 273. -->
+        <p class="deal-saved">Your contact details are saved. If you stop here, an advisor can still call you.</p>
+        <!-- Taps first, then State, then Comments (task doc). Loan amount is the doc's four ranges, one pick ("Range chips
+             (single select)"; Tanya, 16 Nov); "<$2M" reads "Under $2M" so it is said aloud the same way [~]. -->
+        <fieldset class="field" data-field="amount" aria-describedby="e-amount"><legend>Loan amount</legend><div class="chips amounts">
+          <label class="chip"><input type="radio" name="amount" value="Under $2M"><span>Under $2M</span></label>
+          <label class="chip"><input type="radio" name="amount" value="$2–5M"><span>$2–5M</span></label>
+          <label class="chip"><input type="radio" name="amount" value="$5–10M"><span>$5–10M</span></label>
+          <label class="chip"><input type="radio" name="amount" value="$10M+"><span>$10M+</span></label>
+        </div><p class="field-error" id="e-amount" hidden></p></fieldset>
+        <!-- Five property types as chips, each an exact value of the product's 24-value list; "Other type" opens the other 19 in the site's searchable select. Which five lead is our pick [~], asked of Chris. -->
+        <fieldset class="field" data-field="property" aria-describedby="e-property"><legend>Property type</legend><div class="chips">
+          <label class="chip"><input type="radio" name="property" value="Multifamily"><span>Multifamily</span></label>
+          <label class="chip"><input type="radio" name="property" value="Industrial"><span>Industrial</span></label>
+          <label class="chip"><input type="radio" name="property" value="Mixed-use"><span>Mixed-use</span></label>
+          <label class="chip"><input type="radio" name="property" value="Self-storage"><span>Self-storage</span></label>
+          <label class="chip"><input type="radio" name="property" value="Hotel/motel"><span>Hotel/motel</span></label>
+          <label class="chip"><input type="radio" name="property" value="other"><span>Other type</span></label>
+        </div>
+          <div class="select other-type" data-select="property_other" data-placeholder="Select a property type" data-noun="property types" hidden></div>
+          <p class="field-error" id="e-property" hidden></p></fieldset>
+        <!-- Field names as the task doc words them ("Purchase / Refinance", "Financing type", "State", "Comments (optional)"), in sentence case (Tanya, 16 Nov: "align fields names with requirements"). The chips and the Other type list are in sentence case too, word for word as the app's borrower form ("Mixed-use", "Construction loans"; Tanya, 16 Nov, "fix recomended"). -->
+        <fieldset class="field" data-field="purpose" aria-describedby="e-purpose"><legend>Purchase / refinance</legend><div class="chips pair">
+          <label class="chip"><input type="radio" name="purpose" value="Purchase"><span>Purchase</span></label>
+          <label class="chip"><input type="radio" name="purpose" value="Refinance"><span>Refinance</span></label>
+        </div><p class="field-error" id="e-purpose" hidden></p></fieldset>
+        <!-- Six financing types show, the other eleven of the product's 17 behind "Show all"; Fannie Mae and Freddie Mac are two values, as in the product. "Not sure" clears the rest and is cleared by them. Which six lead is our pick [~]. -->
+        <fieldset class="field" data-field="financing" aria-describedby="e-financing"><legend>Financing type <span class="field-note">Select all that apply</span></legend><div class="chips">
+          <label class="chip"><input type="checkbox" name="financing" value="Permanent | fixed-rate"><span>Permanent | fixed-rate</span></label>
+          <label class="chip"><input type="checkbox" name="financing" value="Bridge / short-term debt (&lt;3 yrs)"><span>Bridge / short-term debt (&lt;3 yrs)</span></label>
+          <label class="chip"><input type="checkbox" name="financing" value="Construction loans"><span>Construction loans</span></label>
+          <label class="chip"><input type="checkbox" name="financing" value="Agency (Fannie Mae)"><span>Agency (Fannie Mae)</span></label>
+          <label class="chip"><input type="checkbox" name="financing" value="Agency (Freddie Mac)"><span>Agency (Freddie Mac)</span></label>
+          <label class="chip"><input type="checkbox" name="financing" value="CMBS"><span>CMBS</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Balance sheet debt"><span>Balance sheet debt</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Build to rent"><span>Build to rent</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Build to sell SF &amp; condos"><span>Build to sell SF &amp; condos</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Equity (LP/GP)"><span>Equity (LP/GP)</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Equity (preferred)"><span>Equity (preferred)</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="FHA/HUD"><span>FHA/HUD</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Hard / private money"><span>Hard / private money</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Land / lot development"><span>Land / lot development</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Mezz debt"><span>Mezz debt</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Note purchase financing"><span>Note purchase financing</span></label>
+          <label class="chip more" hidden><input type="checkbox" name="financing" value="Second lien loans"><span>Second lien loans</span></label>
+          <button class="chip-more" type="button" aria-expanded="false">Show all 17</button>
+          <label class="chip wide"><input type="checkbox" name="financing" value="Not sure"><span>Not sure — my advisor will advise</span></label>
+        </div><p class="field-error" id="e-financing" hidden></p></fieldset>
+        <div class="field" data-field="state"><span class="field-label" id="l-state">State</span><div class="select" data-select="state" data-placeholder="Select a state" data-noun="states"></div><p class="field-error" id="e-state" hidden></p></div>
+        <div class="field" data-field="comments"><label for="f-comments">Comments <span class="field-note">(optional)</span></label><textarea id="f-comments" name="comments" rows="3" placeholder="e.g. 48-unit multifamily refinance in Austin, closing by March"></textarea></div>
+        <!-- A failed send (?state=fail): the answers stay, and the same button tries again. --><p class="deal-fail" role="alert" hidden>We couldn’t send that. Your answers are still here. Check your connection and try again.</p>
+        <div class="deal-actions"><button class="button outline deal-back" type="button">Back</button><button class="button" type="submit" data-busy="Finding lenders…">Find my matched lenders <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button></div>
+      </div>
+    </form>
+    <!-- The live form's trust row, "Broker reviews every deal" reading "An advisor reviews every deal". Beside the form from 851px, where the column would stand empty; under it below. -->
+    <aside class="deal-trust" aria-label="What you can count on">
+      <ul><li>Free to submit</li><li>No obligation</li><li>An advisor reviews every deal</li><li>Confidential</li></ul>
+    </aside>
+  </div>
+
+  <!-- Thank-you view (task doc, "Thank-you page"): every element that looks tappable does something, and nothing else is
+       drawn as a card. The matches card is a button that opens a preview; the count is a sample [~] until the product
+       supplies the real one. The account card has two variants, by width and by touch (submit.css), not by user-agent
+       sniffing, as the task doc's table words them (Tanya, 16 Nov: "check the doc … and match it"):
+       - from 851px, "Account card — desktop": the email filled in from the form, only a password, and one tap
+         creates the account; a sign-in link is the no-typing path;
+       - below, "Account card — mobile": a confirmation, not a send button. The matches email (emails/1-matches.html)
+         goes to every borrower right after submit, as the doc's "Follow-up emails" table ("Right after submit") and
+         its "New flow" diagram ("mobile → Matches emailed") have it (Tanya, 16 Nov, of the diagram: "check if flow
+         logic is aligned with this", then "Auto-send at submit"). The mobile row's primary, "Email me my matches",
+         is that email, already sent, so the card says where it went, with Change and Send again; Create account now
+         and Add a reminder are the doc's secondary paths.
+       "Save our number" is in the doc's deliverables and not its table; it is built under "What happens now". -->
+  <div class="wrap done" hidden>
+    <h1 tabindex="-1">Your request is in, <em data-fill="first">Jane</em>.</h1>
+    <p class="done-lede">A LenderPrism financing advisor reviews your <span data-fill="deal">deal</span> and calls you within 24 hours.</p>
+    <div class="done-grid">
+      <!-- No matches yet (?state=nomatch): plain text in place of the count card, so nothing looks tappable. Wording ours [rec]. -->
+      <div class="match-none" hidden><h2>We’re matching your deal now</h2><p>No lender list yet. Your advisor goes through the lenders that fit and shares them on your call.</p></div>
+      <!-- From 851px the count card stands as tall as the account card; the first four sample rows of the matches preview fill it, names blurred, the last fading out, so the card shows what the password unlocks (Tanya, 16 Nov, of the empty navy card: "how to improve layout here?", then "build recommended") [rec]. Hidden from screen readers: the dialog it opens reads the same rows. -->
+      <button class="match-card" type="button" aria-haspopup="dialog"><span class="match-count">8+</span><span class="match-label">potential lender matches</span><span class="match-peek" aria-hidden="true"><span class="match-row"><span class="match-name">Lender name</span><span class="match-range">$2M – $25M</span><span class="match-type">Debt fund</span></span><span class="match-row"><span class="match-name">Lender name here</span><span class="match-range">$1M – $15M</span><span class="match-type">Bank</span></span><span class="match-row"><span class="match-name">Lender name</span><span class="match-range">$5M – $50M</span><span class="match-type">Life insurance company</span></span><span class="match-row"><span class="match-name">Lender name here</span><span class="match-range">$1M – $10M</span><span class="match-type">Credit union</span></span></span><span class="match-go">Preview your matches <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></span></button>
+      <div class="account-card">
+        <div class="account-wide">
+          <h2>See who matched your deal</h2>
+          <p>Your email is filled in from your request. Choose a password and you land on your deal, with the lenders that matched it.</p>
+          <form class="account-quick" novalidate>
+            <!-- Each card ranks its actions (Tanya, 16 Nov: "to many CTA, how to prioritize them? make same secondary/tertiary buttons?", then "go"): one filled button, one outlined button for the other way to the same end, one muted text line for later or elsewhere; "Change" sits on the email it corrects, not in the row of actions [rec]. -->
+            <div class="account-email"><span>Email</span><b data-fill="email">jane@example.com</b><button class="email-change" type="button" data-act="fix" aria-expanded="false" aria-controls="email-fix">Change</button></div>
+            <!-- A mistyped email would send the matches nowhere: it is corrected here, under the email it changes [rec]. The one form moves to the card in view (submit.js). -->
+            <div class="email-fix-form" id="email-fix" hidden><label class="sr-only" for="f-fix">Your email</label><input id="f-fix" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" aria-describedby="e-fix"><button class="button outline" type="button" data-act="fixsave">Save</button><p class="field-error" id="e-fix" hidden></p></div>
+            <!-- The email again for password managers, which save it with the new password. -->
+            <input type="email" name="acc_email" autocomplete="username" value="jane@example.com" hidden>
+            <div class="field" data-field="acc_password"><label for="c-pass">Password</label><div class="pass"><input id="c-pass" name="acc_password" type="password" autocomplete="new-password" aria-describedby="h-cpass e-cpass"><button class="pass-show" type="button" aria-pressed="false" aria-controls="c-pass">Show</button></div><p class="field-hint" id="h-cpass">At least 8 characters.</p><p class="field-error" id="e-cpass" hidden></p></div>
+            <button class="button" type="submit" data-busy="Creating your account…">Create account and see my matches <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button>
+            <button class="button outline" type="button" data-act="magic">Email me a sign-in link instead</button>
+            <p class="deal-consent">By creating an account you agree to the <a href="https://lenderprism.com/terms">Terms of Service</a> and <a href="https://lenderprism.com/privacy">Privacy Policy</a>.</p>
+          </form>
+          <!-- The other path stays open on a computer too (task doc: "the borrower can still choose the other path"): the matches email went out on submit, so the quiet line says so [rec]. -->
+          <p class="account-later">Not at your computer? Your matches are in your inbox too.</p>
+        </div>
+        <div class="account-narrow">
+          <!-- Sent on submit, so the card confirms (wording ours [rec]). With no matches yet (?state=nomatch) nothing has gone out, and the waiting copy shows instead. -->
+          <h2><span class="sent-copy">Your matches are in your inbox</span><span class="wait-copy">We’ll email your matches</span></h2>
+          <p><span class="sent-copy">We emailed them with a link to finish on a computer, where LenderPrism works best.</span><span class="wait-copy">As soon as lenders match your deal, we send them to this email.</span></p>
+          <div class="account-email"><span><span class="sent-copy">Sent to</span><span class="wait-copy">Email</span></span><b data-fill="email">jane@example.com</b><button class="email-change" type="button" data-act="fix" aria-expanded="false" aria-controls="email-fix">Change</button></div>
+          <p class="account-resend sent-copy">Didn’t get it? <button class="inline-link" type="button" data-act="resend">Send again</button></p>
+          <button class="button outline" type="button" data-go="account">Create account now</button>
+          <p class="account-later"><button class="inline-link" type="button" data-act="remind">Add a reminder</button> to finish on a computer.</p>
+        </div>
+        <!-- This email already has an account (?state=exists): log in, not sign up. Wording ours [rec]. -->
+        <div class="account-exists" hidden>
+          <h2>You already have an account</h2>
+          <p><b data-fill="email">jane@example.com</b> is registered with LenderPrism. Log in to see who matched this deal.</p>
+          <a class="button" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/login">Log in <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a>
+        </div>
+        <p class="done-status" role="status"></p>
+      </div>
+    </div>
+    <div class="done-next">
+      <h2>What happens now</h2>
+      <ol><li>Your advisor reviews your request.</li><li>They call you within 24 hours.</li><li>Your deal goes to the lenders that fit it.</li></ol>
+      <!-- "Save our number" is in the task doc's deliverables and not in its table; our reading [~], asked as question 275: a contact card, so the advisor's call does not show as an unknown number. The number is a placeholder. -->
+      <p class="done-share"><button class="inline-link" type="button" data-act="vcard">Save our number</button><button class="inline-link" type="button" data-act="share">Forward to a partner</button><span class="share-status" role="status"></span></p>
+    </div>
+  </div>
+
+  <!-- Short account creation (task doc: "Email pre-filled from the form; ask only for a password (or send a magic link).
+       One tap → lands on the deal with matches"; Tanya, 16 Nov: password first, the link as the fallback). The email
+       arrives filled in and stays editable; one password field, the product's "At least 8 characters"; the sign-in link
+       is the no-typing path. The terms line is ours [rec]. The emails' buttons open this view (?view=account). -->
+  <div class="wrap account" hidden>
+    <!-- Back sits at the top, above the heading, as step 2's does (Tanya, 16 Nov, of "Back to your request" under the form: "should back button be on top", then "go"; website-submit-deal-back-placement-research). The step is one short form, so there is no second Back at its foot. The label names where it goes: a visitor from the emails has not seen the thank-you view [rec]. -->
+    <button class="deal-back" type="button" data-go="done"><svg class="chev" width="5" height="8" viewBox="0 0 5 8" aria-hidden="true" focusable="false"><path d="M4 1L1 4l3 3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to your request</button>
+    <h1 tabindex="-1">One step to <em>your matches.</em></h1>
+    <p class="done-lede">Your email is filled in from your request. Choose a password and you land on your deal, with the lenders that matched it.</p>
+    <!-- The reason beside the form (Tanya, 16 Nov, of the account step: "is it better to make this as a modal?", then, of a page with the form on the left and the matches beside it, "do recommended"). The step stays a page: the emails' buttons open it, and it follows the matches preview, which is already a dialog [rec]. The empty half beside the form now repeats what the account opens: the preview's count and its rows, names blurred. The rows are the dialog's own, copied in by submit.js, so the two never differ. Beside the form from 851px, under it below. -->
+    <div class="account-body">
+    <form class="account-form" novalidate>
+      <div class="field" data-field="acc_email"><label for="a-email">Email</label><input id="a-email" name="acc_email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="e-acc_email"><p class="field-error" id="e-acc_email" hidden></p></div>
+      <div class="field" data-field="acc_password"><label for="a-pass">Password</label><div class="pass"><input id="a-pass" name="acc_password" type="password" autocomplete="new-password" aria-describedby="h-pass e-acc_password"><button class="pass-show" type="button" aria-pressed="false" aria-controls="a-pass">Show</button></div><p class="field-hint" id="h-pass">At least 8 characters.</p><p class="field-error" id="e-acc_password" hidden></p></div>
+      <p class="deal-consent">By creating an account you agree to the <a href="https://lenderprism.com/terms">Terms of Service</a> and <a href="https://lenderprism.com/privacy">Privacy Policy</a>.</p>
+      <div class="account-actions"><button class="button" type="submit" data-busy="Creating your account…">Create account and see my matches <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button></div>
+      <p class="account-alt"><button class="inline-link" type="button" data-act="magic">Email me a sign-in link instead</button><span class="share-status" role="status"></span></p>
+    </form>
+    <!-- The thank-you count card again, as a panel (Tanya, 16 Nov, of the thank-you card with sample rows: "should we reuse this pattern for this page?", then "yes" [rec]): the same navy, count and rows, so the matches read as one thing across the flow. Not a button: nothing opens from here, so no hover and no "Preview your matches". All four rows show, unfaded, with "and 4 more" under them (submit.js copies both from the dialog): here the rows are the content, not a teaser. -->
+    <aside class="account-matches" aria-labelledby="acc-match-title"><h2 id="acc-match-title"><span class="match-count">8+</span><span class="match-label">potential lender matches</span></h2></aside>
+    </div>
+  </div>
+  <div class="wrap ready" hidden>
+    <h1 tabindex="-1">Your account is ready, <em data-fill="first">Jane</em>.</h1>
+    <p class="done-lede">Your <span data-fill="deal">deal</span> is saved in it, with the lenders that matched. Your advisor still calls you within 24 hours.</p>
+    <p class="ready-go"><a class="button" href="https://tetianazakus-coder.github.io/prism-prototype/#/loan/lakeview">Open my deal <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></p>
+    <p class="ready-note">LenderPrism works best on a computer. On a phone, the link in your email opens the same deal later.</p>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="../"><img src="../img/logo-main.svg" width="177" height="30" alt="LenderPrism"></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span><!-- Tony, Figma comment on "[Email address]", Nov 2026: "E-mail: I prefer a form field to avoid spam". No address is published; Company > Contact leads to the form on About. --></div><div><h2>Solutions</h2><a href="../brokers/">For Brokers</a><a href="../borrowers/">For Borrowers</a><a href="../lenders/">For Lenders</a><a href="../find-a-broker/">Find an advisor</a><a href="./">Submit a deal</a><a href="../pricing/">Pricing</a></div><div><h2>Company</h2><a href="../about/">About</a><a href="../about/#contact">Contact</a><h2 class="platforms-label">Our platforms</h2><a href="../">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><!-- Tony, Figma comment on "Market notes and new lenders, once a month.", Nov 2026: "Replace these two lines with "Lender insights and LenderPrism updates"". Set word for word on one line (Tanya, 11 Nov: "make it one line"); from 860 to 1230 the four-column footer is narrower than the line and it breaks into two even lines (editorial.css). The field's hidden label follows. --><p>Lender insights and LenderPrism updates</p><!-- One sign-up form, with the role asked (Tony, Figma thread on the Borrowers launch band, about 12 Nov: "I think we should ask for role (broker, lender, borrower) throughout. Have one sign up form. We can have it go to MailChimp, which we currently use. i plan to switch to Zoho Campaigns soon."; Tanya, 16 Nov: "go"). The same fields wherever someone signs up: role, email, and the page it was sent from as a hidden field (site.js fills it), so one list can be split by role in MailChimp or Zoho Campaigns [rec]. Christian's idea, the page telling the role, becomes the pre-selected answer on the Borrowers and Lenders bands; the footer starts with none, as Home, About and Pricing speak to everyone [rec, question 293]. The consent line is ours [rec]. --><form id="newsletter-form" class="signup"><fieldset class="signup-role"><legend>I am a</legend><label><input type="radio" name="role" value="broker" required> Broker</label><label><input type="radio" name="role" value="lender"> Lender</label><label><input type="radio" name="role" value="borrower"> Borrower</label></fieldset><input type="hidden" name="source" value="footer"><label class="sr-only" for="newsletter-email">Email for lender insights and LenderPrism updates</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Email" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p class="signup-consent">By signing up, you agree to our <a href="https://lenderprism.com/privacy">Privacy Policy</a>. Unsubscribe anytime.</p><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><!-- Tony, Figma comment on the footer line, Nov 2026: "Replace footer with 'LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.'" Set word for word; the old "We are not a lender. Commercial-purpose financing only." goes with it. --><p class="disclaimer">LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.</p></div></footer>
+<!-- Matches preview: lender type and loan range show, names stay blurred until the account exists (task doc). The rows are samples [~]; the blurred text is a stand-in, never a real name, so nothing can be read out of it. -->
+<dialog id="match-dialog" class="match-dialog dialog-sectioned" aria-labelledby="match-title"><button class="dialog-close" data-close aria-label="Close">×</button>
+  <div class="dialog-step">
+    <div class="dialog-hd">
+      <h2 id="match-title">8+ lenders <em>fit your deal</em></h2>
+    </div>
+    <div class="dialog-bd">
+      <ul class="match-list">
+        <li><span class="match-name" aria-hidden="true">Lender name</span><span class="sr-only">Lender name hidden</span><span class="match-type">Debt fund</span><span class="match-range">$2M – $25M</span></li>
+        <li><span class="match-name" aria-hidden="true">Lender name here</span><span class="sr-only">Lender name hidden</span><span class="match-type">Bank</span><span class="match-range">$1M – $15M</span></li>
+        <li><span class="match-name" aria-hidden="true">Lender name</span><span class="sr-only">Lender name hidden</span><span class="match-type">Life insurance company</span><span class="match-range">$5M – $50M</span></li>
+        <li><span class="match-name" aria-hidden="true">Lender name here</span><span class="sr-only">Lender name hidden</span><span class="match-type">Credit union</span><span class="match-range">$1M – $10M</span></li>
+      </ul>
+      <p class="match-rest">and 4 more. Create your free account to see their names and terms.</p>
+    </div>
+    <div class="dialog-ft"><button class="button" type="button" data-go="account">Create account to see them <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button></div>
+  </div>
+</dialog>
+<dialog id="notice-dialog" aria-labelledby="notice-title"><button class="dialog-close" data-close aria-label="Close notice">×</button><h2 id="notice-title"></h2><p id="notice-body"></p><button class="text-link" data-close>Back to the page <span aria-hidden="true">↙</span></button></dialog>
+</body>
+</html>

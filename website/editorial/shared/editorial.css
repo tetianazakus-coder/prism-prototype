@@ -287,21 +287,21 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
    6px bronze diamond in the gutter before the title, which keeps its ink (the bar already says where you are; Dribbble
    and Later mark nothing in such menus). In the phone drawer, with no header rule beside the items, the diamond marks
    the top-level item too. */
-@media(min-width:851px){#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current=page])>summary::after{content:"";position:absolute;left:0;right:0;top:calc(50% + 39px);height:2px;background:var(--bronze);pointer-events:none}}
+@media(min-width:851px){#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current])>summary::after{content:"";position:absolute;left:0;right:0;top:calc(50% + 39px);height:2px;background:var(--bronze);pointer-events:none}}
 /* Bronze bar, label at 500 (Tanya, 9 Nov: "make underline bronze and selected item text semibold or bold (think what will
    look better)"). 500 is the site's UI emphasis (menu titles, buttons); 600 outweighed all but the logo. A heavier
    label is wider, 500 by about .15px a letter, so -.01em gives the width back and Pricing and About never move from
    page to page (at 600 they moved about 3px, and -.024em to hold it crowds 14px text). Then 600 (Tanya, 9 Nov: "make
    selected bolder, contrast isn't enough"): rendered beside the rest at 14px, -.024em reads clean, not crowded, and
    keeps Pricing and About within .2px; 700 needed -.03em, still moved .7px and outweighed the logo. */
-#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current=page])>summary{font-weight:600;letter-spacing:-.024em}
+#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current])>summary{font-weight:600;letter-spacing:-.024em}
 /* The open menu stacks above the nav: the links after Solutions are positioned (the hover pill above), so at z-index
    auto they painted over it, Pricing's or About's current bar showing through the panel (Tanya, 9 Nov: "fix this bug"). */
 .solutions-menu{z-index:1}
-.solutions-menu a[aria-current=page] b{position:relative}
-.solutions-menu a[aria-current=page] b::before{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}
-@media(max-width:850px){#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current=page])>summary{position:relative}
-#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current=page])>summary::after{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}}
+.solutions-menu a[aria-current] b{position:relative}
+.solutions-menu a[aria-current] b::before{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}
+@media(max-width:850px){#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current])>summary{position:relative}
+#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current])>summary::after{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}}
 /* the newsletter's submit ↗ nudges like every other arrow (Tanya, 29 Oct) */
 .newsletter form button{transition:transform 150ms cubic-bezier(.4,0,.2,1)}
 .newsletter form button:is(:hover,:focus-visible){transform:translateX(4px)}
@@ -360,3 +360,89 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
 .tip:focus-visible{outline:2px solid var(--bronze);outline-offset:1px}
 .tip-pop{position:absolute;z-index:5;left:-12px;top:calc(100% + 10px);width:min(300px,calc(100vw - 48px));padding:14px 16px;background:var(--white);border:1px solid var(--line);box-shadow:0 8px 24px rgba(14,28,53,.1);font-size:14px;line-height:1.5;font-weight:400;letter-spacing:0;color:var(--ink);text-align:left;white-space:normal;pointer-events:none}
 .tip-pop::before{content:"";position:absolute;left:var(--notch,16px);top:-6px;width:10px;height:10px;background:var(--white);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+/* The open menu's toggle shows a close mark (Tanya, 16 Nov: "should burger icon change to close when menu is open?
+   make research", then "go"; website-mobile-menu-toggle-research.md). The toggle is the menu's only visible way
+   out and the sticky header keeps it on screen, yet it still drew the burger. Every web menu captured open on
+   Mobbin shows a ×, and ZARA and Open turn the header toggle itself into one [💡 rec].
+   Second pass, same day (Tanya: "remove 'menu' label and make icon button bigger (research what size is should
+   be); find thinner icons"): the word goes and the toggle is an icon button, 44 by 44, the size of every other
+   touch target here (WCAG 2.5.5, Apple's 44pt). Measured at 375 on live sites: Vercel and Notion 44, Apple 48,
+   Stripe, Ramp and Figma 40. "Menu" stays as the button's name in aria-label, so a screen reader hears the same
+   button open or closed. The ≡ glyph drew bars 2 to 2.25px; the icons are now 24px SVG lines at 1.5px, as
+   Vercel's (1.5), Figma's and Notion's (1.33) and Apple's (1.2): burger ink 16 by 13.5, × ink 12 by 12. The
+   button sits 14px into the gutter so the burger's ink, not the button, lines up with the page edge. */
+.menu-toggle svg{display:block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5}
+.menu-toggle .icon-close,.menu-toggle[aria-expanded="true"] .icon-menu{display:none}
+.menu-toggle[aria-expanded="true"] .icon-close{display:block}
+/* Touch targets, 850px and under (Tanya, 16 Nov: "Check every website page at a 375px phone size ... Fix all layout
+   issues that you find"). Measured at 375: the menu button was 34px high, footer links 24, legal links 21, text links
+   35 to 40, the pricing tips 22, About's radios 24, the open menu's rows 22. Each now answers a 44px touch. Lists get real height, as a
+   stacked hit area would overlap its neighbour; single links get an invisible ::after, so nothing moves. Links
+   inside a sentence stay as they are. */
+@media(max-width:850px){.menu-toggle{width:44px;height:44px;padding:0;justify-content:center;margin-right:-14px}
+.site-header .brand,.footer-brand .brand,.footer-brand a.sample,.text-link,.tip{position:relative}
+.footer-brand .brand{width:fit-content}
+.site-header .brand::after,.footer-brand .brand::after{content:"";position:absolute;inset:-9px 0}
+.footer-brand a.sample::after{content:"";position:absolute;inset:-13px 0}
+.text-link::after{content:"";position:absolute;inset:-6px -5px}
+.tip::after{content:"";position:absolute;inset:-11px}
+.footer-grid>div:not(:first-child)>a,.footer-grid>div>button{padding-block:10px;margin-bottom:0;background-origin:content-box}
+.footer-grid h2{margin-bottom:10px}
+.footer-bottom>div{margin-top:6px;gap:0 14px}
+.footer-bottom a,.footer-bottom button{display:inline-flex;align-items:center;min-height:44px}
+.radio-group{gap:0 28px}
+.radio-group label{min-height:44px}
+.contact-lines a{position:relative}
+.contact-lines a::after{content:"";position:absolute;inset:-8px 0}
+.header-inner nav{gap:1px}
+#navigation>a:not(.button),.solutions>summary{display:flex;align-items:center;min-height:44px}
+#navigation>.button{margin-top:14px}}
+/* Phone layout, second pass (Tanya, 16 Nov, on the 375px check: "Testimonial heading", "Small alignment fixes" approved).
+   The testimonial heading shared its row with the arrows and was squeezed to 211px, three lines: it takes the full
+   width and the arrows sit under it. The open menu sat 8px right of the page gutter (base.css pads it 30px) and its
+   button stood at the right at 132px: the panel takes the gutter and the button the full width. */
+@media(max-width:600px){.quote-head{flex-direction:column;align-items:flex-start;gap:20px}}
+@media(max-width:850px){.header-inner nav{padding-inline:var(--gutter)}
+#navigation>.button{align-self:stretch;margin-left:0;justify-content:center}
+/* A platform card is one link over the whole card (components.css): the touch rule above made its link position:relative,
+   which shrank the card's target to the 37px line. The card stays the target. */
+.platform-card>a.text-link{position:static}}
+/* The open phone menu scrolls on its own, and Log in and Start free trial stay at its foot (Tanya, 16 Nov, of the open
+   Solutions submenu: "when it's open the 'start free trial' desapears", then "do recommended";
+   website-mobile-menu-submenu-research.md). Measured at 375 by 667 with Solutions open, the panel ran 76 to 750 and the
+   button sat at 677 to 723, below the fold: the panel hung off the sticky header with no scroll of its own, and a
+   scroll moved the page behind it. Stripe, Ramp, Mercury and Linear hold the page still; Stripe, Ramp and Mercury pin
+   the main action at the menu's foot, Ramp and Mercury with the sign-in beside it [💡 rec]. So the panel stops at the
+   screen's foot and scrolls, the page is held (motion.js pauses Lenis), and the two actions share a row that sticks to
+   the bottom, on a 14px paper band (offset shadows, so one button's band never covers the other's edge) so the links scroll
+   under it. Log in becomes the outlined button, the site's
+   secondary. Solutions stays an inline accordion, four links in one group, and its chevron turns when open, as the
+   FAQ and comparison markers do. */
+@media(max-width:850px){.header-inner nav.open{display:grid;grid-template-columns:1fr 1fr;column-gap:12px;align-content:start;max-height:calc(100dvh - 100%);overflow-y:auto;overscroll-behavior:contain;padding-bottom:14px}
+/* Open menu and header read as one paper sheet (Tanya, 16 Nov: "why header color looks another shade that dropdown", then "fix"). The menu's shadow is clipped to below it, as its 30px blur spread 15px up over the header's foot, and the header turns solid while the menu is open, so nothing scrolled behind its .97 paper shows through. */
+.header-inner nav.open{clip-path:inset(0 0 -48px 0)}
+.site-header:has(nav.open){background:var(--paper)}
+#navigation>*{grid-column:1/-1}
+#navigation>a:has(+ .button),#navigation>.button{grid-column:auto;position:sticky;bottom:14px;z-index:1;margin-top:14px}
+#navigation>a:has(+ .button){box-shadow:-14px -14px var(--paper),12px -14px var(--paper),-14px 14px var(--paper),12px 14px var(--paper)}
+#navigation>.button{box-shadow:14px -14px var(--paper),0 -14px var(--paper),14px 14px var(--paper),0 14px var(--paper)}
+#navigation>a:has(+ .button){justify-content:center;border:1px solid var(--ink);background:var(--paper);font-weight:500}
+html:has(#navigation.open){overflow:hidden}
+.solutions>summary .chev{transition:transform .2s}
+.solutions[open]>summary .chev{transform:rotate(180deg)}}
+/* One sign-up form (Tony, Figma thread on the Borrowers launch band, about 12 Nov: "ask for role (broker, lender, borrower)
+   throughout. Have one sign up form."): "I am a" with three fixed answers, so radios, as on About's contact form; the
+   footer's on paper, the Borrowers and Lenders bands' on the dark photo. Each answer is a 44px touch. */
+.signup-role{display:flex;flex-wrap:wrap;gap:0 20px;min-width:0;margin:0;padding:0;border:0}
+.signup-role legend{width:100%;padding:0;font-size:14px;font-weight:500}
+.signup-role label{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:14px;cursor:pointer}
+.signup-role input{width:16px;height:16px;margin:0;accent-color:var(--ink)}
+.newsletter .signup-role{margin-top:4px}
+.signup-consent{margin:10px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+.signup-consent a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.notify .signup-role{max-width:520px;margin:0 auto 8px;text-align:left;color:var(--paper)}
+.notify .signup-role legend{font-size:15px;color:#d6dbe5}
+.notify .signup-role label{font-size:15px}
+.notify .signup-role input{accent-color:#c2a98a}
+.notify .signup-consent{max-width:520px;margin:12px auto 0;font-size:13px;text-align:left;color:#b6bfcf}
+.notify .signup-consent a:hover{color:#c2a98a}

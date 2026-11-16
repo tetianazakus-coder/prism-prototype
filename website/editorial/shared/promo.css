@@ -1,0 +1,50 @@
+/* Holiday special, the gold ticket above the plans. Tony picked it in Slack on 10 Nov, of the options page
+   (promo-banner-options/gold.html#b-ticket, "Strip above plans", treatment "Gold ticket"): "I like this one." His copy
+   from 5 Nov, word for word: "Black Friday / Christmas / New Year 2027 Special - up to 60% off for the first 50 users.
+   Contact us for details." The stub's "Up to 60% off" restates his number [rec]. Ported from gold.css and promo.css
+   unchanged in look; only the ticket and its form come over. One switch, html[data-promo] (promo.js), takes it off
+   every page at once; a visitor's × hides it in that browser. Nothing is positioned against it, so either leaves no
+   gap. "Contact us for details" opens a form, never an address (Tony: "I don't want to advertise my email to avoid
+   spam"). */
+html[data-promo=off] .promo,html.promo-dismissed .promo{display:none}
+.promo-bt{margin-bottom:28px}
+.promo-bt .promo-inner{display:flex;align-items:center;background:var(--white);border:1px solid #b08a4e}
+.bt-stub{align-self:stretch;flex:0 0 188px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 24px;background:linear-gradient(115deg,#f6e9cb,#e2c285 55%,#c9a15e);border-right:1px dashed rgba(14,28,53,.45);color:var(--navy)}
+.bt-stub small{font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;line-height:16px}
+.bt-stub b{font:400 40px/1.15 var(--serif);letter-spacing:-.02em;white-space:nowrap}
+.bt-stub i{font-size:26px}
+.bt-offer{flex:1;min-width:0;padding:20px 24px 20px 32px}
+.bt-offer p{margin:0;font-size:16px;line-height:24px;color:var(--muted)}
+.bt-offer .bt-name{font-size:18px;line-height:26px;font-weight:700;color:var(--ink)}
+.promo-bt .button{flex:0 0 auto}
+.promo-x{flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;margin:0 8px 0 16px;font-size:24px;line-height:1;color:inherit;opacity:.7;cursor:pointer}
+.promo-x:hover,.promo-x:focus-visible{opacity:1}
+
+/* The contact form behind "Contact us for details". */
+#promo-dialog h2 em{display:inline}
+#promo-form{display:grid;gap:18px;margin-top:24px}
+#promo-form label{margin:0}
+#promo-form .form-row{gap:18px 20px}
+#promo-form fieldset{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
+#promo-form legend{width:100%;padding:0;margin-bottom:8px;font-size:15px}
+#promo-form fieldset label{display:inline-flex;align-items:center;gap:8px;min-height:32px;white-space:nowrap}
+/* base.css's dialog input (block, 100% wide, 44px tall, a border) would reach the radios too. */
+#promo-form input[type=radio]{display:inline-block;flex:0 0 18px;width:18px;height:18px;min-height:0;margin:0;padding:0;border:0;accent-color:var(--navy)}
+#promo-form textarea{display:block;width:100%;margin-top:7px;padding:12px;border:1px solid #bfc2bd;background:var(--white);color:var(--ink);font:inherit;font-size:16px;border-radius:0;resize:vertical}
+#promo-status{flex-basis:100%;margin:0;font-size:14px;color:var(--muted)}
+#promo-status:empty{display:none}
+/* The send button pins to the dialog's foot while the form scrolls (Tanya, 9 Nov), 16px over and 20px under, on the
+   right; a hairline shows above it only while there is form below the fold (promo.js, .is-more). */
+#promo-dialog{--dp-x:44px;padding-bottom:0}
+#promo-form .form-actions{position:sticky;bottom:0;z-index:1;justify-content:flex-end;margin:-2px calc(-1 * var(--dp-x)) 0;padding:16px var(--dp-x) 20px;background:var(--paper);box-shadow:0 -1px 0 transparent;transition:box-shadow .15s}
+#promo-dialog.is-more .form-actions{box-shadow:0 -1px 0 var(--line)}
+@media(prefers-reduced-motion:reduce){#promo-form .form-actions{transition:none}}
+
+@media(max-width:600px){
+  .promo-bt .promo-inner{position:relative;flex-wrap:wrap}
+  .bt-stub{flex-basis:100%;border-right:0;border-bottom:1px dashed rgba(14,28,53,.45)}
+  .bt-offer{flex-basis:100%;padding:16px 18px 8px}
+  .promo-bt .button{margin:0 0 16px 18px}
+  .promo-bt .promo-x{position:absolute;top:2px;right:2px;margin:0}
+  #promo-dialog{--dp-x:24px}
+}

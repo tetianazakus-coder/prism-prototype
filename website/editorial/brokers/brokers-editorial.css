@@ -350,3 +350,17 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
 @media(max-width:600px){.benefits{grid-template-columns:1fr;margin-top:44px}
 .benefits>li,.benefits>li:nth-child(n){padding:22px 0;border:0;border-bottom:1px solid var(--dark-line)}
 .benefits>li:last-child{border-bottom:0}}
+/* Walkthrough tabs at phone width: three columns left each label about 45px beside its number, so the number sits
+   above the label (Tanya, 16 Nov: "Check every website page at a 375px phone size ... Fix all layout issues"). */
+@media(max-width:480px){.walk-tabs button{grid-template-columns:1fr;gap:6px;padding-inline:8px}}
+/* Walkthrough tabs, 600px and under (Tanya, 16 Nov, "Walkthrough tabs" approved on the 375px check) [rec]: in three
+   110px tabs the descriptions broke one or two words a line at 11px. The tab row keeps number and title; the selected
+   tab's description runs on the full width under the row, at 14px. The buttons stay position:relative for the film's
+   progress bar (screens.css), so the line is placed from its own tab: three times the tab's width, shifted back one
+   tab per position. Two lines are reserved, so switching tabs moves nothing. The other two descriptions are clipped,
+   not removed, and stay in each tab's name. */
+@media(max-width:600px){.walk-tabs{padding-bottom:58px}
+.walk-tabs button small{position:absolute;top:100%;left:0;width:300%;margin:0;padding:14px 8px 0;font-size:14px;line-height:1.5;text-align:left}
+.walk-tabs button:nth-of-type(2) small{left:-100%}
+.walk-tabs button:nth-of-type(3) small{left:-200%}
+.walk-tabs button:not([aria-selected=true]) small{width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}

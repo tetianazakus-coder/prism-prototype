@@ -22,9 +22,14 @@
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       touchMultiplier: 2,
       anchors: {duration: .8, easing: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2},
-      prevent: node => node.closest('dialog')
+      prevent: node => node.closest('dialog, #navigation.open')
     });
     lenis.on('scroll', ScrollTrigger.update);
+    // The open phone menu scrolls on its own and holds the page still (website-mobile-menu-submenu-research.md):
+    // the open menu is left to the browser above, and the page's smooth scroll pauses while site.js marks the menu open.
+    const menu = document.getElementById('navigation');
+    if (menu) new MutationObserver(() => menu.classList.contains('open') ? lenis.stop() : lenis.start())
+      .observe(menu, {attributes: true, attributeFilter: ['class']});
     gsap.ticker.add(time => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
   }

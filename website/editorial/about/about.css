@@ -75,6 +75,8 @@ main h2 em{display:inline}
 .story-portrait{overflow:hidden}
 .story-portrait>img{transition:scale .6s}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.story-portrait:hover>img{scale:1.05}}
+/* "I am a" on phones: the fourth answer wrapped alone, so the four stand two by two (Tanya, 16 Nov, 375px check). */
+@media(max-width:600px){.contact-form .radio-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.story-pair{grid-template-columns:1fr;gap:28px}.story-body>p.story-turn{font-size:23px}.story-body>p.story-mission,.story-tagline{font-size:22px}}
 
 /* What we believe: three numbered beliefs across the row, the number beside the title in Home's 24px serif, 16px apart,

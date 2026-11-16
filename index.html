@@ -3169,6 +3169,11 @@
     font: inherit; font-size: 13px; text-align: left; cursor: pointer; color: inherit; white-space: nowrap; }
   :where(.app--borrower) .sel__item { font-size: 14px; }  /* ramp:b */
   .sel__item:hover, .sel__item:focus-visible { background: var(--accent); color: var(--accent-foreground); }
+  .sel__item[hidden] { display: none; }
+  /* the search box of a searchable select (selCtl's q), pinned over the rows */
+  .sel__q { position: sticky; top: -4px; z-index: 1; margin: -4px -4px 4px; padding: 4px; background: var(--popover); border-bottom: 1px solid var(--border); }
+  .sel__q .inp { width: 100%; }
+  .sel__none { margin: 0; padding: 6px 8px; font-size: 14px; color: var(--muted-foreground); }
   .sel__item .d { width: 8px; height: 8px; border-radius: 9999px; flex: none; }
   .sel__item .nm { flex: 1; }
   .sel__tick { position: absolute; right: 8px; display: grid; place-items: center; width: 14px; height: 14px; color: var(--foreground); }
@@ -5768,6 +5773,122 @@
   .auth .btn--full { width: 100%; justify-content: center; margin-top: 4px; }
   .auth__note { margin-top: 14px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); background: var(--brand-surface-50); border: 1px solid var(--brand-border-100); border-radius: var(--radius-md); padding: 10px 12px; }
   .auth__note b { color: var(--foreground); }
+  /* the borrower deal form, #/post-deal/borrower (16 Nov) - the website
+     form's controls in the product's ramp, inside the sign-up card. The
+     chips are the Filter chip (.lshort-chip) at rest and on, so a picked
+     answer reads the way a picked filter does; the purchase/refinance pair
+     is the product's radio, the rule for a fixed answer. */
+  .pd__steps { display: flex; align-items: center; gap: 12px; margin: 2px 0 14px; }
+  .pd__steps p { margin: 0; font-size: 12px; line-height: 16px; color: var(--muted-foreground); white-space: nowrap; }
+  .pd__bar { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .pd__bar i { height: 4px; border-radius: 9999px; background: var(--muted); }
+  .pd__bar i.on { background: var(--primary); }
+  .pd__h2 { margin: 0 0 14px; font-size: 16px; font-weight: 600; line-height: 24px; }
+  .pd__h2:focus { outline: none; }
+  /* The step's title (task doc: Step 1 "Contact", Step 2 "Your deal"; Tanya, 16 Nov: "add titles for steps"):
+     at 16px it read as one more field label, so it takes the product's 20px section size [~] */
+  .pd__steps + .pd__h2 { margin-bottom: 16px; font-size: 20px; line-height: 28px; }
+  .pd__lbl { margin: 0 0 8px; font-size: 14px; font-weight: 500; line-height: 20px; }
+  .pd__lbl .opt { margin-left: 4px; color: var(--muted-foreground); font-weight: 400; }
+  .pd__phone { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 8px; }
+  .pd__phone select { padding: 4px 8px; }
+  .pd__fine { margin: 0 0 14px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  .pd__fine a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .pd__fine--c { margin: 12px 0 0; text-align: center; }
+  .pd__saved { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 16px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
+  .pd__saved svg { flex: none; margin-top: 3px; color: var(--primary); }
+  .pd__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  /* the doc's four loan amount ranges, one row of equal chips */
+  .pd__chips--4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pd__chips--4 .pd__chip { justify-content: center; padding: 0 8px; white-space: nowrap; } /* "Under $2M" broke onto two lines at 12px padding */
+  .pd__lbl + .pd__chips { margin-top: 0; }
+  .pd__chip { display: inline-flex; align-items: center; height: 36px; padding: 0 12px;
+    border: 1px solid var(--input); border-radius: var(--radius-md); background: var(--card);
+    font: inherit; font-size: 14px; font-weight: 500; color: var(--foreground);
+    cursor: pointer; box-shadow: var(--shadow-xs); }
+  .pd__chip:hover { border-color: var(--brand-navy-600); }
+  .pd__chip.on { background: color-mix(in srgb, var(--brand-gold) 14%, #fff);
+    border-color: color-mix(in srgb, var(--brand-gold) 45%, #fff); color: var(--color-brand-gold-text); box-shadow: none; }
+  .pd__chip--wide { flex-basis: 100%; }
+  .pd__more { height: 36px; padding: 0 4px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
+  .pd__other { margin-top: 8px; }
+  .pd .pd__ta { height: auto; min-height: 76px; padding: 8px 12px; font: inherit; font-size: 14px; line-height: 20px; resize: vertical; }
+  .pd__acts { display: flex; gap: 8px; margin-top: 4px; }
+  .pd__acts .btn { flex: 1; justify-content: center; }
+  .pd__acts .btn--outline { flex: none; }
+  .pd__acts--one { margin-top: 0; }
+  .pd__fail { margin: 0 0 12px; font-size: 14px; line-height: 20px; color: var(--destructive); }
+  /* the trust row under each step's button (task doc: "Keep") */
+  .pd__trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; margin: 14px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+  .pd__trust li { display: inline-flex; align-items: center; gap: 6px; }
+  .pd__trust li::before { content: ""; width: 4px; height: 4px; border-radius: 9999px; background: var(--brand-gold); }
+  /* the matches card is a button, since it looks tappable (task doc) */
+  .pd__mcard { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 14px; width: 100%; margin: 16px 0 0; padding: 12px 16px;
+    border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--card); box-shadow: var(--shadow-xs);
+    font: inherit; text-align: left; color: var(--foreground); cursor: pointer; }
+  .pd__mcard:hover { border-color: var(--brand-navy-600); }
+  .pd__n { grid-row: span 2; font-size: 30px; font-weight: 600; line-height: 36px; color: var(--primary); }
+  .pd__mlbl { font-size: 14px; font-weight: 500; line-height: 20px; }
+  .pd__mgo { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--primary); }
+  .pd__mgo::after { content: " \2192"; }
+  .pd__none { margin: 16px 0 0; }
+  .pd__none .pd__p { margin: 0; }
+  .pd__mlist { margin: 0; padding: 0; list-style: none; }
+  .pd__mlist li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 20px; }
+  .pd__mname { grid-column: 1 / -1; font-weight: 600; filter: blur(5px); user-select: none; }
+  .pd__mtype { color: var(--muted-foreground); }
+  .pd__mrange { font-variant-numeric: tabular-nums; }
+  .pd__mrest { margin: 12px 0 0; }
+  .pd__after { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .pd__ol { margin: 0; padding-left: 20px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
+  .pd__ol li + li { margin-top: 4px; }
+  .pd__deal { display: flex; align-items: center; gap: 10px; margin: 14px 0 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--brand-surface-50); font-size: 14px; line-height: 20px; }
+  .pd__deal svg { flex: none; color: var(--muted-foreground); }
+  .pd__deal span { flex: 1; min-width: 0; }
+  .pd__deal a { font-weight: 500; color: var(--primary); }
+  .pd__acct { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .pd__email { display: flex; align-items: baseline; gap: 8px; font-size: 14px; line-height: 20px; }
+  .pd__email span { color: var(--muted-foreground); }
+  .pd__email b { min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+  .pd__line { margin: 2px 0 14px; }
+  .pd__line--c { margin: 12px 0 0; text-align: center; }
+  .pd__lnk { border: 0; background: none; padding: 0; font: inherit; font-size: 14px; line-height: 20px; color: var(--primary); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .pd__fix { margin-top: 10px; }
+  .pd__fixrow { display: flex; gap: 8px; }
+  .pd__fixrow .inp { flex: 1; min-width: 0; }
+  .pd__pass { position: relative; }
+  .pd__pass .inp { padding-right: 64px; }
+  .pd__show { position: absolute; top: 4px; right: 4px; height: 28px; padding: 0 10px; border: 0; border-radius: var(--radius-sm); background: none; font: inherit; font-size: 14px; font-weight: 500; color: var(--primary); cursor: pointer; }
+  .pd__status { margin: 6px 0 0; text-align: center; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
+  .pd__status:empty { margin: 0; }
+  .pd__p { margin: 0 0 14px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); }
+  .pd__p b { color: var(--foreground); font-weight: 500; }
+  .pd__extra { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 24px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+  /* phones: every control a 44px target, the website form's rule (16 Nov);
+     chips two to a row (task doc) */
+  @media (max-width: 640px) {
+    .pd .inp, .pd .btn, .pd .fld__sel, .pd__more { height: 44px; }
+    .pd__chips, .pd__chips--4 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* two to a row, a long financing name takes two lines: the chip grows */
+    .pd__chip { height: auto; min-height: 44px; padding: 6px 10px; justify-content: center; text-align: center; line-height: 18px; }
+    .pd__chip--wide, .pd__more { grid-column: 1 / -1; }
+    .pd__more { justify-self: start; }
+    .pd__extra { gap: 0 20px; }
+    .pd .mdl__hd .x { top: 4px; right: 4px; width: 44px; height: 44px; justify-content: center; }
+    .pd .rad { min-height: 44px; }
+    .pd .pd__ta { height: auto; }
+    .pd__show { top: 0; right: 0; height: 44px; }
+    .pd__lnk { padding: 12px 0; }
+    .pd__line { margin: 0 0 6px; }
+    .pd__extra { padding-top: 2px; }
+    .pd__deal a { padding: 12px 0; margin: -12px 0; }
+    /* Task doc, Mobile: "each step fits one phone screen with the button visible". Step 2 is taller than any
+       phone, so the step's buttons stay pinned to the foot of the screen, as on the website form
+       (Tanya, 16 Nov: "fix recomended") */
+    .app:has(.pd__acts) { overflow: clip; }
+    .scroll:has(.pd__acts) { overflow: visible; } /* the shell traps sticky; same fix as .lrbar */
+    .pd__acts { position: sticky; bottom: 0; z-index: 2; margin: 4px -16px 0; padding: 12px 16px; background: var(--card); box-shadow: 0 -1px 0 var(--border); }
+  }
   /* Screen 2, the trial start — #/auth/trial. New classes rather than .msg or
      .hint, which are scoped to ancestors this surface does not have; this file
      has fallen into that trap three times. The chip is .bp__badge, the brand
@@ -12848,7 +12969,12 @@ function srchBox(id, val, ph, label, style) {
    component. `key` is "<kind>:<id>" and is what the click handler routes on;
    opts are {v, label, tone?}. A tone paints the same dot the trigger shows, so
    the open list carries the colour vocabulary the row does. */
-function selCtl(key, opts, cur, label, ph, withLbl) {
+/* q, when given, puts a search box at the top of the list that filters it as
+   you type (the borrower form's state, 16 Nov: the task doc's "Searchable
+   select (type to filter)"). Filtering hides rows in place, no re-render, so
+   the box keeps its focus; Enter picks the first row left, Down moves into
+   the list. Every other caller passes no q and is unchanged. */
+function selCtl(key, opts, cur, label, ph, withLbl, q) {
   const open = S.selOpen === key;
   /* an empty cur draws a placeholder instead of silently claiming opts[0] —
      the form selects start unset; every pre-existing caller passes a set cur */
@@ -12860,6 +12986,7 @@ function selCtl(key, opts, cur, label, ph, withLbl) {
       <span class="sel__car" aria-hidden="true">${SELCAR}</span>
     </button>
     ${open ? `<div class="sel__pop" role="listbox" aria-label="${esc(label)}">
+      ${q ? `<div class="sel__q"><input class="inp" type="text" data-selq="${esc(key)}" placeholder="${esc(q)}" aria-label="${esc(q)}" autocomplete="off" spellcheck="false"></div><p class="sel__none" hidden>No matches</p>` : ""}
       ${opts.map((o, i) => `${o.lvl === 0 && i ? `<div class="sel__sep" role="separator"></div>` : ""}<button type="button" role="option" aria-selected="${o.v === cur}"
         class="sel__item${o.lvl === 0 ? " sel__item--top" : o.grp ? " sel__item--grp" : ""}" data-selopt="${esc(key)}" data-selval="${esc(o.v)}" title="${esc(o.label)}"${o.lvl ? ` style="padding-left:${8 + o.lvl * 16}px"` : ""}>
         ${o.tone ? `<span class="d d-${o.tone}"></span>` : ""}
@@ -12911,6 +13038,8 @@ function applySel(key, v) {
   const i = key.indexOf(":"), kind = key.slice(0, i), id = key.slice(i + 1);
   if (kind === "d") { setStatus(id, v); return; }
   if (kind === "nd") { setDraft(id, v); return; }
+  /* the borrower deal form's two lists, 16 Nov */
+  if (kind === "pd") { S.pd.f[id] = v; return; }
   /* the decline confirm's reason — picking one re-renders and arms the button */
   if (kind === "od") { S.oppDecReason = v; return; }
   /* the profile. States left this path on 3 Sep for the shared multiselect
@@ -21346,7 +21475,393 @@ function renderJoinAuth() {
     AUTH_PANELS.borrower);
 }
 
+/* ---------- The borrower deal form, #/post-deal/borrower — 16 Nov ----------
+   Christian, Figma comment of 11 Nov on the website's Borrowers hero (thread
+   2000217479): "For the redesign, we can send borrowers to the same form on
+   its own page, separate from the marketing page, at /post-deal?role=borrower.
+   That page exists for brokers today, so I'd add the borrower version" [C].
+   Tanya, 16 Nov: the form lives on that app page, and the website's
+   submit-deal/ page stays as the content reference. So this is the website
+   form's content (task doc "Design Task — Borrower Form: Fewer Fields, Easier
+   Inputs, Working Thank-you Page") in the app's sign-up shell, with Tony's
+   11 Oct borrower panel unchanged. Wording is the website form's, word for
+   word, unless a comment below says otherwise.
+
+   The order is the broker's /post-deal in the product repo (cf24d861,
+   BrokerPostDealFlow + BrokerMatchReveal): the deal first, then a page that
+   counts the matches, then the account. The broker's count page is where a
+   plan is chosen; a borrower has no plan, so the account itself sits on that
+   page - email filled in, one password - where the website needed a second
+   click to reach it [💡 rec].
+
+   One address per screen and state, so each can be sent to Christian, as the
+   verify states are (29 Sep):
+     #/post-deal/borrower                Contact, step 1 of 2
+     #/post-deal?role=borrower           the same; the app's own address
+     .../deal                            Your deal, step 2 of 2
+     .../matches                         the count and the account
+     .../ready                           Your account is ready
+     .../<screen>/errors                 every empty answer flagged at once
+     .../<screen>/fail                   the first send fails, answers kept
+     .../matches/nomatch                 no count yet: plain text, no number
+     .../matches/exists                  the email has an account: Log in
+     .../matches/link                    the sign-in link was sent
+     .../signed-in                       a signed-in borrower [💡 rec]: no
+                                         form; the in-app financing request
+                                         already takes their deal, so the
+                                         address goes there (#/loans/new)
+     .../matches/preview                 the matches preview dialog open
+   An address past Contact fills the website's sample answers (Jane Cooper).
+   Nothing is sent or stored.
+
+   16 Nov, second pass - the task doc read again against these screens
+   (Tanya: "so recommended"). Now as the doc says: one Full name field and
+   the four loan amount ranges, on the website too (questions 269 and 270
+   stay open with Tony); autocomplete on the contact fields; the state list
+   searches as you type; "Next — Deal details"; the trust row; the count is a
+   card that opens a preview with the names blurred; "What happens now";
+   "Forward to a partner"; and on a phone the account card leads with "Email
+   me my matches", picked by width as the doc's "device detection" [~]. */
+const PD_PROPS = ["Multifamily", "Industrial", "Mixed-use", "Self-storage", "Hotel/motel"];
+const PD_FINS = ["Permanent | fixed-rate", "Bridge / short-term debt (<3 yrs)", "Construction loans",
+  "Agency (Fannie Mae)", "Agency (Freddie Mac)", "CMBS"];
+/* the doc's four ranges, one pick; "<$2M" reads "Under $2M" so a screen
+   reader says it the way it looks [~] */
+const PD_AMTS = ["Under $2M", "$2–5M", "$5–10M", "$10M+"];
+const PD_TRUST = ["Free to submit", "No obligation", "An advisor reviews every deal", "Confidential"];
+/* the website preview's sample rows [~]: type and range show, the name is a
+   stand-in under a blur, never a real name, so nothing can be read out */
+const PD_MATCHES = [["Lender name", "Debt fund", "$2M – $25M"], ["Lender name here", "Bank", "$1M – $15M"],
+  ["Lender name", "Life insurance company", "$5M – $50M"], ["Lender name here", "Credit union", "$1M – $10M"]];
+/* a phone, by width - the doc's "device detection picks the account card
+   variant"; 640 is this form's phone edge, where its controls go to 44px */
+const PD_PHONE = window.matchMedia("(max-width: 640px)");
+PD_PHONE.addEventListener("change", () => { if (S.route === "auth" && S.authMode === "postdeal") render(); });
+/* Task doc, Email: "inline format check". The format is checked as the borrower leaves the field, as on the
+   website form, in place, so focus stays on the next field; an empty field waits for Next (Tanya, 16 Nov: "fix recomended") */
+document.addEventListener("focusout", e => {
+  if (S.route !== "auth" || !S.pd || e.target.id !== "pd_email") return;
+  const inp = e.target, v = inp.value.trim(), fld = inp.closest(".fld");
+  if (!v) return;
+  S.pd.err = S.pd.err || {};
+  fld.querySelector("#pde_email")?.remove();
+  if (!/^\S+@\S+\.\S+$/.test(v)) {
+    S.pd.err.email = "Enter an email like name@company.com.";
+    fld.classList.add("err"); inp.setAttribute("aria-describedby", "pde_email"); inp.insertAdjacentHTML("afterend", pdErr("email"));
+  } else { delete S.pd.err.email; fld.classList.remove("err"); inp.removeAttribute("aria-describedby"); }
+});
+const pdFirst = f => f.name.trim().split(/\s+/)[0];
+/* the website's thirteen codes, US first; the list is our pick [~] */
+const PD_CODES = ["US +1", "Canada +1", "Mexico +52", "UK +44", "Australia +61", "Brazil +55", "China +86",
+  "France +33", "Germany +49", "India +91", "Israel +972", "Japan +81", "UAE +971"];
+const PD_NOTSURE = "Not sure";
+const PD_PIN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+function pdBlank() {
+  return { name: "", email: "", code: "US +1", phone: "", amt: "", prop: "", propOther: "",
+    purpose: "", fin: [], state: "", comments: "", pass: "", fixTo: "" };
+}
+function pdSample(upTo) {
+  const f = pdBlank();
+  Object.assign(f, { name: "Jane Cooper", email: "jane@example.com", phone: "(512) 555-0142" });
+  if (upTo !== "deal") Object.assign(f, { amt: "$2–5M", prop: "Multifamily", purpose: "Refinance", fin: [PD_NOTSURE], state: "Texas" });
+  return f;
+}
+function pdErrs(step) {
+  const f = S.pd.f, m = {}, dg = s => String(s).replace(/\D/g, "");
+  if (step === "contact") {
+    if (!f.name.trim()) m.name = "Enter your full name.";
+    if (!f.email.trim()) m.email = "Enter your email.";
+    else if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) m.email = "Enter an email like name@company.com.";
+    const us = / \+1$/.test(f.code);
+    if (!f.phone.trim()) m.phone = "Enter your phone number.";
+    else if (dg(f.phone).length < (us ? 10 : 6)) m.phone = us ? "Enter a full phone number, with the area code." : "Enter a full phone number.";
+  } else if (step === "deal") {
+    if (!f.amt) m.amt = "Choose a loan amount.";
+    if (!f.prop) m.prop = "Choose a property type.";
+    else if (f.prop === "other" && !f.propOther) m.prop = "Choose the property type from the list.";
+    if (!f.purpose) m.purpose = "Choose purchase or refinance.";
+    if (!f.fin.length) m.fin = "Choose a financing type, or “Not sure”.";
+    if (!f.state) m.state = "Choose the property’s state.";
+  } else if (step === "account") {
+    if (f.pass.length < 8) m.pass = "Use at least 8 characters.";
+  } else if (step === "fix") {
+    if (!/^\S+@\S+\.\S+$/.test(f.fixTo.trim())) m.fixTo = "Enter an email like name@company.com.";
+  }
+  return m;
+}
+/* "Step 1 of 2" over a two-part bar, the website form's progress line in the
+   product's ramp: the step's own name is the h2, as the website's is */
+function pdSteps(n, name) {
+  return `<div class="pd__steps"><p>Step ${n} of 2</p>
+    <div class="pd__bar" role="progressbar" aria-label="Form progress" aria-valuemin="0" aria-valuemax="2" aria-valuenow="${n}"><i class="on"></i><i${n > 1 ? ' class="on"' : ""}></i></div></div>
+    <h2 class="pd__h2" tabindex="-1">${name}</h2>`;
+}
+function pdErr(k) {
+  const m = S.pd.err || {};
+  return m[k] ? `<div class="errmsg" id="pde_${k}">${m[k]}</div>` : "";
+}
+function pdBtn(step, label, busy, extra) {
+  const on = S.pd.busy === step;
+  return `<button type="button" class="btn${extra || ""}" data-pdgo="${step}"${on ? ' aria-busy="true"' : ""}>${on ? busy : label}</button>`;
+}
+/* a failed send keeps every answer and the same button tries again */
+const pdFail = () => S.pd.failShown ? `<p class="pd__fail" role="alert">We couldn’t send that. Your answers are still here. Check your connection and try again.</p>` : "";
+function pdChip(group, v, label, on, cls) {
+  return `<button type="button" class="pd__chip${cls ? " " + cls : ""}${on ? " on" : ""}" aria-pressed="${on}" data-pdchip="${group}" data-v="${esc(v)}">${esc(label)}</button>`;
+}
+function renderPostDeal() {
+  const p = S.pd, f = p.f, m = p.err || {};
+  const head = `<h1>Submit your deal</h1>
+    <p class="auth__sub">A LenderPrism financing advisor reviews it and calls you within 24 hours.</p>`;
+  /* the doc's "Keep: the trust row", under each step's button */
+  const trust = `<ul class="pd__trust" aria-label="What you can count on">${PD_TRUST.map(t => `<li>${t}</li>`).join("")}</ul>`;
+  if (p.step === "contact") {
+    /* the consent line stands before Next, since Next is where the task doc
+       saves the lead [💡 rec, the website's own line]. Autocomplete as the
+       doc asks: name, email, and the phone without its country code */
+    return authShell(`<div class="pd">${head}${pdSteps(1, "Contact")}
+      <div class="fld ${m.name ? "err" : ""}"><label for="pd_name">Full name</label><input class="inp" id="pd_name" data-pdf="name" autocomplete="name" autocapitalize="words" spellcheck="false" value="${esc(f.name)}"${m.name ? ' aria-describedby="pde_name"' : ""}>${pdErr("name")}</div>
+      <div class="fld ${m.email ? "err" : ""}"><label for="pd_email">Email</label><input class="inp" id="pd_email" data-pdf="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" value="${esc(f.email)}"${m.email ? ' aria-describedby="pde_email"' : ""}>${pdErr("email")}</div>
+      <div class="fld ${m.phone ? "err" : ""}"><label for="pd_phone">Phone</label>
+        <div class="pd__phone"><select class="inp" data-pdf="code" aria-label="Country code" autocomplete="tel-country-code">${PD_CODES.map(c => `<option${c === f.code ? " selected" : ""}>${c}</option>`).join("")}</select><input class="inp" id="pd_phone" data-pdf="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 123-4567" value="${esc(f.phone)}"${m.phone ? ' aria-describedby="pde_phone"' : ""}></div>${pdErr("phone")}</div>
+      <p class="pd__fine">By continuing, you agree that LenderPrism shares these details with a LenderPrism financing advisor, who may call, text or email you about your financing. <a href="https://lenderprism.com/privacy">Privacy Policy</a></p>
+      ${pdFail()}
+      <div class="pd__acts pd__acts--one">${pdBtn("contact", "Next — Deal details", "Saving…", " btn--full")}</div>${trust}</div>`,
+      `<div class="auth__foot">Already have an account? <a href="#/auth/login/borrower">Log in</a></div>`, AUTH_PANELS.borrower);
+  }
+  if (p.step === "deal") {
+    const others = PROPERTY_TYPES.filter(v => !PD_PROPS.includes(v));
+    const finMore = FINANCING_TYPES.filter(v => !PD_FINS.includes(v));
+    const fins = p.showAll ? PD_FINS.concat(finMore) : PD_FINS;
+    return authShell(`<div class="pd">${head}${pdSteps(2, "Your deal")}
+      <p class="pd__saved">${TICK}<span>Your contact details are saved. If you stop here, an advisor can still call you.</span></p>
+      <!-- Field names as the task doc words them: "Purchase / refinance", "Financing type", "State" (Tanya, 16 Nov) -->
+      <div class="fld ${m.amt ? "err" : ""}" role="group" aria-labelledby="pdl_amt"><p class="pd__lbl" id="pdl_amt">Loan amount</p>
+        <div class="pd__chips pd__chips--4">${PD_AMTS.map(v => pdChip("amt", v, v, f.amt === v)).join("")}</div>${pdErr("amt")}</div>
+      <div class="fld ${m.prop ? "err" : ""}" role="group" aria-labelledby="pdl_prop"><p class="pd__lbl" id="pdl_prop">Property type</p>
+        <div class="pd__chips">${PD_PROPS.map(v => pdChip("prop", v, v, f.prop === v)).join("")}${pdChip("prop", "other", "Other type", f.prop === "other")}</div>
+        ${f.prop === "other" ? `<div class="fld__sel pd__other">${selCtl("pd:propOther", others.map(v => ({ v, label: v })), f.propOther, "Other property type", "Select a property type")}</div>` : ""}${pdErr("prop")}</div>
+      <div class="fld ${m.purpose ? "err" : ""}" role="radiogroup" aria-labelledby="pdl_purpose"><p class="pd__lbl" id="pdl_purpose">Purchase / refinance</p>
+        <div class="rgrp">${["Purchase", "Refinance"].map(v => `<label class="rad"><input type="radio" name="pd_purpose" value="${v}" data-pdf="purpose"${f.purpose === v ? " checked" : ""}><span class="dot"></span>${v}</label>`).join("")}</div>${pdErr("purpose")}</div>
+      <div class="fld ${m.fin ? "err" : ""}" role="group" aria-labelledby="pdl_fin"><p class="pd__lbl" id="pdl_fin">Financing type <span class="opt">Select all that apply</span></p>
+        <div class="pd__chips">${fins.map(v => pdChip("fin", v, v, f.fin.includes(v))).join("")}
+          <button type="button" class="pd__more" data-pdall aria-expanded="${!!p.showAll}">${p.showAll ? "Show fewer" : "Show all " + FINANCING_TYPES.length}</button>
+          ${pdChip("fin", PD_NOTSURE, "Not sure — my advisor will advise", f.fin.includes(PD_NOTSURE), "pd__chip--wide")}</div>${pdErr("fin")}</div>
+      <div class="fld ${m.state ? "err" : ""}"><p class="pd__lbl" id="pdl_state">State</p>
+        <div class="fld__sel">${selCtl("pd:state", US_STATES.map(([, l]) => ({ v: l, label: l })), f.state, "State", "Select a state", false, "Search states")}</div>${pdErr("state")}</div>
+      <div class="fld"><label for="pd_comments">Comments <span class="opt">(optional)</span></label>
+        <textarea class="inp pd__ta" id="pd_comments" data-pdf="comments" rows="3" placeholder="e.g. 48-unit multifamily refinance in Austin, closing by March">${esc(f.comments)}</textarea></div>
+      ${pdFail()}
+      <div class="pd__acts"><a class="btn btn--outline" href="#/post-deal/borrower">Back</a>${pdBtn("deal", "Find my matched lenders", "Finding lenders…")}</div>${trust}</div>`,
+      "", AUTH_PANELS.borrower);
+  }
+  if (p.step === "matches") {
+    const none = p.state === "nomatch", has = p.state === "exists";
+    const prop = f.prop === "other" ? f.propOther : f.prop;
+    const deal = [prop, f.purpose, f.state, f.amt].filter(Boolean).join(" · ");
+    /* the task doc's thank-you page: "Your request is in, {name}." with the
+       call line, then the matches card - a button, since it looks tappable,
+       opening the preview - then the deal on one row with Edit (the broker
+       reveal's row, BrokerMatchReveal.tsx), the account card, "What happens
+       now" as plain numbered text, and the small actions. No matches: the
+       website's plain text, so nothing reads as a count [💡 rec]. The count
+       and the preview rows are samples [~]. */
+    const emailRow = `<div class="pd__email"><span>Email</span><b>${esc(f.email)}</b></div>
+        ${p.fix ? `<div class="fld ${m.fixTo ? "err" : ""} pd__fix"><label for="pd_fix">Your email</label>
+          <div class="pd__fixrow"><input class="inp" id="pd_fix" data-pdf="fixTo" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" value="${esc(f.fixTo)}"${m.fixTo ? ' aria-describedby="pde_fixTo"' : ""}><button type="button" class="btn btn--outline" data-pdfixsave>Save and resend</button></div>${pdErr("fixTo")}</div>`
+          : `<p class="pd__line"><button type="button" class="pd__lnk" data-pdfix aria-expanded="false">Not your email? Change it</button></p>`}`;
+    /* on a phone the doc's primary is "Email me my matches", a link to finish
+       on a computer, since the platform is not phone-ready; "Create account
+       now" opens the computer's card in place. /matches/link shows each
+       card's sent line: the sign-in link, or on a phone the matches */
+    const phone = PD_PHONE.matches && !p.acctNow;
+    const status = `<p class="pd__status" role="status">${p.state === "link" ? `${phone ? "Sent" : "Sign-in link sent"} to ${esc(f.email)} ✓` : p.said ? esc(p.said) : ""}</p>`;
+    const acct = has
+      ? `<h2 class="pd__h2">You already have an account</h2>
+        <p class="pd__p"><b>${esc(f.email)}</b> is registered with LenderPrism. Log in to see who matched this deal.</p>
+        <a class="btn btn--full" href="#/auth/login/borrower">Log in</a>`
+      : phone
+      ? `<h2 class="pd__h2">${none ? "Follow your request on a computer" : "See your matches on a computer"}</h2>
+        <p class="pd__p">LenderPrism works best on a computer. We email you a link to open there.</p>
+        ${emailRow}
+        <button type="button" class="btn btn--full" data-pdmail>${none ? "Email me the link" : "Email me my matches"}</button>
+        <p class="pd__line pd__line--c"><button type="button" class="pd__lnk" data-pdnow>Create account now</button></p>
+        ${status}`
+      : `<h2 class="pd__h2">${none ? "Create your free account to follow your request" : "Create your free account to see them"}</h2>
+        ${emailRow}
+        <div class="fld ${m.pass ? "err" : ""}"><label for="pd_pass">Password</label>
+          <div class="pd__pass"><input class="inp" id="pd_pass" data-pdf="pass" type="${p.showPass ? "text" : "password"}" autocomplete="new-password" value="${esc(f.pass)}" aria-describedby="pdh_pass${m.pass ? " pde_pass" : ""}"><button type="button" class="pd__show" data-pdshow aria-pressed="${!!p.showPass}" aria-controls="pd_pass">${p.showPass ? "Hide" : "Show"}</button></div>
+          <div class="hint" id="pdh_pass">At least 8 characters.</div>${pdErr("pass")}</div>
+        ${pdFail()}
+        ${pdBtn("account", "Create account and see my matches", "Creating your account…", " btn--full")}
+        <p class="pd__line pd__line--c"><button type="button" class="pd__lnk" data-pdlink>Email me a sign-in link instead</button></p>
+        ${status}
+        <p class="pd__fine pd__fine--c">By creating an account you agree to the <a href="https://lenderprism.com/terms">Terms of Service</a> and <a href="https://lenderprism.com/privacy">Privacy Policy</a>.</p>`;
+    /* the preview: lender type and loan range show, names stay blurred until
+       the account exists (task doc); Prism's sectioned Dialog. Its button is
+       the card's own next step: the password on a computer, the email on a
+       phone */
+    const prev = p.prev && !none ? `<div class="mov" data-pdprevx role="dialog" aria-modal="true" aria-labelledby="pd_prevt">
+      <div class="mdl">
+        <div class="mdl__hd"><div><h2 id="pd_prevt">8+ lenders fit your deal</h2><p>Sample matches. Names show once your account is ready.</p></div>
+          <button class="x" type="button" data-pdprevx aria-label="Close">${XCLOSE}</button></div>
+        <div class="mdl__bd"><ul class="pd__mlist">${PD_MATCHES.map(([n, t, r]) => `<li><span class="pd__mname" aria-hidden="true">${n}</span><span class="vh">Lender name hidden</span><span class="pd__mtype">${t}</span><span class="pd__mrange">${r}</span></li>`).join("")}</ul>
+          <p class="pd__p pd__mrest">and 4 more. ${phone ? "Open the link we email you on a computer to see their names and terms." : "Create your free account to see their names and terms."}</p></div>
+        <div class="mdl__ft"><button class="btn btn--outline" type="button" data-pdprevx>Close</button>${has ? `<a class="btn" href="#/auth/login/borrower">Log in to see them</a>` : phone ? `<button class="btn" type="button" data-pdmail>Email me my matches</button>` : `<button class="btn" type="button" data-pdprevgo>Create account to see them</button>`}</div>
+      </div></div>` : "";
+    return authShell(`<div class="pd">
+      <h1>Your request is in, ${esc(pdFirst(f))}.</h1>
+      <p class="auth__sub">A LenderPrism financing advisor reviews your deal and calls you within 24 hours.</p>
+      ${none ? `<div class="pd__none"><h2 class="pd__h2">We’re matching your deal now</h2>
+        <p class="pd__p">No lender list yet. Your advisor goes through the lenders that fit and shares them on your call.</p></div>`
+        : `<button type="button" class="pd__mcard" data-pdprev aria-haspopup="dialog"><span class="pd__n">8+</span><span class="pd__mlbl">potential lender matches</span><span class="pd__mgo">Preview your matches</span></button>`}
+      <div class="pd__deal">${PD_PIN}<span>${esc(deal)}</span><a href="#/post-deal/borrower/deal">Edit</a></div>
+      <div class="pd__acct">${acct}</div>
+      <div class="pd__after"><h2 class="pd__h2">What happens now</h2>
+        <ol class="pd__ol"><li>Your advisor reviews your request.</li><li>They call you within 24 hours.</li><li>Your deal goes to the lenders that fit it.</li></ol></div>
+      <div class="pd__extra"><button type="button" class="pd__lnk" data-pdics>Add a reminder</button><button type="button" class="pd__lnk" data-pdvcf>Save our number</button><button type="button" class="pd__lnk" data-pdshare>Forward to a partner</button></div>
+      <p class="pd__status" role="status">${p.saidX ? esc(p.saidX) : ""}</p>${prev}</div>`,
+      "", AUTH_PANELS.borrower);
+  }
+  /* ready - the website's end state; Open my deal goes where its button goes */
+  return authShell(`<div class="pd">
+    <h1>Your account is ready, ${esc(pdFirst(f))}.</h1>
+    <p class="auth__sub">Your deal is saved in it, with the lenders that matched. Your advisor still calls you within 24 hours.</p>
+    <a class="btn btn--full" href="#/loan/lakeview" data-pdopen>Open my deal</a>
+    <p class="pd__fine pd__fine--c">LenderPrism works best on a computer. On a phone, the link in your email opens the same deal later.</p></div>`,
+    "", AUTH_PANELS.borrower);
+}
+function pdFocusErr() {
+  const el = document.querySelector(".pd .fld.err input:not([type=radio]), .pd .fld.err .pd__chip, .pd .fld.err input[type=radio], .pd .fld.err [data-sel], .pd .fld.err textarea");
+  if (el) el.focus();
+}
+function pdGo(step) {
+  S.pd.err = pdErrs(step); S.pd.said = "";
+  if (Object.keys(S.pd.err).length) { render(); pdFocusErr(); return; }
+  S.pd.busy = step; S.pd.failShown = false; render();
+  setTimeout(() => {
+    S.pd.busy = null;
+    if (S.pd.fail) { S.pd.fail = false; S.pd.failShown = true; render(); const b = document.querySelector(`[data-pdgo="${step}"]`); if (b) b.focus(); return; }
+    S.pd.keep = true;
+    location.hash = "#/post-deal/borrower/" + (step === "contact" ? "deal" : step === "deal" ? "matches" : "ready");
+  }, 700);
+}
+function pdDownload(text, type, name) {
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type })), download: name });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+const pdStamp = d => d.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+function pdClick(e) {
+  const t = e.target;
+  const go = t.closest("[data-pdgo]");
+  if (go) { if (!S.pd.busy) pdGo(go.dataset.pdgo); return true; }
+  const ch = t.closest("[data-pdchip]");
+  if (ch) {
+    const f = S.pd.f, g = ch.dataset.pdchip, v = ch.dataset.v;
+    if (g === "amt") f.amt = f.amt === v ? "" : v;
+    if (g === "prop") { f.prop = f.prop === v ? "" : v; if (f.prop !== "other") f.propOther = ""; }
+    /* "Not sure" clears the rest and is cleared by them, as on the website */
+    if (g === "fin") f.fin = v === PD_NOTSURE ? (f.fin.includes(v) ? [] : [v])
+      : f.fin.includes(v) ? f.fin.filter(x => x !== v) : f.fin.filter(x => x !== PD_NOTSURE).concat(v);
+    render();
+    const b = document.querySelector(`[data-pdchip="${g}"][data-v="${CSS.escape(v)}"]`);
+    if (b) b.focus();
+    return true;
+  }
+  if (t.closest("[data-pdall]")) {
+    S.pd.showAll = !S.pd.showAll; render();
+    const b = document.querySelector("[data-pdall]"); if (b) b.focus();
+    return true;
+  }
+  if (t.closest("[data-pdshow]")) {
+    S.pd.showPass = !S.pd.showPass; render();
+    const b = document.querySelector("[data-pdshow]"); if (b) b.focus();
+    return true;
+  }
+  if (t.closest("[data-pdfix]")) {
+    S.pd.fix = true; S.pd.f.fixTo = S.pd.f.email; render();
+    const i = document.getElementById("pd_fix"); if (i) i.focus();
+    return true;
+  }
+  if (t.closest("[data-pdfixsave]")) {
+    S.pd.err = pdErrs("fix");
+    if (!Object.keys(S.pd.err).length) { S.pd.f.email = S.pd.f.fixTo.trim(); S.pd.fix = false; S.pd.said = `Sent to ${S.pd.f.email} ✓`; }
+    render();
+    if (S.pd.fix) pdFocusErr();
+    return true;
+  }
+  if (t.closest("[data-pdlink]")) { S.pd.said = `Sign-in link sent to ${S.pd.f.email} ✓`; render(); return true; }
+  /* the matches preview: opens on the card, closes on Close, the x, the
+     backdrop or Escape, and gives focus back to the card */
+  if (t.closest("[data-pdprev]")) {
+    S.pd.prev = true; render();
+    const x = document.querySelector(".mov[data-pdprevx] .x"); if (x) x.focus();
+    return true;
+  }
+  const px = t.closest("[data-pdprevx]");
+  if (px && (px.tagName === "BUTTON" || t === px)) { pdPrevClose(); return true; }
+  if (t.closest("[data-pdprevgo]")) {
+    S.pd.prev = false; render();
+    const i = document.getElementById("pd_pass"); if (i) i.focus();
+    return true;
+  }
+  /* phone: "Email me my matches", then the confirmation the doc asks for */
+  if (t.closest("[data-pdmail]")) {
+    S.pd.prev = false; S.pd.said = `Sent to ${S.pd.f.email} ✓`; render();
+    const b = document.querySelector(".pd__acct [data-pdmail]"); if (b) b.focus();
+    return true;
+  }
+  if (t.closest("[data-pdnow]")) {
+    S.pd.acctNow = true; S.pd.said = ""; render();
+    const i = document.getElementById("pd_pass"); if (i) i.focus();
+    return true;
+  }
+  /* "Forward to a partner": the phone's share sheet, or the link copied */
+  if (t.closest("[data-pdshare]")) {
+    const url = location.href.split("#")[0] + "#/post-deal/borrower";
+    const say = s => { S.pd.saidX = s; render(); };
+    if (navigator.share) navigator.share({ title: "LenderPrism", text: "Submit a commercial real estate deal to LenderPrism", url })
+      .then(() => say("Shared ✓"), err => { if (err.name !== "AbortError") say("Copy this link: " + url); });
+    else if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => say("Link copied ✓"), () => say("Copy this link: " + url));
+    else say("Copy this link: " + url);
+    return true;
+  }
+  /* tomorrow at 9:00 local time, the website's reminder, word for word */
+  if (t.closest("[data-pdics]")) {
+    const start = new Date(); start.setDate(start.getDate() + 1); start.setHours(9, 0, 0, 0);
+    const end = new Date(start.getTime() + 30 * 60000);
+    pdDownload(["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//LenderPrism//Borrower request//EN", "BEGIN:VEVENT", `UID:${Date.now()}@lenderprism.com`, `DTSTAMP:${pdStamp(new Date())}`, `DTSTART:${pdStamp(start)}`, `DTEND:${pdStamp(end)}`, "SUMMARY:See my LenderPrism lender matches", "DESCRIPTION:Open the link in the LenderPrism email on a computer to see who matched your deal.", "END:VEVENT", "END:VCALENDAR"].join("\r\n"), "text/calendar", "lenderprism-matches.ics");
+    S.pd.saidX = "Reminder added ✓"; render();
+    return true;
+  }
+  /* "Save our number" [~], question 275: the number is a placeholder */
+  if (t.closest("[data-pdvcf]")) {
+    pdDownload(["BEGIN:VCARD", "VERSION:3.0", "N:;LenderPrism;;;", "FN:LenderPrism", "ORG:LenderPrism", "TITLE:Financing advisors", "TEL;TYPE=WORK,VOICE:+1-555-555-0100", "URL:https://lenderprism.com", "NOTE:Your LenderPrism financing advisor calls from this number.", "END:VCARD"].join("\r\n"), "text/vcard", "lenderprism.vcf");
+    S.pd.saidX = "Contact saved ✓"; render();
+    return true;
+  }
+  /* the new account is a borrower's, so the deal page opens under that role */
+  if (t.closest("[data-pdopen]")) { S.role = "borrower"; return false; }
+  return false;
+}
+function pdPrevClose() {
+  S.pd.prev = false; render();
+  const c = document.querySelector("[data-pdprev]"); if (c) c.focus();
+}
+/* typing never re-renders: the value is kept, and the phone is reshaped in
+   place - ten digits take the US shape under +1 only, as on the website */
+function pdInput(el) {
+  const f = S.pd.f, k = el.dataset.pdf;
+  if (el.type === "radio") { f[k] = el.value; return; }
+  if (k === "phone" && / \+1$/.test(f.code)) {
+    const d = el.value.replace(/\D/g, "").replace(/^1(?=\d{10})/, "").slice(0, 10);
+    el.value = d.length > 6 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0, 3)}) ${d.slice(3)}` : d;
+  }
+  f[k] = el.value;
+}
 function renderAuth() {
+  if (S.authMode === "postdeal") return renderPostDeal();
   if (S.authMode === "trial") return renderTrialStart();
   if (S.authMode === "verify") return renderBVerify();
   if (S.authMode === "invite") return renderInviteAuth();
@@ -31848,6 +32363,25 @@ function route() {
      in-app path is taken - one slash, then letters, digits and hyphens - so a
      link can never send someone off the product after login [rec]; anything
      else is dropped and the log-in page still opens. */
+  /* the borrower deal form, 16 Nov - see renderPostDeal. Inside the flow
+     (Continue, Back, Edit) the answers stay; a cold arrival at an address
+     past Contact takes the website's sample answers. */
+  const mpd = h.replace(/^\/post-deal\?role=borrower/, "/post-deal/borrower").match(/^\/post-deal\/borrower(?:\/(deal|matches|ready|signed-in))?(?:\/(errors|fail|nomatch|exists|link|preview))?\/?$/);
+  if (mpd) {
+    if (mpd[1] === "signed-in") { S.role = "borrower"; location.replace("#/loans/new"); return; }
+    const inFlow = S.route === "auth" && S.authMode === "postdeal" && S.pd && !mpd[2];
+    const step = mpd[1] || "contact", st = mpd[2] || null;
+    S.route = "auth"; S.authMode = "postdeal"; S.authRole = "borrower"; S.authErr = null; S.dealId = null;
+    S.secEdit = null; S.draft = null; S.draftFor = null; S.justCreated = null; S.lb = null;
+    S.pd = { f: inFlow ? S.pd.f : step === "contact" && st !== "fail" ? pdBlank() : pdSample(st === "fail" ? "matches" : step), step, state: st, err: null,
+      busy: null, fail: st === "fail", failShown: false, showAll: inFlow ? S.pd.showAll : false, showPass: false, fix: false, said: "",
+      saidX: "", prev: st === "preview", acctNow: false };
+    if (st === "errors") {
+      if (step === "deal") Object.assign(S.pd.f, { amt: "", prop: "", purpose: "", fin: [], state: "" });
+      S.pd.err = pdErrs(step === "matches" ? "account" : step);
+    }
+    render(); window.scrollTo(0, 0); return;
+  }
   const ma = h.match(/^\/auth(?:\/(signup|login|trial|verify))?(?:\/(borrower|broker|lender))?(?:\/(verified|expired))?\/?(?:\?next=([^&#]*))?$/);
   if (ma) {
     S.route = "auth"; S.dealId = null;
@@ -32281,6 +32815,7 @@ window.addEventListener("scroll", hideTip, true);
    no kebabs, selects or menus, so none of that machinery should run under it */
 document.addEventListener("click", e => {
   if (S.route !== "auth") return;
+  if (S.authMode === "postdeal" && pdClick(e)) return;
   const rb = e.target.closest("[data-authrole]");
   if (rb) { location.hash = `#/auth/signup/${rb.dataset.authrole}`; return; }
   /* both controls on the trial screen are the assent — one goes on to a deal
@@ -32318,7 +32853,18 @@ document.addEventListener("click", e => {
 document.addEventListener("input", e => {
   const bif = e.target.closest("[data-binvf]");
   if (bif && S.binvF) { S.binvF[bif.dataset.binvf] = bif.value; return; }
+  /* a searchable select's box: hide the rows that do not contain the text */
+  const selq = e.target.closest("[data-selq]");
+  if (selq) {
+    const v = selq.value.trim().toLowerCase(), pop = selq.closest(".sel__pop");
+    let n = 0;
+    pop.querySelectorAll(".sel__item").forEach(it => { const hit = !v || it.textContent.toLowerCase().includes(v); it.hidden = !hit; n += hit; });
+    pop.querySelector(".sel__none").hidden = n > 0;
+    return;
+  }
   if (S.route !== "auth") return;
+  const pdf = e.target.closest("[data-pdf]");
+  if (pdf && S.pd) { pdInput(pdf); return; }
   const af = e.target.closest("[data-af]");
   if (af) S.auth[af.dataset.af] = af.value;
 });
@@ -32481,7 +33027,7 @@ document.addEventListener("click", e => {
     const k = selbtn.dataset.sel;
     S.selOpen = S.selOpen === k ? null : k;
     render();
-    const b = document.querySelector(`[data-sel="${CSS.escape(k)}"]`);
+    const b = document.querySelector(`.sel__pop [data-selq="${CSS.escape(k)}"]`) || document.querySelector(`[data-sel="${CSS.escape(k)}"]`);
     if (b) b.focus();
     return;
   }
@@ -35790,6 +36336,16 @@ document.addEventListener("dragend", () => {
 });
 
 document.addEventListener("keydown", e => {
+  /* the borrower form's matches preview owns Escape while it is open */
+  if (e.key === "Escape" && S.route === "auth" && S.authMode === "postdeal" && S.pd && S.pd.prev) { pdPrevClose(); return; }
+  /* a searchable select's box: Enter picks the first row left, Down moves
+     into the list; Escape falls through to the select's own close below */
+  if (e.target && e.target.dataset && e.target.dataset.selq !== undefined && (e.key === "Enter" || e.key === "ArrowDown")) {
+    const first = [...e.target.closest(".sel__pop").querySelectorAll(".sel__item")].find(it => !it.hidden);
+    e.preventDefault();
+    if (first) { if (e.key === "Enter") first.click(); else first.focus(); }
+    return;
+  }
   /* Before everything else: while the address list is open it owns Escape and
      the arrows, and it is the innermost thing on the screen. Enter only acts
      when a row is highlighted - with none, Enter is still the form's. */

@@ -11,8 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared/base.css?v=20261109a">
-  <link rel="stylesheet" href="../shared/editorial.css?v=20261111b">
-  <link rel="stylesheet" href="../shared/components.css?v=20261109c">
+  <link rel="stylesheet" href="../shared/editorial.css?v=20261116ic">
+  <link rel="stylesheet" href="../shared/components.css?v=20261116t">
+  <link rel="stylesheet" href="../shared/market.css?v=20261116m2">
   <link rel="stylesheet" href="../shared/type.css?v=20261102c">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
   <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
@@ -20,15 +21,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
-  <script src="../shared/site.js?v=20261102e" defer></script>
-  <script src="../shared/motion.js?v=20261109n" defer></script>
+  <script src="../shared/site.js?v=20261116su" defer></script>
+  <script src="../shared/motion.js?v=20261116sb" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="../" aria-label="LenderPrism home"><img src="../img/logo-main.svg" width="177" height="30" alt=""></a>
-    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu <span aria-hidden="true">≡</span></button>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Menu"><svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <nav id="navigation" aria-label="Main navigation">
       <details class="solutions"><summary>Solutions <svg class="chev" width="8" height="5" viewBox="0 0 8 5" aria-hidden="true"><path d="M1 1l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="solutions-menu">
         <a href="../brokers/"><b>For Brokers</b><span>Leads, lender matching and an execution desk</span></a>
@@ -51,7 +52,13 @@
        submit form on its own page instead, outside the marketing site (Tony, Figma comment on the button: "It should go
        to the borrower form now"; Christian, 12 Nov: "we can send borrowers to the same form on its own page, separate
        from the marketing page, at /post-deal?role=borrower. That page exists for brokers today, so I'd add the borrower
-       version"). Until that borrower version ships, the address opens what /post-deal shows today. -->
+       version"). Until that borrower version ships, the address opens what /post-deal shows today.
+       15 Nov: the button opens the prototype's own borrower form, ../submit-deal/, built from the task doc "Borrower Form: Fewer
+       Fields, Easier Inputs, Working Thank-you Page" (Tanya, 15 Nov), so the redesigned form can be tried from here; the live
+       address stays /post-deal?role=borrower.
+       16 Nov: the form lives on the website, as the task doc's Decision says ("Keep the borrower request as one form on
+       the website"; Tanya, 16 Nov: "form should live on website"). The links that pointed to the app's #/post-deal/borrower
+       for a few hours point back to ../submit-deal/. Christian's /post-deal?role=borrower is not the form's home. -->
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -59,7 +66,7 @@
         <h1 id="hero-title"><span>Financing with a person,</span><em>not a portal.</em></h1>
         <div class="hero-lower">
           <p class="hero-description">We're rebuilding the borrower experience around one promise: submit your deal once, and a vetted LenderPrism financing advisor calls you within 24 hours.</p>
-          <div class="hero-actions"><a class="button" href="https://lenderprism.com/post-deal?role=borrower">Submit my deal — it's free</a><a class="text-link" href="https://calendly.com/tony_talamas/work-with-lenderprism" target="_blank" rel="noopener">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span><span class="sr-only"> (opens in a new tab)</span></a></div>
+          <div class="hero-actions"><a class="button" href="../submit-deal/">Submit my deal — it's free</a><a class="text-link" href="https://calendly.com/tony_talamas/work-with-lenderprism" target="_blank" rel="noopener">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span><span class="sr-only"> (opens in a new tab)</span></a></div>
         </div>
       </div>
       <!-- The Brokers hero figure, shared from editorial.css: a building photo with the product window running off its
@@ -78,6 +85,24 @@
       <li>Free for borrowers</li><li>No obligation</li><li>Your information stays confidential</li><li>Broker fees only at closing, if you proceed</li>
     </ul>
   </div>
+  <!-- Recently financed (task doc "Design Task — Website Market Intelligence Teasers", Borrowers: "Between hero and 'Want
+       to know when it launches?'", "'Recently financed' — 3 closing cards, no lender name, no locked metrics", "Request
+       financing" to the borrower form; Tanya, 15 Nov: "create a plan, what should be build", approved). Two sections stand
+       between the hero and that band; the cards go first, under the trust strip, as proof ahead of "What's coming" [rec].
+       The button keeps the page's own label and address, "Submit my deal", rather than a second name for the same form
+       [rec]. The title's second line and the line beside the button are ours [rec]; "within 24 hours" is the hero's
+       promise. The three closings are SAMPLE content (class "sample"). -->
+  <section class="market section" data-publication-placeholder aria-labelledby="recent-title">
+    <div class="wrap">
+      <div class="section-heading"><h2 id="recent-title">Recently financed <br><em>on LenderPrism.</em></h2><p>Loans closed in the last 30 days by lenders on the platform.</p></div>
+      <ul class="closing-grid" aria-label="Recent closings">
+        <li class="closing-card sample"><div class="closing-head"><p class="eyebrow">Refinance</p><p class="closing-date">Closed Oct 2026</p></div><p class="closing-amount">$8,500,000</p><dl><div><dt>Property type</dt><dd>Multifamily</dd></div><div><dt>Location</dt><dd>Houston, TX</dd></div><div><dt>Investment type</dt><dd>Stabilized</dd></div></dl></li>
+        <li class="closing-card sample"><div class="closing-head"><p class="eyebrow">Purchase</p><p class="closing-date">Closed Nov 2026</p></div><p class="closing-amount">$4,200,000</p><dl><div><dt>Property type</dt><dd>Retail</dd></div><div><dt>Location</dt><dd>Tampa, FL</dd></div><div><dt>Investment type</dt><dd>Value-add</dd></div></dl></li>
+        <li class="closing-card sample"><div class="closing-head"><p class="eyebrow">Construction</p><p class="closing-date">Closed Oct 2026</p></div><p class="closing-amount">$21,000,000</p><dl><div><dt>Property type</dt><dd>Build to rent</dd></div><div><dt>Location</dt><dd>Phoenix, AZ</dd></div><div><dt>Investment type</dt><dd>Development</dd></div></dl></li>
+      </ul>
+      <div class="market-cta"><p>Have a deal of your own? Submit it once and a financing advisor calls you within 24 hours.</p><a class="button" href="../submit-deal/">Submit my deal <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></div>
+    </div>
+  </section>
   <section class="coming section" aria-labelledby="coming-title">
     <div class="wrap">
       <div class="section-heading"><h2 id="coming-title">What's coming</h2></div>
@@ -91,12 +116,12 @@
   </section>
   <section class="final final-centred band-city-dusk notify dark section" aria-labelledby="notify-title"><div class="wrap"><div class="final-grid"><h2 id="notify-title">Want to know <br><em>when it launches?</em></h2><div>
     <p>Leave your email and we'll let you know when the new experience is live.</p>
-    <form class="notify-form-wrap" data-notify="Thanks — we'll be in touch."><div class="notify-form"><label><span class="sr-only">Email</span><input type="email" name="email" autocomplete="email" placeholder="Email" required></label><button class="button light" type="submit">Notify me</button></div><p class="notify-status" role="status"></p></form>
+    <form class="notify-form-wrap signup" data-notify="Thanks — we'll be in touch."><fieldset class="signup-role"><legend>I am a</legend><label><input type="radio" name="role" value="broker" required> Broker</label><label><input type="radio" name="role" value="lender"> Lender</label><label><input type="radio" name="role" value="borrower" checked> Borrower</label></fieldset><input type="hidden" name="source" value="launch band"><div class="notify-form"><label><span class="sr-only">Email</span><input type="email" name="email" autocomplete="email" placeholder="Email" required></label><button class="button light" type="submit">Notify me</button></div><p class="signup-consent">By signing up, you agree to our <a href="https://lenderprism.com/privacy">Privacy Policy</a>. Unsubscribe anytime.</p><p class="notify-status" role="status"></p></form>
     <p class="soon-more">Already submitted a deal? <a href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/login">Log in to see your request</a></p>
   </div></div></div></section>
 </main>
 
-<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="../"><img src="../img/logo-main.svg" width="177" height="30" alt="LenderPrism"></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span><!-- Tony, Figma comment on "[Email address]", Nov 2026: "E-mail: I prefer a form field to avoid spam". No address is published; Company > Contact leads to the form on About. --></div><div><h2>Solutions</h2><a href="../brokers/">For Brokers</a><a href="../borrowers/">For Borrowers</a><a href="../lenders/">For Lenders</a><a href="../find-a-broker/">Find an advisor</a><a href="../pricing/">Pricing</a></div><div><h2>Company</h2><a href="../about/">About</a><a href="../about/#contact">Contact</a><button data-unavailable="Broker Agreement">Broker Agreement</button><h2 class="platforms-label">Our platforms</h2><a href="../">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><!-- Tony, Figma comment on "Market notes and new lenders, once a month.", Nov 2026: "Replace these two lines with "Lender insights and LenderPrism updates"". Set word for word on one line (Tanya, 11 Nov: "make it one line"); from 860 to 1230 the four-column footer is narrower than the line and it breaks into two even lines (editorial.css). The field's hidden label follows. --><p>Lender insights and LenderPrism updates</p><form id="newsletter-form"><label class="sr-only" for="newsletter-email">Email for lender insights and LenderPrism updates</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><!-- Tony, Figma comment on the footer line, Nov 2026: "Replace footer with 'LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.'" Set word for word; the old "We are not a lender. Commercial-purpose financing only." goes with it. --><p class="disclaimer">LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.</p></div></footer>
-<dialog id="notice-dialog" aria-labelledby="notice-title"><button class="dialog-close" data-close aria-label="Close notice">×</button><p class="eyebrow">LENDERPRISM / DESIGN PREVIEW</p><h2 id="notice-title"></h2><p id="notice-body"></p><button class="text-link" data-close>Back to the page <span aria-hidden="true">↙</span></button></dialog>
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="../"><img src="../img/logo-main.svg" width="177" height="30" alt="LenderPrism"></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span><!-- Tony, Figma comment on "[Email address]", Nov 2026: "E-mail: I prefer a form field to avoid spam". No address is published; Company > Contact leads to the form on About. --></div><div><h2>Solutions</h2><a href="../brokers/">For Brokers</a><a href="../borrowers/">For Borrowers</a><a href="../lenders/">For Lenders</a><a href="../find-a-broker/">Find an advisor</a><a href="../submit-deal/">Submit a deal</a><a href="../pricing/">Pricing</a></div><div><h2>Company</h2><a href="../about/">About</a><a href="../about/#contact">Contact</a><h2 class="platforms-label">Our platforms</h2><a href="../">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><!-- Tony, Figma comment on "Market notes and new lenders, once a month.", Nov 2026: "Replace these two lines with "Lender insights and LenderPrism updates"". Set word for word on one line (Tanya, 11 Nov: "make it one line"); from 860 to 1230 the four-column footer is narrower than the line and it breaks into two even lines (editorial.css). The field's hidden label follows. --><p>Lender insights and LenderPrism updates</p><!-- One sign-up form, with the role asked (Tony, Figma thread on the Borrowers launch band, about 12 Nov: "I think we should ask for role (broker, lender, borrower) throughout. Have one sign up form. We can have it go to MailChimp, which we currently use. i plan to switch to Zoho Campaigns soon."; Tanya, 16 Nov: "go"). The same fields wherever someone signs up: role, email, and the page it was sent from as a hidden field (site.js fills it), so one list can be split by role in MailChimp or Zoho Campaigns [rec]. Christian's idea, the page telling the role, becomes the pre-selected answer on the Borrowers and Lenders bands; the footer starts with none, as Home, About and Pricing speak to everyone [rec, question 293]. The consent line is ours [rec]. --><form id="newsletter-form" class="signup"><fieldset class="signup-role"><legend>I am a</legend><label><input type="radio" name="role" value="broker" required> Broker</label><label><input type="radio" name="role" value="lender"> Lender</label><label><input type="radio" name="role" value="borrower"> Borrower</label></fieldset><input type="hidden" name="source" value="footer"><label class="sr-only" for="newsletter-email">Email for lender insights and LenderPrism updates</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Email" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p class="signup-consent">By signing up, you agree to our <a href="https://lenderprism.com/privacy">Privacy Policy</a>. Unsubscribe anytime.</p><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><!-- Tony, Figma comment on the footer line, Nov 2026: "Replace footer with 'LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.'" Set word for word; the old "We are not a lender. Commercial-purpose financing only." goes with it. --><p class="disclaimer">LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.</p></div></footer>
+<dialog id="notice-dialog" aria-labelledby="notice-title"><button class="dialog-close" data-close aria-label="Close notice">×</button><h2 id="notice-title"></h2><p id="notice-body"></p><button class="text-link" data-close>Back to the page <span aria-hidden="true">↙</span></button></dialog>
 </body>
 </html>

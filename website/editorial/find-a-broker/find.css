@@ -104,6 +104,10 @@
 .find-more{display:flex;justify-content:center;margin-top:48px}
 .find-more[hidden]{display:none}
 
+/* The form's route under the grid; hidden when a no-advisor card (in the grid, or the page's own) already offers it. */
+.find-route{margin-top:48px;text-align:center;font-size:16px;line-height:1.7;color:var(--muted)}
+.find-route .text-link{margin-left:6px;color:var(--ink)}
+.broker-grid:has(.find-none:not([hidden]))~.find-route,.find-route:has(~.find-empty:not([hidden])){display:none}
 .find-empty{display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding:48px;background:var(--white);border:1px dashed #b9ab95}
 .find-empty[hidden]{display:none}
 .find-empty p{font:400 clamp(26px,2.2vw,32px)/1.25 var(--serif);letter-spacing:-.02em;max-width:620px}
@@ -139,8 +143,12 @@
   .filter-pop{width:100%}
   .find-count{margin-left:0}
   .find-search input{font-size:16px}
-  .broker-grid{grid-template-columns:1fr;max-width:420px;row-gap:8px;margin-bottom:-24px}
-  .broker-card{margin-bottom:24px}
+  .broker-grid{grid-template-columns:1fr;row-gap:8px;margin-bottom:-24px}
+  /* The compact phone card (components.css; Tanya, 16 Nov): the desktop subgrid levels four cards in a row and has no
+     job in one column. Photo beside name, place and types; locations and Connect run the full width under them. */
+  .broker-card{grid-template-rows:auto auto 1fr;grid-row:auto;margin-bottom:24px}
+  .broker-card>.broker-states,.broker-card>.button{grid-column:1/-1}
+  .broker-card>.broker-states{margin-top:12px}
   .find-empty{padding:28px 24px}
   .connect-dialog h2{font-size:32px}
 }
