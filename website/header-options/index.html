@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LenderPrism: header options</title>
+<style>
+/* Layout: a review sheet. Rules first, then each page group with Today and Draft header shots stacked full width, phone shots in a row. System fonts; LenderPrism navy + bronze. */
+:root{
+  --bg:#f5f3ee; --surface:#ffffff; --fg:#14213a; --muted:#5d6676; --line:#dcd8cf;
+  --navy:#0e1c35; --bronze:#8a6a3c; --ok:#1d7549; --ok-soft:#e2f1e8; --bad:#a3322a; --bad-soft:#f8e2df;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10151f; --surface:#171e2b; --fg:#e7ebf2; --muted:#a0a9b8; --line:#2a3345;
+  --navy:#a9c4ee; --bronze:#d2ad72; --ok:#72d09f; --ok-soft:#13281e; --bad:#ef9088; --bad-soft:#321a18; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151f; --surface:#171e2b; --fg:#e7ebf2; --muted:#a0a9b8; --line:#2a3345;
+  --navy:#a9c4ee; --bronze:#d2ad72; --ok:#72d09f; --ok-soft:#13281e; --bad:#ef9088; --bad-soft:#321a18; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55}
+.page{max-width:1040px;margin:0 auto;padding-block:44px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:52px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--bronze);font-weight:650}
+h1{font-size:clamp(28px,4.4vw,40px);line-height:1.12;font-weight:700;letter-spacing:-.015em;margin:0;color:var(--navy);text-wrap:balance}
+h2{font-size:22px;line-height:1.25;font-weight:700;margin:0;color:var(--navy);text-wrap:balance}
+h3{font-size:15px;font-weight:650;margin:0}
+p{margin:0;max-width:70ch}
+.meta{color:var(--muted);font-size:13.5px}
+section,header.top{display:flex;flex-direction:column;gap:14px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.rule b{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--bronze)}
+.rule p{font-size:14px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--bg);font-weight:650}
+tr:last-child td,tr:last-child th{border-bottom:0}
+.chg{color:var(--ok);font-weight:650}
+.same{color:var(--muted)}
+.shot{display:flex;flex-direction:column;gap:6px;min-width:0}
+.shot .lbl{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.shot .lbl.draft{color:var(--ok)}
+.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.pair{display:flex;flex-direction:column;gap:12px}
+.note{font-size:14px;color:var(--muted);max-width:72ch}
+.phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.phones img{max-width:300px}
+.open{border-left:3px solid var(--bronze);padding:10px 14px;background:var(--surface);border-radius:0 6px 6px 0;font-size:14px}
+ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 9px;border-radius:999px;background:var(--ok-soft);color:var(--ok);vertical-align:middle;margin-left:8px}
+.badge.no{background:var(--bad-soft);color:var(--bad)}
+.verdict{font-size:14px}
+.src{font-size:13.5px;color:var(--muted)}
+.src a{color:inherit}
+.pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.pc div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px;font-size:14px;min-width:0}
+.pc b{display:block;font-size:12px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.pc .pro b{color:var(--ok)}.pc .con b{color:var(--bad)}
+</style>
+</head>
+<body>
+<main class="page">
+<header class="top">
+  <span class="eyebrow">LenderPrism website · shortlist for review · 18 Nov 2026</span>
+  <h1>Header and Brokers hero: the shortlist</h1>
+  <p class="meta">Two ways to organise the header menu, and one change to the Brokers hero. The hero change works with either menu. Option 1 is built in the prototype; option 2 is the menu the site had before; option 3 is a sketch.</p>
+</header>
+
+<section>
+  <h2>Why these</h2>
+  <div class="rules">
+    <div class="rule"><b>Your request</b><p>Take Pricing out of the header on Home, the lender pages and the borrower pages, so the site feels like a brokerage. Keep it for brokers.</p></div>
+    <div class="rule"><b>Research</b><p>Keep the main menu the same on every page. Both menus below do: Pricing sits inside a dropdown, never as a top-level item.</p></div>
+    <div class="rule"><b>Buttons</b><p>Your labels on every page: Start free trial for brokers, Submit a deal for borrowers, Create free profile for lenders. Home and About show our Get started.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Option 1: Brokers dropdown</h2>
+  <p class="verdict">Brokers ▾ · Borrowers · Lenders · About on every page. The Brokers menu holds For Brokers and Plans and pricing; the other three are plain links.</p>
+  <div class="pair">
+    <div class="shot"><span class="lbl draft">Home</span><img src="shots/o5-home-1440.png" alt="Home header: Brokers with a chevron, Borrowers, Lenders, About, phone, Log in, Get started" width="1440" height="120"></div>
+    <div class="shot"><span class="lbl draft">Brokers, menu open</span><img src="shots/o5-brokers-open-1440.png" alt="Brokers header with the Brokers menu open: For Brokers marked current, Plans and pricing" width="1440" height="300"></div>
+    <div class="shot"><span class="lbl draft">Pricing, menu open</span><img src="shots/o5-pricing-open-1440.png" alt="Pricing header with the Brokers menu open: Plans and pricing marked current" width="1440" height="300"></div>
+  </div>
+  <div class="phones"><div class="shot"><span class="lbl draft">Phone, Brokers open</span><img src="shots/o5-brokers-375.png" alt="Phone menu: Brokers expanded with For Brokers and Plans and pricing, then Borrowers, Lenders, About, Log in and Start free trial" width="375" height="812"></div></div>
+  <div class="pc">
+    <div class="pro"><b>For</b>All three audiences are visible without a click. Pricing sits under the audience it belongs to. The menu is the same on every page. Fits on one row down to 860 wide.</div>
+    <div class="con"><b>Against</b>Brokers opens a menu while Borrowers and Lenders go straight to a page. Reaching the Brokers page takes two clicks. Find an advisor leaves the header (Home, the Borrowers page and the footer still link to it).</div>
+  </div>
+</section>
+
+<section>
+  <h2>Option 2: Solutions dropdown</h2>
+  <p class="verdict">Solutions ▾ · About on every page. The Solutions menu holds all three audiences, Find an advisor, and Plans and pricing as a small link under For Brokers.</p>
+  <div class="pair"><div class="shot"><span class="lbl draft">Brokers, Solutions open</span><img src="shots/o3-brokers-1440.png" alt="Brokers header with the Solutions menu open: For Brokers, Plans and pricing, For Borrowers, For Lenders, Find an advisor" width="1440" height="470"></div></div>
+  <div class="pc">
+    <div class="pro"><b>For</b>Every menu item behaves the same way. Each audience has a one-line description. Find an advisor stays in the header. The site had it before, so going back is quick.</div>
+    <div class="con"><b>Against</b>The audiences are hidden behind one click, on Home too. “Solutions” is SaaS vocabulary, which is the feel you want less of.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Option 3: Brokers hero with two buttons</h2>
+  <p class="verdict">The trial stays the filled button. “See pricing” becomes an outlined second button. “Book a call” moves into the small line under them.</p>
+  <div class="pair">
+    <div class="shot"><span class="lbl draft">Brokers page with option 3</span><img src="shots/hero-two-1440.png" alt="Brokers page at 1440: the header with the Brokers menu, the hero headline, and under the description a filled Start 14-day free trial, an outlined See pricing, and No card required · Book a call" width="1440" height="721"></div>
+    <div class="shot"><span class="lbl">Brokers page today, for comparison</span><img src="shots/hero-today-1440.png" alt="Brokers page at 1440 today: Start 14-day free trial, Book a call as a text link beside it, and No card required under them" width="1440" height="724"></div>
+  </div>
+  <div class="phones"><div class="shot"><span class="lbl draft">Option 3 on a phone</span><img src="shots/hero-two-375.png" alt="Brokers page at 375 with option 3: both buttons on one row, No card required · Book a call under them" width="375" height="1027"></div></div>
+  <p class="note">Shot on the real Brokers page in the prototype, with only the hero's actions changed. Both buttons fit on one row at 375 wide.</p>
+  <div class="pc">
+    <div class="pro"><b>For</b>A clear first and second action. Brokers see the route to prices on the first screen, not only in the menu.</div>
+    <div class="con"><b>Against</b>“Book a call” becomes a small text link. With either menu, Plans and pricing is already in the header, so this repeats it.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Compared</h2>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>1 Brokers dropdown</th><th>2 Solutions dropdown</th></tr></thead>
+    <tbody>
+      <tr><th>Audiences visible without a click</th><td class="chg">Yes</td><td>No</td></tr>
+      <tr><th>Same menu on every page</th><td class="chg">Yes</td><td class="chg">Yes</td></tr>
+      <tr><th>The word Pricing in the header</th><td class="chg">Only inside the Brokers menu</td><td class="chg">Only inside the Solutions menu</td></tr>
+      <tr><th>Find an advisor in the header</th><td>No</td><td class="chg">Yes</td></tr>
+      <tr><th>Every item behaves the same</th><td>No, Brokers opens a menu</td><td class="chg">Yes</td></tr>
+      <tr><th>Status</th><td class="chg">Built in the prototype</td><td>The previous menu</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Option 3 is a separate choice: it can go with either menu, or the Brokers hero can stay as it is (the trial button and “Book a call”).</p>
+</section>
+
+<section>
+  <h2>Open</h2>
+  <div class="open"><ul class="plain">
+    <li>Which menu: 1 or 2.</li>
+    <li>Whether the Brokers hero adds “See pricing” as in option 3, or keeps its two actions.</li>
+    <li>The wording “Compare plans and features” and “See pricing” is our proposal.</li>
+  </ul></div>
+</section>
+
+</main>
+</body>
+</html>
