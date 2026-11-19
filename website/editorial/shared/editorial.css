@@ -46,6 +46,10 @@ nav{font-size:14px;gap:25px}
 .hero-actions>.button{grid-column:1;grid-row:1}
 .hero-actions>.text-link{grid-column:2;grid-row:1;margin:0;border:0;padding-block:13px}
 .hero-actions>.micro{grid-column:1/-1;grid-row:2;font-size:12px;margin:10px 0 0}
+/* Brokers hero, option 3 (Tony, 19 Nov): the trial and an outlined See pricing side by side, "Book a call" a link in the
+   small line under them, underlined so it reads as a link. */
+.hero-actions.pair>.button.outline{grid-column:2;grid-row:1}
+.hero-actions.pair>.micro a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 /* The photo ends 3px above the copy column's last line box (47 vs the copy's 44px bottom pad), so it overshoots the "No card required"
    baseline by the same 3.5px it overshoots the eyebrow cap tops (Tanya, 2 Nov: "make visually identical top and bottom padding"). */
 .hero-visual{grid-column:2;margin:0 0 47px;padding:0;min-width:0;animation:none}

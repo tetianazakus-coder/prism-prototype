@@ -9,7 +9,10 @@
 .submit-head .hero-lower{margin-top:20px}
 
 /* Form on the left in a white card, the trust list beside it from 851px. */
-.submit{display:grid;grid-template-columns:minmax(0,680px) minmax(0,1fr);gap:0 72px;align-items:start;padding-bottom:110px}
+/* The second column never goes under its longest word (min-content, 113px: "Confidential"). With minmax(0,1fr) it
+   was 50px at 860, where the form holds 680 of the 774px, and the list ran 20px off the page from 851 to 885px
+   (measured 19 Nov). Now the form gives way instead: 617px at 860, 653px at 900; from 1000px up nothing moves. */
+.submit{display:grid;grid-template-columns:minmax(0,680px) minmax(min-content,1fr);gap:0 72px;align-items:start;padding-bottom:110px}
 .submit[hidden],.done[hidden],.submit-head[hidden],.account[hidden],.ready[hidden]{display:none}
 .deal-form{background:var(--white);border:1px solid var(--line);padding:36px 40px 40px}
 .deal-progress{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin-bottom:28px}

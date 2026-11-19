@@ -39,11 +39,11 @@
   // want the agreement public (question 258); a new placeholder takes data-unavailable="<name>".
   $$('[data-unavailable]').forEach(button => button.addEventListener('click', () => notice(button.dataset.unavailable, 'This destination is part of the new website structure and is not included in this local preview. Its approved page or URL must be connected before launch.')));
 
-  // Header menu and Solutions dropdown. The /lp/broker header has neither (no top nav on the ad landing).
+  // Header menu. The /lp/broker header has none (no top nav on the ad landing). The Brokers dropdown went on 19 Nov (Tony,
+  // option 3 of the header shortlist): every item is a plain link.
   const menu = $('#navigation');
   const menuButton = $('.menu-toggle');
-  const solutions = $('.solutions');
-  if (menu && menuButton && solutions) {
+  if (menu && menuButton) {
     function closeMenu() { menu.classList.remove('open'); menuButton.setAttribute('aria-expanded', 'false'); }
     menuButton.addEventListener('click', () => {
       const open = menu.classList.toggle('open');
@@ -52,11 +52,9 @@
     $$('a,button', menu).forEach(link => link.addEventListener('click', closeMenu));
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
-      if (solutions.open) { solutions.open = false; $('summary', solutions).focus(); }
       if (menu.classList.contains('open')) { closeMenu(); menuButton.focus(); }
     });
     document.addEventListener('click', event => {
-      if (!event.target.closest('.solutions')) solutions.open = false;
       if (!event.target.closest('.site-header')) closeMenu();
     });
     matchMedia('(min-width:851px)').addEventListener('change', closeMenu);
