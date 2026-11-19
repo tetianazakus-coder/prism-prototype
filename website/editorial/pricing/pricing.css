@@ -146,9 +146,10 @@
   .compare-always tr:first-child>*{border-top:0}
   .compare-group th{font-size:16px;padding:18px 0}
   /* A row's definition (editorial.css .tip) opens inline under its label, pushing the row's numbers down rather than
-     covering them; the wrapper stays inline so the icon keeps to the label's line. */
+     covering them; the wrapper stays inline so the icon keeps to the label's line. Only when open: a bare
+     display:block outranked the browser's [hidden] rule, so until 19 Nov both definitions showed closed. */
   .compare th .tip-wrap{position:static;display:inline}
-  .compare th .tip-pop{position:relative;display:block;left:auto;top:auto;width:auto;margin:12px 0 4px;box-shadow:none}
+  .compare th .tip-pop:not([hidden]){position:relative;display:block;left:auto;top:auto;width:auto;margin:12px 0 4px;box-shadow:none}
 }
 
 /* Closing band: a paper card on the city at dusk (Option G of the closing band review, assets/website/final-cta-options/,
