@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LenderPrism website build plan</title>
+<style>
+  :root { --ink:#16181d; --muted:#586478; --rule:#dcdfe5; --bg:#f6f5f2; --card:#fff; --accent:#8a6a2f; --code:#eef0f3; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 48px 20px 96px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 22px; line-height: 1.25; margin: 56px 0 10px; padding-top: 20px; border-top: 2px solid var(--ink); }
+  p { margin: 0 0 14px; max-width: 76ch; }
+  .meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .lead { font-size: 18px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; max-width: 76ch; }
+  li { margin-bottom: 6px; }
+  .who { font-weight: 600; margin: 18px 0 6px; }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; font: 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+  .scroll { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--rule); border-radius: 8px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  th { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: #fafaf8; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  td.wrap { white-space: normal; }
+  nav { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
+  nav a { color: var(--accent); margin-right: 14px; white-space: nowrap; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+<h1>LenderPrism website build plan</h1>
+<p class="meta">19 November 2026 · Tetiana Zakus, Cieden · for Chris</p>
+
+<p class="lead">The new design is ported into the existing Next.js app on one branch off <code>dev</code>, page by page, and released once. Tanya builds the pages; Chris is asked for access, five decisions up front, eight backend pieces for the forms, and the review and release.</p>
+<p>New design: <a href="./editorial/">the Editorial prototype</a>.</p>
+
+<nav>
+  <a href="#decisions">Decisions</a><a href="#start">Where we start</a><a href="#p0">Phase 0</a><a href="#p1">Phase 1</a><a href="#p2">Phase 2</a><a href="#p3">Phase 3</a><a href="#p4">Phase 4</a><a href="#p5">Phase 5</a><a href="#p6">Phase 6</a>
+</nav>
+
+<h2 id="decisions">Decisions needed from Chris before any code</h2>
+<p>Five choices shape every PR after them. Each has our recommendation; Chris decides.</p>
+<div class="scroll"><table>
+<tr><th>#</th><th>Decision</th><th>Our recommendation</th><th>Why it needs him</th></tr>
+<tr><td>1</td><td class="wrap">Hand-written CSS or a Tailwind rewrite</td><td>Keep the prototype's stylesheets, loaded only by the marketing route group, with their own tokens</td><td>A rewrite into Tailwind tokens re-derives every measured value, which is where a port drifts from the design. Keeping them breaks the landing rule "token colours only" in <code>src/components/landing/CLAUDE.md</code></td></tr>
+<tr><td>2</td><td class="wrap">URLs</td><td>Keep every live URL that exists: <code>/broker</code>, <code>/borrower</code>, <code>/brokers</code>, <code>/get-matched</code>. Add only the new ones: <code>/lenders</code>, <code>/join</code>, <code>/lp/broker</code></td><td>The prototype's paths clash with live ones (list below). Keeping live paths means no redirects, no SEO loss, and ad and email links keep working</td></tr>
+<tr><td>3</td><td class="wrap">How unfinished work stays out of production</td><td>One long-lived branch off <code>dev</code>; small PRs into it for review; one merge to <code>dev</code> for staging QA; then the release to <code>main</code></td><td>Old and new pages cannot mix, because the header and footer change. A push to <code>dev</code> deploys to staging and <code>dev</code> feeds releases. He may prefer a flag or a preview app</td></tr>
+<tr><td>4</td><td class="wrap">Live pages the prototype does not have: <code>/contact</code>, <code>/schedule</code>, <code>/faq</code>, <code>/residential-brokers</code>, <code>/lender-portal</code>, <code>/privacy</code>, <code>/terms</code></td><td>They keep their content and take the new header and footer only</td><td>The prototype's contact form sits on About. Does <code>/contact</code> stay, or redirect there?</td></tr>
+<tr><td>5</td><td class="wrap">New dependencies</td><td>GSAP and Lenis from npm (the prototype loads them from CDNs); DM Sans and Bodoni Moda through <code>next/font</code> beside Inter</td><td>Neither library is in <code>frontend/package.json</code> today</td></tr>
+</table></div>
+<p>URL clashes behind decision 2:</p>
+<ul>
+<li>Prototype <code>/brokers</code> is the marketing page. Live <code>/brokers</code> is the directory, <code>/broker</code> is the marketing page, and <code>/broker/*</code> is the signed-in broker app.</li>
+<li>Prototype <code>/find-a-broker</code> is live <code>/brokers</code>. Prototype <code>/submit-deal</code> is live <code>/get-matched</code>. Prototype <code>/borrowers</code> is live <code>/borrower</code>.</li>
+<li>Prototype <code>/lenders</code> sits next to <code>/lenders/search/*</code>, which is rewritten to Rails. Bare <code>/lender</code> redirects to the lender dashboard.</li>
+<li>Renaming to the prototype's paths can follow later as its own change, with 301 redirects.</li>
+</ul>
+
+<h2 id="start">Where we start</h2>
+<p>The live site is a Next.js 16 app (React 19, TypeScript, Tailwind 4) in <code>apps/lender-prism/frontend/</code>, with Rails behind it as a JSON API. The prototype is hand-written HTML, CSS and JavaScript, so the work is a port into React components, not a file copy.</p>
+<p>Serving the prototype's HTML from <code>frontend/public/</code> would not work: those pages would have no session, no tracking and no environment values, and <code>/assets</code>, <code>/images</code> and <code>/fonts</code> are proxied to Rails.</p>
+<p>Checked against <code>origin/dev</code> at <code>73beabf2</code> (18 Nov 2026) and the prototype as of 19 Nov.</p>
+<div class="scroll"><table>
+<tr><th></th><th>Live site</th><th>Prototype</th></tr>
+<tr><td>Pages</td><td><code>/</code>, <code>/broker</code>, <code>/borrower</code>, <code>/pricing</code>, <code>/about</code>, <code>/contact</code>, <code>/schedule</code>, <code>/faq</code>, <code>/brokers</code> and <code>/brokers/[slug]</code>, <code>/get-matched</code>, <code>/post-deal</code>, <code>/residential-brokers</code>, <code>/lender-portal</code>, <code>/privacy</code>, <code>/terms</code>, sign-in pages</td><td>Home, Brokers, Pricing, Borrowers, Lenders, About, Find a broker, Submit a deal, Join, <code>/lp/broker</code></td></tr>
+<tr><td>Styling</td><td>Tailwind 4 tokens in <code>src/app/globals.css</code></td><td>6 shared stylesheets and one per page</td></tr>
+<tr><td>Fonts</td><td>Inter, Roboto Mono (<code>next/font</code>)</td><td>DM Sans, Bodoni Moda, Inter (Google Fonts CDN)</td></tr>
+<tr><td>Motion</td><td>Little</td><td>GSAP 3.15.0 and Lenis 1.3.25; <code>motion.js</code> 38 KB; animated product screens in <code>screens.js</code>, 99 KB</td></tr>
+<tr><td>Forms</td><td>Deal flow, broker inquiry and sign-up work. The contact form and the footer newsletter field submit to nothing</td><td>7 forms, none sends anything</td></tr>
+<tr><td>Analytics</td><td>PostHog, GA4, Meta pixel, Clarity, Sentry, ProveSource, through <code>src/lib/analytics.ts</code></td><td>None</td></tr>
+<tr><td>Branches</td><td><code>dev</code> is the default and deploys to staging (dev.lenderprism.com); <code>main</code> is production. The deploy workflow runs no lint or tests</td><td>A GitHub Pages preview</td></tr>
+</table></div>
+
+<h2 id="p0">Phase 0: access and setup</h2>
+<p>Nothing is committed until Chris has answered the five decisions and the branch exists.</p>
+<div class="scroll"><table>
+<tr><th>Step</th><th>Tanya</th><th>Ask Chris</th></tr>
+<tr><td>0.1</td><td>Send this plan, through Olesia</td><td>Read it; answer the five decisions</td></tr>
+<tr><td>0.2</td><td></td><td>Push access to <code>LenderMatrix/LenderPrism</code>. Access is read-only today</td></tr>
+<tr><td>0.3</td><td>Say which day the work starts, so commits are no surprise</td><td>Branch name and ticket number (the repo uses <code>feature/len-NNN-...</code>); confirm the base is <code>dev</code></td></tr>
+<tr><td>0.4</td><td>Install Docker, Node 22 or later, pnpm 9 or later; run <code>make lender</code></td><td>The file <code>apps/lender-prism/.env</code> (the repo has no example of it) and the seed database <code>db/seed.dump</code>. Or: permission to run only the Next app against staging Rails</td></tr>
+<tr><td>0.5</td><td>Fix three known defects in the prototype before porting them: 20px sideways scroll on Submit a deal at 860px; no pause control on the phone walkthrough (WCAG 2.2.2); a broken italic line at 420 to 600px with motion on</td><td></td></tr>
+</table></div>
+
+<h2 id="p1">Phase 1: foundation (first PR)</h2>
+<p>The first PR carries no page content. It sets the pattern every later page follows, so it is the one to review most closely.</p>
+<p class="who">Tanya</p>
+<ul>
+<li>Marketing layout in <code>src/app/(landing)/layout.tsx</code>: the prototype's stylesheets in their load order, fonts through <code>next/font</code>, and motion switched off when the visitor asks for reduced motion.</li>
+<li>New header and footer in place of <code>Navbar-var.tsx</code> and <code>footer8.tsx</code> on marketing pages. They keep what the live header does: a signed-in visitor sees Dashboard, and <code>nav_cta_clicked</code> still fires.</li>
+<li>Images in <code>frontend/public/assets-landing/editorial/</code>. About 22 of the prototype's 53 image files are unused and stay behind.</li>
+<li>The behaviour in <code>site.js</code> and <code>motion.js</code> as client components. The prototype's hand-written <code>?v=</code> cache keys go, because Next fingerprints assets.</li>
+</ul>
+<p class="who">Ask Chris</p>
+<ul><li>Review the first PR before any page is built on it.</li></ul>
+
+<h2 id="p2">Phase 2: static pages (one PR each)</h2>
+<p>These pages need no backend work, so they go first, simplest first.</p>
+<ol>
+<li>About (without its contact form, which waits for Phase 3)</li>
+<li>Pricing</li>
+<li>Home</li>
+<li>Brokers, with the animated product screens</li>
+<li>Lenders and Borrowers, the two coming-soon pages (their notify forms wait for Phase 3)</li>
+<li>Join (its form waits for Phase 3)</li>
+<li><code>/lp/broker</code>, the ad landing page</li>
+</ol>
+<p class="who">Tanya, on every page</p>
+<ul>
+<li>Markup as JSX, links through <code>next/link</code>, and the page's own title, description and social tags. The prototype's <code>noindex</code> goes.</li>
+<li>Every sign-in and sign-up link points at the real route (<code>/login</code>, <code>/signup?role=...&amp;plan=...&amp;billing=...</code>, <code>/lender-portal</code>). In the prototype most of them point at the prototype app.</li>
+<li>Prices and plan limits read from <code>src/lib/broker-plans.ts</code>, not retyped. The prototype hard-codes $159 / $399 a month billed annually and $199 / $499 monthly.</li>
+<li>Compared with the prototype at 1440, 1024, 851, 600, 375 and 320px, with motion and with reduced motion.</li>
+</ul>
+<p class="who">Ask Chris</p>
+<ul>
+<li>Where <code>feature/len-109-pricing-one-set-of-prices</code> stands. It is not merged into <code>dev</code>, and Pricing should be built on the final numbers.</li>
+<li>Whether <code>/residential-brokers</code> stays live beside the new <code>/lp/broker</code>.</li>
+</ul>
+
+<h2 id="p3">Phase 3: forms and live data</h2>
+<p>This is where Chris's help is required: eight backend pieces, three of them new endpoints. Tanya builds each form with its validation, loading, success and failure states; the table says what it submits to.</p>
+<div class="scroll"><table>
+<tr><th>Piece</th><th>Exists today</th><th>Tanya</th><th>Ask Chris</th></tr>
+<tr><td class="wrap">Find a broker: cards and filters</td><td><code>GET /api/public/brokers</code></td><td>Render the cards from the API; keep <code>/brokers/[slug]</code></td><td>Confirm the response carries property types, advisor location and territory states, which the three filters need</td></tr>
+<tr><td class="wrap">Find a broker: Connect dialog</td><td><code>POST /api/public/broker_inquiries/:slug</code> emails the broker</td><td>Send name, email, phone and the deal note</td><td>Add a confirmation email to the borrower, an in-app notice to the advisor, and a <code>source</code> field</td></tr>
+<tr><td class="wrap">Submit a deal: contact and deal steps</td><td><code>POST /api/matches/count</code> creates the lead and emails admin and borrower</td><td>New screens on the same endpoint; amount chips sent as <code>min_amount</code> and <code>max_amount</code></td><td>Save the lead after the first step; return a real match count for the result line; accept a phone country code; the new form has no city field</td></tr>
+<tr><td class="wrap">Submit a deal: account step</td><td><code>POST /api/auth/register</code> and <code>/api/borrower_leads/activate</code></td><td>Wire the password path</td><td>"Email me a sign-in link" does not exist: build it or we cut it. Three email templates are written and need a PNG logo at a full URL</td></tr>
+<tr><td class="wrap">Contact form (on About)</td><td>The live <code>/contact</code> form submits to nothing. An older Rails action, <code>POST /home/support-question</code>, emails the admin address</td><td>Form and its states</td><td>An endpoint that takes name, email, role and message, and where it delivers</td></tr>
+<tr><td class="wrap">Footer newsletter and "notify me"</td><td>The live footer field submits to nothing. Rails <code>POST /subscribe-newsletter</code> writes to Mailchimp and returns no response</td><td>Form and its states</td><td>An endpoint that returns a result and records role and source. Tony has said Mailchimp now, Zoho Campaigns later</td></tr>
+<tr><td class="wrap">Join application</td><td>Nothing</td><td>Form and its states</td><td>A new endpoint, and where applications go</td></tr>
+<tr><td class="wrap">Promo request (Brokers, Pricing, landing page)</td><td>Nothing</td><td>Form, and the banner's on/off switch</td><td>A new endpoint; the switch as an environment value, not a constant in a script</td></tr>
+</table></div>
+
+<h2 id="p4">Phase 4: analytics and SEO</h2>
+<p>Every event the live pages fire today keeps firing from the same user action, through the existing <code>track()</code> and <code>trackConversion()</code> helpers.</p>
+<p class="who">Tanya</p>
+<ul>
+<li>Carry over <code>nav_cta_clicked</code>, <code>broker_cta_clicked</code>, <code>deal_submitted</code> (it feeds Meta's Lead conversion), <code>broker_connect_clicked</code> and <code>signup_started</code>.</li>
+<li>Add what the live site lacks: a sitemap, <code>robots.txt</code>, a 404 page, the social share image (<code>/og-image.jpg</code> is referenced and missing), a PNG favicon and touch icon.</li>
+</ul>
+<p class="who">Ask Chris, with Olesia for the event list</p>
+<ul>
+<li>Which events are fixed by <code>docs/analytics/tracking-plan.md</code> (a test enforces it), and names for the new ones: newsletter, notify, join, promo and contact submits.</li>
+<li>Analytics ids on staging, so events can be checked before release.</li>
+</ul>
+
+<h2 id="p5">Phase 5: content that blocks launch</h2>
+<p>Four items wait on Tony, not on code. Tanya collects them while the pages are built.</p>
+<ul>
+<li>The phone number. <code>[Phone number]</code> stands in every header and footer.</li>
+<li>Photo rights. The hero photos are Unsplash stock, 12 advisor portraits in the product screens have no recorded source, and About needs a larger portrait of Tony.</li>
+<li>Market figures. The closings, lender counts and commentary are samples and stay hidden until real data exists.</li>
+<li>Open answers on promo terms, the Pro commission split and the header menu.</li>
+</ul>
+
+<h2 id="p6">Phase 6: review and release</h2>
+<p>Nothing reaches <code>main</code> without Chris's code review; the release itself is his.</p>
+<div class="scroll"><table>
+<tr><th>Step</th><th>Tanya</th><th>Chris</th></tr>
+<tr><td>6.1</td><td>Run <code>npx tsc --noEmit</code>, <code>eslint</code> and the landing checklist in <code>docs/frontend/landing/playbook.md</code> by hand, since the deploy workflow runs none of them</td><td>Code review</td></tr>
+<tr><td>6.2</td><td>Fix review findings</td><td>Merge the branch to <code>dev</code></td></tr>
+<tr><td>6.3</td><td>Full pass on dev.lenderprism.com: every page at six widths, every form end to end, the header signed in and signed out, reduced motion, JavaScript off</td><td>Staging environment values for the new endpoints</td></tr>
+<tr><td>6.4</td><td></td><td>Release PR to <code>main</code>, changelog entry, production environment values</td></tr>
+<tr><td>6.5</td><td>Check production: forms deliver, events arrive, <code>noindex</code> is gone, every old URL still resolves</td><td>Owns the rollback if something breaks</td></tr>
+</table></div>
+</main>
+</body>
+</html>
