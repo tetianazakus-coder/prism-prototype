@@ -64,12 +64,33 @@
 .ledger .total dl>div{align-items:center}
 .ledger .total dl>div:last-child{border-bottom:0}
 .ledger .total dt small{font-size:14px;font-weight:400;opacity:1;margin-top:3px}
+/* The calculator (Tony, Figma comment, 17 Nov: "make this interactive calculator to allow users to change the loan amount
+   and the %"; Option A of the "Pricing ledger calculator" preview, Tanya, 19 Nov: "build"). The loan and the fee are
+   fields where their figures stood: the loan in the row's Bodoni, the fee inline in its label at the label's size. Each
+   field is a light box on the paper with the site's hairline, ink when focused, so it reads as editable without a
+   dotted underline. The rows lose 4px each to the box's padding; the hint line under the cap is the card's only growth. */
+.ledger .calc-hint{margin:6px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
+.ledger .field{display:inline-flex;align-items:baseline;gap:2px;padding:4px 10px 3px;border:1px solid var(--line);background:var(--paper);transition:border-color .15s,background-color .15s,box-shadow .15s}
+.ledger .field:hover{border-color:#b9b4a8}
+.ledger .field:focus-within{border-color:var(--ink);background:var(--white);box-shadow:0 0 0 3px rgba(14,28,53,.08)}
+.ledger .field.small{font:500 16px/1.2 var(--sans);padding:3px 6px 2px;color:var(--ink)}
+.ledger .field .unit{color:var(--muted)}
+.ledger input.fig{width:5.6em;font:inherit;letter-spacing:inherit;color:var(--ink);font-variant-numeric:lining-nums tabular-nums;text-align:right;background:transparent;border:0;margin:0;padding:0;border-radius:0;-webkit-appearance:none;appearance:none}
+.ledger .field.small input.fig{width:2.6em}
+.ledger input.fig:focus{outline:none}
+.ledger dl>div.in{padding-block:11px 10px}
+.ledger dl>div.in dt{white-space:nowrap}
+.ledger .calc-hint{text-wrap:balance}
+/* Phones: the loan field and its label share one line down to 360 (at 375: label 115, gap 16, field 152 of 291). */
+@media(max-width:600px){.ledger dl>div.in{column-gap:16px}.ledger .field{padding-inline:8px}}
+@media(max-width:359px){.ledger dl>div.in dt{white-space:normal}}
 
 /* Plans follow the header directly, so the section keeps only a short top padding, clear of the header's rule; the
    toggle sits right, over Pro. */
 #plans{padding-top:40px;padding-bottom:0} /* compare follows on the same paper: the cards' bottom rule is the divider, then one section padding, as Brokers draws a same-colour boundary (hairline, then 96) */
-.plans-head{justify-content:flex-end;margin-top:0}
-.plans-head .billing{margin-top:0}
+/* Since 18 Nov the row's left holds Tony's "Compete like a big shop" heading and lede (.pricing-intro, as on Brokers), so
+   the row keeps base.css's space-between, and the toggle its stacked margin under 850 (it had 0 when it stood alone). */
+.plans-head{margin-top:0}
 
 /* Card labels (START HERE, MOST POPULAR, DEAL FLOW): the rule moved to shared/editorial.css on 13 Nov so the Brokers and LP
    plan cards carry it too. */

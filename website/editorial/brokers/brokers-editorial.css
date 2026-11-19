@@ -82,8 +82,8 @@
    bottom edge. The lede takes the walkthrough lede's type, 16 on 1.7 muted. Its cap is 660px, not the walkthrough's 560:
    the 57-word lede ran 5 lines at 560 and runs 4 at 660, last line about 530px, so the section is 27px shorter (Tanya,
    12 Nov: "we can increase the width of this text, to reduce the height"). At 640 the last line nearly fills and a font
-   change could tip it back to 5. Under 1150 the space left of the toggle is about 624px, so 1000 keeps 5 lines. */
-.pricing-intro>p{font-size:16px;line-height:1.7;color:var(--muted);max-width:660px;margin-top:24px}
+   change could tip it back to 5. Under 1150 the space left of the toggle is about 624px, so 1000 keeps 5 lines.
+   The rule itself, .pricing-intro>p, moved to shared/editorial.css on 18 Nov, when Pricing took the same block. */
 /* Below 1000 the lede goes under the title, as on phones (Tanya, 10 Nov: "build recommended"). Tony's longer lede
    (3 lines at its 360px cap) squeezed the title beside it to 3 lines from 960 down and 4 at 851 and 768; from about 970
    up the title keeps 2 lines beside it. Stacked, the title keeps the full width and the lede stops at 560px, two lines
@@ -214,7 +214,8 @@
 .walk-tabs button[aria-selected=true]{padding-top:13px}
 .walk-tabs button>b{flex-basis:100%}
 .walk-tabs button small{font-size:11px}
-.screen{aspect-ratio:auto;height:360px}
+/* The walkthrough screen keeps the base rule's 8:5 on phones; it was a 360px-tall portrait slice (Tanya, 19 Nov: "use
+   right frame size and ratio"). */
 .walk-screen{padding:18px}
 .screen-notes p{font-size:11px}
 .annotation{font-size:14px}
@@ -261,10 +262,13 @@ h3 em,.pillar h3 em{display:block;font-style:italic;color:var(--bronze)}
 .matching-crop img{width:150%}
 @media(max-width:850px){.pillar-screen{max-width:100%}
 .screen-crop{height:302px}}
+/* Phones: the crop takes the app window's 8:5 and shows all of it, as the walkthrough and Home's side screens do; it
+   was 252px tall, near square, and showed a panned left slice (Tanya, 19 Nov: "fix all frames with aminations, use
+   right frame size and ratio"). The fallback PNGs are 8:5 too, so they fill it whole. */
 @media(max-width:600px){.pillar-screen{padding:18px}
-.screen-crop{height:252px}
-.lenders .screen-crop>img,.advisors .screen-crop>img,.matching-crop img{width:190%;left:0}
-.deal .screen-crop>img{width:150%;left:0}}
+.screen-crop{height:auto;aspect-ratio:8/5}
+.lenders .screen-crop>img,.advisors .screen-crop>img,.deal .screen-crop>img{width:100%;left:0}
+.matching-crop img{width:190%;left:0}}
 /* The map band, since 12 Nov (Tony, Figma comment on it: "Keep the map. Remove all the copy in this entire section. It is
    no longer part of our strategy."). The map is a picture now: one navy for every state, no legend, no hover, nothing to
    click; the territory inquiry it fed is gone. Under it, after a rule (his "---------"), who is encouraged to join: his

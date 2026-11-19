@@ -23,6 +23,16 @@
 .about-hero h1:first-child{margin-top:0}
 .about-hero .hero-copy{padding-bottom:0}
 .about-hero+.story{border-top:1px solid #23324f}
+/* Not on phones (Tanya, 19 Nov, of the photo's foot on About at 375: "fix this gap"). From 850px down the photo's veil
+   runs top to bottom, .82 navy at the foot, darker there than #23324f, so the hairline read as a light seam, a gap,
+   under the photo. The photo's own edge splits the two bands. On wider screens the veil fades to .5 at the right and
+   the hairline stays. Then (Tanya, 19 Nov, "gap is still there"): a light row still showed at the photo's foot in her
+   browser, with a wedge of photo below it on the right, though headless Chromium and WebKit render a clean edge. The hero's
+   foot falls mid-pixel (390.42px tall), and the drifting photo is its own layer, clipped apart from its veil; the story
+   band, unpositioned, painted under the positioned hero, so any photo that layer leaked past the edge showed over the
+   navy. The band now stacks above the hero (position:relative, later in the page) and tucks 1px under its foot, so its
+   navy covers that last part-row and whatever spills below it. */
+@media(max-width:850px){.about-hero+.story{border-top:0;position:relative;margin-top:-1px}}
 
 /* Our story: title left, Tony's paragraphs right, in the FAQ's 4:8 grid, on the navy band the Brokers problem section
    uses (2 Nov), so the page opens paper, navy, paper as Brokers does. Since 9 Nov the column holds his note (below);
@@ -77,6 +87,13 @@ main h2 em{display:inline}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.story-portrait:hover>img{scale:1.05}}
 /* "I am a" on phones: the fourth answer wrapped alone, so the four stand two by two (Tanya, 16 Nov, 375px check). */
 @media(max-width:600px){.contact-form .radio-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* The rows touch, 44px apart (Tanya, 19 Nov, of the two rows: "make smaller vertical padding between radio, search for
+   right ui pattern"). The touch rule (editorial.css, 850px and under) gives each answer a 44px row and no row gap, but
+   this file loads after it, so the 12px gap above still stood between rows: 56px apart, 38 of air between 18px rings.
+   On Mobbin (24 screens, 19 Nov), phone choice lists set their rows edge to edge, 44 to 56 apart, with nothing between
+   (Betterment, Wealthsimple, Marriott, Shopee, BlaBlaCar); in-form groups on the web sit closer still, about 24 apart
+   (Zillow, Zendesk, Tana). Scoped to the form so it outranks the base rule further down. 44 is the closest that keeps each answer a 44px touch without hit areas overlapping. */
+@media(max-width:850px){.contact-form .radio-group{row-gap:0}}
 @media(max-width:600px){.story-pair{grid-template-columns:1fr;gap:28px}.story-body>p.story-turn{font-size:23px}.story-body>p.story-mission,.story-tagline{font-size:22px}}
 
 /* What we believe: three numbered beliefs across the row, the number beside the title in Home's 24px serif, 16px apart,
@@ -123,8 +140,9 @@ main h2 em{display:inline}
 .contact-lines{display:flex;flex-direction:column;gap:6px}
 .contact-lines :is(.placeholder,.sample){font-size:17px}
 .contact-lines a.sample{color:var(--ink)}
-/* The footer's phone and email, filled on About only (9 Nov); editorial.css sizes only the [placeholder] spans. Moves to
-   editorial.css when the other seven footers fill. */
+/* The footer's phone as a link, filled on About only from 9 Nov; editorial.css sizes only the [placeholder] spans. Since
+   19 Nov About shows the placeholder too (Tony's Zoho Voice number is to come, question 255), so this rule and
+   .contact-lines a.sample style nothing; they move to editorial.css when the number fills every footer. */
 .footer-brand>a.sample{font-size:14px}
 .contact-form{display:grid;gap:22px}
 .contact-form .form-row{gap:22px 20px}

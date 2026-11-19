@@ -64,6 +64,9 @@ nav{font-size:14px;gap:25px}
 .plan .feature-list li::before{top:calc(11px + .85em - 3px)}
 .section-heading{gap:48px}
 .pricing{border-top:1px solid var(--line)}
+/* The plans heading's lede, left of the billing toggle: Brokers and LP since 12 Nov, Pricing since 18 Nov (Tony's "Compete
+   like a big shop"). It moved here from brokers/brokers-editorial.css, where its sizing notes stay. */
+.pricing-intro>p{font-size:16px;line-height:1.7;color:var(--muted);max-width:660px;margin-top:24px}
 /* Plan columns, side by side: the dividers between cards are an inset shadow, not border-right. A border meets the card's top rule
    at a mitred corner, which cut the 3px bronze and the 1px navy into diagonals (Tanya, 2 Nov: "fix this broken lines here").
    An inset shadow paints inside the border, so each divider starts under its top rule and the corners stay square. Both dividers
@@ -287,21 +290,32 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
    6px bronze diamond in the gutter before the title, which keeps its ink (the bar already says where you are; Dribbble
    and Later mark nothing in such menus). In the phone drawer, with no header rule beside the items, the diamond marks
    the top-level item too. */
-@media(min-width:851px){#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current])>summary::after{content:"";position:absolute;left:0;right:0;top:calc(50% + 39px);height:2px;background:var(--bronze);pointer-events:none}}
+@media(min-width:851px){#navigation>a[aria-current]::after,.solutions:has(.solutions-menu [aria-current])>summary::after{content:"";position:absolute;left:0;right:0;top:calc(50% + 39px);height:2px;background:var(--bronze);pointer-events:none}}
 /* Bronze bar, label at 500 (Tanya, 9 Nov: "make underline bronze and selected item text semibold or bold (think what will
    look better)"). 500 is the site's UI emphasis (menu titles, buttons); 600 outweighed all but the logo. A heavier
    label is wider, 500 by about .15px a letter, so -.01em gives the width back and Pricing and About never move from
    page to page (at 600 they moved about 3px, and -.024em to hold it crowds 14px text). Then 600 (Tanya, 9 Nov: "make
    selected bolder, contrast isn't enough"): rendered beside the rest at 14px, -.024em reads clean, not crowded, and
    keeps Pricing and About within .2px; 700 needed -.03em, still moved .7px and outweighed the logo. */
-#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current])>summary{font-weight:600;letter-spacing:-.024em}
+#navigation>a[aria-current],.solutions:has(.solutions-menu [aria-current])>summary{font-weight:600;letter-spacing:-.024em}
 /* The open menu stacks above the nav: the links after Solutions are positioned (the hover pill above), so at z-index
    auto they painted over it, Pricing's or About's current bar showing through the panel (Tanya, 9 Nov: "fix this bug"). */
 .solutions-menu{z-index:1}
 .solutions-menu a[aria-current] b{position:relative}
 .solutions-menu a[aria-current] b::before{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}
-@media(max-width:850px){#navigation>a[aria-current=page],.solutions:has(.solutions-menu [aria-current])>summary{position:relative}
-#navigation>a[aria-current=page]::after,.solutions:has(.solutions-menu [aria-current])>summary::after{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}}
+/* The menu since 18 Nov (see the header note in index.html): Brokers is the one dropdown, Borrowers, Lenders and About
+   are links. base.css pushes the third link to the right from 851 to 1150px; that is About now, so it stays in the
+   menu. A top-level link is also marked when it is the section, not the page (Borrowers on Find an advisor and Submit a
+   deal, aria-current="true"). */
+@media(min-width:851px) and (max-width:1150px){#navigation>a:nth-of-type(3):not(:has(+ .button)):not(:last-child){margin-left:0}}
+/* The header keeps its height and its right-hand group whatever the button is (17 Nov). Without a button (Submit a deal)
+   the bar measured 65px against 81px elsewhere, so the nav holds the button's 46px. From 851 to 1150px, base.css pushed
+   the third link to the right, which was Log in while Pricing stood in the bar and is the button now: Log in sat beside
+   About (measured 411 at 1150). Log in leads the right-hand group again, by its place before the button, not by count. */
+@media(min-width:851px){#navigation{min-height:46px}}
+@media(min-width:851px) and (max-width:1150px){#navigation>a:has(+ .button){margin-left:auto}#navigation>a:has(+ .button)+.button{margin-left:0}}
+@media(max-width:850px){#navigation>a[aria-current],.solutions:has(.solutions-menu [aria-current])>summary{position:relative}
+#navigation>a[aria-current]::after,.solutions:has(.solutions-menu [aria-current])>summary::after{content:"";position:absolute;left:-15px;top:calc(50% - 3px);width:6px;height:6px;background:var(--bronze);transform:rotate(45deg)}}
 /* the newsletter's submit ↗ nudges like every other arrow (Tanya, 29 Oct) */
 .newsletter form button{transition:transform 150ms cubic-bezier(.4,0,.2,1)}
 .newsletter form button:is(:hover,:focus-visible){transform:translateX(4px)}
@@ -427,9 +441,16 @@ h1 em,h2 em{display:block;font-style:italic;color:var(--bronze)}
 #navigation>a:has(+ .button){box-shadow:-14px -14px var(--paper),12px -14px var(--paper),-14px 14px var(--paper),12px 14px var(--paper)}
 #navigation>.button{box-shadow:14px -14px var(--paper),0 -14px var(--paper),14px 14px var(--paper),0 14px var(--paper)}
 #navigation>a:has(+ .button){justify-content:center;border:1px solid var(--ink);background:var(--paper);font-weight:500}
+/* A page with no header button (Submit a deal, 17 Nov): Log in takes the whole action row, outlined as beside a button. */
+#navigation>a:last-child:not(.button){grid-column:1/-1;position:sticky;bottom:14px;z-index:1;margin:14px 0 0;justify-content:center;border:1px solid var(--ink);background:var(--paper);font-weight:500}
 html:has(#navigation.open){overflow:hidden}
 .solutions>summary .chev{transition:transform .2s}
-.solutions[open]>summary .chev{transform:rotate(180deg)}}
+.solutions[open]>summary .chev{transform:rotate(180deg)}
+/* The drawer's chevron at 12 by 7.5, half as big again (Tanya, 19 Nov, of the open Brokers item: "dropdown here looks
+   tiny"). The bar's 8 by 5 sits 8px after its label; in the drawer it stands alone at the far end of a 331px row
+   (at 375), the row's only control mark, and read as a speck. The stroke holds 1.5px instead of scaling to 1.8. */
+.solutions>summary .chev{width:12px;height:7.5px;flex:none}
+.solutions>summary .chev path{vector-effect:non-scaling-stroke;stroke-width:1.5}}
 /* One sign-up form (Tony, Figma thread on the Borrowers launch band, about 12 Nov: "ask for role (broker, lender, borrower)
    throughout. Have one sign up form."): "I am a" with three fixed answers, so radios, as on About's contact form; the
    footer's on paper, the Borrowers and Lenders bands' on the dark photo. Each answer is a 44px touch. */

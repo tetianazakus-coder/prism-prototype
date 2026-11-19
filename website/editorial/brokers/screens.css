@@ -192,7 +192,10 @@
 .ps-ctl:hover{background:#e4e8ef}
 .ps-ctl:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 @media(hover:none){.ps-ctl{opacity:1}}
-@media(max-width:600px){.ps-ctl{right:29px;bottom:29px}}
+/* Phones draw neither the control nor the full-screen button (Tanya, 19 Nov, of both squares on the 8:5 phone frames:
+   "don't show these icon buttons on mobile"): at 293 x 183 the two 36px squares covered a fifth of the window. Each
+   flow still plays once and rests on its last frame, and reduced motion still draws it still. */
+@media(max-width:600px){.ps-ctl{display:none}}
 
 /* New deal (#/deals/new, .frm, measured on 2 Nov at 1440): a 784px form column and a 300px rail, 16px apart. Cards
    carry a 15px title and 14px 18px of padding; fields are a 13px Medium label 6px over a 36px input, 16px apart. The
@@ -268,7 +271,7 @@
 .screen-expand:hover{background:#e4e8ef}
 .screen-expand:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 @media(hover:none){.screen-expand{opacity:1}}
-@media(max-width:600px){.screen-expand{top:29px;right:29px}}
+@media(max-width:600px){.screen-expand{display:none}}
 /* Full screen: the stage (tabs and screen) on the section's own ground, the screen as tall as the window allows */
 .walk-stage:fullscreen{background:#eef1f6;padding:40px;align-content:center;overflow:auto}
 .walk-stage:fullscreen .screen{aspect-ratio:auto;height:calc(100vh - 126px)}

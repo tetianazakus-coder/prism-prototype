@@ -8,7 +8,7 @@
   root.dataset.promo = params.get('promo') || PROMO;
   // A visitor's ×, remembered in this browser only. Keyed to the campaign, so the next promotion shows again.
   // ?reset brings it back.
-  const KEY = 'lp-promo-holiday-2027-dismissed';
+  const KEY = 'lp-promo-founders-circle-dismissed'; // Tony's new offer, 18 Nov: shows again to anyone who closed the first.
   try {
     if (params.has('reset')) localStorage.removeItem(KEY);
     if (localStorage.getItem(KEY)) root.classList.add('promo-dismissed');
@@ -32,7 +32,7 @@
     }));
     document.getElementById('promo-form').addEventListener('submit', event => {
       event.preventDefault();
-      document.getElementById('promo-status').textContent = 'Inquiry ready for review. Not sent. Delivery is not connected in this preview.';
+      document.getElementById('promo-status').textContent = 'Request ready for review. Not sent. Delivery is not connected in this preview.';
     });
   });
 })();

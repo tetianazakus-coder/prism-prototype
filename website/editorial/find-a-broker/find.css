@@ -146,9 +146,19 @@
   .broker-grid{grid-template-columns:1fr;row-gap:8px;margin-bottom:-24px}
   /* The compact phone card (components.css; Tanya, 16 Nov): the desktop subgrid levels four cards in a row and has no
      job in one column. Photo beside name, place and types; locations and Connect run the full width under them. */
-  .broker-card{grid-template-rows:auto auto 1fr;grid-row:auto;margin-bottom:24px}
-  .broker-card>.broker-states,.broker-card>.button{grid-column:1/-1}
-  .broker-card>.broker-states{margin-top:12px}
+  /* Tightened on 19 Nov (Tanya, of the 375 card: "how to improve this layout on mobile", then "yes" to the three fixes).
+     The 16px photo gap is restored: .broker-card's gap:8px above also reset the column gap, so the photo had sat 8px
+     from the name. Only the name and town sit beside the photo, centred on it, and the types run the full width under
+     them: at 227px beside the photo they took three lines and left "+19 more" alone on one. Property location is one
+     line, its label muted in sentence case before the states, where the eyebrow and its own line took 60px for
+     "Texas". At 375 the card goes from 296px to 284, the types on two lines (at 320 too). */
+  .broker-card{grid-template-rows:48px 48px auto;column-gap:16px;row-gap:0;grid-row:auto;margin-bottom:24px}
+  .broker-card>h3{align-self:end}
+  .broker-card>.person-role{align-self:start;margin-top:4px}
+  .broker-card>:is(.broker-types,.broker-states,.button){grid-column:1/-1}
+  .broker-card>.broker-types{margin-top:16px}
+  .broker-card>.broker-states{margin-top:14px}
+  .broker-states>span:first-child{display:inline;margin:0 6px 0 0;font-size:15px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted)}
   .find-empty{padding:28px 24px}
   .connect-dialog h2{font-size:32px}
 }

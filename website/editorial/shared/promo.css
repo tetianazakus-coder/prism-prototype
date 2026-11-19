@@ -1,7 +1,9 @@
 /* Holiday special, the gold ticket above the plans. Tony picked it in Slack on 10 Nov, of the options page
    (promo-banner-options/gold.html#b-ticket, "Strip above plans", treatment "Gold ticket"): "I like this one." His copy
    from 5 Nov, word for word: "Black Friday / Christmas / New Year 2027 Special - up to 60% off for the first 50 users.
-   Contact us for details." The stub's "Up to 60% off" restates his number [rec]. Ported from gold.css and promo.css
+   Contact us for details." Rewritten by Tony, Figma comment, 18 Nov, as a reward, not a commitment: "50% off",
+   "Founder's Circle Black Friday / Christmas Special", "Limited to 50 brokers", "Request Details" (.bt-kicker,
+   the pages' comments). Ported from gold.css and promo.css
    unchanged in look; only the ticket and its form come over. One switch, html[data-promo] (promo.js), takes it off
    every page at once; a visitor's × hides it in that browser. Nothing is positioned against it, so either leaves no
    gap. "Contact us for details" opens a form, never an address (Tony: "I don't want to advertise my email to avoid
@@ -16,6 +18,8 @@ html[data-promo=off] .promo,html.promo-dismissed .promo{display:none}
 .bt-offer{flex:1;min-width:0;padding:20px 24px 20px 32px}
 .bt-offer p{margin:0;font-size:16px;line-height:24px;color:var(--muted)}
 .bt-offer .bt-name{font-size:18px;line-height:26px;font-weight:700;color:var(--ink)}
+/* Tony's first line, 18 Nov, set as the site's eyebrow (base.css .eyebrow), a step up for the ticket. */
+.bt-offer .bt-kicker{margin-bottom:4px;font-size:11px;line-height:16px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--bronze)}
 .promo-bt .button{flex:0 0 auto}
 .promo-x{flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;margin:0 8px 0 16px;font-size:24px;line-height:1;color:inherit;opacity:.7;cursor:pointer}
 .promo-x:hover,.promo-x:focus-visible{opacity:1}

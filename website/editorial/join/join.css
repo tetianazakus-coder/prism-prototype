@@ -1,0 +1,106 @@
+/* Join as an independent broker (19 Nov). The page is built from the site's own parts: the text hero, Brokers' proof
+   strip (.proof, base.css), the FAQ's heading-left grid for every section, the plan cards' bronze diamond bullet, the
+   navy band, and About's Contact band and form (about.css, mirrored here because about.css loads on About only). Only
+   what those do not cover is here. White and paper alternate with no rule between them, as on every other page. */
+.join-band{background:var(--white)}
+.join-prose{display:flex;flex-direction:column;gap:20px;max-width:720px;font-size:18px;line-height:1.75}
+.join-block{display:flex;flex-direction:column;gap:20px;max-width:720px}
+/* The plan cards' and pillars' bullet (editorial.css .plan .feature-list): a 6px square turned 45deg in bronze. */
+.join-points{display:grid;gap:12px;margin:0;padding:0;list-style:none;max-width:720px}
+.join-points li{position:relative;padding-left:20px;font-size:16px;line-height:1.7}
+.join-points li::before{content:'';position:absolute;left:1px;top:calc(.85em - 3px);width:6px;height:6px;transform:rotate(45deg);background:var(--bronze)}
+/* Required experience as tags (Tanya, 19 Nov: "I want to use tags for this"): Submit a deal's chip (submit.css .chip),
+   square, its #bfc2bd border on white, at 15px, without the 44px tap height since these are not controls; 8px apart,
+   no diamond. They wrap at every width. */
+.join-tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.join-tags li{padding:8px 14px;border:1px solid #bfc2bd;background:var(--white);font-size:15px;line-height:1.35}
+/* Required experience and Compensation: a block under the list it belongs to, over a hairline, its label an eyebrow. */
+.join-sub{position:relative;display:flex;flex-direction:column;gap:14px;margin-top:20px;padding-top:28px;border-top:1px solid var(--line)}
+/* With motion the hairline is a span that draws from the left (motion.js, the Pricing ledger's rule); the border it
+   stands on goes clear, so without motion the border shows as before. */
+.join-sub:has(>.join-sub-rule){border-top-color:transparent}
+.join-sub-rule{position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--line);transform-origin:left}
+:is(.join-block,.join-why) h3.eyebrow{font-family:var(--sans);letter-spacing:.11em;line-height:1.5}
+/* An eyebrow sits 14px over its list, in Who this is for as in the blocks under it. */
+.join-block>h3.eyebrow+.join-points{margin-top:-6px}
+/* Why it's different: most platforms against LenderPrism (Tanya, 19 Nov, option C). The heading holds one line and the
+   lede sits right of it, bottom-aligned; under 850 the lede drops below. */
+.join-why-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:60px;align-items:end}
+.join-why-head h2{white-space:nowrap}
+.join-why-head h2 em{display:inline}
+.join-why-lede{justify-self:end;margin:0;max-width:460px;font-size:16px;line-height:1.7;color:#c3cad6}
+/* base.css gives every table min-width:670px and 11px type (the Pricing compare table); this one resets both. */
+.join-why-table{width:100%;min-width:0;font-size:inherit;margin-top:56px;border-collapse:separate;border-spacing:0;border-top:1px solid var(--dark-line);text-align:left}
+/* With motion the table's top rule is a div before it that draws from the left (motion.js); the table's own top border
+   goes, so the line stays one px where it was. Borders are separate, not collapsed, so each row's line belongs to its
+   cells and fades in with the row: collapsed, the table paints them and the empty rows' lines showed before the rows. */
+.join-why-rule{height:1px;margin-top:56px;background:var(--dark-line);transform-origin:left}
+.join-why-rule+.join-why-table{margin-top:0;border-top:0}
+.join-why-table :is(th,td){padding:18px 24px 18px 0;border-bottom:1px solid var(--dark-line);vertical-align:baseline;font-weight:400}
+.join-why-table thead :is(th,td){padding-block:14px;font-size:13px;font-weight:500;color:#c3cad6}
+.join-why-table thead :is(th,td):nth-child(1){width:18%}
+.join-why-table thead :is(th,td):nth-child(2){width:34%}
+.join-why-table thead th:last-child{color:var(--paper)}
+.join-why-table tbody th{font-size:12px;font-weight:600;letter-spacing:.11em;line-height:1.5;text-transform:uppercase;color:#c2a98a}
+.join-why-table .them{font-size:16px;line-height:1.5;color:#c3cad6}
+.join-why-table .us{padding-right:0;font:400 22px/1.3 var(--serif);letter-spacing:-.015em;color:var(--paper)}
+/* About's Contact band (about.css .contact, .contact-intro>p). */
+.join-apply{background:#eef1f6}
+/* Short headings hold one line, the italic inline (Tanya, 19 Nov, of "Apply to join": "make this one line"; of Who this
+   is for, What you'll do and What you'll get: "make this texts one line"). nowrap keeps them whole from 851 to 1000,
+   where the heading column is a few px narrower than the line and the grid widens it instead (measured: 262px of 310
+   free at 851). About the opportunity and What you must bring are too long for the column and keep two lines. */
+h2.join-line{white-space:nowrap}
+h2.join-line em{display:inline}
+.join-apply-lede{margin-top:16px;max-width:360px;font-size:16px;line-height:1.7;color:var(--muted)}
+/* About's contact form (about.css .contact-form): labels at 500, fields 8px under them, 22px between rows, the bronze
+   focus ring. */
+.join-form{display:grid;gap:22px}
+.join-form .form-row{gap:22px 20px}
+.join-form label,.join-form legend{display:block;font-size:15px;font-weight:500}
+.join-form input:not([type=checkbox]),.join-form select,.join-form textarea{display:block;width:100%;margin-top:8px;padding:12px 14px;min-height:48px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);color:var(--ink);font:inherit;font-size:16px;font-weight:400}
+.join-form textarea{resize:vertical;min-height:132px}
+.join-form :is(input:not([type=checkbox]),select,textarea):focus-visible{outline:2px solid #b59159;outline-offset:2px}
+/* The select draws Submit a deal's country-code chevron (submit.css .phone-row select), 14px from the edge, where the
+   native arrow sat 8px in (Tanya, 19 Nov: "fix this"). */
+.join-form select{padding-right:34px;background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' fill='none' stroke='%230e1c35' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;appearance:none;-webkit-appearance:none}
+.join-form [aria-invalid=true]{border-color:#9b2c2c}
+.join-form fieldset{border:0;margin:0;padding:0}
+.join-form legend{width:100%;margin-bottom:12px;padding:0}
+/* Asset classes: Submit a deal's chips (submit.css .chips, .chip), mirrored here as about.css's form is, since
+   submit.css loads on Submit a deal only. The checkbox covers its chip, invisible, so a click anywhere toggles it and
+   the keyboard and screen readers get a real checkbox; picked, the chip turns navy. */
+.join-form .chips{display:flex;flex-wrap:wrap;gap:10px}
+.join-form .chip{position:relative;display:inline-flex;font-weight:400}
+.join-form .chip input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.join-form .chip>span{display:inline-flex;align-items:center;min-height:44px;padding:9px 16px;border:1px solid #bfc2bd;background:var(--white);font-size:15px;line-height:1.35;transition:background .15s,border-color .15s,color .15s}
+.join-form .chip:hover>span{border-color:var(--ink)}
+.join-form .chip input:checked+span{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.join-form .chip input:focus-visible+span{outline:2px solid #b59159;outline-offset:2px}
+.join-form .form-actions{margin-top:0}
+.join-form .hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+/* About's two outcomes (about.css .contact-sent, #contact-status). */
+.join-form[hidden],.join-sent[hidden]{display:none}
+.join-sent{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding-top:32px;border-top:1px solid var(--bronze)}
+.join-sent h3{margin:0;font-size:34px;line-height:1.1}
+.join-sent p{margin:0 0 12px;font-size:16px;line-height:1.7;color:var(--muted)}
+#join-status{font-size:15px;color:var(--muted);min-height:1.5em}
+#join-status.is-error{color:#9b2c2c;font-weight:500}
+#join-status:empty{position:absolute;min-height:0}
+@media(max-width:850px){
+  .join-why-head{grid-template-columns:1fr;gap:20px}
+  .join-why-lede{justify-self:start}
+  .join-why-table{margin-top:40px}
+  .join-why-rule{margin-top:40px}
+}
+@media(max-width:600px){
+  /* Each row stacks: its label, then most platforms (labelled), then LenderPrism. The roles in the markup keep it a
+     table for screen readers once display changes. */
+  .join-why-table,.join-why-table tbody{display:block}
+  .join-why-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .join-why-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding:18px 0;border-bottom:1px solid var(--dark-line)}
+  .join-why-table tbody :is(th,td){display:block;padding:0;border:0}
+  .join-why-table .them::before{content:'Most platforms: '}
+  .join-why-table .us{font-size:20px}
+  .join-prose{font-size:16px;line-height:1.7}
+}

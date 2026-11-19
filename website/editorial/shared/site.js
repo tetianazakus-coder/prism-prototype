@@ -113,10 +113,56 @@
       const sample = {name: 'Jordan Ellis', email: 'jordan@example.com', message: 'I have a 48-unit multifamily refinance in Austin and would like to talk about lender fit.'};
       Object.entries(sample).forEach(([name, value]) => { contactForm.elements[name].value = value; });
       contactForm.querySelector('input[value="broker"]').checked = true;
-      const phone = Object.assign(document.createElement('a'), {href: 'tel:+17136791890', textContent: '(713) 679-1890'});
+      // The number waits for Tony's Zoho Voice line (question 255), so the message carries the same placeholder as the page.
+      const phone = Object.assign(document.createElement('span'), {className: 'placeholder', textContent: '[Phone number]'});
       contactStatus.classList.add('is-error');
       contactStatus.replaceChildren('Your message did not send. Try again, or call ', phone, '.');
     }
+  }
+  // Pricing's ledger is a calculator (Tony, Figma comment, 17 Nov: "make this interactive calculator to allow users to
+  // change the loan amount and the %"; Tanya, 19 Nov: "build"). The loan and the fee are fields; every keystroke recounts
+  // the fee and the years each plan's annual price fits in it. Under a year the total reads in months; nothing to count
+  // reads "—". While typing the loan shows its digits, and $5,000,000 again on leaving it, so the commas never move the
+  // caret. The limits ($1B, 10%) are ours [rec], question 315. One status line tells screen readers the result once
+  // typing pauses.
+  const calc = $('[data-calc]');
+  if (calc) {
+    const ACC = 1908, PRO = 4788; // the plan cards' prices on annual billing
+    const loanIn = $('[data-loan]', calc), feeIn = $('[data-fee]', calc), status = $('[data-calc-status]', calc);
+    const money = n => '$' + Math.round(n).toLocaleString('en-US');
+    const amount = value => { const n = Number(String(value).replace(/[^0-9.]/g, '')); return Number.isFinite(n) ? n : 0; };
+    let loan = 5e6, pct = 1, timer;
+    const span = (fee, price) => {
+      const years = fee / price;
+      if (years >= 1) { const whole = Math.floor(years); return {n: whole, plus: years > whole, unit: whole === 1 ? 'year' : 'years'}; }
+      const months = Math.floor(years * 12);
+      return months < 1 ? {n: '<1', plus: false, unit: 'month'} : {n: months, plus: false, unit: months === 1 ? 'month' : 'months'};
+    };
+    const paint = (dd, s) => {
+      dd.replaceChildren();
+      if (!s) { dd.textContent = '—'; return ''; }
+      const em = document.createElement('em');
+      em.textContent = s.n;
+      if (s.plus) em.append(Object.assign(document.createElement('span'), {textContent: '+'}));
+      dd.append(em, ` ${s.unit}`);
+      return `${s.n}${s.plus ? '+' : ''} ${s.unit}`;
+    };
+    const recount = () => {
+      const fee = loan * pct / 100;
+      $('[data-fee-out]', calc).textContent = fee > 0 ? money(fee) : '—';
+      const acc = paint($('[data-acc]', calc), fee > 0 && span(fee, ACC));
+      const pro = paint($('[data-pro]', calc), fee > 0 && span(fee, PRO));
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        status.textContent = fee > 0 ? `Your fee, ${money(fee)}, covers Accelerator for ${acc} and Pro for ${pro}.` : 'Enter a loan amount and a fee.';
+      }, 700);
+    };
+    loanIn.addEventListener('focus', () => { loanIn.value = loan ? String(loan) : ''; loanIn.select(); });
+    loanIn.addEventListener('input', () => { loan = Math.min(amount(loanIn.value), 1e9); recount(); });
+    loanIn.addEventListener('blur', () => { loanIn.value = loan ? money(loan) : ''; });
+    feeIn.addEventListener('input', () => { pct = Math.min(amount(feeIn.value), 10); recount(); });
+    feeIn.addEventListener('blur', () => { feeIn.value = pct ? (Math.round(pct * 100) / 100).toFixed(2) : ''; });
+    [loanIn, feeIn].forEach(input => input.addEventListener('keydown', event => { if (event.key === 'Enter') input.blur(); }));
   }
   // Every sign-up form says where it was sent from, so one list can be split by page as well as by role (Tony, Figma
   // thread on the Borrowers launch band, about 12 Nov: one sign-up form, role asked throughout) [rec].

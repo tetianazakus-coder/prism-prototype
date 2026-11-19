@@ -135,7 +135,8 @@
 
   const CHECKS = {
     1: [
-      ['full_name', () => value('full_name') ? '' : 'Enter your full name.'],
+      ['first_name', () => value('first_name') ? '' : 'Enter your first name.'],
+      ['last_name', () => value('last_name') ? '' : 'Enter your last name.'],
       ['email', () => !value('email') ? 'Enter your email.' : emailOk(value('email')) ? '' : 'Enter an email like name@company.com.'],
       ['phone', () => !value('phone') ? 'Enter your phone number.' : digits(value('phone')).length >= (value('phone_code') === '+1' ? 10 : 6) ? '' : value('phone_code') === '+1' ? 'Enter a full phone number, with the area code.' : 'Enter a full phone number.'],
     ],
@@ -255,8 +256,8 @@
   };
   function finish() {
     const type = checked('property')[0] === 'other' ? selects.property_other.value : checked('property')[0];
-    // The greeting takes the first word of the full name [~]; Tony may still ask for two fields (question 269).
-    fillAll({first: value('full_name').split(/\s+/)[0], email: value('email'), deal: `${type} ${checked('purpose')[0].toLowerCase()} in ${selects.state.value}`});
+    // The greeting takes the first name (two fields since 19 Nov, question 269).
+    fillAll({first: value('first_name'), email: value('email'), deal: `${type} ${checked('purpose')[0].toLowerCase()} in ${selects.state.value}`});
     open('done');
   }
 
@@ -393,7 +394,7 @@
   // of the step in view), loading, fail, and on the thank-you view nomatch and exists.
   const view = params.get('view');
   if (['deal', 'done', 'account', 'ready'].includes(view)) {
-    form.elements.full_name.value = 'Jane Cooper';
+    form.elements.first_name.value = 'Jane'; form.elements.last_name.value = 'Cooper';
     form.elements.email.value = 'jane@example.com'; phone.value = '(512) 555-0142';
     show(2, false);
     if (view !== 'deal') {

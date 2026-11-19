@@ -467,14 +467,19 @@
       if (window.gsap) gsap.set(ui, {scale: k, x});
       else ui.style.transform = `translateX(${x}px) scale(${k})`;
     };
-    const min = spec.min ?? .45;
+    // On phones (the CSS's 600px breakpoint) the floor gives way, so the frame, 8:5 there, shows the whole window as
+    // desktop does, never a panned slice of it, and a row snap may not scale up past the crop's width (Tanya, 19 Nov,
+    // of the four phone frames: "fix all frames with aminations, use right frame size and ratio").
+    const phone = matchMedia('(max-width:600px)').matches;
+    const min = phone ? Math.min(spec.min ?? .45, w / spec.width) : spec.min ?? .45;
+    const pans = k => phone && k * spec.width > w + .5;
     let k = Math.max(min, Math.min(w / spec.width, h / spec.fit));
     scale(k);
     for (let i = 0; i < 3; i++) {
       const {last, cut} = rowEdges(screen);
       if (!cut) break;
       const up = last ? h / last : 0, down = h / cut;
-      const next = down >= min ? down : up;
+      const next = down >= min ? down : pans(up) ? 0 : up;
       if (!next || Math.abs(next - k) < 1e-4) break;
       scale(k = next);
     }

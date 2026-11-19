@@ -200,11 +200,38 @@
 
     // Blocks, each on its own trigger as The Nest wraps them. A container that holds a title reveals its other
     // children instead, so no title moves twice.
-    const picked = gsap.utils.toArray('.proof > div, .problem-body, .benefits > li, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *')
+    const picked = gsap.utils.toArray('.proof > div, .problem-body, .benefits > li, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *, .join-why-head')
       .flatMap(block => block.querySelector('h2') ? [...block.children] : block)
       .filter(block => block.tagName !== 'H2' && !block.matches('.story-portrait'));
     const blocks = [...new Set(picked)];
     blocks.filter(block => !blocks.some(other => other !== block && other.contains(block))).forEach(block => reveal(block));
+
+    // Join (Tanya, 19 Nov: "analyze what animation can be added to this page's sections, to match the rest website",
+    // then "go"). Two beats the site already uses, nothing new. The hairline over Required experience and Compensation
+    // draws from the left as the Pricing ledger's rule does (0.6s power3.out), once the block is 85% down the viewport;
+    // join.css moves the line off the border onto .join-sub-rule, so without motion the border stands. Why it's
+    // different works its table as the ledger works its sum: the rule over the table draws, then the header and the
+    // four rows rise in reading order (14px, 0.7s, 0.35s apart, from 0.25s), under 2.5s in all, once the table is 85%
+    // down. Its lede reveals with the blocks above (.join-why-head). The rows keep their table roles; only opacity and
+    // transform move.
+    document.querySelectorAll('.join-sub').forEach(sub => {
+      const rule = document.createElement('span');
+      rule.className = 'join-sub-rule';
+      rule.setAttribute('aria-hidden', 'true');
+      sub.prepend(rule);
+      gsap.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out', scrollTrigger: {trigger: sub, start: 'top 85%', once: true}});
+    });
+    document.querySelectorAll('.join-why-table').forEach(table => {
+      const rule = document.createElement('div');
+      rule.className = 'join-why-rule';
+      rule.setAttribute('aria-hidden', 'true');
+      table.before(rule);
+      const rows = [...table.rows];
+      gsap.set(rows, {opacity: 0, y: 14});
+      const play = gsap.timeline({defaults: {ease}, scrollTrigger: {trigger: table, start: 'top 85%', once: true}});
+      play.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out'}, 0);
+      rows.forEach((row, n) => play.to(row, {opacity: 1, y: 0, duration: .7, clearProps: 'opacity,transform'}, .25 + n * .35));
+    });
 
     // Person cards, one by one, after Stellar Management's news photos (stellarmanagement.com, read from its bundle on
     // 5 Nov 2026: xPercent -110 to 0, power1.out, 1.05s, once the card is 80% down the viewport). Here the photo slides

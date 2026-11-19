@@ -56,7 +56,16 @@
 .market-topic{align-self:flex-start;margin-top:20px;padding:3px 10px;border:1px solid var(--line);font-size:12px;line-height:1.5;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
 .market-line,.market-poll h3{margin-top:14px;font:400 24px/1.3 var(--serif);letter-spacing:-.015em;color:var(--ink)}
 .market-poll h3{margin-top:20px}
-.market-rest{height:62px;margin-top:16px;background:repeating-linear-gradient(180deg,var(--ink) 0 9px,transparent 9px 24px);opacity:.2;filter:blur(3.5px);-webkit-mask-image:linear-gradient(#000 20%,transparent);mask-image:linear-gradient(#000 20%,transparent)}
+/* The commentary's locked rest: two more lines of the quote, drawn and blurred (Tanya, 19 Nov, on the old three
+   full-width bars: "fix blur here"). The old bars ran edge to edge on a 24px pitch with no word gaps, and the mask
+   that faded them cut the blur off flat at the box's top and sides, so they read as grey bands, not text. Now each bar
+   is one line of the quote's own type: em units on the quote's size, the quote's 1.3 pitch, the bar over the x-height
+   (Bodoni Moda at 24px: baseline 1.0em down the line box, x-height 0.46em; measured), with word gaps and a ragged
+   second line. The second line is lighter in place of the mask, so nothing clips the blur. */
+.market-rest{--bar:var(--ink);--bar2:color-mix(in srgb,var(--ink) 55%,transparent);height:2.6em;font-size:24px;opacity:.26;filter:blur(3px);
+  background:
+    linear-gradient(90deg,var(--bar) 0 17%,transparent 0 19.5%,var(--bar) 0 37%,transparent 0 39.5%,var(--bar) 0 46%,transparent 0 48.5%,var(--bar) 0 71%,transparent 0 73.5%,var(--bar) 0 96%) 0 .55em/100% .46em no-repeat,
+    linear-gradient(90deg,var(--bar2) 0 24%,transparent 0 30%,var(--bar2) 0 52%,transparent 0 58%,var(--bar2) 0 100%) 0 1.85em/58% .46em no-repeat}
 .market-poll ol{margin:18px 0 0;padding:0;list-style:none}
 .market-poll li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:11px 0;border-top:1px solid var(--line);font-size:15px;line-height:1.5}
 .market-foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px 20px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-size:14px;line-height:1.5;color:var(--muted)}
@@ -86,6 +95,6 @@
   .market-strip{margin-bottom:32px}
   .closing-grid>.closing-card,.closing-grid.four>.closing-card{padding:26px}
   .market-note,.market-poll{padding:26px}
-  .market-line,.market-poll h3{font-size:22px}
+  .market-line,.market-poll h3,.market-rest{font-size:22px}
   .market-cta>.button{flex:1 1 100%;justify-content:center}
 }
