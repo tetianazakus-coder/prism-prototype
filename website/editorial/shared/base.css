@@ -7,6 +7,10 @@
 :root{--paper:#f6f3ed;--white:#fffdf9;--ink:#0e1c35;--navy:#0e1c35;--muted:#637079;--bronze:#947552;--line:#d8d7cf;--dark-line:#2a3a58;--serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',Arial,sans-serif;--gutter:clamp(24px,4.45vw,86px)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:100px}
+/* With motion on, Lenis (motion.js) does the smoothing, anchor jumps included, so the document's own smooth scroll is
+   off from the first paint (html.motion, set in each page's head). With it, a page opened at an anchor (about/#contact)
+   glided toward it until Lenis started and cut the glide short, near the page's top. Without scripts the glide stays. */
+html.motion{scroll-behavior:auto}
 body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
 body.modal-open{overflow:hidden}
 button,input{font:inherit}
@@ -112,6 +116,18 @@ h1 em{color:var(--ink)}
 .price small{font:11px var(--sans);letter-spacing:0;margin-left:5px}
 .price-note{font-size:10px;min-height:20px;margin-top:5px;color:var(--muted)}
 .plan>.button{width:100%;margin-top:25px;font-size:12px}
+/* The plan buttons' states in the product, set by its SitePlanButtons as data-plan-state; the prototype only shows
+   them on ../plan-button-states/ (19 Nov). busy: this plan's click is under way, "One moment…" with a spinner where
+   the arrow was, as the product's old buttons did. waiting: another plan's click is, so the others rest, dimmed as
+   the quote arrows' disabled state is. unavailable: the account is not a broker's, and "For broker accounts" reads
+   as a note, not a control. None of them takes a click or a hover. [💡 rec] */
+.plan>.button[data-plan-state]{pointer-events:none}
+.plan>.button[data-plan-state=busy]>span>svg{display:none}
+.plan>.button[data-plan-state=busy]>span::after{content:'';display:block;width:14px;height:14px;border:1.5px solid currentColor;border-right-color:transparent;border-radius:50%;animation:plan-spin .8s linear infinite}
+@keyframes plan-spin{to{transform:rotate(360deg)}}
+.plan>.button[data-plan-state=waiting]{opacity:.35}
+.plan>.button[data-plan-state=unavailable]{background:transparent;border-color:var(--line);color:var(--muted)}
+.plan>.button[data-plan-state=unavailable]>span{display:none}
 .plan .feature-list{margin-top:24px;margin-bottom:10px}
 .plan .feature-list li:last-child{border-bottom:0}
 .pricing-footnote{text-align:center;font-size:11px;color:var(--muted);margin-top:25px}
