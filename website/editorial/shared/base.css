@@ -194,6 +194,13 @@ dialog>.text-link{display:block;margin-top:20px}
    clear of the close. A dialog with more than one step wraps each in .dialog-step. The flat dialog stays for notices. */
 dialog.dialog-sectioned{padding:0;overflow:hidden}
 dialog.dialog-sectioned[open]{display:flex;flex-direction:column}
+/* Book a call: Calendly's inline embed under a title bar (site.js), sized for its calendar beside its times. */
+dialog.call-dialog{width:min(1060px,calc(100% - 32px));height:min(760px,calc(100dvh - 32px));max-height:none;background:var(--white)}
+.call-head{display:flex;flex:none;align-items:center;justify-content:space-between;min-height:56px;padding:0 6px 0 24px;border-bottom:1px solid var(--line);background:var(--paper)}
+dialog .call-head h2{margin:0;font:500 15px/1.4 var(--sans);letter-spacing:normal}
+.call-close{width:44px;height:44px;font-size:29px;line-height:1}
+.call-embed{flex:1 1 auto;min-height:0}
+.call-embed>iframe{display:block;width:100%;height:100%}
 .dialog-sectioned>.dialog-step{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
 .dialog-sectioned>.dialog-step[hidden]{display:none}
 .dialog-hd{padding:44px 72px 0 44px}

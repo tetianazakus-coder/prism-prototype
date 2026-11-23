@@ -27,9 +27,11 @@
     lenis.on('scroll', ScrollTrigger.update);
     // The open phone menu scrolls on its own and holds the page still (website-mobile-menu-submenu-research.md):
     // the open menu is left to the browser above, and the page's smooth scroll pauses while site.js marks the menu open.
+    // An open dialog (site.js sets body.modal-open) holds the page still too: until 23 Nov it went on scrolling behind.
     const menu = document.getElementById('navigation');
-    if (menu) new MutationObserver(() => menu.classList.contains('open') ? lenis.stop() : lenis.start())
-      .observe(menu, {attributes: true, attributeFilter: ['class']});
+    const hold = () => menu?.classList.contains('open') || document.body.classList.contains('modal-open') ? lenis.stop() : lenis.start();
+    if (menu) new MutationObserver(hold).observe(menu, {attributes: true, attributeFilter: ['class']});
+    new MutationObserver(hold).observe(document.body, {attributes: true, attributeFilter: ['class']});
     gsap.ticker.add(time => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
   }
@@ -68,6 +70,9 @@
     if (total) total.prepend(rule);
     const play = gsap.timeline({delay, defaults: {ease}});
     play.fromTo(ledger.querySelector('.ledger-cap'), {opacity: 0, y: 14}, {opacity: 1, y: 0, duration: .6, clearProps: 'transform'}, 0);
+    // The calculator's hint under the cap rises with it, a beat behind (Tanya, 23 Nov: "animate this text line").
+    const hint = ledger.querySelector('.calc-hint');
+    if (hint) play.fromTo(hint, {opacity: 0, y: 14}, {opacity: 1, y: 0, duration: .6, clearProps: 'transform'}, .12);
     // Pricing's total is a block since 13 Nov ("Your fee covers", then a row per plan): its lead-in and rows rise in
     // turn after the rule draws. A one-row total (a dl > div.total) plays as before.
     const steps = [...ledger.querySelectorAll('dl > div, .ledger-sub')];
@@ -525,7 +530,9 @@
       // "follow-through" whole and pushed it to the next line, which ran About's first belief to five lines with motion
       // and four without, "assignment." alone on the last (Tony's copy, 13 Nov). The zero-width split after a space or
       // a hyphen keeps every character; the extra spaces it leaves collapse in the line's text.
-      beliefs.forEach((card, n) => [...card.children].forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, wordDelimiter: /(?<=\s)|(?<=-)/, onSplit(split) {
+      // A card's link (Borrowers' advisor card, .feature-more) is not split: SplitText copies a link into an empty twin
+      // and doubles its spaces. It arrives with its card.
+      beliefs.forEach((card, n) => [...card.children].filter(part => !part.matches('.feature-more')).forEach((part, k) => SplitText.create(part, {type: 'lines', mask: 'lines', aria: 'none', autoSplit: true, wordDelimiter: /(?<=\s)|(?<=-)/, onSplit(split) {
         split.masks.forEach(mask => Object.assign(mask.style, {padding: '0 .22em .14em', margin: '0 -.22em -.14em'}));
         parts[n][k] = split.lines;
         gsap.set(split.lines, {yPercent: risen.has(n) ? 0 : 110});
@@ -542,9 +549,10 @@
 
     // Count-up, as on the Find and Cinematic options (Tanya, 29 Oct): each proof figure counts from 0 over 1.5s expo.out
     // as its block reveals. The digits are hidden from screen readers; an .sr-only twin carries the real figure.
-    // [N] and "Limited" have no digits and stay as they are. Tabular numerals keep the width still while it counts.
+    // [N] and "Limited" have no digits and stay as they are, and so do words around a digit, such as Market
+    // intelligence's "Last 30 days" (it counted as NaN until 23 Nov). Tabular numerals keep the width still while it counts.
     document.querySelectorAll('.proof strong').forEach(figure => {
-      const node = [...figure.childNodes].find(child => child.nodeType === 3 && /\d/.test(child.nodeValue));
+      const node = [...figure.childNodes].find(child => child.nodeType === 3 && /^\s*\d[\d,]*\s*$/.test(child.nodeValue));
       if (!node) return;
       const target = Number(node.nodeValue.replace(/,/g, ''));
       const twin = document.createElement('span');

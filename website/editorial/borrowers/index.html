@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../shared/base.css?v=20261120sa">
+  <link rel="stylesheet" href="../shared/base.css?v=20261123cb">
   <link rel="stylesheet" href="../shared/editorial.css?v=20261119it">
-  <link rel="stylesheet" href="../shared/components.css?v=20261123sm">
+  <link rel="stylesheet" href="../shared/components.css?v=20261123fa">
   <link rel="stylesheet" href="../shared/market.css?v=20261119rb">
   <link rel="stylesheet" href="../shared/type.css?v=20261102c">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
@@ -21,8 +21,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
-  <script src="../shared/site.js?v=20261119nv" defer></script>
-  <script src="../shared/motion.js?v=20261116sb" defer></script>
+  <script src="../shared/site.js?v=20261123cb" defer></script>
+  <script src="../shared/motion.js?v=20261123fa" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -64,7 +64,7 @@
         <h1 id="hero-title"><span>Financing with a person,</span><em>not a portal.</em></h1>
         <div class="hero-lower">
           <p class="hero-description">We're rebuilding the borrower experience around one promise: submit your deal once, and a vetted LenderPrism financing advisor calls you within 24 hours.</p>
-          <div class="hero-actions"><a class="button" href="../submit-deal/">Submit my deal — it's free</a><a class="text-link" href="https://calendly.com/tony_talamas/work-with-lenderprism" target="_blank" rel="noopener">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span><span class="sr-only"> (opens in a new tab)</span></a></div>
+          <div class="hero-actions"><a class="button" href="../submit-deal/">Submit my deal — it's free</a><a class="text-link" href="https://calendly.com/tony_talamas/work-with-lenderprism">Book a call <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></div>
         </div>
       </div>
       <!-- The Brokers hero figure, shared from editorial.css: a building photo with the product window running off its
@@ -72,7 +72,7 @@
            window keeps the Brokers sharp edge (Tanya, 2 Nov). -->
       <figure class="hero-visual quiet-photo">
         <img src="../img/hero-brick-corner.jpg" width="2400" height="1600" alt="Red-brick apartment building with shops on the ground floor, on a city street corner" fetchpriority="high">
-        <div class="hero-screen"><div class="screen-bar" aria-hidden="true"><i></i><i></i><i></i><span>app.lenderprism.com/deals</span></div><img src="../img/hero-borrower-deals.png?v=20261111" width="1552" height="750" alt="LenderPrism My deals: the borrower's deals in one table, with loan request, advisor, stage, quotes, outstanding items and last activity"></div>
+        <div class="hero-screen"><div class="screen-bar" aria-hidden="true"><i></i><i></i><i></i><span>lenderprism.com/borrower/my-deals</span></div><img src="../img/hero-borrower-deals.png?v=20261111" width="1552" height="750" alt="LenderPrism My deals: the borrower's deals in one table, with loan request, advisor, stage, quotes, outstanding items and last activity"></div>
       </figure>
     </div>
   </section>
@@ -87,8 +87,9 @@
     <div class="wrap">
       <div class="section-heading"><h2 id="coming-title">What's coming</h2></div>
       <!-- Borrower-facing "broker" reads "advisor" (Tanya, Figma comment on Find a broker, about 10 Nov: should the public page say "advisor" as the app does?; Tony, about 11 Nov: "We could use "advisor" and "financing advisor" interchangeably."; Tanya, 14 Nov: "build"). As in the app, "financing advisor" leads and "advisor" follows. Copy for brokers, the "Broker fees" line (Q210), Tony's bio and the /find-a-broker/ address keep "broker". -->
+      <!-- The advisor card links to Find an advisor (Tanya, 23 Nov: "go"): the directory is the one live borrower surface while this page is coming soon, and the header no longer marks Borrowers there, so only the footer led to it. The link sits at the card's foot, as Home's "Find an advisor" under Who runs your deal. -->
       <ul class="feature-cards">
-        <li class="feature-card"><span aria-hidden="true">01</span><h3>An advisor on every deal</h3><p>A LenderPrism advisor matched to your property type and market reviews your request and stays with you to close.</p></li>
+        <li class="feature-card"><span aria-hidden="true">01</span><h3>An advisor on every deal</h3><p>A LenderPrism advisor matched to your property type and market reviews your request and stays with you to close.</p><p class="feature-more"><a class="text-link" href="../find-a-broker/">Find an advisor <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></p></li>
         <li class="feature-card"><span aria-hidden="true">02</span><h3>Status at a glance</h3><p>See where your request stands — reviewed, sent to lenders, quotes in — without chasing anyone.</p></li>
         <li class="feature-card"><span aria-hidden="true">03</span><h3>Quotes side by side</h3><p>Compare lender terms in one place and choose with your advisor.</p></li>
       </ul>

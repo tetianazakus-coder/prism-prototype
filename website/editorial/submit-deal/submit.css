@@ -43,9 +43,14 @@
 .field-error{margin-top:8px;font-size:14px;line-height:1.5;font-weight:500;color:#9b2c2c}
 .field-error[hidden]{display:none}
 .field.has-error :is(input:not([type=radio],[type=checkbox]),textarea,.select-toggle){border-color:#9b2c2c}
+.field.has-error .select-code .select-toggle{border-color:#bfc2bd}
 
 /* Phone: the country code is a native select the height of the field, so a phone opens its own picker. */
 .phone-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;margin-top:8px}
+/* The country code is the form's own select (submit.js), as wide as the native one was, so the number never shifts
+   with the pick; its list opens as wide as its search needs. */
+.phone-row .select{width:9.5em;margin-top:0}
+.phone-row .select-pop{width:max-content;min-width:100%}
 .phone-row select{min-height:48px;max-width:9.5em;padding:12px 34px 12px 14px;border:1px solid #bfc2bd;border-radius:0;background:var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' fill='none' stroke='%230e1c35' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;color:var(--ink);font:inherit;font-size:16px;appearance:none;-webkit-appearance:none;text-overflow:ellipsis}
 .phone-row select:focus-visible{outline:2px solid #b59159;outline-offset:2px}
 .field .phone-row input{margin-top:0}
@@ -140,13 +145,8 @@
 /* Tertiary actions: text buttons, no underline, as Show and Change (Tanya, 16 Nov: "remove underline here, make it tertiary buttons"). */
 .match-go{display:inline-flex;align-items:center;gap:14px;margin-top:auto;padding-top:28px;font-size:15px;font-weight:500;text-decoration:none}
 .match-go .arrow{width:14px;height:14px;fill:currentColor}
-/* The sample rows inside the count card, from 851px (index.html says why). Spans, as a button holds phrasing content only; the
-   name and the range share a line, the type sits under them, so the rows fit the 246px column at 851. */
-.match-peek{display:grid;align-self:stretch;margin-top:28px;border-top:1px solid var(--dark-line);-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent)}
-.match-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;padding:12px 0;border-bottom:1px solid var(--dark-line);font-size:15px;line-height:1.4}
-.match-card .match-name{justify-self:start}
-.match-card .match-range{color:var(--paper)}
-.match-card .match-type{grid-column:1/-1;font-size:14px;color:#a9b3c6}
+/* The count card is the phones' and touch devices' (below); from 851px on a pointer the panel shows the rows instead. */
+.done-grid>.match-card{display:none}
 .account-card{display:flex;flex-direction:column;padding:32px;background:var(--white);border:1px solid var(--line)}
 .account-card h2{font-size:30px;line-height:1.15;letter-spacing:-.02em}
 .account-card p{margin-top:12px;font-size:16px;line-height:1.65;color:var(--muted)}
@@ -174,10 +174,14 @@
 .account-email>span:first-child{grid-column:1;grid-row:1}
 .email-change{grid-column:2;grid-row:1;min-height:44px;margin:-13px -4px;padding:0 4px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:none}
 .email-change:focus-visible{outline:2px solid #b59159;outline-offset:2px}
+/* Where the card is wide (the desktop card, from 851px on a pointer), Change sits on the address's row, as the Figma
+   card has it (Tanya, 23 Nov: "if space is not limited, align 'change' button with value"): beside the address there is
+   room, so the label's row stays a label. The phone card keeps it on the label's row, for the reason above. */
+.account-wide .account-email>b{grid-column:1;grid-row:2}
+.account-wide .email-change{grid-row:2;margin-block:-9px}
 .account-card :is(.account-quick,.account-narrow) .button{width:100%;justify-content:center;gap:14px}
 .account-card .account-narrow .button.outline{margin-top:12px}
 .account-card .account-quick>.button.outline{margin-top:-8px}
-.account-card .account-quick .email-fix-form{margin-top:-12px}
 .account-card :is(.account-later,.account-resend){margin-top:12px;font-size:15px;line-height:1.5}
 :is(.account-later,.account-resend) .inline-link{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:500;color:var(--ink);border:0;text-decoration:none}
 .account-narrow{display:none}
@@ -193,11 +197,19 @@
 .match-none p{margin-top:12px;font-size:16px;line-height:1.65;color:var(--muted)}
 /* An email that already has an account: the log-in card replaces both variants and the correction row. */
 .done.has-account :is(.account-wide,.account-narrow){display:none}
-.email-fix-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}
+/* The correction form stands in the email's box, in place of the address and Change (submit.js, is-editing): the
+   email shows once, under its label, with Save and Cancel beside it. On the phone card the label reads "Email", not
+   "Sent to", while it is being changed. */
+.account-email.is-editing>:is(b,.email-change){display:none}
+.account-email.is-editing .sent-copy{display:none}
+.account-email.is-editing .wait-copy{display:inline}
+.email-fix-form{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;margin-top:6px}
+.email-cancel{min-height:44px;padding:0 4px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:none}
+.email-cancel:focus-visible{outline:2px solid #b59159;outline-offset:2px}
 .email-fix-form input{min-height:48px;padding:12px 14px;border:1px solid #bfc2bd;border-radius:0;background:var(--white);font:inherit;font-size:16px;color:var(--ink)}
 .email-fix-form input:focus-visible{outline:2px solid #b59159;outline-offset:2px}
 .email-fix-form input[aria-invalid]{border-color:#9b2c2c}
-.account-card .email-fix-form .button{margin-top:0;width:auto}
+.account-card .email-fix-form .button.outline{margin-top:0;width:auto}
 /* On the phone card Save is filled (Tanya, 19 Nov, of the outlined Save under the address: "shoud save here be primary?",
    then "go"). That card has no filled button: it confirms an email already sent, so Save is the one step that finishes
    what Change started, and outlined it read as the other way. The desktop card keeps it outlined, as its "Create
@@ -205,7 +217,8 @@
    card it sits in decides. */
 .account-card .account-narrow .email-fix-form .button.outline{background:var(--navy);border-color:var(--navy);color:var(--white)}
 .account-card .account-narrow .email-fix-form .button.outline:hover{background:#213459;border-color:#213459}
-.email-fix-form .field-error{grid-column:1/-1;margin-top:0}
+/* The card's paragraph style reached the phone card's error (grey, 16px); it keeps the form's error style. */
+.account-card .email-fix-form .field-error{grid-column:1/-1;margin-top:0;font-size:14px;line-height:1.5;color:#9b2c2c}
 .account-card .done-status{min-height:24px;margin-top:12px;font-size:15px;font-weight:500;color:#2e5b3a}
 .done-status:empty{display:none}
 .done-next{margin-top:56px;max-width:560px}
@@ -213,9 +226,12 @@
 .done-next ol{display:grid;gap:10px;margin:18px 0 0;padding:0;list-style:none;counter-reset:next}
 .done-next li{display:flex;gap:14px;font-size:17px;line-height:1.55;counter-increment:next}
 .done-next li::before{content:counter(next) '.';flex:0 0 1.2em;color:var(--bronze);font-variant-numeric:tabular-nums}
-.done-share{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;margin-top:28px}
+.done-share{display:flex;flex-wrap:wrap;align-items:center;gap:4px 24px;margin-top:28px}
 .share-status{font-size:15px;font-weight:500;color:#2e5b3a;overflow-wrap:anywhere}
-.done-share .inline-link{min-height:44px;font-size:15px;font-weight:500;border:0;text-decoration:underline;text-underline-offset:3px}
+/* Text buttons with a small leading icon, as the advisor profile's LinkedIn and Website (advisor.css): no underline. */
+.done-share .inline-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:15px;font-weight:500;color:var(--ink);border:0;text-decoration:none;transition:color .2s}
+.done-share .inline-link:hover{color:var(--bronze)}
+.done-share .inline-link svg{flex:none}
 
 /* Account step and its end state: the thank-you view's head over one narrow form. */
 .account,.ready{padding-block:64px 110px}
@@ -271,7 +287,7 @@
 /* The account card's phone variant also shows on a touch device with no hover, whatever its width: the platform is
    not ready for phones and tablets (task doc: "Device detection picks the account card variant") [rec: a media query,
    not user-agent sniffing]. Both variants offer both paths. */
-@media(hover:none) and (pointer:coarse){.account-wide{display:none}.account-narrow{display:block}.match-peek{display:none}}
+@media(hover:none) and (pointer:coarse){.account-wide{display:none}.account-narrow{display:block}.done-grid>.match-card{display:flex}.match-panel{display:none}}
 @media(max-width:850px){
   .submit{grid-template-columns:1fr;padding-bottom:72px}
   .deal-trust{position:static;padding-top:28px}
@@ -284,7 +300,8 @@
   .account-wide{display:none}
   .account-narrow{display:block}
   .match-count{font-size:64px}
-  .match-peek{display:none}
+  .done-grid>.match-card{display:flex}
+  .match-panel{display:none}
 }
 /* Phones: no card, so the fields take the full column; chips two to a row; the action stays at the foot of the screen. */
 @media(max-width:600px){
@@ -305,7 +322,8 @@
   .deal-trust ul{grid-template-columns:1fr}
   .match-card,.account-card,.account-matches{padding:24px}
   .account-form{padding:0;border:0;background:none;margin-top:28px}
-  .email-fix-form{grid-template-columns:1fr}
+  .email-fix-form{grid-template-columns:minmax(0,1fr) auto}
+  .email-fix-form input{grid-column:1/-1}
   .ready-go .button{width:100%;justify-content:center}
   .account-card .button{width:100%;justify-content:center}
   .match-dialog h2{font-size:32px}

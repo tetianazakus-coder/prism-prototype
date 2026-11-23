@@ -104,6 +104,9 @@
 .feature-card>span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line);transform-origin:left;transform:scaleX(var(--rule,1))}
 .feature-card h3{font-size:24px;line-height:1.25;margin-top:20px}
 .feature-card p{margin-top:10px;font-size:16px;line-height:1.7;color:var(--muted)}
+/* A card's link (Borrowers' advisor card): at the card's foot, so it lines up whatever the text runs to. */
+.feature-card .feature-more{margin-top:auto;padding-top:12px}
+.feature-card .feature-more .text-link{color:var(--ink);border:0;padding-block:8px} /* as Home's .people-more */
 
 /* Trust strip: the proof strip's rule and place, under the hero, with text in place of figures. The cards after it
    take the white band, as Home's steps and About's team do: it went when they became white cards (9 Nov) and came back

@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../shared/base.css?v=20261120sa">
   <link rel="stylesheet" href="../shared/editorial.css?v=20261119it">
   <link rel="stylesheet" href="../shared/components.css?v=20261116t">
-  <link rel="stylesheet" href="submit.css?v=20261119gr">
+  <link rel="stylesheet" href="submit.css?v=20261123ed">
   <link rel="stylesheet" href="../shared/type.css?v=20261102c">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
   <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
@@ -22,8 +22,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
   <script src="../shared/site.js?v=20261119nv" defer></script>
-  <script src="submit.js?v=20261119fl" defer></script>
-  <script src="../shared/motion.js?v=20261116sb" defer></script>
+  <script src="submit.js?v=20261123ed" defer></script>
+  <script src="../shared/motion.js?v=20261123fa" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -100,7 +100,7 @@
         </div>
         <div class="field" data-field="email"><label for="f-email">Email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" aria-describedby="e-email"><p class="field-error" id="e-email" hidden></p></div>
         <!-- Country code (task doc: "US default + country code"): a native select, so phones get their own picker. Ten digits take the US shape under +1 only. The list of codes is our pick [~]. -->
-        <div class="field" data-field="phone"><label for="f-phone">Phone</label><div class="phone-row"><select name="phone_code" aria-label="Country code" autocomplete="tel-country-code"><option value="+1" selected>US +1</option><option value="+1">Canada +1</option><option value="+52">Mexico +52</option><option value="+44">UK +44</option><option value="+61">Australia +61</option><option value="+55">Brazil +55</option><option value="+86">China +86</option><option value="+33">France +33</option><option value="+49">Germany +49</option><option value="+91">India +91</option><option value="+972">Israel +972</option><option value="+81">Japan +81</option><option value="+971">UAE +971</option></select><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 123-4567" aria-describedby="e-phone"></div><p class="field-error" id="e-phone" hidden></p></div>
+        <div class="field" data-field="phone"><label for="f-phone">Phone</label><div class="phone-row"><span class="sr-only" id="l-phone_code">Country code</span><div class="select select-code" data-select="phone_code" data-labelledby="l-phone_code" data-placeholder="US +1" data-noun="country codes"></div><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 123-4567" aria-describedby="e-phone"></div><p class="field-error" id="e-phone" hidden></p></div>
         <!-- Consent, after the Connect dialog's line on Find a broker [rec]: Next is where the lead is saved, so the borrower agrees to the call before it. Not in the task doc. -->
         <p class="deal-consent">By continuing, you agree that LenderPrism shares these details with a LenderPrism financing advisor, who may call, text or email you about your financing. <a href="https://lenderprism.com/privacy">Privacy Policy</a></p>
         <!-- A failed send (?state=fail): the answers stay, and the same button tries again. --><p class="deal-fail" role="alert" hidden>We couldn’t send that. Your answers are still here. Check your connection and try again.</p>
@@ -170,7 +170,7 @@
   </div>
 
   <!-- Thank-you view (task doc, "Thank-you page"): every element that looks tappable does something, and nothing else is
-       drawn as a card. The matches card is a button that opens a preview; the count is a sample [~] until the product
+       drawn as a card. The matches show as a panel, or on phones as a card that opens a preview; the count is a sample [~] until the product
        supplies the real one. The account card has two variants, by width and by touch (submit.css), not by user-agent
        sniffing, as the task doc's table words them (Tanya, 16 Nov: "check the doc … and match it"):
        - from 851px, "Account card — desktop": the email filled in from the form, only a password, and one tap
@@ -188,17 +188,18 @@
     <div class="done-grid">
       <!-- No matches yet (?state=nomatch): plain text in place of the count card, so nothing looks tappable. Wording ours [rec]. -->
       <div class="match-none" hidden><h2>We’re matching your deal now</h2><p>No lender list yet. Your advisor goes through the lenders that fit and shares them on your call.</p></div>
-      <!-- From 851px the count card stands as tall as the account card; the first four sample rows of the matches preview fill it, names blurred, the last fading out, so the card shows what the password unlocks (Tanya, 16 Nov, of the empty navy card: "how to improve layout here?", then "build recommended") [rec]. Hidden from screen readers: the dialog it opens reads the same rows. -->
-      <button class="match-card" type="button" aria-haspopup="dialog"><span class="match-count">8+</span><span class="match-label">potential lender matches</span><span class="match-peek" aria-hidden="true"><span class="match-row"><span class="match-name">Lender name</span><span class="match-range">$2M – $25M</span><span class="match-type">Debt fund</span></span><span class="match-row"><span class="match-name">Lender name here</span><span class="match-range">$1M – $15M</span><span class="match-type">Bank</span></span><span class="match-row"><span class="match-name">Lender name</span><span class="match-range">$5M – $50M</span><span class="match-type">Life insurance company</span></span><span class="match-row"><span class="match-name">Lender name here</span><span class="match-range">$1M – $10M</span><span class="match-type">Credit union</span></span></span><span class="match-go">Preview your matches <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></span></button>
+      <!-- From 851px on a pointer the matches are a panel, the account step's (Tanya, 23 Nov, of the dialog the card opened: "do we need this modal, is we already show it on card?", then "go"): the four sample rows in full, names blurred, and "and 4 more", beside the account form the dialog's button only led to. Until then the card was a button whose rows faded out and whose dialog showed them again. The rows are the dialog's, copied in by submit.js, so the three never differ. On a phone or a touch device the rows do not fit beside the form, so the count card stays a button and the dialog is where they show. -->
+      <aside class="account-matches match-panel" aria-labelledby="done-match-title"><h2 id="done-match-title"><span class="match-count">8+</span><span class="match-label">potential lender matches</span></h2></aside>
+      <button class="match-card" type="button" aria-haspopup="dialog"><span class="match-count">8+</span><span class="match-label">potential lender matches</span><span class="match-go">Preview your matches <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></span></button>
       <div class="account-card">
         <div class="account-wide">
           <h2>See who matched your deal</h2>
           <p>Your email is filled in from your request. Choose a password and you land on your deal, with the lenders that matched it.</p>
           <form class="account-quick" novalidate>
             <!-- Each card ranks its actions (Tanya, 16 Nov: "to many CTA, how to prioritize them? make same secondary/tertiary buttons?", then "go"): one filled button, one outlined button for the other way to the same end, one muted text line for later or elsewhere; "Change" sits on the email it corrects, not in the row of actions [rec]. -->
-            <div class="account-email"><span>Email</span><b data-fill="email">jane@example.com</b><button class="email-change" type="button" data-act="fix" aria-expanded="false" aria-controls="email-fix">Change</button></div>
-            <!-- A mistyped email would send the matches nowhere: it is corrected here, under the email it changes [rec]. The one form moves to the card in view (submit.js). -->
-            <div class="email-fix-form" id="email-fix" hidden><label class="sr-only" for="f-fix">Your email</label><input id="f-fix" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" aria-describedby="e-fix"><button class="button outline" type="button" data-act="fixsave">Save</button><p class="field-error" id="e-fix" hidden></p></div>
+            <div class="account-email"><span>Email</span><b data-fill="email">jane@example.com</b><button class="email-change" type="button" data-act="fix">Change</button></div>
+            <!-- A mistyped email would send the matches nowhere: it is corrected here [rec], in the email's own box (Tanya, 23 Nov, of the field that opened under the box: "is it common pattern to that edit action opens separate fiend to edit? or is it better edit in in same section?", then "go"). While it is open the address and Change hide, so the email shows once; Cancel or Escape puts them back. The one form moves into the box of the card in view (submit.js). -->
+            <div class="email-fix-form" id="email-fix" hidden><label class="sr-only" for="f-fix">Your email</label><input id="f-fix" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" aria-describedby="e-fix"><button class="button outline" type="button" data-act="fixsave">Save</button><button class="email-cancel" type="button" data-act="fixcancel">Cancel</button><p class="field-error" id="e-fix" hidden></p></div>
             <!-- The email again for password managers, which save it with the new password. -->
             <input type="email" name="acc_email" autocomplete="username" value="jane@example.com" hidden>
             <div class="field" data-field="acc_password"><label for="c-pass">Password</label><div class="pass"><input id="c-pass" name="acc_password" type="password" autocomplete="new-password" aria-describedby="h-cpass e-cpass"><button class="pass-show" type="button" aria-pressed="false" aria-controls="c-pass">Show</button></div><p class="field-hint" id="h-cpass">At least 8 characters.</p><p class="field-error" id="e-cpass" hidden></p></div>
@@ -213,7 +214,7 @@
           <!-- Sent on submit, so the card confirms (wording ours [rec]). With no matches yet (?state=nomatch) nothing has gone out, and the waiting copy shows instead. -->
           <h2><span class="sent-copy">Your matches are in your inbox</span><span class="wait-copy">We’ll email your matches</span></h2>
           <p><span class="sent-copy">We emailed them with a link to finish on a computer, where LenderPrism works best.</span><span class="wait-copy">As soon as lenders match your deal, we send them to this email.</span></p>
-          <div class="account-email"><span><span class="sent-copy">Sent to</span><span class="wait-copy">Email</span></span><b data-fill="email">jane@example.com</b><button class="email-change" type="button" data-act="fix" aria-expanded="false" aria-controls="email-fix">Change</button></div>
+          <div class="account-email"><span><span class="sent-copy">Sent to</span><span class="wait-copy">Email</span></span><b data-fill="email">jane@example.com</b><button class="email-change" type="button" data-act="fix">Change</button></div>
           <p class="account-resend sent-copy">Didn’t get it? <button class="inline-link" type="button" data-act="resend">Send again</button></p>
           <button class="button outline" type="button" data-go="account">Create account now</button>
           <p class="account-later"><button class="inline-link" type="button" data-act="remind">Add a reminder</button> to finish on a computer.</p>
@@ -230,8 +231,8 @@
     <div class="done-next">
       <h2>What happens now</h2>
       <ol><li>Your advisor reviews your request.</li><li>They call you within 24 hours.</li><li>Your deal goes to the lenders that fit it.</li></ol>
-      <!-- "Save our number" is in the task doc's deliverables and not in its table; our reading [~], asked as question 275: a contact card, so the advisor's call does not show as an unknown number. The number is a placeholder. -->
-      <p class="done-share"><button class="inline-link" type="button" data-act="vcard">Save our number</button><button class="inline-link" type="button" data-act="share">Forward to a partner</button><span class="share-status" role="status"></span></p>
+      <!-- "Save our number" is in the task doc's deliverables and not in its table; our reading [~], asked as question 275: a contact card, so the advisor's call does not show as an unknown number. The number is a placeholder. The two are text buttons with a small leading icon, as the advisor profile sets LinkedIn and Website (Tanya, 23 Nov: "make this buttons with left icons, as here"). -->
+      <p class="done-share"><button class="inline-link" type="button" data-act="vcard"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M14.2 11.3v1.8a1.2 1.2 0 0 1-1.3 1.2 11.9 11.9 0 0 1-5.2-1.85 11.7 11.7 0 0 1-3.6-3.6A11.9 11.9 0 0 1 2.25 3.6 1.2 1.2 0 0 1 3.45 2.3h1.8a1.2 1.2 0 0 1 1.2 1.03c.08.58.22 1.15.42 1.69a1.2 1.2 0 0 1-.27 1.27l-.76.76a9.6 9.6 0 0 0 3.6 3.6l.76-.76a1.2 1.2 0 0 1 1.27-.27c.54.2 1.11.34 1.69.42a1.2 1.2 0 0 1 1.03 1.22z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>Save our number</button><button class="inline-link" type="button" data-act="share"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 4.5 13.5 8 10 11.5M13.5 8H6.5A3.5 3.5 0 0 0 3 11.5V12.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Forward to a partner</button><span class="share-status" role="status"></span></p>
     </div>
   </div>
 

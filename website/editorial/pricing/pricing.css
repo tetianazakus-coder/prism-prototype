@@ -22,7 +22,9 @@
 /* No rule under the caption since 13 Nov: the card's top edge frames it, and a hairline there doubled the edge. It sits
    2px over the first row, as "On annual billing, your fee covers" sits over the plan rows [rec] (Tanya, 13 Nov: "to many
    dividers here, what dividers we can remove?", then "do recommended"). */
-.ledger-cap{font-size:12px;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:var(--bronze);padding-bottom:2px}
+/* Deep bronze, as other small bronze text on light (find.css .filter-count): --bronze is 4.19:1 on the card at 12px and fails AA
+   (Lighthouse on the port, 23 Nov). */
+.ledger-cap{font-size:12px;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:#7a6040;padding-bottom:2px}
 .ledger dl{margin:0}
 .ledger dl>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 24px;padding:15px 0 14px;border-bottom:1px solid var(--line)}
 .ledger dt{font-size:16px;line-height:1.4;color:var(--muted)}
@@ -60,7 +62,7 @@
 .ledger .total{padding-top:16px}
 /* The lead-in takes the card caption's label style, DM Sans 12 at 600, .095em tracking, capitals, bronze (Tanya, 13 Nov:
    "lets use this label style", with a screenshot of it set like "One closed deal, worked through"). */
-.ledger-sub{margin:0;padding-bottom:2px;font-size:12px;line-height:1.4;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:var(--bronze)}
+.ledger-sub{margin:0;padding-bottom:2px;font-size:12px;line-height:1.4;font-weight:600;letter-spacing:.095em;text-transform:uppercase;color:#7a6040} /* deep bronze, as .ledger-cap */
 .ledger .total dl>div{align-items:center}
 .ledger .total dl>div:last-child{border-bottom:0}
 .ledger .total dt small{font-size:14px;font-weight:400;opacity:1;margin-top:3px}

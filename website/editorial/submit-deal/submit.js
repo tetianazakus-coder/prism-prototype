@@ -9,7 +9,9 @@
   const STATES = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
   // The product's 24 property types less the five on chips (platform-audit-findings, /loans/new).
   const OTHER_TYPES = ['Assisted living / memory care', 'Build to rent', 'Build to sell single-family & condos', 'Land', 'Manufactured housing / mobile home park', 'Marina', 'Medical office', 'Note purchase financing', 'Nursing facility', 'Office-multi tenant', 'Office-owner/user', 'Office-single tenant', 'Other', 'Retail-multi tenant', 'Retail-single tenant', 'RV park', 'Senior housing', 'Single-family rentals (1-4 units)', 'Student housing'];
-  const LISTS = {state: STATES, property_other: OTHER_TYPES};
+  // The phone's country codes, the list the native select had; US first, the default.
+  const PHONE_CODES = ['US +1', 'Canada +1', 'Mexico +52', 'UK +44', 'Australia +61', 'Brazil +55', 'China +86', 'France +33', 'Germany +49', 'India +91', 'Israel +972', 'Japan +81', 'UAE +971'];
+  const LISTS = {state: STATES, property_other: OTHER_TYPES, phone_code: PHONE_CODES};
   const fold = text => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
   const CHEV = '<svg class="chev" width="8" height="5" viewBox="0 0 8 5" aria-hidden="true"><path d="M1 1l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const LENS = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5.25" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M11 11l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
@@ -17,14 +19,16 @@
 
   // Searchable single-select, after Find a broker's Property state picker (find.js): a button that reads the pick, a
   // combobox search over a listbox, arrows and Enter pick, Escape closes. Built from the root's data attributes so one
-  // function serves State and "Other type"; find.js can take it over when that file is next open.
+  // function serves State, "Other type" and the phone's country code (Tanya, 23 Nov: "use our dropdown component for
+  // this", of the native select); find.js can take it over when that file is next open. A pick fires change on the
+  // hidden input, as the native select did, so the field's error clears and the phone takes its code's shape.
   const selects = {};
   function initSelect(root) {
     const name = root.dataset.select;
     const placeholder = root.dataset.placeholder;
     const noun = root.dataset.noun;
     const field = root.closest('.field');
-    const labelId = field.querySelector('.field-label, legend')?.id || (field.querySelector('legend').id = 'l-' + name);
+    const labelId = root.dataset.labelledby || field.querySelector('.field-label, legend')?.id || (field.querySelector('legend').id = 'l-' + name);
     root.innerHTML = `<button class="select-toggle is-empty" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="pop-${name}" aria-labelledby="${labelId} v-${name}" aria-describedby="e-${field.dataset.field}"><span class="select-value" id="v-${name}">${placeholder}</span>${CHEV}</button>`
       + `<div class="select-pop" data-lenis-prevent id="pop-${name}" hidden><label class="select-search"><span class="sr-only">Search ${noun}</span>${LENS}<input type="text" role="combobox" aria-controls="list-${name}" aria-expanded="true" aria-autocomplete="list" placeholder="Search ${noun}" autocomplete="off" spellcheck="false"></label>`
       + `<ul class="select-options" id="list-${name}" role="listbox" aria-labelledby="${labelId}"></ul><p class="select-none" hidden>No ${noun} match.</p></div><input type="hidden" name="${name}">`;
@@ -77,6 +81,7 @@
       label.textContent = value || placeholder;
       toggle.classList.toggle('is-empty', !value);
       clearError(field);
+      hidden.dispatchEvent(new Event('change', {bubbles: true}));
     };
     const choose = option => { pick(option.dataset.value); open(false); toggle.focus(); };
     toggle.addEventListener('click', () => open(pop.hidden));
@@ -101,11 +106,13 @@
     selects[name] = {root, open, pick, toggle, get value() { return hidden.value; }};
   }
   $$('[data-select]', form).forEach(initSelect);
+  selects.phone_code.pick('US +1');
   document.addEventListener('pointerdown', event => Object.values(selects).forEach(select => { if (!select.root.contains(event.target)) select.open(false); }));
 
   // Errors: one line under the field, tied to its control; the first wrong field takes focus on submit.
   const fieldOf = name => $(`[data-field="${name}"]`, form);
-  const controlsOf = field => $$('input:not([type=hidden]), textarea, .select-toggle', field).filter(control => !control.closest('.select-pop'));
+  // The phone's country code is no part of its error: the number is, so it alone turns red and takes focus.
+  const controlsOf = field => $$('input:not([type=hidden]), textarea, .select-toggle', field).filter(control => !control.closest('.select-pop, .select-code'));
   function setError(field, message) {
     const line = $('.field-error', field);
     line.textContent = message;
@@ -138,7 +145,7 @@
       ['first_name', () => value('first_name') ? '' : 'Enter your first name.'],
       ['last_name', () => value('last_name') ? '' : 'Enter your last name.'],
       ['email', () => !value('email') ? 'Enter your email.' : emailOk(value('email')) ? '' : 'Enter an email like name@company.com.'],
-      ['phone', () => !value('phone') ? 'Enter your phone number.' : digits(value('phone')).length >= (value('phone_code') === '+1' ? 10 : 6) ? '' : value('phone_code') === '+1' ? 'Enter a full phone number, with the area code.' : 'Enter a full phone number.'],
+      ['phone', () => !value('phone') ? 'Enter your phone number.' : digits(value('phone')).length >= (dial() === '+1' ? 10 : 6) ? '' : dial() === '+1' ? 'Enter a full phone number, with the area code.' : 'Enter a full phone number.'],
     ],
     2: [
       ['amount', () => checked('amount').length ? '' : 'Choose a loan amount.'],
@@ -171,15 +178,16 @@
   // Phone: under +1, ten digits take the US shape as they are typed; under another code the number stays as written.
   const phone = form.elements.phone;
   const code = form.elements.phone_code;
+  const dial = () => code.value.split(' ').pop(); // "US +1" to "+1"
   const shapePhone = () => {
-    if (code.value !== '+1') return;
+    if (dial() !== '+1') return;
     const d = digits(phone.value).replace(/^1(?=\d{10})/, '').slice(0, 10);
     phone.value = d.length > 6 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0, 3)}) ${d.slice(3)}` : d;
   };
   phone.addEventListener('input', shapePhone);
   code.addEventListener('change', () => {
-    phone.placeholder = code.value === '+1' ? '(555) 123-4567' : 'Phone number';
-    if (code.value === '+1') shapePhone(); else phone.value = digits(phone.value);
+    phone.placeholder = dial() === '+1' ? '(555) 123-4567' : 'Phone number';
+    if (dial() === '+1') shapePhone(); else phone.value = digits(phone.value);
   });
 
   // Property type: "Other type" opens the rest of the list in the select.
@@ -299,7 +307,9 @@
   $('.match-card', done).addEventListener('click', () => { matchDialog.showModal(); document.body.classList.add('modal-open'); });
   // The account step shows the preview's rows beside its form: copied from the dialog, so there is one list.
   const accountMatches = $('.account-matches', account);
-  accountMatches.append(...['.match-list', '.match-rest'].map(sel => $(sel, matchDialog).cloneNode(true)));
+  // The thank-you view's panel too (from 851px on a pointer; phones open the dialog).
+  const donePanel = $('.match-panel', done);
+  [accountMatches, donePanel].forEach(panel => panel.append(...['.match-list', '.match-rest'].map(sel => $(sel, matchDialog).cloneNode(true))));
   const stamp = date => date.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
   const fix = $('.email-fix-form', done);
   let fixFrom = null;
@@ -328,14 +338,24 @@
       } catch (error) { if (error.name !== 'AbortError') say('Copy this link: ' + url, shareStatus); }
     },
     // A mistyped email: corrected here, and the matches go out again.
-    // "Change" sits on each card's email; the one correction form moves under the email of the card in view, and
-    // after Save the focus returns to that Change.
+    // "Change" sits on each card's email; the one correction form moves into the email box of the card in view, where
+    // it stands in for the address and Change (is-editing) until Save, Cancel or Escape, and the focus returns to Change.
     fix: button => {
-      const isOpen = fix.hidden;
-      if (isOpen) { fixFrom = button; button.closest('.account-email').after(fix); }
-      fix.hidden = !isOpen;
-      $$('[data-act=fix]', done).forEach(change => change.setAttribute('aria-expanded', String(isOpen)));
-      if (isOpen) { fixInput.value = value('email'); fixInput.focus(); fixInput.select(); }
+      fixFrom = button;
+      const box = button.closest('.account-email');
+      box.append(fix);
+      box.classList.add('is-editing');
+      fix.hidden = false;
+      fixInput.value = value('email');
+      fixInput.focus();
+      fixInput.select();
+    },
+    fixcancel: () => {
+      fix.hidden = true;
+      fixFrom.closest('.account-email').classList.remove('is-editing');
+      fixError.hidden = true;
+      fixInput.removeAttribute('aria-invalid');
+      fixFrom.focus();
     },
     fixsave: () => {
       const next = fixInput.value.trim();
@@ -346,8 +366,7 @@
       if (wrong) return fixInput.focus();
       form.elements.email.value = next;
       fillAll({email: next});
-      ACTS.fix(fixFrom);
-      fixFrom.focus();
+      ACTS.fixcancel();
       // With no matches yet nothing has been sent, so the change is only confirmed.
       say(done.classList.contains('nomatch') ? `Email changed to ${next} ✓` : `Email changed. Matches sent to ${next} ✓`);
     },
@@ -357,7 +376,10 @@
       : say(`Link sent to ${accountForm.elements.acc_email.value.trim() || value('email')} ✓`, $('.share-status', button.parentNode)),
   };
   $$('[data-act]').forEach(button => button.addEventListener('click', () => ACTS[button.dataset.act](button)));
-  fixInput.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); ACTS.fixsave(); } });
+  fixInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') { event.preventDefault(); ACTS.fixsave(); }
+    if (event.key === 'Escape') { event.preventDefault(); ACTS.fixcancel(); }
+  });
 
   // Account step: the email comes from the request; one password, eight characters or more.
   $$('[data-go]').forEach(button => button.addEventListener('click', () => {
@@ -411,6 +433,6 @@
   // ?view=done&state=errors: the thank-you card's account form sent empty (shown from 851px).
   if (STATE === 'errors') { if (view === 'account') accountForm.requestSubmit(); else if (view === 'done') quickForm.requestSubmit(); else if (view !== 'ready') form.requestSubmit(); }
   if (STATE === 'loading' && view !== 'done' && view !== 'ready') (view === 'account' ? accountForm : form).requestSubmit();
-  if (STATE === 'nomatch') { done.classList.add('nomatch'); $('.match-card', done).hidden = true; $('.match-none', done).hidden = false; accountMatches.hidden = true; }
+  if (STATE === 'nomatch') { done.classList.add('nomatch'); $('.match-card', done).hidden = true; donePanel.hidden = true; $('.match-none', done).hidden = false; accountMatches.hidden = true; }
   if (STATE === 'exists') { done.classList.add('has-account'); $('.account-exists', done).hidden = false; }
 })();

@@ -23,7 +23,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
   <script src="../shared/site.js?v=20261119nv" defer></script>
   <script src="find.js?v=20261114dl" defer></script>
-  <script src="../shared/motion.js?v=20261116sb" defer></script>
+  <script src="../shared/motion.js?v=20261123fa" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +33,7 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Menu"><svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <nav id="navigation" aria-label="Main navigation">
       <a href="../brokers/">Brokers</a>
-      <a href="../borrowers/" aria-current="true">Borrowers</a>
+      <a href="../borrowers/">Borrowers</a>
       <a href="../lenders/">Lenders</a>
       <a href="../about/">About</a>
       <a href="../join/">Careers</a>
@@ -83,6 +83,8 @@
         <div class="filter" data-filter="located"><button class="filter-toggle" type="button" aria-expanded="false" aria-controls="filter-located">Advisor location<span class="filter-count"></span><svg class="chev" width="8" height="5" viewBox="0 0 8 5" aria-hidden="true"><path d="M1 1l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="filter-pop" data-lenis-prevent id="filter-located" role="group" aria-label="Advisor location" hidden><div class="filter-options"></div><div class="filter-foot"><button type="button" data-all>Select all</button><button type="button" data-clear>Clear</button></div></div></div>
         <p class="find-count" role="status"></p>
       </div>
+      <!-- The cards' names are h3s; this heading sits between them and the page's h1, for screen readers only (Lighthouse on the port, 23 Nov). -->
+      <h2 class="sr-only">Advisors</h2>
       <ul class="person-grid broker-grid">
         <li data-broker="sean-hasson" class="person-card broker-card" data-located="Texas" data-types="Assisted Living / Memory Care|Build to Rent|Hotel/Motel|Industrial|Land|Manufactured Housing / Mobile Home Park|Marina|Medical Office|Mixed-Use|Multifamily|Nursing Facility|Office-Multi Tenant|Office-Owner/User|Office-Single Tenant|Other|RV Park|Retail-Multi Tenant|Retail-Single Tenant|Self-Storage|Senior Housing|Single-Family Rentals (1-4 Units)|Student Housing" data-states="Texas"><div class="portrait"><img src="../img/brokers/sean-hasson.jpg" width="800" height="800" alt="" loading="lazy"></div><h3><a href="advisor/?a=sean-hasson">Sean Hasson</a></h3><p class="person-role">Magnolia, TX</p><p class="broker-types">Multifamily, Assisted Living / Memory Care, Build to Rent <span>+19 more</span></p><p class="broker-states"><span>Property location</span>Texas</p><a class="button outline" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/borrower">Connect via LenderPrism<span class="sr-only"> with Sean Hasson</span> <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></li>
         <li data-broker="matthew-morelli" class="person-card broker-card" data-located="New Jersey" data-types="Assisted Living / Memory Care|Build to Rent|Build to Sell Single-Family &amp; Condos|Land|Manufactured Housing / Mobile Home Park|Mixed-Use|Multifamily|RV Park|Retail-Multi Tenant|Retail-Single Tenant|Self-Storage|Senior Housing|Single-Family Rentals (1-4 Units)|Student Housing" data-states="Florida"><div class="portrait"><img src="../img/brokers/matthew-morelli.jpg" width="800" height="800" alt="" loading="lazy"></div><h3>Matthew Morelli</h3><p class="person-role">Belmar, NJ</p><p class="broker-types">Multifamily, Assisted Living / Memory Care, Build to Rent <span>+11 more</span></p><p class="broker-states"><span>Property location</span>Florida</p><a class="button outline" href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/signup/borrower">Connect via LenderPrism<span class="sr-only"> with Matthew Morelli</span> <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></a></li>
@@ -122,7 +124,6 @@
 <dialog id="connect-dialog" class="connect-dialog dialog-sectioned" aria-labelledby="connect-title"><button class="dialog-close" data-close aria-label="Close">×</button>
   <form id="connect-form" class="connect-form connect-ask dialog-step">
     <div class="dialog-hd">
-      <p class="eyebrow">CONNECT VIA LENDERPRISM</p>
       <h2 id="connect-title">Connect with <em data-connect="name">your advisor</em></h2>
       <p class="connect-lede">Share your details and <span data-connect="first">your advisor</span> will reach out to you directly.</p>
     </div>

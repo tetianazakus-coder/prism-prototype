@@ -21,6 +21,41 @@
       if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
     });
   });
+  // Book a call (Tanya, 23 Nov: "go", to the port's dialog in place of Calendly's popup): a plain click on a link to Tony's
+  // booking page opens it in the site's own dialog, Calendly's inline embed inside, so Escape, focus and the backdrop
+  // behave as every other dialog's here. Calendly's script loads on the first click only; if it fails, the booking page
+  // opens in this tab. A click meant for a new tab, and no scripts, keep the plain link.
+  const CALL = 'https://calendly.com/tony_talamas/work-with-lenderprism';
+  let calendly, callDialog;
+  const loadCalendly = () => calendly ??= new Promise((resolve, reject) => {
+    const css = Object.assign(document.createElement('link'), {rel: 'stylesheet', href: 'https://assets.calendly.com/assets/external/widget.css'});
+    const js = Object.assign(document.createElement('script'), {src: 'https://assets.calendly.com/assets/external/widget.js', async: true});
+    js.onload = () => window.Calendly ? resolve() : reject();
+    js.onerror = reject;
+    document.head.append(css, js);
+  }).catch(error => { calendly = undefined; throw error; });
+  document.addEventListener('click', event => {
+    const link = event.target.closest?.('a[href]');
+    if (!link || link.href !== CALL || event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (!callDialog) {
+      callDialog = document.createElement('dialog');
+      callDialog.className = 'dialog-sectioned call-dialog';
+      callDialog.setAttribute('aria-labelledby', 'call-title');
+      callDialog.innerHTML = '<div class="call-head"><h2 id="call-title">Book a call</h2><button class="call-close" type="button" aria-label="Close">×</button></div><div class="call-embed"></div>';
+      document.body.append(callDialog);
+      $('.call-close', callDialog).addEventListener('click', () => callDialog.close());
+      callDialog.addEventListener('close', () => { document.body.classList.remove('modal-open'); $('.call-embed', callDialog).replaceChildren(); });
+      callDialog.addEventListener('click', event => {
+        if (event.target !== callDialog) return;
+        const rect = callDialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) callDialog.close();
+      });
+    }
+    openDialog(callDialog);
+    const parentElement = $('.call-embed', callDialog);
+    loadCalendly().then(() => { parentElement.replaceChildren(); Calendly.initInlineWidget({url: CALL, parentElement}); }, () => location.assign(CALL));
+  });
   function notice(title, message) {
     $('#notice-title').textContent = title;
     $('#notice-body').textContent = message;
