@@ -1,0 +1,132 @@
+/* An advisor's profile (index.html records the request and the design). Load order: base.css, editorial.css,
+   components.css, ../find.css (the Connect dialog, the route line), ../../shared/market.css (the closing card), this
+   file, type.css. Every value here is ours
+   [💡 rec], drawn from the site's own: the hero's type a step down (as Submit a deal's), the cards' caps labels and
+   hairlines, Submit a deal's white card. */
+
+/* Identity: back link, then a small portrait beside the name, so the profile starts on the first screen. */
+.advisor-head .wrap{padding-block:28px 56px}
+.advisor-back{display:inline-flex;align-items:center;gap:10px;font-size:14px;line-height:1.5;font-weight:500;color:var(--muted);transition:color .2s}
+.advisor-back:hover{color:var(--ink)}
+.advisor-back .arrow{width:11px;height:auto;rotate:225deg;fill:currentColor}
+.advisor-id{display:flex;align-items:center;gap:40px;margin-top:28px}
+/* Taller than square, 4:5 (Tanya, 22 Nov: "increase height of photo"): the square photo crops at the sides. */
+.advisor-portrait{flex:none;width:168px;aspect-ratio:4/5;margin:0}
+.advisor-name{min-width:0}
+.advisor-head h1{margin-top:12px;font-size:clamp(44px,4.2vw,60px)}
+.advisor-details{display:flex;flex-wrap:wrap;align-items:center;gap:8px 32px;margin:16px 0 0}
+.advisor-meta{margin:0;font-size:17px;line-height:1.5;color:var(--muted)}
+.advisor-company{color:var(--ink)}
+.advisor-company[hidden]{display:none}
+.advisor-company:not([hidden])+.advisor-place::before{content:'\00B7';margin-inline:10px;color:var(--muted)}
+
+/* The profile beside the contact card, which stays in view under the sticky header. */
+/* The same space above and below the hero's hairline (Tanya, 22 Nov: "here as well"): the body opens with the head's
+   bottom padding, 56px, 40px on phones. */
+.advisor-body{padding-top:56px;border-top:1px solid var(--line)}
+.advisor-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:80px;align-items:start}
+.advisor-main h2{font-size:clamp(34px,2.8vw,40px)}
+.advisor-about-title em{display:inline}
+.advisor-bio{max-width:680px;margin:24px 0 0;font-size:18px;line-height:1.65;white-space:pre-line}
+/* The same space above and below each hairline (Tanya, 22 Nov: "make top and bottom paddings the same"), 40px, as the
+   card's facts hold 24 on both sides of theirs. */
+.advisor-facts{display:grid;gap:40px;max-width:680px;margin:40px 0 0}
+.advisor-facts>div{padding-top:40px;border-top:1px solid var(--line)}
+/* Short lists side by side under one hairline (Tanya, 23 Nov: "go", on "how to improve layout in this section"): two
+   types and two states stacked under two hairlines left most of the block empty. The halves meet with no gap, so their
+   hairlines read as one line. Long lists (the live profiles hold 17-22 types, up to 20 states) stay stacked. The facts
+   end with the bio, at 680px. */
+.advisor-facts.is-pair{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:0}
+.advisor-facts.is-pair>div:first-child{padding-right:32px}
+.advisor-facts.is-pair .advisor-list{columns:auto}
+.advisor-facts dt{margin-bottom:8px;font-size:12px;line-height:1.5;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:#7A6040}
+.advisor-facts dd{margin:0;font-size:16px;line-height:1.6}
+/* Columns by width, not by count: as many as fit, so a short list keeps its items together (columns:2 set two types
+   400px apart) and a long one still fills the measure: 2 columns of types (at 200px, 3 columns wrapped four of
+   Dustin Shively's 20), 4 of states at 680px. A short pair keeps one column each. */
+.advisor-list{margin:0;padding:0;list-style:none;columns:240px;column-gap:32px}
+.advisor-list li{padding-block:2px;break-inside:avoid}
+.advisor-list.is-states{columns:140px}
+/* The map over the states (advisor.js; 23 Nov), the app's (#562) in the site's colours: the covered states in navy, the
+   rest a step darker than the paper, the borders in the paper so each state reads on its own [rec]. 440px at most, so
+   on its own row it stays a figure beside the list, not a banner; in a pair it takes its half. */
+.advisor-map{display:block;width:100%;max-width:440px;height:auto;margin:4px 0 20px}
+.advisor-map path{fill:#e4dfd5;stroke:var(--paper);stroke-width:1;stroke-linejoin:round}
+.advisor-map path.on{fill:var(--navy)}
+.advisor-all{display:block}
+
+/* Closed transactions (advisor.js; 23 Nov): Home's closing cards, two to a row in the profile's 680px column, one on
+   phones; a step smaller than Home's three-up, as its four-up is. 80px over the title, a section's break after the
+   facts' 40s [rec]. */
+.advisor-closings{max-width:680px;margin-top:80px}
+.advisor-closings h2 em{display:inline} /* one line, as About's title */
+.advisor-closings[hidden],.advisor-closing-list>[hidden],.advisor-more[hidden]{display:none}
+.advisor-closing-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:32px 0 0;padding:0;list-style:none}
+.advisor-closing-list>.closing-card{padding:28px}
+.advisor-closing-list .closing-amount{font-size:clamp(30px,2.6vw,36px)}
+.advisor-closing-list dd{text-wrap:balance} /* a long financing type splits evenly, not "(<3" over "Yrs)" */
+.advisor-more{margin-top:32px}
+
+.advisor-contact{position:sticky;top:104px}
+.advisor-card{padding:32px;background:var(--white);border:1px solid var(--line)}
+/* 26px, so "Ready to work together?" holds one line in the 360px card (at 28px it was 303px in 296 and broke after
+   "to"; the shared text-wrap:balance cannot even that break). Narrower cards still take two lines. */
+.advisor-card h2{font-size:26px;line-height:1.2}
+.advisor-card>p:not(.advisor-safe){margin:12px 0 0;font-size:16px;line-height:1.6;color:var(--muted)}
+.advisor-card .button{width:100%;justify-content:space-between;margin-top:24px}
+.advisor-safe{display:flex;align-items:center;gap:6px;margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.advisor-safe svg{flex:none}
+.advisor-links{display:flex;flex-wrap:wrap;gap:8px 24px;margin:0}
+.advisor-links[hidden]{display:none}
+.advisor-link{display:inline-flex;align-items:center;gap:8px;font-size:15px;line-height:1.5;font-weight:500;color:var(--ink);transition:color .2s}
+.advisor-link:hover{color:var(--bronze)}
+/* Icons set on the text, not on the line box (Tanya, 23 Nov: "align icon with text properly"): the "in" mark at 16px is
+   about the capitals' height and stands on the baseline; the link icon, at 18, centres on the capitals. Centring on
+   the 22.5px line box set both about 0.5px low, the mark 1.3px under the baseline at 18px. */
+.advisor-link svg{flex:none}
+.advisor-link .icon-in{translate:0 -.65px}
+.advisor-link .icon-link{translate:0 -.5px}
+/* Left, on the page's one edge (Tanya, 23 Nov: "should we align this text to the left?", then "go"): centred, it sat
+   across the full width, beside nothing. Find an advisor keeps it centred under its grid. It closes the profile's
+   column, 56px under the facts (40 on phones), the space around the hero's hairline (23 Nov: "should we decrease gap
+   here?", then "go"); it was 88px under the whole row, 93-125px when the card ran longer than the facts. */
+.advisor-body .find-route{margin-top:56px;text-align:left}
+/* Its type, the Brokers hero's small line, is find.css's, shared with Find an advisor (23 Nov). */
+
+/* Motion (shared/motion.js): the identity block waits for its intro, as other heroes' parts do (editorial.css); the
+   facts' hairlines move onto a span that draws from the left, so without motion the border stands. */
+.motion-pending .advisor-head .wrap{visibility:hidden}
+.advisor-facts>div:has(>.advisor-facts-rule){position:relative;border-top-color:transparent}
+.advisor-facts-rule{position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--line);transform-origin:left}
+
+@media (max-width:1100px){
+  .advisor-layout{grid-template-columns:minmax(0,1fr) 320px;gap:48px}
+}
+/* Narrower, one column: the card follows the name, before About, and no longer sticks. */
+@media (max-width:850px){
+  .advisor-layout{grid-template-columns:minmax(0,1fr);gap:56px}
+  .advisor-contact{position:static;order:-1}
+  .advisor-portrait{width:128px}
+  .advisor-id{gap:28px}
+}
+@media (max-width:600px){
+  .advisor-head .wrap{padding-block:20px 40px}
+  .advisor-body{padding-top:40px}
+  .advisor-body .find-route{margin-top:40px}
+  .advisor-id{flex-direction:column;align-items:flex-start;gap:20px;margin-top:24px}
+  .advisor-portrait{width:112px}
+  .advisor-head h1{font-size:clamp(36px,10.2vw,44px)}
+  .advisor-meta{font-size:16px}
+  .advisor-meta>span{display:block}
+  .advisor-details{flex-direction:column;align-items:flex-start;gap:12px}
+  .advisor-company:not([hidden])+.advisor-place::before{content:none}
+  .advisor-card{padding:24px}
+  .advisor-bio{font-size:17px;line-height:1.6}
+  .advisor-list.is-states{column-gap:20px}
+  .advisor-facts.is-pair{grid-template-columns:minmax(0,1fr)}
+  .advisor-facts.is-pair>div:first-child{padding-right:0}
+  .advisor-closings{margin-top:56px}
+  .advisor-closing-list{grid-template-columns:minmax(0,1fr);gap:16px;margin-top:24px}
+  .advisor-closing-list>.closing-card{padding:26px}
+  .advisor-more>.button{width:100%;justify-content:center}
+}

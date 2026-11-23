@@ -193,6 +193,13 @@
     if (pick('.ledger')) workSum(pick('.ledger'), .5);
     else if (pick('.hero-visual')) reveal(pick('.hero-visual'), .1);
     if (pick('.hero-lower')) reveal(pick('.hero-lower'), .15);
+    // An advisor's profile (find-a-broker/advisor/; Tanya, 23 Nov, "to align with other pages"): the photo slides in
+    // inside its frame as it did on the card the reader clicked (the person cards' beat below: xPercent -110 to 0,
+    // power1.out, 1.05s), at the photo's 0.1s; the back link and the details line rise at the copy's 0.15s.
+    // advisor.css hides the block while .motion-pending, as editorial.css hides other heroes' parts.
+    if (pick('.advisor-portrait > img')) gsap.fromTo(pick('.advisor-portrait > img'), {xPercent: -110}, {xPercent: 0, duration: 1.05,
+      ease: 'power1.out', delay: .1, clearProps: 'transform'});
+    hero.querySelectorAll('.advisor-back, .advisor-details').forEach(part => reveal(part, .15));
     lines(pick('h1'), .2);
     root.classList.remove('motion-pending');
 
@@ -200,7 +207,7 @@
 
     // Blocks, each on its own trigger as The Nest wraps them. A container that holds a title reveals its other
     // children instead, so no title moves twice.
-    const picked = gsap.utils.toArray('.proof > div, .problem-body, .benefits > li, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *, .join-why-head')
+    const picked = gsap.utils.toArray('.proof > div, .problem-body, .benefits > li, .desk-line, .pillar > *, .section-heading > *, .walk-stage, .territory-grid > *, .testimonial-grid > *, .roi-comparison, .plans > article, .pricing-footnote, .comparison, .compare .table-scroll, .compare-notes, .sides-list, .platform-pair > *, .notify > *, .faq-grid > *, .final-grid > *, .story-side, .story-body, .contact-grid > *, .join-why-head, .advisor-bio, .advisor-card, .advisor-closings, .advisor-body .find-route')
       .flatMap(block => block.querySelector('h2') ? [...block.children] : block)
       .filter(block => block.tagName !== 'H2' && !block.matches('.story-portrait'));
     const blocks = [...new Set(picked)];
@@ -231,6 +238,23 @@
       const play = gsap.timeline({defaults: {ease}, scrollTrigger: {trigger: table, start: 'top 85%', once: true}});
       play.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out'}, 0);
       rows.forEach((row, n) => play.to(row, {opacity: 1, y: 0, duration: .7, clearProps: 'opacity,transform'}, .25 + n * .35));
+    });
+
+    // An advisor's facts (Property types, Property location) arrive as Join's sections do: the hairline over each draws
+    // from the left (0.6s power3.out) once the block is 85% down the viewport, then its label and list rise (22px, 0.9s,
+    // 0.1s apart) from 0.25s. advisor.css moves the line off the border onto .advisor-facts-rule, so without motion the
+    // border stands. The card's contents rise through the reveal list above, its frame still, as Pricing's plans do, so
+    // its title moves once and the card still sticks.
+    document.querySelectorAll('.advisor-facts > div').forEach(fact => {
+      const rule = document.createElement('span');
+      rule.className = 'advisor-facts-rule';
+      rule.setAttribute('aria-hidden', 'true');
+      fact.prepend(rule);
+      const parts = fact.querySelectorAll('dt, dd');
+      gsap.set(parts, {opacity: 0, y: 22});
+      const play = gsap.timeline({defaults: {ease}, scrollTrigger: {trigger: fact, start: 'top 85%', once: true}});
+      play.fromTo(rule, {scaleX: 0}, {scaleX: 1, duration: .6, ease: 'power3.out'}, 0);
+      play.to(parts, {opacity: 1, y: 0, duration: .9, stagger: .1, clearProps: 'opacity,transform'}, .25);
     });
 
     // Person cards, one by one, after Stellar Management's news photos (stellarmanagement.com, read from its bundle on

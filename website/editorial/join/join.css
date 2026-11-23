@@ -14,8 +14,11 @@
    no diamond. They wrap at every width. */
 .join-tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
 .join-tags li{padding:8px 14px;border:1px solid #bfc2bd;background:var(--white);font-size:15px;line-height:1.35}
-/* Required experience and Compensation: a block under the list it belongs to, over a hairline, its label an eyebrow. */
-.join-sub{position:relative;display:flex;flex-direction:column;gap:14px;margin-top:20px;padding-top:28px;border-top:1px solid var(--line)}
+/* Required experience and Compensation: a block under the list it belongs to, over a hairline, its label an eyebrow.
+   The same space above and below the hairline, 40px from the list's last line to the rule and from the rule to the
+   label's letters (Tanya, 23 Nov: "make top and bottom gaps here same size"); it was 40 over 29. 39px of padding: the
+   label's line box adds the last 1. */
+.join-sub{position:relative;display:flex;flex-direction:column;gap:14px;margin-top:20px;padding-top:39px;border-top:1px solid var(--line)}
 /* With motion the hairline is a span that draws from the left (motion.js, the Pricing ledger's rule); the border it
    stands on goes clear, so without motion the border shows as before. */
 .join-sub:has(>.join-sub-rule){border-top-color:transparent}

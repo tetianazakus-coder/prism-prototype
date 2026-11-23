@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A LenderPrism financing advisor: the properties and states they finance, and a way to connect with them directly.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Financing advisor — LenderPrism</title>
+  <link rel="icon" href="../../img/logo-sign.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/base.css?v=20261120sa">
+  <link rel="stylesheet" href="../../shared/editorial.css?v=20261119it">
+  <link rel="stylesheet" href="../../shared/components.css?v=20261116t">
+  <link rel="stylesheet" href="../find.css?v=20261123rs">
+  <link rel="stylesheet" href="../../shared/market.css?v=20261123ct">
+  <link rel="stylesheet" href="advisor.css?v=20261123ct">
+  <link rel="stylesheet" href="../../shared/type.css?v=20261102c">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.css">
+  <script>matchMedia('(prefers-reduced-motion: reduce)').matches||(document.documentElement.classList.add('motion','motion-pending'),setTimeout(()=>document.documentElement.classList.remove('motion-pending'),2500))</script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.25/dist/lenis.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script>
+  <script src="../../shared/site.js?v=20261119nv" defer></script>
+  <script src="us-states.js?v=20261123ct" defer></script>
+  <script src="advisor.js?v=20261123ct" defer></script>
+  <script src="../../shared/motion.js?v=20261123ct" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="../../" aria-label="LenderPrism home"><img src="../../img/logo-main.svg" width="177" height="30" alt=""></a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" aria-label="Menu"><svg class="icon-menu" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><svg class="icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <nav id="navigation" aria-label="Main navigation">
+      <a href="../../brokers/">Brokers</a>
+      <a href="../../borrowers/" aria-current="true">Borrowers</a>
+      <a href="../../lenders/">Lenders</a>
+      <a href="../../about/">About</a>
+      <a href="../../join/">Careers</a>
+      <span class="nav-phone placeholder">[Phone number]</span>
+      <a href="https://tetianazakus-coder.github.io/prism-prototype/#/auth/login">Log in</a>
+      <a class="button small" href="../../submit-deal/">Submit a deal</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- An advisor's profile (Tanya, 21 Nov: "Prototype first", for the live /brokers/[slug], which the port's cards link to and
+       which was still in the old design). The design is ours [💡 rec]; its parts are the profile the live page already has, from
+       GET /api/public/brokers/:slug, and nothing it does not return: name, company, city, member since, bio, property types,
+       the states the advisor finances in, LinkedIn and website. No cover photo or branded band: Tony eliminated both for
+       broker listings (Figma comment, 10 Sep). No "Pro" mark: every listed advisor is Pro, and the word is for brokers, not
+       borrowers [💡 rec]. Closed transactions (Tony's tombstones) join once the public API returns them.
+       Layout (Tanya, 22 Nov: "improve layout, search references on mobbin"): a compact identity header, then the profile
+       beside a contact card that stays in view, the two patterns nearly every comparable profile on Mobbin shares (Zillow's
+       agent page, Semrush's agency page, Preply, Fiverr and Notion's expert pages keep the contact action in a right-hand
+       card beside the bio; Hashnode, Fiverr, Codecademy and Upwork set a small photo beside the name, so the bio starts on
+       the first screen). It replaced, the same day, a 340px portrait under a 76px name, which filled the first screen and
+       showed Connect once.
+       Demo data: the live directory's three advisors, read from lenderprism.com's public API on 21 Nov, word for word;
+       ?a=<slug> picks one (advisor.js), Sean Hasson without it. ?a=sample is a made-up advisor, the one with closed
+       transactions (23 Nov). -->
+  <section class="hero text-hero advisor-head" aria-labelledby="hero-title">
+    <div class="wrap">
+      <!-- Back to the list, above the name, as Base44's "Go back" and Semrush's breadcrumb lead their profiles: the page is
+           reached from a card, and the browser's Back is not the only way out on a phone. -->
+      <a class="advisor-back" href="../"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg>All advisors</a>
+      <div class="advisor-id">
+        <div class="portrait advisor-portrait"><img data-advisor="photo" src="../../img/brokers/sean-hasson.jpg" width="800" height="800" alt=""></div>
+        <div class="advisor-name">
+          <!-- Three tiers, each in one style (Tanya, 22 Nov: "as a senior designer, suggest how to improve this block", then
+               "yes"): the eyebrow, the name, one details line. The eyebrow carries a fact, Member since (it was "Financing
+               advisor", which every advisor here is); it left the card. The company and the city are one line, as the app's
+               profile sets them ("Ellis Capital · Magnolia, Texas", Borrower Figma 16:1552): the company in ink, the city
+               muted, one size, so the company no longer competes with the name; no pin. On phones they stack, without the dot. -->
+          <p class="eyebrow">Member since <span data-advisor="since">July 2025</span></p>
+          <h1 id="hero-title" data-advisor="name">Sean Hasson</h1>
+          <!-- LinkedIn and Website beside the details line, as the app's profile sets them (Borrower Figma 16:1552): they are
+               about the advisor, not the card's action (Tanya, 23 Nov: "go"). On phones they take their own line. -->
+          <div class="advisor-details">
+            <p class="advisor-meta"><span class="advisor-company" data-advisor="company">Hasson Capital LLC</span><span class="advisor-place" data-advisor="place">Magnolia, TX</span></p>
+            <p class="advisor-links" data-advisor="links"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section advisor-body" aria-label="Profile">
+    <div class="wrap advisor-layout">
+      <div class="advisor-main">
+        <!-- One line, the accent inline (Tanya, 22 Nov: "make this one line"), as the inquiry dialog's title. -->
+        <h2 id="about-title" class="advisor-about-title">About <em data-advisor="first">Sean</em></h2>
+        <p class="advisor-bio" data-advisor="bio">As a seasoned commercial finance professional with over two decades of experience in the lending space, I help small business owners and real estate investors secure the right capital for their needs. By leveraging a nationwide network of banks and alternative lenders, I deliver tailored funding solutions that go beyond traditional lending channels — truly “Better Than A Banker.</p>
+        <!-- The cards' two facts in full, under hairlines with their caps labels (find.css .broker-states): on the card they
+             stop at three types and "+N more". The states read as Zillow's "Service areas" do, a list in columns; every state
+             reads "All states", as the port's cards do. Short lists share one row and one hairline (.is-pair, advisor.js;
+             23 Nov). -->
+        <dl class="advisor-facts">
+          <div><dt>Property types</dt><dd><ul class="advisor-list" data-advisor="types"></ul></dd></div>
+          <div><dt>Property location</dt><dd data-advisor="states">All states</dd></div>
+        </dl>
+        <!-- Closed transactions (Tanya, 23 Nov: "go", on adding the US map and closed transactions the app's profile has,
+             LEN-253 #562): the advisor's track record on Home's closing cards, two to a row in the column. advisor.js fills
+             it and shows it only when there are closings. The title is the product's own name for them (the broker's
+             "Closed transactions" page) [rec]. -->
+        <section class="advisor-closings" aria-labelledby="closings-title" hidden>
+          <h2 id="closings-title">Closed <em>transactions</em></h2>
+          <ul class="advisor-closing-list"></ul>
+          <div class="advisor-more" hidden><button class="button outline" type="button" aria-expanded="false">Show all</button></div>
+        </section>
+        <!-- In the profile's column, so its space counts from the facts, not from the card when the card is the taller
+             (23 Nov). -->
+        <p class="find-route">Not sure who to pick? <a href="../../submit-deal/">Submit your deal and we'll match you</a></p>
+      </div>
+      <!-- The contact card: the live page's own sidebar, word for word ("Ready to work together?", "Send <first> a message
+           about your commercial real estate deal.", "Connect via LenderPrism", "Secure and confidential"), one action and
+           nothing else: Member since moved to the eyebrow (22 Nov), the links to the details line (23 Nov). It stays in view
+           beside the profile from 851px; narrower, it follows the name. -->
+      <aside class="advisor-contact" aria-labelledby="contact-card-title">
+        <div class="advisor-card">
+          <h2 id="contact-card-title">Ready to work together?</h2>
+          <p>Send <span data-advisor="first">Sean</span> a message about your commercial real estate deal.</p>
+          <button class="button" type="button" data-connect-open>Connect via LenderPrism <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button>
+          <!-- Left-aligned with the rest of the card, a lock before it, so it reads as reassurance, not a caption (23 Nov). -->
+          <p class="advisor-safe"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="3" y="7" width="10" height="7.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>Secure and confidential</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><a class="brand" href="../../"><img src="../../img/logo-main.svg" width="177" height="30" alt="LenderPrism"></a><p>The capital markets desk for multifamily and commercial real estate.</p><span class="placeholder">[Phone number]</span><!-- Tony, Figma comment on "[Email address]", Nov 2026: "E-mail: I prefer a form field to avoid spam". No address is published; Company > Contact leads to the form on About. --></div><div><h2>Solutions</h2><a href="../../brokers/">For Brokers</a><a href="../../borrowers/">For Borrowers</a><a href="../../lenders/">For Lenders</a><a href="../../find-a-broker/">Find an advisor</a><a href="../../submit-deal/">Submit a deal</a><a href="../../pricing/">Pricing</a></div><div><h2>Company</h2><a href="../../about/">About</a><a href="../../about/#contact">Contact</a><a href="../../join/">Careers</a><h2 class="platforms-label">Our platforms</h2><a href="../../">LenderPrism <span class="platform-kind">debt</span></a><a href="https://join.investorprism.com/">InvestorPrism <span class="platform-kind">equity</span></a></div><div class="newsletter"><h2>Stay in the know</h2><!-- Tony, Figma comment on "Market notes and new lenders, once a month.", Nov 2026: "Replace these two lines with "Lender insights and LenderPrism updates"". Set word for word on one line (Tanya, 11 Nov: "make it one line"); from 860 to 1230 the four-column footer is narrower than the line and it breaks into two even lines (editorial.css). The field's hidden label follows. --><p>Lender insights and LenderPrism updates</p><!-- One sign-up form, with the role asked (Tony, Figma thread on the Borrowers launch band, about 12 Nov: "I think we should ask for role (broker, lender, borrower) throughout. Have one sign up form. We can have it go to MailChimp, which we currently use. i plan to switch to Zoho Campaigns soon."; Tanya, 16 Nov: "go"). The same fields wherever someone signs up: role, email, and the page it was sent from as a hidden field (site.js fills it), so one list can be split by role in MailChimp or Zoho Campaigns [rec]. Christian's idea, the page telling the role, becomes the pre-selected answer on the Borrowers and Lenders bands; the footer starts with none, as Home, About and Pricing speak to everyone [rec, question 293]. The consent line is ours [rec]. --><form id="newsletter-form" class="signup"><fieldset class="signup-role"><legend>I am a</legend><label><input type="radio" name="role" value="broker" required> Broker</label><label><input type="radio" name="role" value="lender"> Lender</label><label><input type="radio" name="role" value="borrower"> Borrower</label></fieldset><input type="hidden" name="source" value="footer"><label class="sr-only" for="newsletter-email">Email for lender insights and LenderPrism updates</label><div><input id="newsletter-email" type="email" name="email" autocomplete="email" placeholder="Email" required><button type="submit" aria-label="Subscribe"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></button></div><p class="signup-consent">By signing up, you agree to our <a href="https://lenderprism.com/privacy">Privacy Policy</a>. Unsubscribe anytime.</p><p id="newsletter-status" class="micro" role="status"></p></form></div></div><div class="footer-bottom"><span>© 2026 LenderPrism</span><div><a href="https://lenderprism.com/privacy">Privacy Policy</a><a href="https://lenderprism.com/terms">Terms of Service</a><a href="#main">Back to top ↑</a></div></div><!-- Tony, Figma comment on the footer line, Nov 2026: "Replace footer with 'LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.'" Set word for word; the old "We are not a lender. Commercial-purpose financing only." goes with it. --><p class="disclaimer">LenderPrism is a technology-enabled commercial mortgage brokerage connecting borrowers, brokers and lenders with one another.</p></div></footer>
+<!-- Connect via LenderPrism (Tanya, Figma comment on the cards, 10 Nov: where should it take a visitor who isn't logged
+     in, sign-up or a short contact form?; Tony, 10 Nov: "We need to track these in our platform because the economics are
+     different for lead that come to our platform. We need to capture verifiable info on the borrower."; Tony, 12 Nov: "Maybe
+     we integrate the borrower form", pointing to Olesia's Slack review of the ad form, where borrowers who signed up never
+     came back; Christian, 12 Nov: Connect signs the visitor up, confirms the email and records "that they came through
+     LenderPrism and which broker they chose"; Tony, 13 Nov: "first name, last name, email and phone for added verification
+     ... How do we put this in front of the broker as soon as it happens to avoid disputes down 1-2-3 months later?"; Tanya,
+     14 Nov: "build it"). A short form on the page, all four of Tony's fields required, the deal optional, the consent
+     line under them [rec]. On submit the lead is recorded with the advisor, the source and the time, and the advisor is
+     told at once, in the app and by email; the emailed link confirms the borrower's email and sets up the account later,
+     on any device, so no password stands between the borrower and the advisor. The card's link to borrower sign-up
+     stays as the no-script path. Preview: nothing is sent, and the confirmation says so. -->
+<dialog id="connect-dialog" class="connect-dialog dialog-sectioned" aria-labelledby="connect-title"><button class="dialog-close" data-close aria-label="Close">×</button>
+  <form id="connect-form" class="connect-form connect-ask dialog-step">
+    <div class="dialog-hd">
+      <p class="eyebrow">CONNECT VIA LENDERPRISM</p>
+      <h2 id="connect-title">Connect with <em data-connect="name">your advisor</em></h2>
+      <p class="connect-lede">Share your details and <span data-connect="first">your advisor</span> will reach out to you directly.</p>
+    </div>
+    <div class="dialog-bd">
+      <input type="hidden" name="advisor"><input type="hidden" name="source" value="advisor-profile">
+      <div class="form-row"><label>First name<input name="first_name" autocomplete="given-name" required></label><label>Last name<input name="last_name" autocomplete="family-name" required></label></div>
+      <div class="form-row"><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Phone<input name="phone" type="tel" autocomplete="tel" required></label></div>
+      <label>About your deal <span class="connect-optional">Optional</span><textarea name="deal" rows="3" placeholder="e.g. 48-unit multifamily refinance in Austin, about $6M"></textarea></label>
+      <p class="connect-consent">By connecting, you agree that LenderPrism shares these details with <span data-connect="name">your advisor</span>, who may call, text or email you about your financing. <a href="https://lenderprism.com/privacy">Privacy Policy</a></p>
+    </div>
+    <div class="dialog-ft">
+      <button class="button" type="submit">Connect <span aria-hidden="true"><svg class="arrow" viewBox="0 -800 1000 800" aria-hidden="true" focusable="false"><path d="M75 78 861-711 871-500H900C902-622 909-690 930-810C810-789 742-782 620-780V-751L831-741L46 49Z"/></svg></span></button>
+    </div>
+  </form>
+  <div class="connect-done dialog-step" hidden>
+    <div class="dialog-hd">
+      <h2 tabindex="-1"><span data-connect="first">Your advisor</span> has <em>your details.</em></h2>
+    </div>
+    <div class="dialog-bd">
+      <p><span data-connect="first">Your advisor</span> will reach out to you directly. We also sent a link to <b data-connect="email">your email</b>: open it to confirm your email and follow your request on LenderPrism. No password needed now.</p>
+    </div>
+    <div class="dialog-ft"><button class="button" type="button" data-close>Back to the profile</button></div>
+  </div>
+</dialog>
+<dialog id="notice-dialog" aria-labelledby="notice-title"><button class="dialog-close" data-close aria-label="Close notice">×</button><h2 id="notice-title"></h2><p id="notice-body"></p><button class="text-link" data-close>Back to the page <span aria-hidden="true">↙</span></button></dialog>
+</body>
+</html>

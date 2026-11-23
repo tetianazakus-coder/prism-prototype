@@ -125,8 +125,10 @@
 .notify-status{margin-top:14px;font-size:15px;color:#d6dbe5}
 .notify-status:empty{margin:0}
 .notify .soon-more{margin:24px 0 0;font-size:15px;color:#b6bfcf}
-.notify .soon-more a{color:var(--paper);border-bottom:1px solid currentColor;padding-bottom:2px}
-.notify .soon-more a:hover{color:#c2a98a}
+/* The link as Home's "Prefer to talk? Book a call" (home.css .role-call; Tanya, 23 Nov: "for these links use this
+   style"): light gold, a 1px underline 4px under the text, lighter on hover. It was paper over a 1px rule. */
+.notify .soon-more a{color:#d9bf98;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;transition:color 150ms ease}
+.notify .soon-more a:hover{color:#f0e2cc}
 
 /* Closing band, centred on a photo: Find a broker's (Tanya, 9 Nov: "build recommended", then stacked, "is it better to
    make vertical layout? title -> subtext -> CTA?", and "make it centered"), then Borrowers' and Lenders' Get notified

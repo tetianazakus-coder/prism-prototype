@@ -105,8 +105,11 @@
 .find-more[hidden]{display:none}
 
 /* The form's route under the grid; hidden when a no-advisor card (in the grid, or the page's own) already offers it. */
-.find-route{margin-top:48px;text-align:center;font-size:16px;line-height:1.7;color:var(--muted)}
-.find-route .text-link{margin-left:6px;color:var(--ink)}
+/* The small line's type, as the Brokers hero's "No card required · Book a call" (Tanya, 23 Nov: "use same text style
+   as here", then "apply same on find an advisor page"): 14px/1.5 muted, the link in ink, regular, underlined 3px under
+   the text. It was 16px with a 15px text link over a 1px rule. The advisor profile shares it. */
+.find-route{margin-top:48px;text-align:center;font-size:14px;line-height:1.5;color:var(--muted)}
+.find-route a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .broker-grid:has(.find-none:not([hidden]))~.find-route,.find-route:has(~.find-empty:not([hidden])){display:none}
 .find-empty{display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding:48px;background:var(--white);border:1px dashed #b9ab95}
 .find-empty[hidden]{display:none}
@@ -162,3 +165,13 @@
   .find-empty{padding:28px 24px}
   .connect-dialog h2{font-size:32px}
 }
+/* The whole card opens the advisor's profile (advisor/; Tanya, 23 Nov: "why advisor's cards is not clickable?"). The
+   name stays the one link, so a screen reader hears it once, by name; its ::after stretches over the card (the
+   "stretched link"), and Connect sits above it, a separate action. Hovering anywhere on the card lifts its photo (the
+   card's own rule) and underlines the name; focus rings the card. Cards without a profile (no link) stay as they were. */
+.broker-card:has(h3 a){position:relative}
+.broker-card h3 a::after{content:'';position:absolute;inset:0}
+.broker-card>.button{position:relative;z-index:1}
+.broker-card:has(h3 a):hover h3 a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.broker-card h3 a:focus-visible{outline:0}
+.broker-card:has(h3 a:focus-visible){outline:2px solid var(--ink);outline-offset:6px}
