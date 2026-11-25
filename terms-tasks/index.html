@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms requested tasks</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a developer hand-off sheet. Summary table first (order and dependencies), then one task card per change: why, today on dev, the change, done-when, before/after pictures. */
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --ink:#0e1c35; --muted:#55627a; --line:#d5dce8; --accent:#1f4fa3; --code-bg:#eef1f7;
+  --data:#7a3e9d; --data-bg:#f3eafa; --ui:#1f6b5c; --ui-bg:#e4f3ef; --wait:#9a6700; --wait-bg:#fdf3dc;
+  --before:#7a5c12; --after:#1f4fa3;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1322; --surface:#121c2e; --ink:#e4e9f2; --muted:#9aa7bd; --line:#26334a; --accent:#8cb2ff; --code-bg:#1a2639;
+  --data:#d3a6f0; --data-bg:#2b1d38; --ui:#7fd1bd; --ui-bg:#14302a; --wait:#f2c25c; --wait-bg:#33280f;
+  --before:#e3c06b; --after:#8cb2ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1322; --surface:#121c2e; --ink:#e4e9f2; --muted:#9aa7bd; --line:#26334a; --accent:#8cb2ff; --code-bg:#1a2639;
+  --data:#d3a6f0; --data-bg:#2b1d38; --ui:#7fd1bd; --ui-bg:#14302a; --wait:#f2c25c; --wait-bg:#33280f;
+  --before:#e3c06b; --after:#8cb2ff; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--f-body)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 72px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:34px;font-weight:600;line-height:1.1}
+h2{font-size:22px;font-weight:600}
+h3{font-size:13px;font-weight:500;font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+p{margin:0;max-width:72ch}
+a{color:var(--accent)}
+code{font:13px var(--f-mono);background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header.top{display:grid;gap:12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:13px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px;display:grid;gap:12px;min-width:0}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px var(--f-mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+td.id{font:500 13px var(--f-mono);white-space:nowrap}
+.tag{display:inline-block;font:600 11px var(--f-mono);padding:2px 7px;border-radius:4px;white-space:nowrap;margin:0 4px 2px 0}
+.tag.data{background:var(--data-bg);color:var(--data)} .tag.ui{background:var(--ui-bg);color:var(--ui)} .tag.wait{background:var(--wait-bg);color:var(--wait)}
+ul.plain{margin:0;padding-left:18px;display:grid;gap:4px}
+article.task{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px 22px;display:grid;gap:16px;scroll-margin-top:16px;min-width:0}
+article.task.done{background:var(--bg)}
+article.task.done .thead h2{text-decoration:line-through;color:var(--muted)}
+.thead{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline}
+.thead .id{font:500 14px var(--f-mono);color:var(--muted)}
+.thead .tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:5px 11px;font:500 13px var(--f-body);cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.ready{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;user-select:none}
+.ready input{width:16px;height:16px;margin:0;accent-color:var(--accent);cursor:pointer}
+.btn:focus-visible,.ready input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px}
+.cols > div{display:grid;gap:6px;align-content:start;min-width:0}
+.why{border-left:3px solid var(--line);padding-left:12px;color:var(--muted)}
+.why q{color:var(--ink)}
+ol.steps{margin:0;padding-left:20px;display:grid;gap:6px}
+.pics{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;align-items:start}
+figure{margin:0;display:grid;gap:6px;min-width:0}
+figure img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff}
+figcaption{font-size:12.5px;color:var(--muted)}
+pre.json{margin:0;padding:14px 16px;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;font:12.5px/1.55 var(--f-mono);overflow-x:auto;white-space:pre}
+pre.json mark{background:var(--data-bg);color:var(--data);border-radius:3px;padding:0 2px}
+figcaption b{font:600 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;margin-right:6px}
+figcaption b.before{color:var(--before)} figcaption b.after{color:var(--after)}
+.links{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;font-size:13px}
+@media (max-width:700px){.cols{grid-template-columns:1fr}h1{font-size:28px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">LenderPrism · broker deal page · borrower request form</span>
+  <h1>Terms requested tasks</h1>
+</header>
+
+<section class="panel" aria-labelledby="order-h">
+  <h3 id="order-h">Order and dependencies</h3>
+  <div class="tablewrap"><table id="summary"><thead><tr><th>Task</th><th>What</th><th>Touches</th><th>Needs</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="panel" aria-labelledby="keep-h">
+  <h3 id="keep-h">Stays as built</h3>
+  <ul class="plain">
+    <li><b>Executions to explore</b> stays optional (Tony: <q>Leave Optional</q>).</li>
+    <li><b>Interest-only period</b> stays a single choice, a select, as on his form.</li>
+    <li><b>No "Other"</b> option on any list (Tony: <q>We can leave this alone for now. Nothing to do.</q>).</li>
+    <li>The option lists themselves don't change: <code>TERM_EXECUTIONS</code>, <code>TERM_PROGRAMS</code>, <code>TERM_IOS</code>, <code>TERM_PREPAYS</code>, <code>TERM_HOLDS</code>.</li>
+  </ul>
+</section>
+
+<main id="tasks" style="display:grid;gap:20px"></main>
+</div>
+
+<script>
+const FIG_B = id => `https://www.figma.com/design/Z5x8rRoUmv85k6a3rYiCcD/?node-id=${id.replace(':','-')}`;
+const FIG_R = id => `https://www.figma.com/design/tOzZCJg4VD0iYWGmb4K54a/?node-id=${id.replace(':','-')}`;
+const PROTO = 'https://tetianazakus-coder.github.io/prism-prototype/';
+const SLACK = 'https://cieden-design.slack.com/archives/C0BPQFSEFHT/p1795642882082949?thread_ts=1795579951.404519&cid=C0BPQFSEFHT';
+
+const T = [
+{ id:'T1', title:'Store loan program, prepayment and hold period as lists', tags:['data'], needs:'—',
+  touches:'deal_sections.rb, types.ts, existing deals',
+  why:'Tony, asked whether these allow several answers: <q>Yes - several</q>. His Zoho form uses tickboxes for all three.',
+  today:[
+    '<code>app/models/deal_sections.rb:10-12</code>: <code>"terms" =&gt; { "executions" =&gt; :list, "program" =&gt; :text, "interest_only" =&gt; :text, "prepayment" =&gt; :text, "hold_period" =&gt; :text }</code>.',
+    'Stored in <code>loan_requests.deal_sections</code>, a <code>jsonb</code> column (<code>db/schema.rb:688</code>), so no column migration is needed.',
+    'Deals saved so far hold a single string, e.g. <code>"program": "10-Yr"</code>.'],
+  change:[
+    'Change <code>program</code>, <code>prepayment</code> and <code>hold_period</code> to <code>:list</code>, the type <code>executions</code> already uses (<code>coerce</code> → <code>list(value)</code>).',
+    'Convert saved strings to one-item arrays (<code>"10-Yr"</code> → <code>["10-Yr"]</code>), either with a one-off backfill over <code>deal_sections-&gt;\'terms\'</code> or by reading a string as a one-item list. Your call; a backfill keeps one shape in the data.',
+    'Keep <code>interest_only</code> as <code>:text</code>.',
+    'Front end: the three keys become <code>string[]</code> wherever <code>SectionFields</code> is read for terms.'],
+  done:['A deal saved with two programs returns both, in list order.', 'A deal saved before the change still shows its one value everywhere.', 'Interest-only still saves and reads as one value.'],
+  json:[
+    ['before', 'loan_requests.deal_sections today', `{
+  "terms": {
+    "executions":    ["Fannie Mae / Freddie Mac fixed rate loan"],
+    "program":       <mark>"10-Yr"</mark>,
+    "interest_only": "4-Year",
+    "prepayment":    <mark>"Prefer stepdown (5-4-3-2-1%)"</mark>,
+    "hold_period":   <mark>"10 years"</mark>
+  }
+}`],
+    ['after', 'After T1 (and T3)', `{
+  "terms": {
+    "executions":    ["Fannie Mae / Freddie Mac fixed rate loan"],
+    "program":       <mark>["10-Yr", "12-Yr"]</mark>,
+    "interest_only": "4-Year",
+    "prepayment":    <mark>["Prefer stepdown (5-4-3-2-1%)",
+                      "Okay with yield maintenance"]</mark>,
+    "hold_period":   <mark>["10 years"]</mark>,
+    "notes":         <mark>"Ten-year fixed first; 12-Yr only if…"</mark>
+  }
+}`]],
+  pics:[['after','broker-edit-after.png','Where the lists come from: the broker ticks several answers (T2)']], links:[] },
+
+{ id:'T2', title:'Broker edit: tickboxes for loan program, prepayment and hold period', tags:['ui'], needs:'T1',
+  touches:'details/constants.ts',
+  why:'Same answer, <q>Yes - several</q>. The edit form has to let the broker tick more than one.',
+  today:['<code>my-deals/[id]/components/details/constants.ts:57-60</code>: <code>program</code>, <code>prepayment</code> and <code>hold_period</code> are <code>kind: "select"</code>.', '<code>FieldControl.tsx:24</code> already renders <code>kind: "checks"</code> (Executions to explore uses it).'],
+  change:[
+    'Set the three to <code>kind: "checks"</code> with their existing option lists.',
+    'Rename the label "Loan program" to <b>Loan programs to explore</b> in the editor, as in Figma. The read row stays "Loan program".',
+    'Layout as drawn: Executions and Prepayment one per line (long answers); Loan programs three across; Hold period two across.',
+    'Order: Executions, Loan programs, Interest-only period (select), Prepayment, Hold period, then the comments box from T3.'],
+  done:['Ticking 10-Yr and 12-Yr and saving shows both after reload.', 'Unticking everything saves an empty list; the read view hides the row, as it does for other empty fields.'],
+  pics:[['before','broker-edit-before.png','Edit form before: three selects'],['after','broker-edit-after.png','Edit form after: tickboxes, plus the comments box (T3)']],
+  links:[['Figma · Terms requested, editing', FIG_B('2374:3526')],['Prototype · Riverside, Financials tab, Edit Terms requested', PROTO+'?as=broker#/deal/riverside']] },
+
+{ id:'T3', title:'One comments box: "Comments on pricing, term, prepay and capital stack"', tags:['data','ui'], needs:'—',
+  touches:'deal_sections.rb, constants.ts, FieldControl or a Textarea',
+  why:'His form had two boxes ("Comments on Capital Stack", "Comments on Pricing, Term, and Prepay"). Tony: <q>Add one box - Comments on Pricing, Term, Prepay and Capital Stack</q>.',
+  today:['Terms has no notes key in <code>DealSections::FIELDS</code>.', '<code>FieldControl</code> renders <code>kind: "text"</code> as a one-line input; multi-line text exists only in <code>ProseColumn.tsx</code> (Strengths, Weaknesses).'],
+  change:[
+    'Add <code>"notes" =&gt; :text</code> to <code>FIELDS["terms"]</code> (the <code>TEXT_MAX</code> limit applies).',
+    'Editor: a multi-line field, full width, last in the section. Label: <b>Comments on pricing, term, prepay and capital stack</b>. No placeholder needed.',
+    'Read view and lender preview: a row labelled <b>Comments</b>, the text with its line breaks kept (T4).'],
+  done:['Text with a line break saves and reads back with the break.', 'An empty box adds no row to the read view.'],
+  pics:[['after','broker-read-after.png','Read view after: Comments row last']],
+  links:[['Figma · Terms requested, read', FIG_B('297:4629')]] },
+
+{ id:'T4', title:'Read view and lender preview: lists joined, no "fixed", Comments row', tags:['ui'], needs:'T1, T3',
+  touches:'details/utils.ts (termsRows)',
+  why:'With several programs, "10-Yr fixed" stops making sense: a Floater would read "Floater fixed" next to it, and "fixed" was never one of his answers.',
+  today:['<code>details/utils.ts:113-126</code>: <code>programLine</code> prints <code>`${program} fixed`</code> for "-Yr" programs, then the interest-only part; <code>termsRows</code> has Loan program, Prepayment, Hold period.', '<code>preview/PreviewSections.tsx:12</code> reuses <code>termsRows</code>, so the lender preview follows whatever this returns.'],
+  change:[
+    'Loan program row: the ticked programs joined with " · ", then the interest-only part as today: <code>10-Yr · 12-Yr · 4-Year interest-only</code>. Drop the word "fixed".',
+    'Prepayment and Hold period rows: the ticked answers joined with " · " (the <code>list</code> helper in the same file already does this).',
+    'Add the Comments row from T3 last.'],
+  done:['A deal with 10-Yr, 12-Yr and 4-Year IO reads "10-Yr · 12-Yr · 4-Year interest-only".', 'The lender preview ("See it as a lender") shows the same rows.'],
+  pics:[['before','broker-read-before.png','Read view before: "10-Yr fixed", one value per row'],['after','broker-read-after.png','Read view after'],['before','lender-preview-before.png','Lender preview before'],['after','lender-preview-after.png','Lender preview after']],
+  links:[['Figma · read, second frame', FIG_B('3786:38268')],['Figma · lender preview', FIG_B('2376:3586')],['Prototype · lender preview', PROTO+'?as=broker#/deal/riverside/preview']] },
+
+{ id:'T5', title:'Borrower request, step 2: optional "Terms you\'re looking for" card', tags:['ui','data','wait'], needs:'T1, T3',
+  touches:'FinancingStep.tsx, _form/constants.ts, schema.ts, types.ts',
+  why:'Tony: <q>it\'s not in the borrower\'s request form</q>. His Zoho form is filled by borrowers too, so they answer these today. Design added it on 25 Nov; whether it stays is waiting on his yes (our question 332).',
+  today:['<code>borrower/requests/_form/steps/FinancingStep.tsx:42</code>: step 2 has one card, <b>What you need</b>.', 'Step 3 already saves its extra fields as deal sections through <code>Authenticated::Borrower::Api::DealSectionsController</code>; terms can go the same way.'],
+  change:[
+    'A second card under What you need: <b>Terms you\'re looking for</b>, with Executions to explore, Loan programs to explore, Interest-only period, Prepayment, Hold period and Comments on pricing, term, prepay and capital stack.',
+    'Reuse the broker\'s option constants (<code>TERM_*</code> in the broker <code>details/constants.ts</code>), so a borrower\'s tick lands on exactly the value the broker sees. The form already imports document constants from that folder.',
+    'Nothing is required, so no field gets * or (optional). A blank card blocks nothing and saves no terms.',
+    'Layout as drawn: Executions two across, Loan programs three across, Prepayment two across, Hold period two across.',
+    'Save to <code>deal_sections.terms</code> with the same keys as the broker side.'],
+  done:['A borrower can submit with the card blank.', 'Ticked answers appear on the request and, after T6, on the broker\'s Terms requested.'],
+  pics:[['before','borrower-step2-live.png','Step 2 on dev today: What you need only'],['after','borrower-card-after.png','The new card, under What you need']],
+  links:[['Figma · Borrower step 2 with the card', FIG_R('15:779')],['Prototype · borrower, edit financing request', PROTO+'?as=borrower#/loan/lakeview/edit/financing']] },
+
+{ id:'T6', title:'Broker confirms the borrower\'s terms', tags:['data','ui','wait'], needs:'T5',
+  touches:'borrower_submission.rb',
+  why:'The borrower suggests, the broker decides. Terms requested works like Sponsor and Property details: it arrives marked "From the borrower" with Confirm.',
+  today:['<code>app/models/borrower_submission.rb:20-31</code>: <code>SECTIONS</code> lists deal_facts, sponsor, property_details, sources_uses and documents. Terms isn\'t one of them, so a borrower\'s terms would never ask for confirmation.'],
+  change:[
+    'Add <code>"terms"</code> to <code>SECTIONS</code> with the paths <code>deal_sections.terms.&lt;key&gt;</code> for every key in <code>DealSections::FIELDS["terms"]</code> (including <code>notes</code> from T3), in the deal page\'s order.',
+    'Only a request whose borrower filled the card gets the section: the confirm strip then counts six sections ("0 of 6 sections confirmed"). A blank card keeps five, and the broker sees "+ Add terms" as today.',
+    'Labels in <code>LABELS</code> if the humanized keys read wrong in the broker\'s email ("Program" → "Loan program", "Notes" → "Comments").'],
+  done:['Accepting a request with terms shows Terms requested with "From the borrower" and Confirm.', 'Confirm marks it confirmed and the strip counts it.', 'A request without terms still shows five sections.'],
+  pics:[['after','broker-confirm-after.png','Terms requested on a deal made from a request'],['after','broker-strip-after.png','The confirm strip counts six sections']],
+  links:[['Prototype · a borrower request with terms: accept it, then open Financials', PROTO+'?as=broker#/leads/opp-dallas']] },
+];
+
+const TAG = { data:'Data / API', ui:'UI', wait:'Waiting on Tony' };
+const esc = s => s.replace(/<[^>]+>/g,'').replace(/&gt;/g,'>').replace(/&lt;/g,'<').replace(/&amp;/g,'&');
+const store = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set(k,v){ try { v ? localStorage.setItem(k,'1') : localStorage.removeItem(k); } catch(e){} } };
+
+document.querySelector('#summary tbody').innerHTML = T.map(t => `<tr><td class="id"><a href="#${t.id}">${t.id}</a></td><td>${t.title}</td><td>${t.tags.map(g=>`<span class="tag ${g}">${TAG[g]}</span>`).join('')}<br><span style="font-size:13px;color:var(--muted)">${t.touches}</span></td><td>${t.needs}</td></tr>`).join('');
+
+document.getElementById('tasks').innerHTML = T.map(t => `
+<article class="task" id="${t.id}">
+  <div class="thead">
+    <span class="id">${t.id}</span><h2>${t.title}</h2>
+    <div class="tools">
+      <button class="btn" type="button" data-copy="${t.id}">Copy as text</button>
+      <label class="ready"><input type="checkbox" id="ready-${t.id}" data-ready="${t.id}"> Done</label>
+    </div>
+  </div>
+  <div>${t.tags.map(g=>`<span class="tag ${g}">${TAG[g]}</span>`).join('')}${t.needs !== '—' ? `<span class="tag" style="color:var(--muted)">Needs ${t.needs}</span>` : ''}</div>
+  <div class="cols">
+    <div><h3>On dev today</h3><ul class="plain">${t.today.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    <div><h3>Change</h3><ol class="steps">${t.change.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+  </div>
+  <div><h3>Done when</h3><ul class="plain">${t.done.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  ${t.json ? `<div class="pics">${t.json.map(([k,cap,code])=>`<figure><figcaption><b class="${k}">${k === 'before' ? 'Before' : 'After'}</b>${cap}</figcaption><pre class="json">${code}</pre></figure>`).join('')}</div>` : ''}
+  ${t.pics.length ? `<div class="pics">${t.pics.map(([k,src,cap])=>`<figure><figcaption><b class="${k}">${k === 'before' ? 'Before' : 'After'}</b>${cap}</figcaption><img src="img/${src}" alt="${cap}" loading="lazy"></figure>`).join('')}</div>` : ''}
+  ${t.links.length ? `<div class="links">${t.links.map(([l,h])=>`<a href="${h}" target="_blank" rel="noopener">${l}</a>`).join('')}</div>` : ''}
+</article>`).join('');
+
+function md(t){
+  return [`${t.id}. ${t.title}`, `Type: ${t.tags.map(g=>TAG[g]).join(', ')}${t.needs !== '—' ? ` · Needs ${t.needs}` : ''}`, '',
+    'On dev today:', ...t.today.map(x=>`- ${esc(x)}`), '', 'Change:', ...t.change.map((x,i)=>`${i+1}. ${esc(x)}`), '',
+    'Done when:', ...t.done.map(x=>`- ${esc(x)}`), ...(t.links.length ? ['', 'Links:', ...t.links.map(([l,h])=>`- ${l}: ${h}`)] : []),
+    '', `Decision thread: ${SLACK}`].join('\n');
+}
+function toast(m){ const d=document.createElement('div'); d.className='toast'; d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),1800); }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const text = md(T.find(t => t.id === b.dataset.copy));
+  const fallback = () => { const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('aria-label','Task text'); ta.style.cssText='width:100%;height:200px;margin-top:8px'; b.closest('article').appendChild(ta); ta.select(); toast('Select and copy the text below'); };
+  try { navigator.clipboard.writeText(text).then(()=>toast('Copied ' + b.dataset.copy), fallback); } catch(err){ fallback(); }
+});
+document.querySelectorAll('[data-ready]').forEach(i => {
+  const k = 'terms-tasks-' + i.dataset.ready, art = i.closest('article');
+  i.checked = !!store.get(k); art.classList.toggle('done', i.checked);
+  i.addEventListener('change', () => { store.set(k, i.checked); art.classList.toggle('done', i.checked); });
+});
+</script>
+
+</body>
+</html>
