@@ -2801,6 +2801,9 @@
   .cgrp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; padding: 6px 0; }
   .cgrp .chkrow { font-size: 14px; color: var(--foreground); }
   @media (max-width: 900px) { .cgrp { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  /* two columns for sets whose answers are sentences: the terms card's
+     executions and prepayment wrap at a third of the card [25 Nov] */
+  .cgrp--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* a short tickbox set laid out as .rgrp is: one row at the radios' 20px
      gap and 36px line, options hugging their labels. Lending parameters'
      three Recourse boxes, which the grid spread a third of the card apart
@@ -5189,6 +5192,12 @@
      again one level in. Two tracks, so the boxes line up under the fields
      above them. */
   .sedit--2col .fld--span .chkgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+  /* short option lists (loan programs, hold periods) run three across, as on
+     the Zoho form, instead of six rows down [~] */
+  .chkgrid--3 { grid-template-columns: repeat(3, minmax(0, 104px)); column-gap: 24px; }
+  /* the same columns, two across: Hold period's four answers left 10 years
+     alone on a row in three [Tanya, 25 Nov] */
+  .chkgrid--2 { grid-template-columns: repeat(2, minmax(0, 104px)); column-gap: 24px; }
   @media (max-width: 900px) {
     .sedit--2col { grid-template-columns: 1fr; }
     .sedit--2col .fld--span .chkgrid { grid-template-columns: 1fr; }
@@ -6861,6 +6870,12 @@
 
   /* ---------- Home — screen 01.4, the post-login landing ---------- */
   .home { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  /* Only Home, Activity and Submitted centre their 1120 column (.home). The
+     request form, Help, Profile and Account start at the page padding, and
+     My deals, the deal workspace, Advisors and the advisor profile fill the
+     width: the Borrower Figma's alignment [Tanya, 25 Nov, BR-GLOBAL-13]. A
+     centred .app--col for the capped pages was tried the same day and
+     dropped. */
 
   /* the confirmation is the one borrower route carrying BOTH a .head and a
      .home, and until today the head sat outside the wrapper: it ran the full
@@ -8552,6 +8567,26 @@
 
   .proto a.plink { color: #d5dbe4; border: 1px solid #3c4657; border-radius: var(--radius-sm); padding: 3px 9px; font-family: var(--font-mono); font-size: 11px; text-decoration: none; }
   .proto a.plink:hover { background: #232c3a; }
+  /* Product view, 25 Nov [Tanya: "make it look like a real product"]. Opened
+     as deals-prototype.html?as=borrower (or broker, lender): the prototype bar
+     goes, the grey frame and the slab's border go, and the app fills the
+     window the way the product does. Nothing else changes - same views, same
+     fixtures, same role branches. The class is set on <html> before the bar
+     is parsed, so the bar never flashes. */
+  :root.product, :root.product body { background: var(--background); }
+  :root.product .proto { display: none; }
+  :root.product .frame { padding: 0; }
+  :root.product .app { border: 0; border-radius: 0; min-height: 100vh; }
+  /* the rail holds the window and the page scrolls past it, as the product's
+     sidebar does [Tanya, 25 Nov: "sidebar height should be fixed"]. Sticky
+     needs no scroll container between it and the window: .app's hidden
+     becomes clip (still clips, scrolls nothing) and .scroll lets go. ≥768
+     only - below it the rail is already a fixed overlay. */
+  @media (min-width: 768px) {
+    :root.product .scroll { overflow: visible; }
+    :root.product .app { overflow: clip; }
+    :root.product .rail { position: sticky; top: 0; align-self: start; height: 100vh; min-height: 0; }
+  }
   /* ==== Borrower on the Prism ramp [Tanya, 18 Oct] ====
      Moved 19 Oct. Every override that puts a borrower element on the Prism type
      ramp (10/12/14/16/18/20/24/26/30/36, ties round up) or spacing ramp (2-24,
@@ -8567,6 +8602,15 @@
      children the line height they always did. Generated from measured routes
      by the cascade-true finder; grep ramp:b for the list. [~] */
 </style>
+
+<!-- Product view (?as=<role>), 25 Nov: flagged here, ahead of the bar, so the
+     CSS hides it before first paint. The role itself is set at boot, just
+     before the first route(). -->
+<script>
+  if (/^(borrower|broker|lender)$/.test(new URLSearchParams(location.search).get("as") || "")) {
+    document.documentElement.classList.add("product"); document.title = "LenderPrism";
+  }
+</script>
 
 <div class="proto">
   <div class="proto__row">
@@ -9074,8 +9118,9 @@ const DEALS = [
     noi:331000, closeBy:"30 Nov",
     su:{ sources:[["Senior debt",4500000],["Cash contributed by sponsors & KPs",1700000],["Cash raised via syndication",775000]],
          uses:[["Purchase price",6400000],["CapEx",320000],["Lender origination fees",45000],["Mortgage broker fee",56000],["Legal fees",60000],["Third-party reports",34000],["Other closing costs",60000]] },
-    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"4-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:["10-Yr","12-Yr"], io:"4-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)","Okay with yield maintenance"], hold:["10 years"],
+            notes:"Ten-year fixed first; 12-Yr only if pricing is within 10 bps. Sponsor equity covers the rest of the stack, so no mezz." },
     plan:{ strategy:"Renovate & increase rents", timeline:"24 months to stabilized", noi:352000, exit:"Long-term hold" },
     pdet:{ maint:"None beyond the planned interior programme", env:"Phase I clear, 2024", lura:"No", small:"No", ground:"No", crime:"No", tenants:[], elec:"Tenant", water:"Landlord", gas:"Landlord", cable:"Tenant", legal:"None disclosed", drivers:"Downtown Austin employment and the Riverside Dr corridor redevelopment" },
     mgmt:{ kind:"Third-Party", co:"Bayou Residential Management", props:12, units:2400 },
@@ -9174,8 +9219,8 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:88.0, built:2004, balance:2.35,
     summary:"Permanent debt to retire a maturing bridge facility on a nine-tenant neighbourhood centre. Anchor lease renewed through 2033; the borrower is rate-sensitive and will trade proceeds for term.",
-    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"No IO",
-            prepay:"Okay with yield maintenance", hold:"10 years" },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:["10-Yr"], io:"No IO",
+            prepay:["Okay with yield maintenance"], hold:["10 years"] },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 no repositioning planned", noi:268000, exit:"Long-term hold" },
     pdet:{ maint:"Parking lot resurfacing deferred, quoted at $95,000", env:"Phase I clear, 2022 \u2014 a former dry-cleaner tenant was cleared", lura:"No", small:"Unknown", ground:"No", crime:"No", tenants:[], elec:"Tenant", water:"Tenant", gas:"Tenant", cable:"Tenant", legal:"None disclosed", drivers:"Uptown Dallas daytime population; McKinney Ave retail corridor" },
     mgmt:{ kind:"Borrower Affiliated", co:"Kessler Retail Services", props:4, units:null },
@@ -9202,8 +9247,8 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Refinance",
     units:null, occupancy:100, built:1998, balance:4.1,
     summary:"Cash-out refinance on a fully leased 140,000 sq ft last-mile distribution building. Single tenant, seven years remaining, annual escalations of 3%.",
-    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan","CMBS loan"], program:"10-Yr", io:"3-Year",
-            prepay:"Okay with defeasance", hold:"10 years" },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan","CMBS loan"], program:["10-Yr"], io:"3-Year",
+            prepay:["Okay with defeasance"], hold:["10 years"] },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 single tenant, seven years remaining", noi:563000, exit:"Long-term hold" },
     pdet:{ maint:"Roof replaced 2023; dock levellers original", env:"Phase I 2023 recommended a Phase II on the former paint line", lura:"No", small:"Unknown", ground:"No", crime:"No", tenants:[], elec:"Tenant", water:"Tenant", gas:"Tenant", cable:"Tenant", legal:"None disclosed", drivers:"I-20 and the Fulton industrial corridor; last-mile distribution demand" },
     mgmt:{ kind:"Self-Managed", co:"Northside Logistics Partners", props:9, units:null },
@@ -9239,8 +9284,8 @@ const DEALS = [
     created:"4 Aug", updated:"4 Aug", txType:"Acquisition",
     units:132, occupancy:71.2, built:2009, price:11.0,
     summary:"Bridge facility to acquire and reposition a 132-key select-service hotel two blocks from the convention centre. Eighteen-month business plan, PIP budgeted at $2.1M, exit to agency or CMBS on stabilisation.",
-    terms:{ executions:["Bridge loan"], program:"Floater", io:"Full-Term IO",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"3 years" },
+    terms:{ executions:["Bridge loan"], program:["Floater"], io:"Full-Term IO",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["3 years"] },
     plan:{ strategy:"Reposition", timeline:"18 months to stabilized", noi:1180000, exit:"Refinance" },
     pdet:{ maint:"PIP scoped at $1.8M across guest rooms and the lobby", env:"Phase I clear, 2023", lura:"No", small:"Unknown", ground:"Yes \u2014 62 years remaining on a ground lease from the city", crime:"No", tenants:[], elec:"Landlord", water:"Landlord", gas:"Landlord", cable:"Landlord", legal:"None disclosed", drivers:"Bayshore leisure demand, the Tampa convention calendar, airport corporate" },
     mgmt:{ kind:"Third-Party", co:"Bayshore Hotel Management", props:7, units:940 },
@@ -9267,8 +9312,8 @@ const DEALS = [
     created:"29 Jul", updated:"11 Aug", txType:"Refinance",
     units:610, occupancy:88.4, built:2017, balance:3.7,
     summary:"Rate-and-term refinance of a 610-unit climate-controlled self-storage facility, stabilised at 88% for six consecutive quarters. Existing bank loan matures in November.",
-    terms:{ executions:["CMBS loan"], program:"10-Yr", io:"1-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
+    terms:{ executions:["CMBS loan"], program:["10-Yr"], io:"1-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["7 years"] },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised at 88% for six consecutive quarters", noi:391000, exit:"Refinance" },
     pdet:{ maint:"None reported", env:"Phase I clear, 2024", lura:"No", small:"Yes \u2014 storage unit mix, most units are under 300 sq ft", ground:"No", crime:"No", tenants:[], elec:"Landlord", water:"Landlord", gas:"Landlord", cable:"Landlord", legal:"None disclosed", drivers:"E Colonial Dr traffic count; three-mile household growth" },
     mgmt:{ kind:"Self-Managed", co:"Sunbelt Storage Partners", props:9, units:5400 },
@@ -9296,8 +9341,8 @@ const DEALS = [
     created:"2 Aug", updated:"9 Aug", txType:"Acquisition",
     units:96, occupancy:91.0, built:2012, price:13.5,
     summary:"Acquisition of a 96-unit independent-living community with an in-place operator staying on under a new management agreement. Seeking agency execution with a 35-year amortisation.",
-    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan","FHA/HUD"], program:"10-Yr", io:"2-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan","FHA/HUD"], program:["10-Yr"], io:"2-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["10 years"] },
     plan:{ strategy:"Stabilize", timeline:"12 months to stabilized", noi:812000, exit:"Long-term hold" },
     pdet:{ maint:"Chiller replacement due within 24 months, budgeted", env:"Phase I clear, 2025", lura:"No", small:"Yes \u2014 memory-care units average 280 sq ft", ground:"No", crime:"No", tenants:[], elec:"Landlord", water:"Landlord", gas:"Landlord", cable:"Landlord", legal:"None disclosed", drivers:"The N Central Ave medical cluster; 75-plus population growth" },
     mgmt:{ kind:"Third-Party", co:"Desert Bloom Senior Living", props:11, units:1240 },
@@ -9316,8 +9361,8 @@ const DEALS = [
     created:"15 Jul", updated:"6 Aug", txType:"Refinance",
     occupancy:82.5, built:1998, balance:5.9,
     summary:"Cash-neutral refinance of a boutique eight-storey office building, 82% leased across eleven tenants with a 4.2-year WALT. Draft — rent roll still being assembled.",
-    terms:{ executions:["CMBS loan","Bridge loan"], program:"5-Yr", io:"1-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"5 years" },
+    terms:{ executions:["CMBS loan","Bridge loan"], program:["5-Yr"], io:"1-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["5 years"] },
     plan:{ strategy:"Stabilize", timeline:"24 months to stabilized", noi:634000, exit:"Sell" },
     pdet:{ maint:"Elevator modernisation deferred, quoted at $640,000", env:"Phase I clear, 2023", lura:"No", small:"Unknown", ground:"No", crime:"No", tenants:[], elec:"Tenant", water:"Landlord", gas:"Landlord", cable:"Tenant", legal:"One tenant in holdover, possession proceeding filed", drivers:"Lafayette St office demand; Canal St subway access" },
     mgmt:{ kind:"Third-Party", co:"Lafayette Property Services", props:14, units:null },
@@ -9336,8 +9381,8 @@ const DEALS = [
     created:"12 Jul", updated:"28 Jul", txType:"Acquisition",
     units:24, occupancy:64.0, built:1962, price:7.4,
     summary:"Duplicate of an earlier submission for the same property — archived. Ground-floor retail with 24 lofts above, heavy-lift reposition of a 1962 building.",
-    terms:{ executions:["Bridge loan"], program:"Floater", io:"Full-Term IO",
-            prepay:"Must have no prepay (fewer competitive options)", hold:"3 years" },
+    terms:{ executions:["Bridge loan"], program:["Floater"], io:"Full-Term IO",
+            prepay:["Must have no prepay (fewer competitive options)"], hold:["3 years"] },
     plan:{ strategy:"Reposition", timeline:"24 months to stabilized", noi:486000, exit:"Refinance" },
     pdet:{ maint:"Significant \u2014 envelope, plumbing risers and the ground-floor storefronts", env:"Phase I 2024 flagged possible asbestos in the 1962 fabric; Phase II ordered", lura:"No", small:"Yes \u2014 eleven of the 24 units are studios under 300 sq ft", ground:"No", crime:"Yes \u2014 elevated incident counts in the submarket, private security in place", tenants:[], elec:"Tenant", water:"Landlord", gas:"Landlord", cable:"Tenant", legal:"Two ground-floor leases in dispute over the repositioning", drivers:"River Walk footfall; E Commerce St redevelopment" },
     mgmt:{ kind:"Borrower Affiliated", co:"Alamo Urban Management", props:5, units:96 },
@@ -9366,8 +9411,8 @@ const DEALS = [
     created:"22 Aug", updated:"25 Aug", txType:"Acquisition",
     units:184, occupancy:96.0, built:2014, price:13.9,
     summary:"Acquisition of a 184-bed purpose-built student housing asset four blocks from campus, pre-leased at 96% for the coming academic year. Intake received; sizing not started.",
-    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"3-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:["10-Yr"], io:"3-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["7 years"] },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised \u2014 pre-leased at 96% for the coming year", noi:892000, exit:"Long-term hold" },
     pdet:{ maint:"None reported", env:"Phase I clear, 2025", lura:"No", small:"No", ground:"No", crime:"No", tenants:["Student"], elec:"Landlord", water:"Landlord", gas:"Landlord", cable:"Landlord", legal:"None disclosed", drivers:"UT Austin enrolment; West Campus bed supply" },
     mgmt:{ kind:"Third-Party", co:"Campus Living Group", props:6, units:1860 },
@@ -9386,8 +9431,8 @@ const DEALS = [
     created:"24 Aug", updated:"26 Aug", txType:"Refinance",
     units:248, occupancy:94.8, built:2019, balance:11.4,
     summary:"Refinance of a 248-unit Class A community out of a maturing construction facility. Stabilised eighteen months; the sponsor wants a ten-year fixed and is testing whether proceeds support a partial return of capital.",
-    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:"10-Yr", io:"5-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"10 years" },
+    terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:["10-Yr"], io:"5-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["10 years"] },
     plan:{ strategy:"Buy and hold yield play", timeline:"Stabilised eighteen months", noi:1164000, exit:"Long-term hold" },
     pdet:{ maint:"None reported", env:"Phase I clear, 2024", lura:"Yes \u2014 20% of units at 80% AMI under a county agreement through 2039", small:"No", ground:"No", crime:"No", tenants:[], elec:"Tenant", water:"Landlord", gas:"Tenant", cable:"Tenant", legal:"None disclosed", drivers:"Charleston port employment; Magnolia Rd corridor household growth" },
     mgmt:{ kind:"Third-Party", co:"Lowcountry Residential", props:9, units:2140 },
@@ -9406,8 +9451,8 @@ const DEALS = [
     created:"18 Aug", updated:"24 Aug", txType:"Acquisition",
     units:null, occupancy:87.5, built:2006, price:9.1,
     summary:"Purchase of a 92,000 sq ft multi-tenant flex industrial park, 87% leased across six tenants with a 3.1-year WALT. Package being assembled; two rent-roll gaps outstanding.",
-    terms:{ executions:["CMBS loan","Bridge loan"], program:"7-Yr", io:"2-Year",
-            prepay:"Prefer stepdown (5-4-3-2-1%)", hold:"7 years" },
+    terms:{ executions:["CMBS loan","Bridge loan"], program:["7-Yr"], io:"2-Year",
+            prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["7 years"] },
     plan:{ strategy:"Stabilize", timeline:"18 months to stabilized", noi:522000, exit:"Sell" },
     pdet:{ maint:"None reported", env:"Phase I clear, 2025", lura:"No", small:"Unknown", ground:"No", crime:"No", tenants:[], elec:"Tenant", water:"Tenant", gas:"Tenant", cable:"Tenant", legal:"None disclosed", drivers:"The S Tryon industrial corridor; Charlotte last-mile demand" },
     mgmt:{ kind:"Borrower Affiliated", co:"Catawba Asset Services", props:5, units:null },
@@ -11171,7 +11216,7 @@ function sendModal() {
   const sendLbl = k => `Send to ${k} ${k === 1 ? "lender" : "lenders"}`;
   /* a deal from a request names the sections still unconfirmed, as a warning
      that does not block [Borrower Figma 559:8806, 12 Oct] */
-  const left = d.fromReq ? REQ_SECS.filter(([k]) => !reqConf(d)[k]).map(x => x[1]) : [];
+  const left = d.fromReq ? reqSecs(d).filter(([k]) => !reqConf(d)[k]).map(x => x[1]) : [];
   const leftTxt = left.length > 1 ? left.slice(0, -1).join(", ") + " and " + left[left.length - 1] : left[0];
   return `<div class="mov" data-mclose role="dialog" aria-modal="true" aria-label="Send loan request">
   <div class="mdl">
@@ -12107,6 +12152,8 @@ const BLOANS = [
   { id: "lakeview", name: "Lakeview Flats refinance", amt: 3.2, property: "Multifamily", city: "Austin", state: "TX", zip: "78704", addr: "2201 S Lamar Blvd",
     units: 36, built: 2011, renovated: 2021, occupancy: 95, purpose: "Refinance", value: 4.9, balance: 2.6, closeBy: "15 Nov", maturity: "1 Dec",
     financing: "Agency (Fannie Mae)", noi: "$318,000", entity: "Harbor Point Lakeview LLC",
+    terms: { executions: ["Fannie Mae / Freddie Mac fixed rate loan"], program: ["10-Yr"], io: "3-Year", prepay: ["Prefer stepdown (5-4-3-2-1%)"], hold: ["10 years"],
+      notes: "Ten-year fixed first. Would look at a 12-year if the rate is close." },
     /* sample, balanced: the payoff, the closing costs on the agency quote and
        the 2021 renovation's last phase as CapEx [~] */
     su: { sources: [["Senior debt", 3200000]], uses: [["Pay off outstanding balance", 2600000], ["CapEx", 431000], ["Lender origination fees", 32000],
@@ -12582,6 +12629,8 @@ const OPPS = [
       cospons:"Yes", coSponsors:[{ name:"Daniel Ortiz", email:"d.ortiz@trinitybend.com" }],
       credit:"Yes", creditNote:"A 2015 foreclosure on a Fort Worth fourplex, settled with the lender.", synd:"No",
       liquidity:0.9, worth:6.4,
+      terms:{ executions:["Fannie Mae / Freddie Mac fixed rate loan"], program:["7-Yr","10-Yr"], io:"2-Year",
+        prepay:["Prefer stepdown (5-4-3-2-1%)"], hold:["7 years","10 years"], notes:"Agency first. Open to a bank loan if it prices within 15 bps." },
       su:{ sources:[["Senior debt", 2750000]], uses:[["Pay off outstanding balance", 2100000], ["CapEx", 480000], ["Lender origination fees", 27500],
         ["Mortgage broker fee", 27500], ["Legal fees", 40000], ["Third-party reports", 17500], ["Other closing costs", 57500]] },
       docs:[{ name:"Swiss Ave rent roll Aug.xlsx", cat:"Rent roll", st:"uploaded" }, { name:"Swiss Ave T-12 Aug.pdf", cat:"T-12 / operating statements", st:"uploaded" },
@@ -16565,14 +16614,15 @@ const REQ_SETS = { "@tx": ["txType", "price", "propValue", "balance", "projCost"
   "@loc": ["addr", "city", "state", "zip"], "@size": ["units", "sf", "occupancy"] };
 const REQ_KEYS = ["amt", "property", "@tx", "@loc", "@size", "built", "financing", "summary",
   "sponsor.name", "sponsor.lead", "sponsor.liquidity", "sponsor.worth", "sponsor.credit", "sponsor.synd",
-  "pdet.env", "pdet.lura", "pdet.ground", "pdet.tenants", "su"];
+  "pdet.env", "pdet.lura", "pdet.ground", "pdet.tenants", "su",
+  "terms.executions", "terms.program", "terms.io", "terms.prepay", "terms.hold", "terms.notes"];
 /* normalised, so a form save that writes "" for null or "36" for 36 is not an
    edit, and tenants compare as a set: unticking and reticking one is not either */
 const reqNorm = x => x === "" || x == null ? null : typeof x === "string" && x.trim() !== "" && !isNaN(x) ? Number(x) : x;
 const reqGet = (d, k) => {
   if (REQ_SETS[k]) return JSON.stringify(REQ_SETS[k].map(p => reqNorm(d[p])));
   const v = reqNorm(k.split(".").reduce((x, p) => x == null ? x : x[p], d));
-  return JSON.stringify(Array.isArray(v) && k === "pdet.tenants" ? v.slice().sort() : v);
+  return JSON.stringify(Array.isArray(v) && (k === "pdet.tenants" || k.startsWith("terms.")) ? v.slice().sort() : v);
 };
 function dealFromReq(dl, o, now) {
   const r = o.req, b = o.borrower || {};
@@ -16610,6 +16660,8 @@ function dealFromReq(dl, o, now) {
   dl.closeBy = r.closeBy || ""; dl.renovated = r.renovated || null;
   dl.maturity = tx === "Refinance" ? r.maturity || o.maturity || "" : "";
   if (r.su) dl.su = { sources: r.su.sources.map(x => x.slice()), uses: r.su.uses.map(x => x.slice()) };
+  /* the request's optional terms card, in the deal's own shape (bTermsOf) */
+  if (r.terms) dl.terms = JSON.parse(JSON.stringify(r.terms));
   (r.coSponsors || []).forEach(c => dl.contacts.push({ name: c.name || "", role: "Co-sponsor", email: c.email || "", phone: "" }));
   /* the borrower is on the platform already - they sent the request */
   dl.bor = { name: b.name || "", email: b.email || "", st: "accepted", since: now };
@@ -16642,7 +16694,7 @@ function dealFromReq(dl, o, now) {
   const flags = [["Credit issues", r.credit === "Yes" && (r.creditNote || "Yes, no description")],
     ["Environmental issues", r.env === "Yes" && (r.envNote || "Yes, no description")],
     ["Land use restriction", r.lura === "Yes" && "Yes"], ["Ground lease", r.ground === "Yes" && "Yes"]].filter(x => x[1]);
-  dl.fromReq = { by: b.name || "the borrower", on: o.subShort || "", rest, flags, docs: up.length, skipped, reviewed: false, conf: {},
+  dl.fromReq = { by: b.name || "the borrower", on: o.subShort || "", rest, flags, docs: up.length, skipped, reviewed: false, conf: {}, terms: !!r.terms,
     vals: Object.fromEntries(REQ_KEYS.map(k => [k, reqGet(dl, k)]).filter(x => x[1] !== "null" && x[1] !== '""' && x[1] !== "[]")) };
 }
 /* Edited, beside a value the broker changed from what the request sent.
@@ -16674,14 +16726,21 @@ function brTag(d, k) {
    - The drawer is the lender quick view's layout at 480 [Tanya, 12 Oct]: the
      flags as warning Alerts, Not yet received with Ask per row and Ask for
      all, and Confirm all in the footer. [💡 rec] */
-const REQ_SECS = [["facts", "Deal facts"], ["sponsor", "Sponsor"], ["pdet", "Property details"], ["su", "Sources and uses"], ["docs", "Documents"]];
+/* Terms requested is the sixth, 25 Nov, and only on a deal whose borrower
+   filled the request's optional terms card (fromReq.terms): Tony found the
+   terms missing from the borrower's form [T, Slack thread on Zoho step 3], and
+   what the borrower ticks the broker confirms, like the other five
+   [Tanya, 25 Nov: "broker should confirm this info"]. A request that left the
+   card blank keeps five sections and "+ Add terms". */
+const REQ_SECS = [["facts", "Deal facts"], ["terms", "Terms requested"], ["sponsor", "Sponsor"], ["pdet", "Property details"], ["su", "Sources and uses"], ["docs", "Documents"]];
 const reqConf = d => d.fromReq.conf || (d.fromReq.conf = {});
-const reqConfN = d => REQ_SECS.filter(([k]) => reqConf(d)[k]).length;
+const reqSecs = d => REQ_SECS.filter(([k]) => k !== "terms" || (d.fromReq && d.fromReq.terms));
+const reqConfN = d => reqSecs(d).filter(([k]) => reqConf(d)[k]).length;
 /* the deal on screen, when it came from a request; never in the lender preview */
 const reqDeal = () => { const d = S.lpv ? null : dealById(S.dealId); return d && d.fromReq ? d : null; };
 const REQ_TRI = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`;
 const REQ_USER = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
-const isReqSec = k => REQ_SECS.some(x => x[0] === k);
+const isReqSec = k => { const d = reqDeal(); return (d ? reqSecs(d) : REQ_SECS).some(x => x[0] === k); };
 /* "From the borrower", the role and not the name: the strip names them once */
 const reqSrc = k => isReqSec(k) && reqDeal() ? `<span class="reqsrc">${REQ_USER}From the borrower</span>` : "";
 const reqOk = k => {
@@ -16694,7 +16753,7 @@ const reqOk = k => {
    saved it, which is what Confirm says */
 function reqDoneConf(k) {
   const d = k && reqDeal();
-  const sec = !k ? null : k.startsWith("su") ? "su" : ({ sponsor: "sponsor", pdet: "pdet" })[k];
+  const sec = !k ? null : k.startsWith("su") ? "su" : ({ sponsor: "sponsor", pdet: "pdet", terms: "terms" })[k];
   if (d && sec) reqConf(d)[sec] = true;
 }
 function reqStrip(d) {
@@ -16702,8 +16761,8 @@ function reqStrip(d) {
   if (!f) return "";
   const n = reqConfN(d);
   return `<div class="alert reqstrip" role="status">${INFOIC}
-      <div class="alert__line">Borrower&rsquo;s request · ${esc(f.by)} — ${n === REQ_SECS.length ? "all sections confirmed" : n + " of " + REQ_SECS.length + " sections confirmed"}</div>
-      <div class="alert__act alert__act--end"><button class="btn btn--link btn--sm" type="button" data-reqopen="${d.id}">${n === REQ_SECS.length ? "View request" : "Review request"}</button></div>
+      <div class="alert__line">Borrower&rsquo;s request · ${esc(f.by)} — ${n === reqSecs(d).length ? "all sections confirmed" : n + " of " + reqSecs(d).length + " sections confirmed"}</div>
+      <div class="alert__act alert__act--end"><button class="btn btn--link btn--sm" type="button" data-reqopen="${d.id}">${n === reqSecs(d).length ? "View request" : "Review request"}</button></div>
     </div>`;
 }
 function reqDrawer() {
@@ -16731,7 +16790,7 @@ function reqDrawer() {
   <aside class="ldr ldr--req" role="dialog" aria-modal="true" aria-label="Borrower&rsquo;s request">
     <div class="ldr__hd">
       <div style="min-width:0;flex:1"><h2>Borrower&rsquo;s request</h2>
-        <span class="sub">${esc(f.by)}${f.on ? " · submitted " + esc(f.on) : ""} · ${n} of ${REQ_SECS.length} sections confirmed</span></div>
+        <span class="sub">${esc(f.by)}${f.on ? " · submitted " + esc(f.on) : ""} · ${n} of ${reqSecs(d).length} sections confirmed</span></div>
       <button class="x" type="button" data-reqx aria-label="Close">${XCLOSE}</button>
     </div>
     <div class="ldr__bd reqrv">
@@ -16743,7 +16802,7 @@ function reqDrawer() {
            list is usually empty and then not drawn [T, 15 Oct, answer 4] */""}
       ${f.rest.length ? `<div><h3>In the request, no field on the deal</h3><dl class="fkv">${f.rest.map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl></div>` : ""}
     </div>
-    <div class="ldr__ft">${n < REQ_SECS.length ? `<button class="btn btn--sm" type="button" data-reqall>Confirm all</button>`
+    <div class="ldr__ft">${n < reqSecs(d).length ? `<button class="btn btn--sm" type="button" data-reqall>Confirm all</button>`
       : `<span class="reqrv__none">All sections confirmed</span>`}</div>
   </aside>`;
 }
@@ -20139,23 +20198,33 @@ function seSel(path, list, cur, label) {
    where projected is the only thing it could be, and "Managed in this market"
    sits directly under Company. Both were the labels setting the .fkv track's
    ceiling at 150px; trimming them took it to 132. [💡 rec] */
+/* Loan program, prepayment and hold period take several answers, as the Zoho
+   form's tickboxes do, and the form's two comment boxes are one [T, Slack
+   thread on Zoho step 3, 25 Nov: "Add one box - Comments on Pricing, Term,
+   Prepay and Capital Stack" / "Yes - several"]. "Other" stays off every list
+   and Executions to explore stays optional [T, same thread]. Interest-only
+   period stays a pick-one: the form's own control for it is a dropdown.
+   The read view lost "fixed" after the programs: a Floater is not fixed, and
+   with several programs the word only fitted some of them. [~] */
 function termsSect(d) {
   if (!d.terms) return secAdd("Terms requested", "terms", "+ Add terms");
+  const checks = (key, list, cls) => `<div class="chkgrid${cls ? " " + cls : ""}">${list.map(x => `<label class="chkrow"><span class="chk"><input type="checkbox" data-sechk="terms.${key}" value="${esc(x)}"${d.terms[key].includes(x) ? " checked" : ""}><span class="bx">${CHKTICK}</span></span>${esc(x)}</label>`).join("")}</div>`;
+  const many = a => a.length ? a.map(x => esc(x)).join(" &middot; ") : "";
   if (S.secEdit === "terms") return fixSectE("Terms requested", "terms", `<div class="sedit">
-      <div class="fld">
-        <label>Executions to explore</label>
-        <div class="chkgrid">${TERM_EXECUTIONS.map(x => `<label class="chkrow"><span class="chk"><input type="checkbox" data-sechk="terms.executions" value="${esc(x)}"${d.terms.executions.includes(x) ? " checked" : ""}><span class="bx">${CHKTICK}</span></span>${esc(x)}</label>`).join("")}</div>
-      </div>
-      <div class="fld"><label>Loan program</label>${seSel("terms.program", TERM_PROGRAMS, d.terms.program, "Loan program")}</div>
+      <div class="fld"><label>Executions to explore</label>${checks("executions", TERM_EXECUTIONS)}</div>
+      <div class="fld"><label>Loan programs to explore</label>${checks("program", TERM_PROGRAMS, "chkgrid--3")}</div>
       <div class="fld"><label>Interest-only period</label>${seSel("terms.io", TERM_IOS, d.terms.io, "Interest-only period")}</div>
-      <div class="fld"><label>Prepayment</label>${seSel("terms.prepay", TERM_PREPAYS, d.terms.prepay, "Prepayment")}</div>
-      <div class="fld"><label>Hold period</label>${seSel("terms.hold", TERM_HOLDS, d.terms.hold, "Hold period")}</div>
+      <div class="fld"><label>Prepayment</label>${checks("prepay", TERM_PREPAYS)}</div>
+      <div class="fld"><label>Hold period</label>${checks("hold", TERM_HOLDS, "chkgrid--2")}</div>
+      <div class="fld"><label for="tm_nt">Comments on pricing, term, prepay and capital stack</label>
+        <textarea class="inp" id="tm_nt" data-se="terms.notes" placeholder="Debt, equity or both, and what matters most on pricing">${esc(d.terms.notes || "")}</textarea></div>
     </div>`);
   return fixSectE("Terms requested", "terms", `<dl class="fkv">
-      <dt>Executions to explore</dt><dd>${d.terms.executions.length ? d.terms.executions.map(e => esc(e)).join(" &middot; ") : "\u2014"}</dd>
-      <dt>Loan program</dt><dd>${d.terms.program ? esc(d.terms.program) + " fixed" : "\u2014"}${d.terms.io ? " &middot; " + esc(d.terms.io) + " interest-only" : ""}</dd>
-      <dt>Prepayment</dt><dd>${esc(d.terms.prepay) || "\u2014"}</dd>
-      <dt>Hold period</dt><dd>${esc(d.terms.hold) || "\u2014"}</dd>
+      <dt>Executions to explore</dt><dd>${many(d.terms.executions) || "\u2014"}${brTag(d, "terms.executions")}</dd>
+      <dt>Loan program</dt><dd>${many(d.terms.program) || "\u2014"}${d.terms.io ? " &middot; " + esc(d.terms.io) + " interest-only" : ""}${brTag(d, "terms.program") || brTag(d, "terms.io")}</dd>
+      <dt>Prepayment</dt><dd>${many(d.terms.prepay) || "\u2014"}${brTag(d, "terms.prepay")}</dd>
+      <dt>Hold period</dt><dd>${many(d.terms.hold) || "\u2014"}${brTag(d, "terms.hold")}</dd>
+      <dt>Comments</dt><dd>${d.terms.notes ? esc(d.terms.notes) : "\u2014"}${brTag(d, "terms.notes")}</dd>
     </dl>`);
 }
 
@@ -26928,8 +26997,19 @@ function ldraft() {
     env: "", envNote: "", lura: "", ground: "", tenants: [], tenantNote: "",
     entity: (BPROF.entities[0] || {}).name || "", newEnt: "", newEntType: "LLC", useProfile: true, summary: "", files: {}, skipped: false,
     addrMore: "", parcels: "", contig: "", parcelNote: "", shovel: "", takeout: "",
-    cospons: "", coSponsors: [], credit: "", creditNote: "", synd: "", sponsorCash: "", su: {}, suNote: "" };
+    cospons: "", coSponsors: [], credit: "", creditNote: "", synd: "", sponsorCash: "", su: {}, suNote: "",
+    tExec: [], tProg: [], tIo: "", tPrepay: [], tHold: [], tNotes: "" };
   return S.ldraft;
+}
+/* Step 2's terms card. The draft holds it flat (tExec, tProg...), so the
+   wizard's own handlers store it; the saved request holds the broker deal's
+   shape, or nothing when every answer is blank, so a request that skipped the
+   card does not arrive as an empty Terms requested. */
+const BW_TERMS = [["tExec", "executions"], ["tProg", "program"], ["tPrepay", "prepay"], ["tHold", "hold"]];
+function bTermsOf(d) {
+  const t = { io: d.tIo || "", notes: (d.tNotes || "").trim() };
+  BW_TERMS.forEach(([k, to]) => { t[to] = (d[k] || []).slice(); });
+  return t.io || t.notes || BW_TERMS.some(x => t[x[1]].length) ? t : null;
 }
 const bDigits = m => m == null || m === "" ? "" : String(Math.round(m * 1e6));
 /* a Drafts row and its Continue link both open the wizard on that draft's
@@ -26954,7 +27034,9 @@ function loanDraftOf(d) {
        a line the borrower cleared */
     su: d.su ? Object.fromEntries(["sources", "uses"].flatMap(k => BSU_LINES[k].filter(x => x !== BSU_SPONSOR)
       .map(x => { const r = (d.su[k] || []).find(y => y[0] === x); return [x, r ? String(r[1]) : ""]; }))) : {},
-    suNote: d.suNote || "" };
+    suNote: d.suNote || "",
+    tExec: ((d.terms || {}).executions || []).slice(), tProg: ((d.terms || {}).program || []).slice(), tIo: (d.terms || {}).io || "",
+    tPrepay: ((d.terms || {}).prepay || []).slice(), tHold: ((d.terms || {}).hold || []).slice(), tNotes: (d.terms || {}).notes || "" };
 }
 /* required per step: only what a broker cannot start without */
 function lMissing(d, step) {
@@ -27093,7 +27175,7 @@ function lCommit(d, mode) {
     credit: d.credit, creditNote: d.credit === "Yes" ? d.creditNote.trim() : "", synd: d.synd, sponsorCash: bM(d.sponsorCash) || null,
     /* once a broker has taken the request on, the sources and uses are theirs
        ("it will be adjusted by Broker"), so a save leaves them alone */
-    su: ex && ex.conn && ex.conn.st === "assigned" ? ex.su : lsuOf(d), suNote: (d.suNote || "").trim() };
+    su: ex && ex.conn && ex.conn.st === "assigned" ? ex.su : lsuOf(d), suNote: (d.suNote || "").trim(), terms: bTermsOf(d) };
   if (!ex) {
     const id = (f.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "request") + "-" + (BLOANS.length + 1);
     ex = { id, created: "Today", submitted: null, stage: "Draft", broker: null, conn: null, quotes: [], docs: [], tasks: [], msgs: [],
@@ -27235,6 +27317,10 @@ function renderLoanNew() {
         <div class="rgrp" role="radiogroup" aria-labelledby="lfl_${k}"${hint ? ` aria-describedby="lfh_${k}"` : ""}>${opts.map(v =>
           `<label class="rad"><input type="radio" name="lf_${k}" data-lf="${k}" value="${v}"${d[k] === v ? " checked" : ""}><span class="dot" aria-hidden="true"></span>${v}</label>`).join("")}</div>${hint ? `
         <div class="hint" id="lfh_${k}">${hint}</div>` : ""}</div>`;
+  /* a tickbox set bound to the list d[k], step 2's terms card: .cgrp as the
+     tenant concentrations draw it */
+  const tchk = (k, list, cls) => `<div class="cgrp${cls ? " " + cls : ""}" role="group" aria-labelledby="lfl_${k}">${list.map(x =>
+          `<label class="chkrow"><span class="chk"><input type="checkbox" data-lterm="${k}" value="${esc(x)}"${(d[k] || []).includes(x) ? " checked" : ""}><span class="bx">${CHKTICK}</span></span>${esc(x)}</label>`).join("")}</div>`;
   let body = "";
   /* step 3's Yes / No / Unknown questions: radios() without the (optional)
      tag, see the Property details note */
@@ -27381,6 +27467,28 @@ function renderLoanNew() {
           rows += `<div class="fldrow fldrow--2">${cells[i]}${cells[i + 1] || "<div></div>"}</div>`;
         return rows;
       })()}
+    </div></div>
+    ${/* Terms you're looking for, 25 Nov. Section 3 of Tony's Zoho form, which
+          the request never asked [T, Slack thread on Zoho step 3: "it's not in
+          the borrower's request form"]. Built to his answers in that thread:
+          several answers for loan program, prepayment and hold period, one
+          comment box, no "Other", nothing required. It reaches the broker's
+          Terms requested, who confirms it [Tanya, 25 Nov]. On step 2, beside
+          the amount and purpose it qualifies, not on step 3 where his
+          screenshot was open: that step is numbers and property facts
+          [💡 rec]. No star on the card, so no (optional) tags either, the
+          12 Oct rule. The option lists are the broker editor's (TERM_*), so
+          a tick lands on the same value. Whether the card stays is question
+          332. */""}
+    <div class="card" style="margin-bottom:16px"><div class="card__hd"><h2>Terms you&rsquo;re looking for</h2></div><div class="card__ct">
+      <div class="fld"><label id="lfl_tExec">Executions to explore</label>${tchk("tExec", TERM_EXECUTIONS, "cgrp--2")}</div>
+      <div class="fld"><label id="lfl_tProg">Loan programs to explore</label>${tchk("tProg", TERM_PROGRAMS)}</div>
+      <div class="fldrow fldrow--2"><div class="fld"><label>Interest-only period</label>
+        <div class="fld__sel">${selCtl("lf:tIo", (d.tIo ? [{ v: "", label: "\u2014" }] : []).concat(TERM_IOS.map(v => ({ v, label: v }))), d.tIo, "Interest-only period", "Pick a period")}</div></div><div></div></div>
+      <div class="fld"><label id="lfl_tPrepay">Prepayment</label>${tchk("tPrepay", TERM_PREPAYS, "cgrp--2")}</div>
+      <div class="fld"><label id="lfl_tHold">Hold period</label>${/* two columns: four answers in three left 10 years alone on a row [Tanya, 25 Nov] */""}${tchk("tHold", TERM_HOLDS, "cgrp--2")}</div>
+      <div class="fld"><label for="lf_tNotes">Comments on pricing, term, prepay and capital stack</label>
+        <textarea class="inp" id="lf_tNotes" data-lf="tNotes" rows="2" placeholder="Debt, equity or both, and what matters most on pricing">${esc(d.tNotes)}</textarea></div>
     </div></div>`;
   }
   if (step === 3) body = `
@@ -33252,7 +33360,7 @@ document.addEventListener("click", e => {
     const d = dealById(S.dealId);
     if (d) {
       const k = sad.dataset.secadd;
-      if (k === "terms" && !d.terms) d.terms = { executions: [], program: "", io: "", prepay: "", hold: "" };
+      if (k === "terms" && !d.terms) d.terms = { executions: [], program: [], io: "", prepay: [], hold: [], notes: "" };
       if (k === "plan" && !d.plan) d.plan = { strategy: "", timeline: "", noi: null, exit: "" };
       if (k === "su" && !d.su) d.su = { sources: [["Senior debt", 0]], uses: [["Purchase price", 0]] };
       /* agency and syndication are §6 fields the 26 Aug pass missed. They are
@@ -34918,7 +35026,7 @@ document.addEventListener("click", e => {
   if (t.closest("[data-reqx]")) { S.reqDr = null; render(); return; }
   const rqc = t.closest("[data-reqconf]");
   if (rqc) { const dd = reqDeal(); if (dd) { reqConf(dd)[rqc.dataset.reqconf] = true; render(); } return; }
-  if (t.closest("[data-reqall]")) { const dd = dealById(S.reqDr); if (dd && dd.fromReq) { REQ_SECS.forEach(([k]) => { reqConf(dd)[k] = true; }); render(); } return; }
+  if (t.closest("[data-reqall]")) { const dd = dealById(S.reqDr); if (dd && dd.fromReq) { reqSecs(dd).forEach(([k]) => { reqConf(dd)[k] = true; }); render(); } return; }
   if (t.closest("[data-reqfirst]")) { S.reqDr = S.send; S.send = null; S.sendSel.clear(); render(); return; }
   const tab = t.closest("[data-tab]");
   if (tab) { S.tab = tab.dataset.tab; render(); return; }
@@ -36012,6 +36120,12 @@ document.addEventListener("input", e => {
     if (t.checked && was.some(x => !d.tenants.includes(x))) { render(); const b = document.querySelector(`input[data-lten][value="${v}"]`); if (b) b.focus(); }
     return;
   }
+  /* step 2's terms card: each set is a list of ticks, in the list's own order */
+  if (t.matches("[data-lterm]")) {
+    const d = ldraft(), k = t.dataset.lterm, was = d[k] || [];
+    d[k] = t.checked ? was.filter(x => x !== t.value).concat(t.value) : was.filter(x => x !== t.value);
+    return;
+  }
   /* a co-sponsor row: "index:field". No render, so the caret stays put */
   if (t.matches("[data-lcs]")) {
     const [i, f] = t.dataset.lcs.split(":"), c = ldraft().coSponsors[+i];
@@ -36737,6 +36851,9 @@ document.addEventListener("drop", e => {
   render();
 });
 
+/* product view (?as=<role>, 25 Nov): open in that role. Reload keeps it,
+   since the address carries it; Reset is on the hidden bar. */
+if (document.documentElement.classList.contains("product")) S.role = new URLSearchParams(location.search).get("as");
 route();
 
 /* the countdown is real [T · "counting down on screen"]: one ticker updates
