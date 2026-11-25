@@ -472,6 +472,10 @@
      the .fin .fkv rule itself (150 label track, 8 / 12 gaps, 14/20, both
      at 400). Change takes the value's size. */
   .lmatch .fkv .btn--link { font-size: inherit; line-height: inherit; }
+  /* the card's lead line, Tony's 6 Nov sentence (see renderLHome): the
+     rows' own 14/20 in the muted ink the .fkv labels use, 12 above the rows,
+     a step more than their 8 so it reads as a caption, not a row [~] */
+  .lmatch__lead { margin: 0 0 12px; color: var(--muted-foreground); font-size: 14px; line-height: 20px; }
   /* Counter beside the title, the CTA alone on the right [Tanya, 22 Oct,
      Prism Pattern/Home card: Lead = Title + Counter, gap 12, baseline;
      "you can cta there and hide by default"]. */
@@ -523,6 +527,12 @@
   .splitbtn > .btn:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
   .splitbtn > .splitbtn__car { width: 36px; padding: 0; margin-left: -1px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
   .lrnote { margin-bottom: 16px; }
+  /* Change status on a deal past Interested (23 Nov): the menu's rows at the
+     Pass menu's 13px, the radio indicator column of Prism's Radio item */
+  .cardmenu--st [role="menuitemradio"] { gap: 8px; padding: 6px 8px; font-size: 13px; }
+  .cardmenu--st [role="menuitemradio"]:focus-visible { background: var(--accent); }
+  .lrst__ind { display: grid; place-items: center; width: 14px; height: 14px; flex: none; }
+  .lrst__ind i { width: 8px; height: 8px; border-radius: 9999px; background: currentColor; }
   .lrq { display: grid; gap: 8px; max-width: 560px; }
   .lrq textarea.inp { height: auto; min-height: 72px; padding: 8px 12px; resize: vertical; font: inherit; font-size: 14px; line-height: 1.5; }
   .lrq__ft { display: flex; gap: 8px; }
@@ -1394,7 +1404,12 @@
      are Body/sm (14/20), address and last event Label/xs (12/16). The footer
      sits 12 below the body and 12 under a full-strength border, and its date
      follows the counts 8 on, as the Borrower Home frame (14:332) draws it. */
-  .bdcard { cursor: default; display: flex; flex-direction: column; gap: 2px; line-height: 20px; }
+  /* the whole card opens the deal (data-go, the shared whole-card handler):
+     its hover shadow already promised a click, and the name alone was a
+     one-line target. The counts and "Choose an advisor" keep their own links
+     [Tanya, 25 Nov, BR-HOME]. */
+  .bdcard { cursor: pointer; display: flex; flex-direction: column; gap: 2px; line-height: 20px; }
+  .dcard.bdcard:hover .bdcard__hd b a { text-decoration: underline; }
   /* Figma's 12 padding sits inside its 1px stroke; a CSS border adds to it */
   .dcard.bdcard { padding: 11px; }
   /* hover as the Home KPI tiles, --shadow-md, not the board card's lg [Tanya,
@@ -2370,6 +2385,11 @@
 
   .main { min-width: 0; background: var(--background); }
   .page { padding: 20px 24px 30px; }
+  /* borrower pages pad 32 top, 28 sides, 40 bottom: staging's main pages
+     (px-7 pt-8 pb-10), which Tanya preferred to 20/24/30 on Home and Account
+     [Tanya, 25 Nov, BR-GLOBAL-12]. Profile and Account take it too, so every
+     borrower page starts at the same height. */
+  :where(.app--borrower) .page { padding: 32px 28px 40px; }
 
   /* Breadcrumb — ui/breadcrumb.tsx: text-sm text-muted-foreground */
   .crumb { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: var(--muted-foreground); margin-bottom: 12px; }
@@ -3252,7 +3272,11 @@
     font-size: 14px; white-space: nowrap; cursor: pointer; box-shadow: var(--shadow-xs); overflow: hidden;
   }
   .ms__btn:hover { border-color: var(--brand-navy-600); }
-  .ms.open .ms__btn { border-color: var(--ring); }
+  /* pressed, and held while the menu is open: the hover border plus the accent
+     fill, as the row kebabs hold theirs. The open trigger used to take the ring
+     colour, which read as focus left over from the click [Tanya, 25 Nov,
+     BR-GLOBAL-11]. Keyboard focus keeps its own ring (:focus-visible). */
+  .ms__btn:active, .ms.open .ms__btn { border-color: var(--brand-navy-600); background: var(--accent); }
   .ms__lbl { font-weight: 500; }
   .ms__ph { color: var(--muted-foreground); font-weight: 400; }
   /* min-width:0 lets the row shrink below its content when the trigger hits its
@@ -5714,6 +5738,24 @@
   .auth__brand--col368 h2, .auth__brand--col368 .bp__sub, .auth__brand--col368 .bp__vp { max-width: none; }
   .auth__brand--col368 .bp__vp { gap: 6px; }
   .auth__brand--col368 .bp__tick { flex: 0 0 16px; text-align: center; }
+  /* Role selector, 23 Nov [Tanya: "align it with figma"]: out of the 368
+     column and onto the Lender and Borrower files' role selector (10:1843,
+     827:14568), headline 434 wide and sub-headline 403, so Tony's headline
+     breaks into three lines where Figma breaks it, not four. The Broker
+     file's 614:3514 was moved to the same widths the same day. The ch caps
+     above come to 413 and 406, close but not the same breaks.
+     Then 400 for both, the same day [Tanya, set in the Lender file and asked
+     for the page]: the shortened headline breaks "...desk for / multifamily
+     & commercial / real estate." instead of leaving "estate." alone. All
+     three files are at 400. */
+  .auth__brand--picker .bp__msg { max-width: 400px; }
+  .auth__brand--picker h2, .auth__brand--picker .bp__sub { max-width: none; }
+  /* Lender panel, 23 Nov [Tanya: "make this container 400px as well"]: the
+     col368 rules above with the column widened to 400, as the Lender file
+     draws all five frames that carry it (15:262, 15:379, 10:1777, 10:1812,
+     10:1875). Figma's value rows are a 13 tick, 10 gap and 377 of text;
+     here 16 + 6 + 378, the same breaks. */
+  .auth__brand--lender .bp__msg { max-width: 400px; }
   .auth__brand .bp__vp b { color: #fff; font-weight: 500; }
   .auth__brand .bp__vp:last-child { margin-bottom: 0; }
   .auth__brand .bp__tick { color: var(--brand-gold); font-weight: 700; }
@@ -8593,10 +8635,13 @@
         <!-- Lender rail, 19 Oct [lender tracker 01.5, 06.2]. Request is the
              lender's noun, "not Loan Request Match, not Best Match"; Lending
              parameters is one name in rail, page title and button [sheet 02.1].
-             Shown only under app--lender, see the CSS. -->
-        <a href="#/requests" class="l-only" data-nav="requests" title="Requests">
+             Shown only under app--lender, see the CSS.
+             "Deals" since 23 Nov [T, Figma 6 Nov: "Change 'request' to
+             'deals'"; Tanya: deals everywhere on the lender side]. The route
+             stays #/requests. -->
+        <a href="#/requests" class="l-only" data-nav="requests" title="Deals">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-          <span class="nm">Requests</span></a>
+          <span class="nm">Deals</span></a>
         <!-- No Lending parameters item since 2 Nov [Tanya: "we remove 'Lending
              parameters' from nav sidebar, so CTA should be prominent enough"].
              Its door is the outline button in the Requests header; Home's
@@ -11704,7 +11749,13 @@ const LPROF = { first: "Lena", last: "Lender", email: "lena@sandboxdebt.com", co
   /* 05.3, from the live lender settings (NotificationTab.jsx): one switch,
      loan_notification, and a frequency whose column default is weekly
      (schema.rb:833). See lAccNotify. */
-  notify: { reqs: true }, freq: "weekly" };
+  notify: { reqs: true }, freq: "weekly",
+  /* the day the parameters were last saved or confirmed, the product's
+     profile_updated_at: the latest of profile.updated_at,
+     lending_parameter.updated_at and confirmed_current_at (sessions_controller.rb).
+     Seeded more than 90 days back so the Home alert Tony asked for is
+     reachable in the default demo state; Confirm or a save empties it [~] */
+  confirmed: "15 Jul" };
 const LPROF0 = JSON.parse(JSON.stringify(LPROF));
 
 /* The Pro broker directory as a borrower sees it [T · 21 Sep]: only Pro
@@ -21185,16 +21236,27 @@ function lbPhotos() {
    every property type, not only multifamily, and the longer heading wraps the
    card. His "Work with a us" is read as "Work with us". The other version,
    "Start your multifamily-CRE debt or equity search", is one string away if
-   he prefers it. Roles without h1 keep "Sign up as a <role>". */
+   he prefers it. Roles without h1 keep "Sign up as a <role>".
+   d, 23 Nov: all three card lines are Tony's, from his Figma comments of
+   6 Nov on the Lender file's role selector (10:1843) [T]. Departures from
+   the comment text [~]: the lender line loses the space before its full
+   stop ("Review opportunities ."). The broker line was his "Capital markets
+   infrastructure for independent brokers", 303px against the card's 301
+   (288 in Figma), so it wrapped; "infrastructure" became "support", his own
+   word from the pillars line, to keep it on one line [Tanya, 23 Nov]. The
+   lender's sign-up screen read its card line,
+   so it now takes the old line as its own sub, as the Lender file's sign-up
+   frame (15:262) still draws it; the comment was on the card only. */
 const AUTH_ROLES = [
-  { v: "borrower", label: "Borrower", d: "Find the right financing for your property.",
+  { v: "borrower", label: "Borrower", d: "Work with our advisors to identify capital providers.",
     h1: "Start your debt or equity search",
     sub: "Work with us to secure financing for your property.",
     ic: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg>` },
-  { v: "broker", label: "Broker", d: "Originate more. Chase lenders less. Close more.",
+  { v: "broker", label: "Broker", d: "Capital markets support for independent brokers.",
     sub: "Spend more time building relationships and less time on operations.",
     ic: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M2 13h20"/></svg>` },
-  { v: "lender", label: "Lender", d: "Receive opportunities that fit your lending criteria.",
+  { v: "lender", label: "Lender", d: "Share your criteria. Review opportunities.",
+    sub: "Receive opportunities that fit your lending criteria.",
     ic: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20 7 4 7Z"/><path d="M6 18v-7M10 18v-7M14 18v-7M18 18v-7"/><path d="M3 22h18"/></svg>` },
 ];
 
@@ -21321,7 +21383,11 @@ const AUTH_PANELS = {
      The same comment, same words, sits on "Borrower landing" (12:458) [T], so
      the landing takes this panel too; renamed bverify -> bgeneric for it.
      Assigned below the literal, since it copies generic. */
-  lender: { h: "See more of the deals you want to finance.", sub: "Tell us what deals you want to see. We\u2019ll filter out everything else so only the right opportunities reach you.",
+  /* lender sub, 23 Nov: Tony's Figma comment of 6 Nov on the Lender file's
+     "Sign up — lender" (15:262, thread 1998247293), "Replace this one line"
+     [T], word for word. The Lender file's two sign-up frames and its three
+     verify frames carry it, as this panel serves all five. */
+  lender: { h: "See more of the deals you want to finance.", sub: "Introduce your institution, share what you finance, and connect with brokers working on relevant financing requests.",
     vp: ["<b>Deals matched to your criteria</b> \u2014 target opportunities by loan size, property type, geography, loan type, and other lending parameters.",
       "<b>Better-organized submissions</b> \u2014 review standardized deal information designed to help you evaluate opportunities faster.",
       "<b>Expand your origination channel</b> \u2014 build relationships with active CRE brokers and borrowers without relying solely on your existing referral network."] },
@@ -21334,10 +21400,17 @@ AUTH_PANELS.bgeneric = { ...AUTH_PANELS.generic, noStats: true };
    His pillars and the counts stay, being true for every role. Headline and
    sub are ours [💡 rec], question 211. No value points: the role cards beside
    it say what each role gets. "Brokers", not "advisors": the card on the same
-   page says Broker. "CRE", Tony's own shorthand: spelled out, the
-   headline took three lines in the 368 column. Log in keeps generic. */
-AUTH_PANELS.picker = { pillars: AUTH_PANELS.generic.pillars, h: "One platform for CRE financing.",
-  sub: "Borrowers, brokers and lenders work each deal in one place: the request, lender matches, quotes and documents.", vp: [] };
+   page says Broker. Log in keeps generic.
+   23 Nov: headline and sub are now Tony's, word for word, from his two
+   Figma comments of 6 Nov on the Lender file's role selector (10:1843,
+   threads 1998222633 and 1998210701) [T], which answer question 211. He
+   wrote the second half in italics (*...*); it is set upright all the same
+   [Tanya, 23 Nov: "don't use italic"]. His opening "LenderPrism" is dropped
+   too, the logo sitting right above it [Tanya, 23 Nov]. The website hero
+   carries the same sub and the same "for multifamily & commercial real
+   estate" line. */
+AUTH_PANELS.picker = { pillars: AUTH_PANELS.generic.pillars, h: "Capital markets desk for multifamily &amp; commercial real estate.",
+  sub: "LenderPrism brings borrowers, brokers, and lenders together through experienced guidance, targeted lender research, and technology that keeps deals moving forward. From start to finish, people lead the process.", vp: [] };
 /* bheld, 11 Oct - Tony's "inline with" Log in, on "That link has expired"
    (76:2730) as on 12:416 and 12:458 [T]: the text matched, but with no strip
    the message centred 56px below Log in's (340 against 284 at 922). The
@@ -21354,7 +21427,7 @@ function authShell(inner, foot, panel) {
      in the sign-up's 418 column. [~] */
   const p = panel || AUTH_PANELS[S.authMode === "login" ? "generic" : (S.authRole || "generic")];
   return `<div class="auth">
-    <div class="auth__brand${S.route === "auth" && S.authMode === "signup" && S.authRole === "borrower" ? " auth__brand--bsignup" : p === AUTH_PANELS.borrower || p === AUTH_PANELS.bgeneric || p === AUTH_PANELS.bheld ? "" : " auth__brand--col368"}">
+    <div class="auth__brand${S.route === "auth" && S.authMode === "signup" && S.authRole === "borrower" ? " auth__brand--bsignup" : p === AUTH_PANELS.borrower || p === AUTH_PANELS.bgeneric || p === AUTH_PANELS.bheld ? "" : p === AUTH_PANELS.picker ? " auth__brand--picker" : p === AUTH_PANELS.lender ? " auth__brand--col368 auth__brand--lender" : " auth__brand--col368"}">
       <div class="auth__mark"><svg class="lpmark" viewBox="0 0 1206.44 1004" aria-hidden="true"><use href="#lpMark"/></svg><span><svg class="lpword" viewBox="0 0 4454 1004" role="img" aria-label="LenderPrism"><use href="#lpWord"/></svg></span></div>
       <div class="bp__msg">
         ${p.badge ? `<div class="bp__badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>${p.badge}</div>` : ""}
@@ -21517,7 +21590,7 @@ function renderJoinAuth() {
    16 Nov, second pass - the task doc read again against these screens
    (Tanya: "so recommended"). Now as the doc says: one Full name field and
    the four loan amount ranges, on the website too (questions 269 and 270
-   stay open with Tony); autocomplete on the contact fields; the state list
+   stay open with Tony; the name is two fields again since 19 Nov, 269); autocomplete on the contact fields; the state list
    searches as you type; "Next — Deal details"; the trust row; the count is a
    card that opens a preview with the names blurred; "What happens now";
    "Forward to a partner"; and on a phone the account card leads with "Email
@@ -21550,26 +21623,27 @@ document.addEventListener("focusout", e => {
     fld.classList.add("err"); inp.setAttribute("aria-describedby", "pde_email"); inp.insertAdjacentHTML("afterend", pdErr("email"));
   } else { delete S.pd.err.email; fld.classList.remove("err"); inp.removeAttribute("aria-describedby"); }
 });
-const pdFirst = f => f.name.trim().split(/\s+/)[0];
+const pdFirst = f => f.first.trim();
 /* the website's thirteen codes, US first; the list is our pick [~] */
 const PD_CODES = ["US +1", "Canada +1", "Mexico +52", "UK +44", "Australia +61", "Brazil +55", "China +86",
   "France +33", "Germany +49", "India +91", "Israel +972", "Japan +81", "UAE +971"];
 const PD_NOTSURE = "Not sure";
 const PD_PIN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12s-8-7-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
 function pdBlank() {
-  return { name: "", email: "", code: "US +1", phone: "", amt: "", prop: "", propOther: "",
+  return { first: "", last: "", email: "", code: "US +1", phone: "", amt: "", prop: "", propOther: "",
     purpose: "", fin: [], state: "", comments: "", pass: "", fixTo: "" };
 }
 function pdSample(upTo) {
   const f = pdBlank();
-  Object.assign(f, { name: "Jane Cooper", email: "jane@example.com", phone: "(512) 555-0142" });
+  Object.assign(f, { first: "Jane", last: "Cooper", email: "jane@example.com", phone: "(512) 555-0142" });
   if (upTo !== "deal") Object.assign(f, { amt: "$2–5M", prop: "Multifamily", purpose: "Refinance", fin: [PD_NOTSURE], state: "Texas" });
   return f;
 }
 function pdErrs(step) {
   const f = S.pd.f, m = {}, dg = s => String(s).replace(/\D/g, "");
   if (step === "contact") {
-    if (!f.name.trim()) m.name = "Enter your full name.";
+    if (!f.first.trim()) m.first = "Enter your first name.";
+    if (!f.last.trim()) m.last = "Enter your last name.";
     if (!f.email.trim()) m.email = "Enter your email.";
     else if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) m.email = "Enter an email like name@company.com.";
     const us = / \+1$/.test(f.code);
@@ -21618,9 +21692,15 @@ function renderPostDeal() {
   if (p.step === "contact") {
     /* the consent line stands before Next, since Next is where the task doc
        saves the lead [💡 rec, the website's own line]. Autocomplete as the
-       doc asks: name, email, and the phone without its country code */
+       doc asks: name, email, and the phone without its country code. First
+       name and Last name are two fields again since 19 Nov (confirmed on the
+       call: Tony prefers two fields and it integrates better with the CRM;
+       question 269); the app's sign-up pair, frm2col */
     return authShell(`<div class="pd">${head}${pdSteps(1, "Contact")}
-      <div class="fld ${m.name ? "err" : ""}"><label for="pd_name">Full name</label><input class="inp" id="pd_name" data-pdf="name" autocomplete="name" autocapitalize="words" spellcheck="false" value="${esc(f.name)}"${m.name ? ' aria-describedby="pde_name"' : ""}>${pdErr("name")}</div>
+      <div class="frm2col">
+        <div class="fld ${m.first ? "err" : ""}"><label for="pd_first">First name</label><input class="inp" id="pd_first" data-pdf="first" autocomplete="given-name" autocapitalize="words" spellcheck="false" value="${esc(f.first)}"${m.first ? ' aria-describedby="pde_first"' : ""}>${pdErr("first")}</div>
+        <div class="fld ${m.last ? "err" : ""}"><label for="pd_last">Last name</label><input class="inp" id="pd_last" data-pdf="last" autocomplete="family-name" autocapitalize="words" spellcheck="false" value="${esc(f.last)}"${m.last ? ' aria-describedby="pde_last"' : ""}>${pdErr("last")}</div>
+      </div>
       <div class="fld ${m.email ? "err" : ""}"><label for="pd_email">Email</label><input class="inp" id="pd_email" data-pdf="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" value="${esc(f.email)}"${m.email ? ' aria-describedby="pde_email"' : ""}>${pdErr("email")}</div>
       <div class="fld ${m.phone ? "err" : ""}"><label for="pd_phone">Phone</label>
         <div class="pd__phone"><select class="inp" data-pdf="code" aria-label="Country code" autocomplete="tel-country-code">${PD_CODES.map(c => `<option${c === f.code ? " selected" : ""}>${c}</option>`).join("")}</select><input class="inp" id="pd_phone" data-pdf="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 123-4567" value="${esc(f.phone)}"${m.phone ? ' aria-describedby="pde_phone"' : ""}></div>${pdErr("phone")}</div>
@@ -22056,7 +22136,7 @@ function renderBVerify() {
   const hd = t => `<div class="bverify__hd"><div class="bverify__ic">${IC}</div><h1>${t}</h1></div>`;
   const body = st === "verified" ? `
     ${hd("Email verified")}
-    <p class="auth__sub">${em} is confirmed. ${L ? "New requests and LenderPrism will reach you there." : "Your advisor and LenderPrism will reach you there."}</p>
+    <p class="auth__sub">${em} is confirmed. ${L ? "New deals and LenderPrism will reach you there." : "Your advisor and LenderPrism will reach you there."}</p>
     <button type="button" class="btn btn--full" data-bverify="go">${S.bvNext ? "Open the invitation" : "Go to home"}</button>`
     : st === "error" ? `
     ${hd("That link has expired")}
@@ -22069,7 +22149,7 @@ function renderBVerify() {
           leaves the card with it. "Our email address" names no sender, and
           the prototype has none to give it. [~] */""}
     <p class="auth__sub">We sent a verification link to <b>${em}</b>. Click the link to confirm your email and get started.</p>
-    <p class="auth__sub">Don’t see it? Check your spam or junk folder. Add our email address to your contacts or safe senders list to receive ${L ? "new requests" : "future updates about your financing"}.</p>
+    <p class="auth__sub">Don’t see it? Check your spam or junk folder. Add our email address to your contacts or safe senders list to receive ${L ? "new deals" : "future updates about your financing"}.</p>
     <div class="bland__cta">
       <button type="button" class="btn btn--full" data-bverify="verified">Open the link (prototype)</button>
       <button type="button" class="btn btn--outline btn--full" data-bverify="resend">Resend the link</button>
@@ -24576,9 +24656,35 @@ const lBroker = r => {
    the tab that opens should be the first one. The order follows a request,
    waiting, then decided either way, then kept, then everything. Saved is a
    bookmark across states, so the counts do not sum to All's [~] */
-const LVIEWS = [["decide", "Needs decision"], ["interested", "Interested"], ["passed", "Passed"], ["saved", "Saved"], ["all", "All"]];
+/* Tony's statuses since 23 Nov [T, Figma 6 Nov: "We need to filter using
+   the statuses we have created: New, Interested, Passed, Working, Funded,
+   Dead / On Hold"], in his order, with Saved and All kept after them.
+   "Needs decision" reads New; its key stays "decide". Working, Funded and
+   Dead / on hold are the LENDER'S own stages, set by the lender after
+   Interested with Change status [Tanya, 23 Nov: "Lender sets them"]. They
+   are not the broker's pipeline: a lender never sees where the broker's
+   deal stands with anyone else. The product's match enum (pending,
+   open_request, under_review, not_a_fit, interested, declined) has no such
+   field, so this is a new one [💡 rec]. Tones follow the broker's stage
+   dots: Working gold, Funded green; Dead / on hold muted, because on hold
+   is not dead. */
+const LVIEWS = [["decide", "New"], ["interested", "Interested"], ["passed", "Passed"], ["working", "Working"], ["funded", "Funded"], ["dead", "Dead / on hold"], ["saved", "Saved"], ["all", "All"]];
 const lInView = (r, v) => v === "all" || (v === "saved" ? r.saved : v === "decide" ? r.st === "new" : r.st === v);
-const LRST = { new: ["New", "tone-blue"], interested: ["Interested", "tone-green"], passed: ["Passed", "tone-muted"] };
+const LRST = { new: ["New", "tone-blue"], interested: ["Interested", "tone-green"], passed: ["Passed", "tone-muted"],
+  working: ["Working", "tone-gold"], funded: ["Funded", "tone-green"], dead: ["Dead / on hold", "tone-muted"] };
+/* the stages a lender moves a deal through after Interested, and the menu
+   that moves it, reached from one outline button. The rows are Prism's
+   DropdownMenu/Row Radio item, as the Lender file draws them (306:8965): a
+   14px indicator column with the 8px dot on the current stage only, no tone
+   dots and no tick, so it reads as the Figma does, not as the broker card's
+   status list [~] */
+const LSTAGES = ["interested", "working", "funded", "dead"];
+function lStageBtn(r, sm) {
+  const mid = "lrmv:" + r.id, open = S.cardMenu === mid;
+  return `<button class="btn btn--outline${sm ? " btn--sm" : ""}" type="button" data-kebab="${mid}" aria-haspopup="menu" aria-expanded="${open}" aria-label="Change status of ${esc(lreq(r).name)}">Change status ${CHEVD}</button>${open
+    ? `<div class="cardmenu cardmenu--st" role="menu" aria-label="Change status" draggable="false"><div class="cardmenu__lbl">Change status</div>${LSTAGES.map(k =>
+      `<button type="button" role="menuitemradio" aria-checked="${k === r.st}" data-lrmv="${r.id}" data-st="${k}"><span class="lrst__ind" aria-hidden="true">${k === r.st ? "<i></i>" : ""}</span><span>${LRST[k][0]}</span></button>`).join("")}</div>` : ""}`;
+}
 /* filters on the shared multiselect, the BFILTERS pattern. No status
    filter: the sheet asks for one and for views, and the views ARE the
    status, so a second control for the same field would let the two disagree
@@ -24686,13 +24792,13 @@ function lmpvHtml() {
   /* actionless, like mpvHtml: the fields beside it are the action */
   const d = lpd();
   if (!d.prop.size || !d.st.size || !d.min || !d.max)
-    return `<div class="empty--inline"><p>Add loan amounts, property types and states — matching requests preview here before you save.</p></div>`;
+    return `<div class="empty--inline"><p>Add loan amounts, property types and states — matching deals preview here before you save.</p></div>`;
   const all = LREQS.map(lreq), hit = all.filter(r => lpFits(r, d));
   const by = {};
   hit.forEach(r => { by[r.prop] = (by[r.prop] || 0) + 1; });
   const rows = Object.entries(by).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   return `<div class="big">${hit.length}</div>
-    <div class="sub">of ${all.length} recent requests fit these parameters</div>
+    <div class="sub">of ${all.length} recent deals fit these parameters</div>
     ${rows.length ? `<div class="mpv__by">${rows.map(([k, n]) => `<div class="su__row"><span>${esc(k)}</span><span class="num">${n}</span></div>`).join("")}</div>` : ""}`;
 }
 
@@ -24706,7 +24812,7 @@ function renderLParams() {
   const chk = (k, v) => `<label class="chkrow"><span class="chk"><input type="checkbox" data-lpchk="${k}" value="${esc(v)}"${d[k].has(v) ? " checked" : ""}><span class="bx">${CHKTICK}</span></span>${esc(v)}</label>`;
   return `
     <div class="head"><div><h1>Lending parameters</h1>
-      <p>What you finance. Requests that fit all of it reach you.</p></div></div>
+      <p>What you finance. Deals that fit all of it reach you.</p></div></div>
     <div class="frm"><div class="lpcol">
       <div class="card">
         <div class="card__hd"><h2>Who you are</h2></div>
@@ -24773,7 +24879,7 @@ function renderLParams() {
           (question 242). */""}
     <div class="frm__rail">
       <div class="card">
-        <div class="card__hd"><h2>Matching requests</h2></div>
+        <div class="card__hd"><h2>Matching deals</h2></div>
         <div class="card__ct mpv" id="lmpv">${lmpvHtml()}</div>
       </div>
     </div></div>
@@ -24881,10 +24987,10 @@ function lDocsCard() {
 function lEmpty() {
   return S.lFresh
     ? `<div class="empty"><b>No matches yet</b>
-        <p>Requests reach you once you have set what you finance.</p>
+        <p>Deals reach you once you have set what you finance.</p>
         <div class="acts"><a class="btn btn--sm" href="#/parameters">Set lending parameters</a></div></div>`
-    : `<div class="empty"><b>No requests waiting for your decision</b>
-        <p>New requests that match your lending parameters land here.</p>
+    : `<div class="empty"><b>No new deals waiting for your response</b>
+        <p>New deals that match your lending parameters land here.</p>
         <div class="acts"><a class="btn btn--outline btn--sm" href="#/parameters">Review lending parameters</a></div></div>`;
 }
 /* ---------- Account, lender — #/account/(profile|password|notify) ----------
@@ -24938,8 +25044,8 @@ function lAccNotify() {
       <div class="card__hd"><h2>Email alerts</h2></div>
       <div class="card__ct">
         <div class="tgl">
-          <span><span class="tgl__t">New requests</span><span class="tgl__s">A request that matches your lending parameters.${on ? "" : " Emails are off; new requests still appear under Requests."}</span></span>
-          <button type="button" class="tgl__sw" data-lnotify="reqs" aria-pressed="${on}" aria-label="New requests"><i></i></button>
+          <span><span class="tgl__t">New deals</span><span class="tgl__s">A deal that matches your lending parameters.${on ? "" : " Emails are off; new deals still appear under Deals."}</span></span>
+          <button type="button" class="tgl__sw" data-lnotify="reqs" aria-pressed="${on}" aria-label="New deals"><i></i></button>
         </div>
         ${on ? `<div class="tgl__sub"><div class="fld"><label id="lnf_freq">How often</label>
           <div class="rgrp" role="radiogroup" aria-labelledby="lnf_freq">${LFREQ.map(([v, t]) =>
@@ -25016,7 +25122,7 @@ function lSubmitterCard(r, d) {
   return `<div class="card__ct lrsub">
       <div class="lrsub__who"><b>${esc(s.nm)}</b><span>Broker · ${esc(s.co)} · ${esc(s.place)}</span></div>
       <div class="crows">${row(IC.mail, "Email", s.email, true)}${s.phone ? row(IC.phone, "Phone", s.phone, true) : ""}</div>
-      ${others.length ? `<div class="lrsub__also">Also on this request</div><dl class="fkv">${others.map(c => `<dt>${esc(c.name)}</dt><dd>${[c.role ? esc(c.role) : "",
+      ${others.length ? `<div class="lrsub__also">Also on this deal</div><dl class="fkv">${others.map(c => `<dt>${esc(c.name)}</dt><dd>${[c.role ? esc(c.role) : "",
         `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`, c.phone ? esc(c.phone) : ""].filter(Boolean).join(" &middot; ")}</dd>`).join("")}</dl>` : ""}
       <div class="lrsub__act"><button class="btn btn--outline btn--sm" type="button" disabled data-tip="Messages is coming soon">Message</button></div>
     </div>`;
@@ -25049,7 +25155,7 @@ function lOtherDlg() {
   return `
     <div class="mov mov--ask" role="dialog" aria-modal="true" aria-labelledby="lrotq">
       <div class="mdl mdl--ask">
-        <div class="mdl__hd"><div><h2 id="lrotq">${add ? "Add a reason" : S.route === "lreq" ? "Pass on this request" : "Pass on " + esc(lreq(r).name)}</h2></div></div>
+        <div class="mdl__hd"><div><h2 id="lrotq">${add ? "Add a reason" : S.route === "lreq" ? "Pass on this deal" : "Pass on " + esc(lreq(r).name)}</h2></div></div>
         <div class="mdl__bd"><div class="fld"><label for="lrot_t">Note <span class="opt">(optional)</span></label>
           <textarea class="inp" id="lrot_t" rows="3" placeholder="What would have made it a fit"></textarea></div></div>
         <div class="mdl__ft"><button class="btn btn--outline" type="button" data-lrotx>Cancel</button><button class="btn" type="button" data-lrotgo>${add ? "Add reason" : "Pass"}</button></div>
@@ -25098,14 +25204,17 @@ function renderLReq() {
       ${open ? `<div class="cardmenu" role="menu" aria-label="Pass with a reason" draggable="false"><div class="cardmenu__lbl">Pass with a reason</div>${LPASS.map(v =>
         `<button type="button" role="menuitem" data-lrpass="${v}">${v === "Other" ? "Other…" : v}</button>`).join("")}</div>` : ""}
     </div>`;
+  /* after Interested, Change status moves the deal on (23 Nov); Withdraw
+     interest stays while it is still at Interested */
   const acts = r.st === "interested"
-    ? `<button class="btn btn--outline" type="button" data-lrwd>Withdraw interest</button>`
+    ? `<button class="btn btn--outline" type="button" data-lrwd>Withdraw interest</button>` + lStageBtn(r)
+    : LSTAGES.includes(r.st) ? lStageBtn(r)
     : (r.st === "new" ? passBtn : "") + `<button class="btn" type="button" data-lrint>Interested</button>`;
   const bar = `<div class="lrbar">
-      <a class="btn btn--outline btn--sm" href="#/requests">${L}Back to requests</a>
-      <div class="lrbar__pos">${nav(prev, "Previous request", L)}<span>${i + 1} of ${seq.ids.length} · ${esc(seq.label)}</span>${nav(next, "Next request", R)}</div>
+      <a class="btn btn--outline btn--sm" href="#/requests">${L}Back to deals</a>
+      <div class="lrbar__pos">${nav(prev, "Previous deal", L)}<span>${i + 1} of ${seq.ids.length} · ${esc(seq.label)}</span>${nav(next, "Next deal", R)}</div>
       <div class="lrbar__acts">
-        <button class="bmkbtn" type="button" data-lrsave="${r.id}" aria-pressed="${r.saved}" aria-label="${r.saved ? "Remove from saved" : "Save this request"}" data-tip="${r.saved ? "Saved" : "Save"}">${r.saved ? BOOKMARKF : BOOKMARK}</button>
+        <button class="bmkbtn" type="button" data-lrsave="${r.id}" aria-pressed="${r.saved}" aria-label="${r.saved ? "Remove from saved" : "Save this deal"}" data-tip="${r.saved ? "Saved" : "Save"}">${r.saved ? BOOKMARKF : BOOKMARK}</button>
         ${acts}
       </div>
     </div>`;
@@ -25115,10 +25224,10 @@ function renderLReq() {
      "question back on interest" [T · 6 Aug], optional. The live code stores
      it and mails it to nobody (lexicon fact 6, question 239), so sending it
      here is our proposal. [💡 rec] */
-  const note = r.st === "interested"
+  const note = LSTAGES.includes(r.st)
     ? `<div class="alert alert--success lrnote" role="status">${CHKSM}
         <div class="alert__title">${esc(sub.nm)} has been notified. Their contact details are below.</div>
-        <div class="alert__desc">You said Interested on ${esc(r.intOn)}.${r.q ? ` Your question: “${esc(r.q)}”` : ""}</div>
+        <div class="alert__desc">You said Interested on ${esc(r.intOn)}.${r.st !== "interested" && r.stOn ? ` Moved to ${LRST[r.st][0]} on ${esc(r.stOn)}.` : ""}${r.q ? ` Your question: “${esc(r.q)}”` : ""}</div>
         ${r.q ? "" : S.lrQ === r.id
           ? `<div class="alert__act lrq"><div class="fld"><label for="lrq_t">Question for ${esc(sub.first)} <span class="opt">(optional)</span></label>
               <textarea class="inp" id="lrq_t" rows="3" placeholder="Anything you need before you quote"></textarea></div>
@@ -25127,19 +25236,19 @@ function renderLReq() {
       </div>`
     : r.st === "passed"
     ? `<div class="alert lrnote" role="status"><span></span>
-        <div class="alert__title">You passed on this request${r.passOn ? " on " + esc(r.passOn) : ""}.</div>
+        <div class="alert__title">You passed on this deal${r.passOn ? " on " + esc(r.passOn) : ""}.</div>
         <div class="alert__desc">${r.why === "Other" && r.whyNote ? "Your note: “" + esc(r.whyNote) + "”"
           : r.why ? "Reason: " + esc(r.why) + "." + (r.whyNote ? " “" + esc(r.whyNote) + "”" : "") : "No reason given."}</div>
         ${r.why ? "" : `<div class="alert__act">${lAddWhyBtn()}</div>`}
       </div>` : "";
   const meta = `<div class="lrmeta"><span class="badge ${stt}">${stl}</span><span>Received ${esc(r.on)}</span>${r.sel
-    ? `<span class="badge tone-blue" data-tip="${esc(sub.nm)} picked you for this request">Picked by ${esc(sub.nm)}</span>` : ""}</div>`;
+    ? `<span class="badge tone-blue" data-tip="${esc(sub.nm)} picked you for this deal">Picked by ${esc(sub.nm)}</span>` : ""}</div>`;
   const other = lOtherDlg();
   const wd = S.lrWd === r.id ? `
     <div class="mov mov--ask" role="alertdialog" aria-modal="true" aria-labelledby="lrwdq" aria-describedby="lrwdb">
       <div class="mdl mdl--ask">
         <div class="mdl__hd"><div><h2 id="lrwdq">Withdraw interest?</h2></div></div>
-        <div class="mdl__bd"><p id="lrwdb">${esc(x.name)} goes back to Needs decision. ${esc(sub.nm)} was told you were interested.</p></div>
+        <div class="mdl__bd"><p id="lrwdb">${esc(x.name)} goes back to New. ${esc(sub.nm)} was told you were interested.</p></div>
         <div class="mdl__ft"><button class="btn btn--outline" type="button" data-lrwdx>Cancel</button><button class="btn" type="button" data-lrwdgo>Withdraw interest</button></div>
       </div>
     </div>` : "";
@@ -25152,13 +25261,13 @@ function lPass(r, why, whyNote) {
   const seq = lSeq(r), i = seq.ids.indexOf(r.id), nextId = seq.ids[i + 1] || seq.ids[i - 1];
   const was = { st: r.st, why: r.why, whyNote: r.whyNote, passOn: r.passOn };
   Object.assign(r, { st: "passed", why: why || "", whyNote: whyNote || "", passOn: "19 Oct" });
-  if (seq.label === "Needs decision") seq.ids.splice(i, 1);
+  if (seq.label === "New") seq.ids.splice(i, 1);
   S.cardMenu = null; S.lrOther = null;
   /* undoNext: route() clears S.undo on every arrival, and this toast has to
      ride across the navigation onto the next request */
   S.undoNext = { msg: "Passed on " + lreq(r).name + "." + (why && why !== "Other" ? " Reason: " + why + "." : ""), fn: () => {
     Object.assign(r, was);
-    if (seq.label === "Needs decision" && !seq.ids.includes(r.id)) seq.ids.splice(i, 0, r.id);
+    if (seq.label === "New" && !seq.ids.includes(r.id)) seq.ids.splice(i, 0, r.id);
     location.hash = "#/requests/" + r.id; } };
   location.hash = nextId && nextId !== r.id ? "#/requests/" + nextId : "#/requests";
 }
@@ -25182,6 +25291,9 @@ function lAddWhyBtn() {
       `<button type="button" role="menuitem" data-lradd="${v}">${v === "Other" ? "Other…" : v}</button>`).join("")}</div>` : ""}`;
 }
 function lRowActs(r) {
+  /* a deal past Interested carries Change status on its row since 23 Nov;
+     Passed still carries nothing, its way back is the deal page [~] */
+  if (LSTAGES.includes(r.st)) return `<div class="lracts__in">${lStageBtn(r, true)}</div>`;
   if (r.st !== "new") return "";
   const mid = "lrp:" + r.id, open = S.cardMenu === mid;
   return `<div class="lracts__in">
@@ -25202,7 +25314,7 @@ function lListPass(rs, why, whyNote) {
   const was = rs.map(r => ({ r, st: r.st, why: r.why, whyNote: r.whyNote, passOn: r.passOn }));
   rs.forEach(r => Object.assign(r, { st: "passed", why: why || "", whyNote: whyNote || "", passOn: "19 Oct" }));
   S.cardMenu = null; S.lrOther = null; S.lpicked.clear();
-  S.undo = { msg: (rs.length === 1 ? "Passed on " + lreq(rs[0]).name + "." : "Passed on " + rs.length + " requests.")
+  S.undo = { msg: (rs.length === 1 ? "Passed on " + lreq(rs[0]).name + "." : "Passed on " + rs.length + " deals.")
       + (why && why !== "Other" ? " Reason: " + why + "." : ""),
     fn: () => { was.forEach(w => Object.assign(w.r, { st: w.st, why: w.why, whyNote: w.whyNote, passOn: w.passOn })); } };
   render();
@@ -25220,13 +25332,23 @@ function lListInt(r) {
 /* ---------- Home, lender — 01.4 and 01.3, milestones F and G, 20 Oct ----------
    01.4 [sheet]: "Answers: what is new, what needs my decision, what did I
    say yes to", in three blocks. Block 1, Needs your decision: the count and
-   the newest requests, with the list's parts (unread dot, Picked mark,
+   the newest requests, with the list's parts (unread dot,
    Pass and Interested, the whole row opens the request) in a list row of
-   its own since 22 Oct, see .lhq__r; the buttons show at rest. Financing
-   rides on the line under the name with property type and place, amount
-   and received date stack on the right: all five of the sheet's fields on
-   two lines. [~] The subtitle counts the unread ones, the dot's meaning
-   in words and the nearest true answer to "what is new" [~]. Block 2,
+   its own since 22 Oct, see .lhq__r; the buttons show at rest. Property
+   type and place ride on the line under the name, amount and received date
+   stack on the right. Financing rode there too until 23 Nov [T, Figma 6 Nov:
+   "Remove the product type from all lines. Leave only property type and
+   city, state"]; the Requests list keeps it as its own column. [~] The
+   "Picked for you" that opened the line on a broker's pick went with it the
+   same day, on the same comment: "only" leaves nothing else on the line.
+   The pick still shows in the Requests list (Submitted by, the Picked for
+   you chip) and on the request page's badge [~]. The
+   subtitle counts the unread ones, the dot's meaning in words and the
+   nearest true answer to "what is new" [~], in Tony's words since 23 Nov
+   [T, Figma 6 Nov: "Welcome back, Lena. You have 4 new financing requests
+   to review."]. The card is "New requests awaiting your response" since the
+   same day [T, Figma 6 Nov: "Change 'needs your decision' by 'New request
+   awaiting your response'"], plural because it holds up to five. Block 2,
    Interested, with the submitter. Block 3, the matching summary: the saved
    parameters in one line and Edit. The decisions run the page's full
    width because they carry the actions; Interested and the summary are
@@ -25268,7 +25390,7 @@ function lListInt(r) {
 const LHOME_N = 5;
 /* the unread dot's tooltip, on Home and the list: what the dot means and
    what clears it, in the lexicon's word [lexicon, Unread] [~] */
-const UDOT_TIP = "Unread. You haven't opened this request yet.";
+const UDOT_TIP = "Unread. You haven't opened this deal yet.";
 const ARROWR = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
 /* Matching's Edit, leading pencil [Tanya, 22 Oct: added, removed, then
    back as "pencil icon + Edit"]: the file's own LNPEN glyph at the 14 the
@@ -25292,7 +25414,7 @@ function lSetupCard() {
       <div class="card__ct">
         <a class="setuprow" href="#/parameters">
           <span class="setuprow__c"></span>
-          <span class="setuprow__tx"><b>Set your lending parameters</b><span>Requests reach you once you have said what you finance.</span></span>
+          <span class="setuprow__tx"><b>Set your lending parameters</b><span>Deals reach you once you have said what you finance.</span></span>
           <span class="setuprow__go" aria-hidden="true">›</span>
         </a>
         <a class="setuprow" href="#/account/documents">
@@ -25303,28 +25425,61 @@ function lSetupCard() {
       </div>
     </div>`;
 }
+/* Parameters not confirmed in 90 days [T, Figma comment 6 Nov on Home:
+   "When their criteria/profile has not been updated in more than 90 days, I
+   want an alert to pop up here that reads 'Please confirm or update your
+   investment criteria. It has been more than 90 days.'"]. A band at the top
+   of Home, not a modal: the lender came to answer requests, and a modal
+   would stand between them and the queue [💡 rec]. Gold, because it is
+   waiting on the lender (warning tone since 28 Sep), with the two answers
+   Tony's sentence names, Update first and Confirm last, the order every
+   two-button band in this file uses. No dismiss: Confirm is one click and is
+   the way it goes [💡 rec]. The product already stores the answer,
+   lending_parameters.confirmed_current_at, set by
+   POST /api/confirm-lending-parameter (setup_controller.rb confirm_current),
+   which no lender screen calls yet.
+   "Lending parameters", not Tony's "investment criteria": the page, the
+   Requests button and his own Matching comment use parameters, and one thing
+   keeps one name [💡 rec]. The date replaces "It has been more than 90 days"
+   with the fact behind it [💡 rec]. Never on the first session: no
+   parameters, nothing to confirm. */
+function lStaleAlert() {
+  return `<div class="alert alert--warning lstale" role="status">${REQ_TRI}
+      <div class="alert__title">Please confirm or update your lending parameters</div>
+      ${/* the date only: "Deals are matched to you on these parameters" is
+            the Lending parameters card's lead line below since 23 Nov, and
+            one screen says it once */""}
+      <div class="alert__desc">Last confirmed ${esc(LPROF.confirmed)}, more than 90 days ago.</div>
+      <div class="alert__act alert__act--end">
+        ${/* a button, not <a class="btn">: .alert a repaints any link in a
+              band semibold primary, which turned this outline button navy */""}
+        <button class="btn btn--outline btn--sm" type="button" data-lupdate>Update</button>
+        <button class="btn btn--sm" type="button" data-lconfirm>Confirm</button>
+      </div>
+    </div>`;
+}
 function renderLHome() {
-  const all = lreqsNow(), setup = S.lFresh && !S.lsetupX;
+  const all = lreqsNow(), setup = S.lFresh && !S.lsetupX, stale = !S.lFresh && LPROF.confirmed;
   const byOn = (a, b) => dayNum(b.on) - dayNum(a.on);
   const waiting = all.filter(r => r.st === "new").sort(byOn), shown = waiting.slice(0, LHOME_N);
   const yes = all.filter(r => r.st === "interested").sort((a, b) => dayNum(b.intOn) - dayNum(a.intOn));
 
   const rows = shown.map(r0 => {
-    const r = lreq(r0), sub = [r.prop, r.city + ", " + r.state, r.fin].filter(Boolean).map(esc).join(" · ");
+    const r = lreq(r0), sub = [r.prop, r.city + ", " + r.state].filter(Boolean).map(esc).join(" · ");
     return `<div class="lhq__r${r.read ? "" : " unread"}" data-go="#/requests/${r.id}">
       <div class="lhq__tx"><span class="lhq__nm"><b><a href="#/requests/${r.id}">${esc(r.name)}</a></b>${r.read ? "" : `<span class="udot" aria-hidden="true" data-tip="${UDOT_TIP}"></span><span class="vh">Unread</span>`}</span>
-        <span class="lhq__sub" title="${r.sel ? "Picked for you · " : ""}${sub}">${r.sel ? lPick(lBroker(r0).nm, "Picked for you") + " · " : ""}${sub}</span></div>
+        <span class="lhq__sub" title="${sub}">${sub}</span></div>
       <div class="lhq__amt"><b>${money(r.amt)}</b><span><span class="vh">Received </span>${esc(r.on)}</span></div>
       ${lRowActs(r)}
     </div>`;
   }).join("");
   const unread = waiting.filter(r => !lreq(r).read).length;
   const decideCt = waiting.length ? rows
-    : setup ? `<div class="empty empty--sm"><b>No matches yet</b><p>Requests reach you once your lending parameters are saved.</p></div>`
+    : setup ? `<div class="empty empty--sm"><b>No matches yet</b><p>Deals reach you once your lending parameters are saved.</p></div>`
     : lEmpty();
   const decide = `<div class="card">
-      <div class="card__hd"><h2>Needs your decision</h2>
-        ${waiting.length ? `<a class="btn btn--link" href="#/requests" data-lgov="decide" aria-label="View all requests">View all ${ARROWR}</a>` : ""}</div>
+      <div class="card__hd"><h2>New deals awaiting your response</h2>
+        ${waiting.length ? `<a class="btn btn--link" href="#/requests" data-lgov="decide" aria-label="View all new deals">View all ${ARROWR}</a>` : ""}</div>
       <div class="card__ct${waiting.length ? " lhq" : ""}">${decideCt}</div>
     </div>`;
 
@@ -25333,9 +25488,15 @@ function renderLHome() {
      Empty/Page Size=sm]. The description line is ours [~]. */
   const p = lParamRows(), f = LFREQ.find(([k]) => k === LPROF.freq);
   const alerts = LPROF.notify.reqs ? esc(f ? f[1] : "Weekly digest") : "Off";
+  /* "Lending parameters", not "Matching", since 23 Nov [T, Figma 6 Nov: "Is
+     this a recap of the lender's criteria? If so, change the word 'matching'
+     to 'These are the parameters to which deals are matched to you'"]. It is
+     the recap. The title takes the page's own name and Tony's sentence rides
+     as the card's first line, tightened, because a sentence is not a card
+     title [💡 rec]. */
   const match = `<div class="card lmatch">
-      <div class="card__hd"><h2>Matching</h2>${p ? `<a class="btn btn--link" href="#/parameters">${PEN14}Edit</a>` : ""}</div>
-      <div class="card__ct">${p ? `<dl class="fkv">${p.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}
+      <div class="card__hd"><h2>Lending parameters</h2>${p ? `<a class="btn btn--link" href="#/parameters">${PEN14}Edit</a>` : ""}</div>
+      <div class="card__ct">${p ? `<p class="lmatch__lead">Deals are matched to you on these parameters.</p><dl class="fkv">${p.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}
         <dt>Alerts</dt><dd>${alerts} · <a class="btn btn--link" href="#/account/notify">Change</a></dd></dl>`
         : `<div class="empty empty--sm"><b>No lending parameters saved yet</b><p>What you finance shows here once it is saved.</p>${setup ? ""
           : `<div class="acts"><a class="btn btn--outline btn--sm" href="#/parameters">Set lending parameters</a></div>`}</div>`}</div>
@@ -25346,16 +25507,16 @@ function renderLHome() {
       return `<a class="feed" href="#/requests/${r.id}"><span class="lpav feed__av">${esc(b.nm.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase())}</span>
         <span class="feed__tx"><span class="s"><b>${esc(r.name)}</b></span><span class="when">${esc(b.nm)} · ${esc(b.co)}${r.intOn ? " · " + esc(r.intOn) : ""}</span></span></a>`;
     }).join("")
-    : `<div class="empty empty--sm"><b>No interested requests</b><p>Requests you say Interested to are kept here, with who sent them.</p></div>`;
+    : `<div class="empty empty--sm"><b>No interested deals</b><p>Deals you say Interested to are kept here, with who sent them.</p></div>`;
   const interested = `<div class="card">
-      <div class="card__hd"><h2>Interested</h2>${yes.length ? `<a class="btn btn--link" href="#/requests" data-lgov="interested" aria-label="View all interested requests">View all ${ARROWR}</a>` : ""}</div>
+      <div class="card__hd"><h2>Interested</h2>${yes.length ? `<a class="btn btn--link" href="#/requests" data-lgov="interested" aria-label="View all interested deals">View all ${ARROWR}</a>` : ""}</div>
       <div class="card__ct">${yesCt}</div>
     </div>`;
 
   return `<div class="home">
     <div class="head"><div><h1>Home</h1><p>${S.lFresh ? `Welcome, ${esc(LPROF.first)}.` : `Welcome back, ${esc(LPROF.first)}.`}${unread
-        ? ` You have ${unread} unread request${unread === 1 ? "" : "s"}.` : ""}</p></div></div>
-    ${setup ? lSetupCard() : ""}${decide}
+        ? ` You have ${unread} new deal${unread === 1 ? "" : "s"} to review.` : ""}</p></div></div>
+    ${stale ? lStaleAlert() : ""}${setup ? lSetupCard() : ""}${decide}
     <div class="lhome__pair">${interested}${match}</div>
   </div>${lOtherDlg()}`;
 }
@@ -25397,14 +25558,15 @@ function renderLHome() {
    after the name [Tanya, 30 Oct: "go with A"]: the badge cost 76px of the
    name on every picked row, named the broker one column away from their
    name, and "Selected" is the word the tick column and "2 selected" own. The
-   tooltip still names the broker. Home has no Submitted by, so its line
-   under the name opens with "Picked for you"; the request page keeps a badge,
+   tooltip still names the broker. Home's line under the name opened with
+   "Picked for you" until 23 Nov, when Tony's "Leave only property type and
+   city, state" took it off [T, Figma 6 Nov]; the request page keeps a badge,
    "Picked by" and the broker, where the header has room. The filter is a
    toggle chip on the bar, the Lenders directory's Shortlist chip
    (Pattern/Filter chip), counting within the view, not a sub-tab as today
    [sheet 03.3]. [~] */
 const LSLIDERS = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>`;
-const lPick = (nm, label) => `<span class="lrpick" data-tip="${esc(nm)} picked you for this request">${label}</span>`;
+const lPick = (nm, label) => `<span class="lrpick" data-tip="${esc(nm)} picked you for this deal">${label}</span>`;
 function renderLRequests() {
   const all = lreqsNow(), rows = visibleLReqs();
   const n = v => all.filter(r => lInView(r, v)).length;
@@ -25415,18 +25577,18 @@ function renderLRequests() {
      action, and the row's Interested is already filled. Drawn on the empty
      state too, so the door never moves; the empty state keeps its own
      button. Prism Button outline, default size, the old rail's sliders. */
-  const head = `<div class="head"><div><h1>Requests</h1><p>Requests matched to your lending parameters.</p></div>
+  const head = `<div class="head"><div><h1>Deals</h1><p>Deals matched to your lending parameters.</p></div>
     <div class="head__acts"><a class="btn btn--outline" href="#/parameters">${LSLIDERS}Lending parameters</a></div></div>`;
   if (!all.length) return head + `<div class="card"><div class="card__ct">${lEmpty()}</div></div>`;
 
-  const views = `<div class="seg" role="group" aria-label="Requests view">${LVIEWS.map(([k, l]) =>
+  const views = `<div class="seg" role="group" aria-label="Deals view">${LVIEWS.map(([k, l]) =>
     `<button type="button" class="${S.lview === k ? "on" : ""}" data-lview="${k}" aria-pressed="${S.lview === k}">${l} <span class="ct">${n(k)}</span></button>`).join("")}</div>`;
   const bar = `
     <div class="msbar msbar--find">
-      ${srchBox("lq", S.lq, "Search requests", "Search requests", "max-width:260px")}
+      ${srchBox("lq", S.lq, "Search deals", "Search deals", "max-width:260px")}
       ${LRQF.map(msCtl).join("")}
       <button type="button" class="lshort-chip lrsel-chip${S.lrSel ? " on" : ""}" id="lrsel" aria-pressed="${S.lrSel}"
-        data-tip="Requests a broker picked you for">Picked for you<span class="ct">${all.filter(r => lInView(r, S.lview) && r.sel).length}</span></button>
+        data-tip="Deals a broker picked you for">Picked for you<span class="ct">${all.filter(r => lInView(r, S.lview) && r.sel).length}</span></button>
       ${LRQF.some(f => f.set().size) || S.lrSel ? `<button class="clrall" type="button" id="lrclrf">Clear all filters</button>` : ""}
     </div>`;
 
@@ -25464,7 +25626,7 @@ function renderLRequests() {
   const pgBtn = (id, to, lbl, path, off) => `<button class="btn btn--outline btn--sm btn--ico" type="button" id="${id}" data-lpg="${to}" aria-label="${lbl}"${off ? " disabled" : ""}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg></button>`;
   const pager = rows.length <= LPG_SIZES[0] ? "" : `
     <nav class="lpgn" aria-label="Pagination">
-      <span class="lpgn__tot">${from + 1}–${from + shown.length} of ${rows.length} request${rows.length === 1 ? "" : "s"}</span>
+      <span class="lpgn__tot">${from + 1}–${from + shown.length} of ${rows.length} deal${rows.length === 1 ? "" : "s"}</span>
       <div class="lpgn__r">
         <div class="lpgn__sz"><span id="lpg_lbl">Rows per page</span>
           <div class="fld__sel fld__sel--sm lpgn__sel">${selCtl("lpg:size", LPG_SIZES.map(v => ({ v: String(v), label: String(v) })), String(sz), "Rows per page")}</div></div>
@@ -25500,19 +25662,22 @@ function renderLRequests() {
      lenders"), so it prints on the bookmark glyph's axis, not the name's. */
   const table = `${selbar}<div class="tblwrap"><table class="t t--lreqs"><thead><tr>
       ${pickOn ? `<th class="lpickth"><span class="chk"><input type="checkbox" id="lpickall" aria-label="Select all on this page" ${allPicked ? "checked" : ""}><span class="bx">${CHKTICK}</span></span></th>` : ""}
-      <th colspan="2">Request</th><th>Loan amount</th><th>Transaction</th>
+      <th colspan="2">Deal</th><th>Loan amount</th><th>Transaction</th>
       <th>Financing</th><th>Submitted by</th><th>Received</th><th>Status</th><th class="lracts"><span class="vh">Actions</span></th></tr></thead><tbody>${body}</tbody></table></div>`;
 
   /* 03.5: one action per empty state [sheet]. All caught up is the sheet's
      own line; the three other views say what lands there and carry none,
      as the borrower's per-view empties do. */
   const ev = { decide: null,
-    interested: ["No interested requests", "Requests you say Interested to are kept here."],
-    passed: ["No passed requests", "Requests you pass on are kept here."],
-    saved: ["No saved requests", "Save a request with the bookmark to keep it here."],
-    all: ["No requests", ""] }[S.lview];
+    interested: ["No interested deals", "Deals you say Interested to are kept here."],
+    passed: ["No passed deals", "Deals you pass on are kept here."],
+    working: ["No deals in Working", "Move a deal here once you are working on it."],
+    funded: ["No funded deals", "Deals you close are kept here."],
+    dead: ["No deals dead or on hold", "Deals that stall after Interested are kept here."],
+    saved: ["No saved deals", "Save a deal with the bookmark to keep it here."],
+    all: ["No deals", ""] }[S.lview];
   const empty = n(S.lview) && anyF
-    ? `<div class="empty"><b>No requests match these filters</b><p>Clear them to see all ${n(S.lview)}.</p>
+    ? `<div class="empty"><b>No deals match these filters</b><p>Clear them to see all ${n(S.lview)}.</p>
         <div class="acts"><button class="btn btn--outline btn--sm" type="button" id="lrclrf2">Clear filters</button></div></div>`
     : ev ? `<div class="empty"><b>${ev[0]}</b>${ev[1] ? `<p>${ev[1]}</p>` : ""}</div>` : lEmpty();
   return head + `<div class="card"><div class="card__ct"><div class="bviews">${views}</div>${bar}${shown.length ? table + pager : empty}</div></div>${lOtherDlg()}`;
@@ -26184,7 +26349,7 @@ function renderBHome() {
   const card = d => {
     const b = bBroker(d), c = d.conn || {}, pend = c.st === "pending" ? brokerById(c.broker) : null;
     const last = (d.events || []).slice(-1)[0];
-    return `<article class="dcard bdcard">
+    return `<article class="dcard bdcard" data-go="#/loan/${d.id}">
       <div class="bdcard__hd"><b><a href="#/loan/${d.id}">${esc(d.name)}</a></b>
       <span class="bdcard__addr">${esc(d.addr)}, ${esc(d.city)}, ${esc(d.state)}</span></div>
       <div class="bdcard__bd"><span class="amt">${money(d.amt)} <span class="bdcard__p">· ${esc(d.purpose)}</span></span>
@@ -33892,9 +34057,18 @@ document.addEventListener("click", e => {
   if (lgov) { S.lview = lgov.dataset.lgov; S.lpg = 1; S.lpicked.clear(); LRQF.forEach(f => f.set().clear()); S.lrSel = false; S.lq = ""; }
   if (t.closest("[data-lsetupx]")) {
     S.lsetupX = true;
-    S.undo = { msg: "Setup skipped. Lending parameters is on the Requests page whenever you are ready.", fn: () => { S.lsetupX = false; } };
+    S.undo = { msg: "Setup skipped. Lending parameters is on the Deals page whenever you are ready.", fn: () => { S.lsetupX = false; } };
     render(); return;
   }
+  /* the 90-day alert's Confirm: confirmed_current_at is stamped, the band
+     goes, and Undo puts it back */
+  if (t.closest("[data-lconfirm]")) {
+    const was = LPROF.confirmed;
+    LPROF.confirmed = "";
+    S.undo = { msg: "Lending parameters confirmed. Thanks for keeping them current.", fn: () => { LPROF.confirmed = was; } };
+    render(); return;
+  }
+  if (t.closest("[data-lupdate]")) { location.hash = "#/parameters"; return; }
   /* ---- Requests, lender, milestone D [03.2, 03.3] ---- */
   if (t.closest("#lrsel")) { S.lrSel = !S.lrSel; S.lpg = 1; render(); return; }
   if (t.id === "lrclrsel") { S.lpicked.clear(); render(); return; }
@@ -33906,6 +34080,17 @@ document.addEventListener("click", e => {
   }
   const lrri = t.closest("[data-lrri]");
   if (lrri) { lListInt(LREQS.find(x => x.id === lrri.dataset.lrri)); return; }
+  /* Change status, list row or deal page: the lender's own stage, Undo for 5 s */
+  const lrmv = t.closest("[data-lrmv]");
+  if (lrmv) {
+    const r = LREQS.find(x => x.id === lrmv.dataset.lrmv), to = lrmv.dataset.st, was = { st: r.st, stOn: r.stOn };
+    S.cardMenu = null;
+    if (to !== r.st) {
+      Object.assign(r, { st: to, stOn: to === "interested" ? null : "23 Nov" });
+      S.undo = { msg: lreq(r).name + " moved to " + LRST[to][0] + ".", fn: () => { Object.assign(r, was); } };
+    }
+    render(); return;
+  }
   const lrbk = t.closest("[data-lrbulk]");
   if (lrbk) { lListPass([...S.lpicked].map(id => LREQS.find(x => x.id === id)), lrbk.dataset.why || ""); return; }
   const lrs = t.closest("[data-lrsave]");
@@ -33948,7 +34133,7 @@ document.addEventListener("click", e => {
   if (t.closest("[data-lrwdgo]")) {
     const r = LREQS.find(x => x.id === S.lrId), was = { st: r.st, intOn: r.intOn, q: r.q };
     Object.assign(r, { st: "new", intOn: null, q: null }); S.lrWd = null;
-    S.undo = { msg: "Interest withdrawn. " + lreq(r).name + " is back in Needs decision.", fn: () => { Object.assign(r, was); } };
+    S.undo = { msg: "Interest withdrawn. " + lreq(r).name + " is back in New.", fn: () => { Object.assign(r, was); } };
     render(); return;
   }
   if (t.closest("[data-lrq]")) { S.lrQ = S.lrId; render(); const f = document.getElementById("lrq_t"); if (f) f.focus(); return; }
@@ -34008,8 +34193,13 @@ document.addEventListener("click", e => {
        is one string the broker views print; the full pick is held here so a
        second type survives the save [22 Oct] */
     S.lpInst = [...d.inst];
+    /* a save is an update, so it clears the 90-day alert too. [~] In the
+       product a save with no changes leaves updated_at alone, so Save should
+       also stamp confirmed_current_at, or a lender who opens the page from
+       Update and finds nothing to change keeps the alert */
+    LPROF.confirmed = "";
     S.lFresh = false; S.lpd = null; S.lpTried = false;
-    S.undo = { msg: "Lending parameters saved.", go: { href: "#/requests", label: "View requests" } };
+    S.undo = { msg: "Lending parameters saved.", go: { href: "#/requests", label: "View deals" } };
     render(); return;
   }
 
