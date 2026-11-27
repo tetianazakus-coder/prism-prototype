@@ -84,7 +84,7 @@
 @supports (grid-template-rows:subgrid){
   .broker-card{display:grid;grid-template-rows:subgrid;grid-row:span 6;align-content:start}
 }
-.broker-card>.portrait{background:#ece7de;border:0;overflow:hidden}
+.broker-card>.portrait{background:#eae6dc;border:0;overflow:hidden}
 .broker-types{font-size:15px;line-height:1.6;color:var(--ink)}
 .broker-types>span{color:var(--muted);white-space:nowrap}
 /* Locations cut at two, as the types line cuts at three: "Arizona, Nevada +1 more", the rest muted after them.

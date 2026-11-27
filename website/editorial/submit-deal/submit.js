@@ -370,10 +370,6 @@
       // With no matches yet nothing has been sent, so the change is only confirmed.
       say(done.classList.contains('nomatch') ? `Email changed to ${next} ✓` : `Email changed. Matches sent to ${next} ✓`);
     },
-    // On the thank-you card the link goes to the request's email; on the account step, to the email in its field.
-    magic: button => done.contains(button)
-      ? say(`Link sent to ${value('email')} ✓`)
-      : say(`Link sent to ${accountForm.elements.acc_email.value.trim() || value('email')} ✓`, $('.share-status', button.parentNode)),
   };
   $$('[data-act]').forEach(button => button.addEventListener('click', () => ACTS[button.dataset.act](button)));
   fixInput.addEventListener('keydown', event => {

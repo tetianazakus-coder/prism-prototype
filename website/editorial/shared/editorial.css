@@ -475,3 +475,15 @@ html:has(#navigation.open){overflow:hidden}
 .notify .signup-role input{accent-color:#c2a98a}
 .notify .signup-consent{max-width:520px;margin:12px auto 0;font-size:13px;text-align:left;color:#b6bfcf}
 .notify .signup-consent a:hover{color:#c2a98a}
+
+/* A wrong answer, on every form, as on Submit a deal (site.js; Tanya, 24 Nov): a red border on the field and a line
+   under it, 8px down; a radio group's line closes the group, its rows already spacing it. On the ink band the red
+   reads 2.3:1, so the band takes a light red, 8.8:1 (the port's --color-site-on-ink-error). */
+.field-error{margin-top:8px;font-size:14px;line-height:1.5;font-weight:500;color:#9b2c2c}
+.field-error[hidden]{display:none}
+fieldset>.field-error{flex-basis:100%;grid-column:1/-1;margin-top:0}
+form [aria-invalid=true][aria-describedby]:is(input,select,textarea),#promo-form [aria-invalid=true]{border-color:#9b2c2c}
+.newsletter form>div:has(>[aria-invalid=true]){border-bottom-color:#9b2c2c}
+.notify-form+.field-error{max-width:520px;margin-inline:auto;text-align:left}
+.notify .field-error{color:#f2a7a0}
+.notify form [aria-invalid=true][aria-describedby]:is(input){border-color:#f2a7a0}

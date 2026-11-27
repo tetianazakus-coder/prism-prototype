@@ -181,7 +181,6 @@
 .account-wide .email-change{grid-row:2;margin-block:-9px}
 .account-card :is(.account-quick,.account-narrow) .button{width:100%;justify-content:center;gap:14px}
 .account-card .account-narrow .button.outline{margin-top:12px}
-.account-card .account-quick>.button.outline{margin-top:-8px}
 .account-card :is(.account-later,.account-resend){margin-top:12px;font-size:15px;line-height:1.5}
 :is(.account-later,.account-resend) .inline-link{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:500;color:var(--ink);border:0;text-decoration:none}
 .account-narrow{display:none}
@@ -264,9 +263,6 @@
 .pass-show{position:absolute;right:2px;top:2px;bottom:2px;min-width:64px;padding:0 14px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:none}
 .pass-show:focus-visible{outline:2px solid #b59159;outline-offset:-2px}
 .account-actions .button{width:100%;justify-content:center;gap:14px;font-size:15px}
-.account-alt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;margin-top:-12px}
-/* The two text buttons under "Create account": no underline, and Back sits right under the sign-in link, each still a 44px target (Tanya, 16 Nov: "remove bottom line from these buttons, make vertical gap between them smaller"). Back has since moved to the top of the step (below). */
-.account-form .inline-link{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:500;border:0;text-decoration:none}
 /* Back above the account step's heading: step 2's .deal-back, its 44px target overlapping the padding, 20px clear of the heading. */
 .account>.deal-back{margin:-11px 0 9px}
 .ready-go{margin-top:36px}

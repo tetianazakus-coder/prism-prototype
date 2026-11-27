@@ -125,6 +125,83 @@
     section.querySelector('[data-roi-status]').textContent = `${name}: $${cost} a year. One closed deal covers about ${years} years.`;
   })));
 
+  // Wrong answers, on every form, as Submit a deal shows them (Tanya, 24 Nov: one way for every form, Submit a deal's;
+  // the port's components/site/form does the same). A submit checks the form's required fields here, before the page's
+  // own handler, which runs only once every answer is right: each wrong field gets a line under it and aria-invalid,
+  // and the first takes focus in the middle of the screen. Editing a field clears its line; an email left in the wrong
+  // shape gets its line as the visitor leaves it. The lines are the port's, word for word (editorial.css draws them).
+  const EMAIL_SHAPE = 'Enter an email like name@company.com.';
+  const emailOk = text => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(text);
+  const SIGNUP = {role: 'Choose broker, lender or borrower.', email: 'Enter your email.'};
+  const LINES = {
+    'contact-form': {name: 'Enter your name.', email: 'Enter your email.', role: 'Choose broker, borrower, lender or other.', message: 'Enter your message.'},
+    'join-form': {name: 'Enter your full name.', email: 'Enter your work email.', years: 'Choose your years in CRE debt.'},
+    'promo-form': {name: 'Enter your full name.', email: 'Enter your work email.', plan: 'Choose a plan, or “Not sure yet”.', term: 'Choose a term, or “Not sure yet”.', existing: 'Choose yes or no.'},
+    'connect-form': {first_name: 'Enter your first name.', last_name: 'Enter your last name.', email: 'Enter your email.', phone: 'Enter your phone number.'},
+    'newsletter-form': SIGNUP,
+  };
+  const linesOf = form => form instanceof HTMLFormElement && (LINES[form.id] || (form.matches('[data-notify]') ? SIGNUP : null));
+  $$('form').forEach(form => { if (linesOf(form)) form.noValidate = true; });
+  let lineIds = 0;
+  const newLine = () => Object.assign(document.createElement('p'), {className: 'field-error', id: `field-error-${++lineIds}`, hidden: true});
+  // The line closes a radio group's fieldset; sits under a row a field shares with its button (the footer's, the
+  // band's); or goes under the field's label, the two wrapped together so a two-column row keeps its columns.
+  function lineFor(control) {
+    if (control.type === 'radio') {
+      const group = control.closest('fieldset');
+      return $(':scope > .field-error', group) || group.appendChild(newLine());
+    }
+    const label = control.closest('label');
+    const row = (label || control).parentElement;
+    if (!label || $(':scope > button', row)) {
+      if (!row.nextElementSibling?.matches('.field-error')) row.after(newLine());
+      return row.nextElementSibling;
+    }
+    if (label.parentElement.matches('.field-block')) return $(':scope > .field-error', label.parentElement);
+    const block = Object.assign(document.createElement('div'), {className: 'field-block'});
+    label.replaceWith(block);
+    block.append(label, newLine());
+    return block.lastElementChild;
+  }
+  function mark(control, message) {
+    const target = control.type === 'radio' ? control.closest('fieldset') : control;
+    if (!message && !target.hasAttribute('aria-invalid')) return;
+    const line = lineFor(control);
+    line.textContent = message;
+    line.hidden = !message;
+    if (message) target.setAttribute('aria-invalid', 'true'), target.setAttribute('aria-describedby', line.id);
+    else target.removeAttribute('aria-invalid');
+  }
+  function wrongWith(form, control, lines) {
+    if (control.type === 'radio') return form.querySelector(`input[name="${control.name}"]:checked`) ? '' : lines[control.name];
+    const value = control.value.trim();
+    if (!value) return control.required ? lines[control.name] : '';
+    return control.type === 'email' && !emailOk(value) ? EMAIL_SHAPE : '';
+  }
+  document.addEventListener('submit', event => {
+    const form = event.target, lines = linesOf(form);
+    if (!lines) return;
+    const seen = new Set();
+    const controls = [...form.elements].filter(control => lines[control.name] && !seen.has(control.name) && seen.add(control.name));
+    const wrong = controls.map(control => [control, wrongWith(form, control, lines)]).filter(([control, message]) => (mark(control, message), message));
+    if (!wrong.length) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const first = wrong[0][0];
+    first.focus({preventScroll: true});
+    (first.closest('fieldset') && first.type === 'radio' ? first.closest('fieldset') : first).scrollIntoView({block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  }, true);
+  const clearOn = event => { const control = event.target; if (control.form && linesOf(control.form)?.[control.name]) mark(control, ''); };
+  document.addEventListener('input', clearOn);
+  document.addEventListener('change', clearOn);
+  document.addEventListener('focusout', event => {
+    const control = event.target, value = control.value?.trim();
+    if (control.type === 'email' && control.form && linesOf(control.form) && value && !emailOk(value)) mark(control, EMAIL_SHAPE);
+  });
+  document.addEventListener('reset', event => {
+    if (linesOf(event.target)) [...event.target.elements].forEach(control => control.name && mark(control, ''));
+  }, true);
+
   // Local preview only: no network, browser storage, or pretend submission success. A real submit says it was not sent;
   // ?contact=sent and ?contact=failed show the two outcomes delivery will need, for review (about.css, 14 Nov).
   const contactForm = $('#contact-form');

@@ -8,7 +8,7 @@
    Until photos are confirmed the frame is dashed and carries the [Photo] placeholder. */
 .person-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:0;padding:0;list-style:none}
 .person-card{display:flex;flex-direction:column;gap:6px;min-width:0}
-.portrait{display:grid;place-items:center;aspect-ratio:1;margin-bottom:16px;background:#ece7de;border:1px dashed #b9ab95}
+.portrait{display:grid;place-items:center;aspect-ratio:1;margin-bottom:16px;background:#eae6dc;border:1px dashed #b9ab95}
 .portrait>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* A frame holding a photo drops the dashed "to confirm" border; absolute keeps a non-square photo (Tony's 853×1067 stand-in) from stretching the square. */
 .portrait{position:relative;overflow:hidden}
